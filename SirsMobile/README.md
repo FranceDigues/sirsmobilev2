@@ -36,7 +36,7 @@ npm install --save @capacitor/cli @capacitor/core
 Execute this both commands :
 
 ```bash
-./setup/sh
+./setup.sh
 ./addPlg.sh
 ```
 
