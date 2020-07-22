@@ -8,9 +8,13 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'database-connection',
     pathMatch: 'full'
   },
+  {
+    path: 'database-connection',
+    loadChildren: () => import('./database-connection/database-connection.module').then( m => m.DatabaseConnectionPageModule)
+  }
 ];
 
 @NgModule({

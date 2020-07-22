@@ -1,0 +1,41 @@
+<!-- <p>
+  add-database works!
+</p> -->
+
+<div>
+        <h2 class="sirs-card-title">Nouvelle base de données</h2>
+        <p>Veuillez saisir les paramètres de connexions à la base de donées.</p>
+        <form [formGroup]="databaseForm">
+
+              <div class="form-group">
+                  <label>Title</label>
+                  <input formControlName="title" type="text" required/>
+              </div>
+
+              <div class="form-group">
+                  <label>URL</label>
+                  <input class="form-control" formControlName="url" type="text" required />
+              </div>
+
+              <div class="form-group">
+                <label>Identifiant utilisateur</label>
+                <input class="form-control" formControlName="user_id" type="text" required />
+              </div>
+
+            <div class="form-group">
+              <label>Mot de passe</label>
+              <input class="form-control" formControlName="password" type="password" required/>
+            </div>
+
+            <div>
+              <button (click)="onBack()" class="btn-flat waves-effect waves-teal">
+                <ion-icon name="arrow-back-outline"></ion-icon>Retour
+              </button>
+
+              <button type="button" [disabled]="!databaseForm.valid" (click)="logForm()" class="btn waves-effect waves-light right">
+                <ion-icon name="add-outline"></ion-icon>Ajouter la base
+              </button>
+            </div>
+
+      </form>
+</div>

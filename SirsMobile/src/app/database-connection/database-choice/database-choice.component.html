@@ -1,0 +1,37 @@
+<!-- <p>
+  database-choice works!
+</p> -->
+
+<div class="sirs-card-content">
+  <h2 class="sirs-card-title">Choix de la base de données</h2>
+  <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
+  <ul class="collection">
+      <!-- <li class="collection-item avatar" ng-repeat="db in c.available"
+          ng-class="{selected: (c.selected === db)}" on-tap="c.selectDB(db)">
+          <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
+          <span class="title">{{db.name}}</span>
+          <p>{{db.url}}</p>
+          <span class="secondary-content" ng-show="c.selected === db"><ion-icon name="checkmark-outline"></ion-icon></span>
+      </li> -->
+  </ul>
+</div>
+<div class="sirs-card-action text-right">
+  <button ion-button class="btn-flat waves-effect waves-teal left" icon-start (click)="addDatabase()">
+    <!-- <a href="#/database_add" class="btn-flat waves-effect waves-teal left"> -->
+      <ion-icon name="add-circle-outline"></ion-icon>
+      Ajouter une base
+    <!-- </a> -->
+  </button>
+
+  <button ion-button class="btn-flat waves-effect waves-light" icon-start ng-disabled="!c.selected" ng-click="c.edition()">
+          <ion-icon name="pencil-outline"></ion-icon>Edition
+  </button>
+
+  <button ion-button class="btn-flat waves-effect waves-light" icon-start ng-disabled="!c.selected" ng-click="c.remove()">
+          <ion-icon name="trash-outline"></ion-icon>Supprimer
+  </button>
+  <button ion-button class="btn pink waves-effect waves-light" icon-start>
+          <ion-icon name="checkmark-outline"></ion-icon>
+          Valider
+  </button>
+</div>
