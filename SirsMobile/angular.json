@@ -40,7 +40,8 @@
               }
             ],
             "scripts": [
-              "./node_modules/pouchdb/dist/pouchdb.js"
+              "./node_modules/pouchdb/dist/pouchdb.js",
+              "./node_modules/gl-matrix/gl-matrix.js"
             ]
           },
           "configurations": {
