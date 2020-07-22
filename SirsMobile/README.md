@@ -36,8 +36,7 @@ npm install --save @capacitor/cli @capacitor/core
 Execute this both commands :
 
 ```bash
-./setup.sh
-./addPlg.sh
+npm install
 ```
 
 ## Launch App on device
