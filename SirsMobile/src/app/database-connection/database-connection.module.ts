@@ -9,6 +9,10 @@ import { DatabaseConnectionPageRoutingModule } from './database-connection-routi
 import { DatabaseConnectionPage } from './database-connection.page';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddDatabaseComponent } from './add-database/add-database.component';
+import { NativeStorage } from '@ionic-native/native-storage';
+import { DatabaseChoiceComponent } from './database-choice/database-choice.component';
+import { IonicStorageModule } from '@ionic/storage';
+import { EditDatabaseComponent } from './edit-database/edit-database.component';
 
 @NgModule({
   imports: [
@@ -17,8 +21,8 @@ import { AddDatabaseComponent } from './add-database/add-database.component';
     ReactiveFormsModule,
     IonicModule,
     DatabaseConnectionPageRoutingModule,
-    FlexLayoutModule,
+    FlexLayoutModule
   ],
-  declarations: [DatabaseConnectionPage, AddDatabaseComponent]
+  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent]
 })
 export class DatabaseConnectionPageModule {}
