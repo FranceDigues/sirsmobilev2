@@ -30,6 +30,7 @@ export class AddDatabaseComponent implements OnInit {
       url: this.url,
       user_id: this.user_id,
       password: this.password,
+      replicated: false
     });
   }
 

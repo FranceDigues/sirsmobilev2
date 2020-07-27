@@ -46,3 +46,22 @@ npm install
 ```bash
 ionic capacitor run android
 ```
+
+
+
+***Error fetch Android***
+
+***if you find this error '(failed)net::ERR_CLEARTEXT_NOT_PERMITTED', ADD THIS***
+
+***in config.xml, in plateform tag***
+```xml
+<edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:networkSecurityConfig="@xml/network_security_config" android:usesCleartextTraffic="true" />
+</edit-config>
+```
+
+
+***in android/app/src/main/AndroidManifest.xml, in plateform tag***
+```
+android:usesCleartextTraffic="true"
+```

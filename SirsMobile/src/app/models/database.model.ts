@@ -3,4 +3,5 @@ export interface DatabaseModel {
     url: string;
     user_id: string;
     password: string;
+    replicated?: boolean;
 }

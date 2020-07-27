@@ -9,10 +9,11 @@ import { DatabaseConnectionPageRoutingModule } from './database-connection-routi
 import { DatabaseConnectionPage } from './database-connection.page';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddDatabaseComponent } from './add-database/add-database.component';
-import { NativeStorage } from '@ionic-native/native-storage';
 import { DatabaseChoiceComponent } from './database-choice/database-choice.component';
 import { IonicStorageModule } from '@ionic/storage';
 import { EditDatabaseComponent } from './edit-database/edit-database.component';
+import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
+import { DatabaseService } from '../database.service';
 
 @NgModule({
   imports: [
@@ -23,6 +24,9 @@ import { EditDatabaseComponent } from './edit-database/edit-database.component';
     DatabaseConnectionPageRoutingModule,
     FlexLayoutModule
   ],
-  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent]
+  providers: [
+    DatabaseService,
+  ],
+  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent, ReplicateDatabaseComponent]
 })
 export class DatabaseConnectionPageModule {}

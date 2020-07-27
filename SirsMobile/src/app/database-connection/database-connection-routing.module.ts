@@ -5,6 +5,7 @@ import { DatabaseChoiceComponent } from './database-choice/database-choice.compo
 
 import { DatabaseConnectionPage } from './database-connection.page';
 import { EditDatabaseComponent } from './edit-database/edit-database.component';
+import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'database-choice'},
       { path: 'database-choice', component: DatabaseChoiceComponent },
       { path: 'add-database', component: AddDatabaseComponent },
-      { path: 'edit-database/:id', component: EditDatabaseComponent }
+      { path: 'edit-database/:id', component: EditDatabaseComponent },
+      { path: 'replicate-database/:id', component: ReplicateDatabaseComponent }
     ]
   }
 ];

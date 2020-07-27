@@ -25,7 +25,7 @@
     <button type="button" ion-button class="btn-flat waves-effect waves-light" icon-start [disabled]="!selectedDatabase" (click)="removeDatabase()">
             <ion-icon name="trash-outline"></ion-icon>Supprimer
     </button>
-    <button type="button" ion-button class="btn pink waves-effect waves-light" icon-start>
+    <button type="button" ion-button class="btn pink waves-effect waves-light" icon-start [disabled]="!selectedDatabase" (click)="validateDatabase()">
             <ion-icon name="checkmark-outline"></ion-icon>
             Valider
     </button>

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { DatabaseService } from 'src/app/database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 
 
@@ -23,7 +24,8 @@ export class EditDatabaseComponent implements OnInit {
   idDB = 0;
 
   constructor(private formBuilder: FormBuilder, private router: Router,
-    private nativeStorage: NativeStorage, private route: ActivatedRoute) {}
+    private nativeStorage: NativeStorage, private route: ActivatedRoute,
+    private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.idDB = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -49,6 +51,7 @@ export class EditDatabaseComponent implements OnInit {
           url: this.url,
           user_id: this.user_id,
           password: this.password,
+          replicated: false
         });
       }
     )
@@ -60,7 +63,8 @@ export class EditDatabaseComponent implements OnInit {
 
   editStorage() {
         this.databases[this.idDB] = this.databaseForm.value;
-        this.nativeStorage.setItem('databases', this.databases);
+        // this.nativeStorage.setItem('databases', this.databases);
+        this.dbService.updateDatabasesHardDisk(this.databases);
         this.onBack();
   }
 
