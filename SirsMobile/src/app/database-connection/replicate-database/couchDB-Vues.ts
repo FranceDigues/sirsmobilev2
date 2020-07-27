@@ -14,7 +14,6 @@ export const indexedViews = [
     'getBornesFromTronconID',
     'getBornesIdsHB',
     'byClassAndLinearRef'
-
 ];
 
 export const syncViews = [

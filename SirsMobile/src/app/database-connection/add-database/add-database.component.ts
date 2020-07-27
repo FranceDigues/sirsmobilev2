@@ -21,7 +21,7 @@ export class AddDatabaseComponent implements OnInit {
     private nativeStorage: NativeStorage) {}
 
   ngOnInit() {
-    this.name = this.formBuilder.control('', Validators.required);
+    this.name = this.formBuilder.control('Test', Validators.required);
     this.url = this.formBuilder.control('http://', Validators.required);
     this.user_id = this.formBuilder.control('', Validators.required);
     this.password = this.formBuilder.control('', Validators.required);

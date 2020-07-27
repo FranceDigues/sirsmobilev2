@@ -28,38 +28,27 @@ export class ReplicateDatabaseComponent implements OnInit {
   constructor(private nativeStorage: NativeStorage,
     private dbService: DatabaseService, private router: Router, private route: ActivatedRoute,
     private alertCtrl: AlertController) {
+      this.step = 0;
+      this.description = "Loading...";
+      this.percent = 0;
+      this.completion = null;
     }
 
   async ngOnInit() {
     this.databaseIndex = parseInt(this.route.snapshot.paramMap.get('id'));
     this.databases = await this.dbService.getDatabasesHardDisk();
     this.activeDb = this.databases[this.databaseIndex];
-    // .then(
-    //   (data) => {
-    //     console.log(data);
-    //     this.databases = data;
-    //     // console.log(this.databases);
-        console.log("0");
-        console.log(this.activeDb);
-        console.log("name");
-        console.log(this.activeDb.name);
-        console.log("0.5");
-        this.localDB = await this.dbService.getLocalDB(this.activeDb);
-        console.log("33333");
-        this.remoteDB = await this.dbService.getRemoteDB(this.activeDb);
-        console.log("julllll");
-        console.log("localDB");
-        console.log(this.localDB);
-        console.log("remoteDB");
-        console.log(this.remoteDB);
-        this.localDB.info()
-        .then(
-          (info) => {
-            console.log("info");
-            console.log(info);
-            this.firstStep();
-          }
-        )
+    this.localDB = await this.dbService.getLocalDB(this.activeDb);
+    this.remoteDB = await this.dbService.getRemoteDB(this.activeDb);
+    this.localDB.info( // faire une demande à Hilmi pour changer ça
+      () => {
+        console.log("it begins")
+        this.firstStep();
+      },
+      (error) => {
+        console.log("Error " + error);
+      }
+    )
   }
 
   firstStep() {
@@ -67,32 +56,28 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.description = "Connexion à la base de données...";
     this.percent = 0;
     this.completion = null;
-    console.log("1");
     // insomnia start
     this.remoteDB.info()
     .then(
       (result) => {
-        console.log("lol");
         console.log(result);
-        this.firstStepFinish(result.doc_count);
+        this.firstStepComplete(result.doc_count);
       },
       (err) => {
-        console.log("Error FirstStepError");
-        console.log(err);
-        this.firstStepError();
+        this.firstStepError(err);
       }
     );
   }
 
-  firstStepFinish(docCount) {
+  firstStepComplete(docCount) {
     this.percent = 100;
     setTimeout(() => {
       this.secondStep(docCount);
     }, 1000);
   }
 
-  async firstStepError() {
-    // faire une popup
+  async firstStepError(error) {
+    console.log(error);
     const alert = await this.alertCtrl.create({
       header: "Erreur",
       message: "Une erreur s'est produite lors de la connexion à la base de données.",
@@ -118,9 +103,11 @@ export class ReplicateDatabaseComponent implements OnInit {
     const subject = new Subject<any>();
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
+      console.log("2 - En COURS");
       subject.next({ repCount: Math.min(result.docs_written, docCount), docCount: docCount });
     })
     .on('complete', () => {
+      console.log("2 - COMPLETE")
       subject.complete();
     })
     .on('error', (error) => {
@@ -129,25 +116,25 @@ export class ReplicateDatabaseComponent implements OnInit {
     });
 
     subject.subscribe({
-      next: () => this.secondStepProgress,
-      complete: () => this.secondStepFinish,
-      error: () => this.secondStepError
+      next: (state) => { this.secondStepProgress(state.repCount, state.docCount) },
+      complete: () => { this.secondStepComplete() },
+      error: (error) => { this.secondStepError(error) }
     })
   }
 
-  secondStepProgress(state) {
-    this.percent = (state.repCount / state.docCount) * 100;
-    this.completion = state.repCount + '/' + state.docCount;
+  secondStepProgress(repCount, docCount)  {
+    this.percent =  repCount / docCount * 100;
+    this.completion = repCount + '/' + docCount;
   }
 
-  secondStepFinish() {
+  secondStepComplete() {
     setTimeout(() => {
       this.thirdStep();
     }, 1000)
   }
 
   async secondStepError(error) {
-    // faire une popup error downloading
+    console.log(error);
     const alert = await this.alertCtrl.create({
       header: "Erreur",
       message: "Une erreur s'est produite lors du téléchargement des documents.",
@@ -172,40 +159,53 @@ export class ReplicateDatabaseComponent implements OnInit {
 
     let subjects = [];
 
-    designDocs.forEach((element, i) => {
+    for (let i = 0, element; element = designDocs[i]; i++) {
       const subject = new Subject<any>();
       this.localDB.put(element).then(
         () => {
+          console.log("3 - EN COURS");
+          // this.thirdStepProgess(i + 1);
           subject.next(i + 1);
           subject.complete();
         },
         (error) => {
+          console.log("SECOND CASE" + error);
+          // this.thirdStepProgess(i + 1);
           subject.next(i + 1);
           if (error.status === 409) { // already done
+            console.log("3 - COMPLETE");
             subject.complete();
+            // this.thirdStepComplete();
           } else {
+            // this.thirdStepError(error);
             subject.error(error);
           }
       });
       subjects.push(subject);
-    });
+    }
 
-    return (forkJoin(subjects));
+    forkJoin(subjects).subscribe({
+      next: (i) => { this.thirdStepProgess(i) },
+      complete: () => { this.thirdStepComplete() },
+      error: (error) => { this.thirdStepError(error) }
+    });
   }
 
   thirdStepProgess(proceedDocs) {
     this.percent = (proceedDocs / designDocs.length) * 100;
+    console.log("THIRD PROGRESS : " + proceedDocs);
     this.completion = proceedDocs + '/' + designDocs.length;
   }
 
   thirdStepComplete() {
+    console.log("3 - REAL COMPLETE");
     setTimeout(() => {
-      this.fourthStep();
+      this.fourthStep()
     }, 1000);
   }
 
-  async thirdStepError() {
-    // faire une popup error on work loading
+  async thirdStepError(error) {
+    console.log(error);
     const alert = await this.alertCtrl.create({
       header: "Erreur",
       message: "Une erreur s'est produite lors de la préparation de l'espace de travail.",
@@ -223,6 +223,7 @@ export class ReplicateDatabaseComponent implements OnInit {
   }
 
   fourthStep() {
+    console.log("FOURTH STEP");
     this.step = 4;
     this.description = "Contruction des index...";
     this.percent = 0;
@@ -230,26 +231,30 @@ export class ReplicateDatabaseComponent implements OnInit {
 
     let subjects = [];
 
-    indexedViews.forEach((view, i) => {
+    for (let i = 0, view; view = indexedViews[i]; i++) {
+      console.log("FOURTH");
+      console.log(i);
       const subject = new Subject<any>();
       this.localDB.query(view, { limit: 0 }).then(
         () => {
           subject.next(i + 1);
+          // this.fourthStepProgress(i + 1);
           subject.complete();
         },
         (error) => {
           subject.next(i + 1);
-          if (error.status === 409) { // already done
-            subject.complete();
-          } else {
-            subject.error(error);
-          }
-      });
+          // this.fourthStepProgress(i + 1);
+          subject.error(error);
+        }
+      );
       subjects.push(subject);
+    }
+
+    forkJoin(subjects).subscribe({
+      next: (i) => { this.fourthStepProgress(i) },
+      complete: () => { this.fourthStepComplete() },
+      error: (error) => { this.fourthStepError(error) }
     });
-
-    return (forkJoin(subjects));
-
     // const subject = new Subject<any>();
     // indexedViews.forEach((view, i) => {
     //   new Promise(() => {
@@ -280,6 +285,7 @@ export class ReplicateDatabaseComponent implements OnInit {
 
   fourthStepProgress(proceedViews) {
     this.percent = (proceedViews / indexedViews.length) * 100;
+    console.log("FOURTH PROGRESS : " + proceedViews);
     this.completion = proceedViews + '/' + indexedViews.length;
   }
 
@@ -289,8 +295,8 @@ export class ReplicateDatabaseComponent implements OnInit {
     }, 1000);
   }
 
-  async fourthStepError() {
-    // faire une popup error creating indexes
+  async fourthStepError(error) {
+    console.log(error);
     const alert = await this.alertCtrl.create({
       header: "Erreur",
       message: "Une erreur s'est produite lors de la construction des index.",
@@ -311,26 +317,32 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.step = 5;
     this.description = "Synchronisation avec la base de données distantes...";
     this.percent = 0;
-    this.completion = '0/' + 0;
+    this.completion = '0/' + syncViews.length;
 
     let subjects = [];
 
-    designDocs.forEach((view, i) => {
+    for (let i = 0, view; view = syncViews[i]; i++) {
       const subject = new Subject<any>();
       const options = { live: false, retry: false, filter: '_view', view: view };
-      this.localDB.sync(view, options)
+      this.localDB.sync(this.remoteDB, options)
       .on('complete', () => {
-          subject.next(i + 1);
+        subject.next(i + 1);
+        // this.fifthStepProgress(i + 1);
           subject.complete();
         })
       .on('error', (error) => {
-          subject.next(i + 1);
-            subject.error(error);
+        subject.next(i + 1);
+        // this.fifthStepProgress(i + 1);
+          subject.error(error);
       });
       subjects.push(subject);
-    });
+    }
 
-    return (forkJoin(subjects));
+    forkJoin(subjects).subscribe({
+      next: (i) => { this.fifthStepProgress(i) },
+      complete: () => { this.fifthStepComplete() },
+      error: (error) => { this.fifthStepError(error) }
+    })
 
     // const subject = new Subject<any>();
     // syncViews.forEach((view, i) => {
@@ -366,13 +378,14 @@ export class ReplicateDatabaseComponent implements OnInit {
     // insomnia stop
     this.dbService.updateDatabasesHardDisk(this.databases);
 
+    console.log("FINIIIIIIIIIII");
     this.router.navigateByUrl('/login');
 
     //update databases in hardisk;
   }
 
   async fifthStepError(error) {
-    // faire une popup error synchronisation
+    console.log(error);
     const alert = await this.alertCtrl.create({
       header: "Erreur",
       message: "Une erreur s'est produite lors de la synchronisation",
