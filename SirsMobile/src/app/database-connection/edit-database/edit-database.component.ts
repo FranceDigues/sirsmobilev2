@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 
 import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,22 +14,21 @@ import { DatabaseModel } from 'src/app/models/database.model';
 })
 export class EditDatabaseComponent implements OnInit {
 
-  databaseForm: FormGroup;
+  @Input() databaseIndex: number;
+  @Output() readonly statusChange = new EventEmitter<Number>()
 
+  databaseForm: FormGroup;
   name: FormControl;
   url: FormControl;
   user_id: FormControl;
   password: FormControl;
   databases: Array<DatabaseModel> = [];
-  idDB = 0;
 
   constructor(private formBuilder: FormBuilder, private router: Router,
     private nativeStorage: NativeStorage, private route: ActivatedRoute,
     private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.idDB = parseInt(this.route.snapshot.paramMap.get('id'));
-    console.log("id", this.idDB);
     this.nativeStorage.getItem('databases')
     .then(
       (data) => {
@@ -42,10 +41,10 @@ export class EditDatabaseComponent implements OnInit {
       }
     ).then(
       () => {
-        this.name = this.formBuilder.control(this.databases[this.idDB].name, Validators.required);
-        this.url = this.formBuilder.control(this.databases[this.idDB].url, Validators.required);
-        this.user_id = this.formBuilder.control(this.databases[this.idDB].user_id, Validators.required);
-        this.password = this.formBuilder.control(this.databases[this.idDB].password, Validators.required);
+        this.name = this.formBuilder.control(this.databases[this.databaseIndex].name, Validators.required);
+        this.url = this.formBuilder.control(this.databases[this.databaseIndex].url, Validators.required);
+        this.user_id = this.formBuilder.control(this.databases[this.databaseIndex].user_id, Validators.required);
+        this.password = this.formBuilder.control(this.databases[this.databaseIndex].password, Validators.required);
         this.databaseForm = this.formBuilder.group({
           name: this.name,
           url: this.url,
@@ -58,12 +57,11 @@ export class EditDatabaseComponent implements OnInit {
   }
 
   onBack() {
-    this.router.navigateByUrl('/database-connection');
+    this.statusChange.emit(0);
   }
 
   editStorage() {
-        this.databases[this.idDB] = this.databaseForm.value;
-        // this.nativeStorage.setItem('databases', this.databases);
+        this.databases[this.databaseIndex] = this.databaseForm.value;
         this.dbService.updateDatabasesHardDisk(this.databases);
         this.onBack();
   }

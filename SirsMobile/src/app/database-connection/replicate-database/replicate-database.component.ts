@@ -1,21 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Subject } from 'rxjs';
 import { DatabaseService } from './../../database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
-import { designDocs, indexedViews, syncViews } from './couchDB-Vues';
+import { designDocs, indexedViews } from './couchDB-Vues';
 import { AlertController } from '@ionic/angular';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 
 @Component({
   selector: 'app-replicate-database',
   templateUrl: './replicate-database.component.html',
-  styleUrls: ['./replicate-database.component.scss'],
+  styleUrls: ['./replicate-database.component.scss']
 })
 export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
-  databaseIndex = 0;
+  @Input() databaseIndex: number;
+  @Output() readonly statusChange = new EventEmitter<Number>()
+
   step;
   description;
   percent;
@@ -36,7 +38,6 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.insomnia.keepAwake();
-    this.databaseIndex = parseInt(this.route.snapshot.paramMap.get('id'));
     this.databases = await this.dbService.getDatabasesHardDisk();
     this.activeDb = this.databases[this.databaseIndex];
     this.localDB = await this.dbService.getLocalDB(this.activeDb);
@@ -45,6 +46,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.localDB.info( // faire une demande à Hilmi pour changer ça
       () => {
         console.log("it begins")
+
         this.firstStep();
       },
       (error) => {
@@ -316,9 +318,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.dbService.updateDatabasesHardDisk(this.databases);
 
     console.log("FINIIIIIIIIIII");
+    this.statusChange.emit(0);
     // this.router.navigateByUrl('/login');
-
-    //update databases in hardisk;
   }
 
   async fifthStepError(error) {
@@ -341,7 +342,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   backToDatabase() {
-    this.router.navigateByUrl('/database-connection');
+    this.statusChange.emit(0);
   }
 
 }

@@ -14,50 +14,42 @@ export class DatabaseChoiceComponent implements OnInit {
 
   databases: Array<DatabaseModel>;
   selectedDatabase: DatabaseModel;
+  status = 0;
   databaseIndex = 0;
 
   constructor(private router: Router, private nativeStorage: NativeStorage,
     private alertCtrl: AlertController, private dbService: DatabaseService) {}
 
-  ngOnInit() {
-    console.log("houhou");
-    // this.databases = await this.dbService.getDatabasesHardDisk();
-    this.nativeStorage.getItem('databases')
-    .then(
-      (data) => {
-        console.log(data);
-        this.databases = data;
-      },
-      (error) => {
-        console.log('There is no database in hard disk', error);
-      }
-    )
+  async ngOnInit() {
+    this.databases = await this.dbService.getDatabasesHardDisk();
+  }
+
+  async changeStatus(status: number) {
+    this.status = status;
+    this.databases = await this.dbService.getDatabasesHardDisk();
   }
 
   selectDB(db) {
-    console.log("DB SELECTED : ");
     console.log(db);
     if (db != this.selectedDatabase) {
-      console.log("CHANGEMENT DE DATABASE");
       this.dbService.changeDatabase();
     }
     this.selectedDatabase = db;
     for (let i = 0; i < this.databases.length; i++) {
       if (this.databases[i] === this.selectedDatabase) {
         this.databaseIndex = i;
-        console.log("index");
-        console.log(this.databaseIndex);
+        console.log("index : " + this.databaseIndex);
         return;
       }
     }
   }
 
   addDatabase() {
-    this.router.navigateByUrl('/database-connection/add-database');
+    this.status = 1;
   }
 
   editDatabase() {
-    this.router.navigate(['/database-connection/edit-database', this.databaseIndex]);
+    this.status = 2;
   }
 
   async removeDatabase() {
@@ -67,6 +59,7 @@ export class DatabaseChoiceComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: "Suppression d'une base de données",
       message: "Voulez-vous vraiment supprimer cette base de données",
+      backdropDismiss: false,
       buttons: [
         {
           text: 'Annuler',
@@ -75,9 +68,8 @@ export class DatabaseChoiceComponent implements OnInit {
         {
           text: 'OK',
           handler: () => {
-            this.databases.slice(this.databaseIndex, 1);
+            this.databases.splice(this.databaseIndex, 1);
             this.dbService.updateDatabasesHardDisk(this.databases);
-            // this.nativeStorage.setItem('databases', this.databases);
             this.selectedDatabase = null;
             return;
           }
@@ -89,7 +81,7 @@ export class DatabaseChoiceComponent implements OnInit {
 
   validateDatabase() {
     if (this.selectedDatabase.replicated == false) {
-      this.router.navigate(['/database-connection/replicate-database', this.databaseIndex]);
+      this.status = 3;
     } else {
       console.log("GO TO LOGIN BCS DB ALREADY REPLICATED");
     }

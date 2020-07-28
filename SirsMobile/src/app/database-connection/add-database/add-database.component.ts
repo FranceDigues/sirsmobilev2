@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
@@ -9,6 +9,8 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
   styleUrls: ['./add-database.component.scss'],
 })
 export class AddDatabaseComponent implements OnInit {
+
+  @Output() readonly statusChange = new EventEmitter<Number>()
 
   databaseForm: FormGroup;
 
@@ -35,7 +37,7 @@ export class AddDatabaseComponent implements OnInit {
   }
 
   onBack() {
-    this.router.navigateByUrl('/database-connection');
+    this.statusChange.emit(0);
   }
 
   addStorage() {
@@ -55,5 +57,4 @@ export class AddDatabaseComponent implements OnInit {
       }
     );
   }
-
 }
