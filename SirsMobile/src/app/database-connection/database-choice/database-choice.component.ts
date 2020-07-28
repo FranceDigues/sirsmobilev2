@@ -35,8 +35,8 @@ export class DatabaseChoiceComponent implements OnInit {
   }
 
   selectDB(db) {
-    console.log("arr");
-    console.log(this.databases);
+    console.log("DB SELECTED : ");
+    console.log(db);
     if (db != this.selectedDatabase) {
       console.log("CHANGEMENT DE DATABASE");
       this.dbService.changeDatabase();
@@ -91,7 +91,7 @@ export class DatabaseChoiceComponent implements OnInit {
     if (this.selectedDatabase.replicated == false) {
       this.router.navigate(['/database-connection/replicate-database', this.databaseIndex]);
     } else {
-      this.router.navigateByUrl('/login');
+      console.log("GO TO LOGIN BCS DB ALREADY REPLICATED");
     }
   }
 

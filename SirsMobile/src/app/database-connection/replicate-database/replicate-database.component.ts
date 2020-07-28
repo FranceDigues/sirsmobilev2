@@ -41,6 +41,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.activeDb = this.databases[this.databaseIndex];
     this.localDB = await this.dbService.getLocalDB(this.activeDb);
     this.remoteDB = await this.dbService.getRemoteDB(this.activeDb);
+    console.log(this.activeDb);
     this.localDB.info( // faire une demande à Hilmi pour changer ça
       () => {
         console.log("it begins")
@@ -83,6 +84,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   async firstStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
       header: "Erreur",
       message: "Une erreur s'est produite lors de la connexion à la base de données.",
       buttons: [
@@ -140,6 +142,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   async secondStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
       header: "Erreur",
       message: "Une erreur s'est produite lors du téléchargement des documents.",
       buttons: [
@@ -210,6 +213,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   async thirdStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
       header: "Erreur",
       message: "Une erreur s'est produite lors de la préparation de l'espace de travail.",
       buttons: [
@@ -273,6 +277,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   async fourthStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
       header: "Erreur",
       message: "Une erreur s'est produite lors de la construction des index.",
       buttons: [
@@ -319,6 +324,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   async fifthStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
       header: "Erreur",
       message: "Une erreur s'est produite lors de la synchronisation",
       buttons: [
