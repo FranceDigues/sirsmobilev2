@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { defer, forkJoin, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DatabaseService } from './../../database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 import { designDocs, indexedViews, syncViews } from './couchDB-Vues';
 import { AlertController } from '@ionic/angular';
-// import { Defer } from './defer';
 
 @Component({
   selector: 'app-replicate-database',
@@ -157,38 +156,37 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.percent = 0;
     this.completion = '0/' + designDocs.length;
 
-    let subjects = [];
+    let promises = [];
 
     for (let i = 0, element; element = designDocs[i]; i++) {
-      const subject = new Subject<any>();
-      this.localDB.put(element).then(
+      let promise = this.localDB.put(element).then(
         () => {
           console.log("3 - EN COURS");
-          // this.thirdStepProgess(i + 1);
-          subject.next(i + 1);
-          subject.complete();
+          this.thirdStepProgess(i + 1);
         },
         (error) => {
           console.log("SECOND CASE" + error);
-          // this.thirdStepProgess(i + 1);
-          subject.next(i + 1);
           if (error.status === 409) { // already done
+            this.thirdStepProgess(i + 1);
             console.log("3 - COMPLETE");
-            subject.complete();
-            // this.thirdStepComplete();
           } else {
-            // this.thirdStepError(error);
-            subject.error(error);
+            this.thirdStepError(error);
           }
       });
-      subjects.push(subject);
+      promises.push(promise);
     }
 
-    forkJoin(subjects).subscribe({
-      next: (i) => { this.thirdStepProgess(i) },
-      complete: () => { this.thirdStepComplete() },
-      error: (error) => { this.thirdStepError(error) }
-    });
+    Promise.all(promises)
+    .then(
+      () => {
+        this.thirdStepComplete();
+      },
+      (error) => {
+        console.log("Faut check les views already in local db");
+        console.log(error);
+        this.thirdStepError(error);
+      }
+    )
   }
 
   thirdStepProgess(proceedDocs) {
@@ -229,58 +227,30 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.percent = 0;
     this.completion = '0/' + indexedViews.length;
 
-    let subjects = [];
+    let promises = [];
+    let proceedViews = 0;
 
     for (let i = 0, view; view = indexedViews[i]; i++) {
-      console.log("FOURTH");
-      console.log(i);
-      const subject = new Subject<any>();
-      this.localDB.query(view, { limit: 0 }).then(
+      let promise = this.localDB.query(view, { limit: 0 }).then(
         () => {
-          subject.next(i + 1);
-          // this.fourthStepProgress(i + 1);
-          subject.complete();
+          this.fourthStepProgress(++proceedViews);
         },
         (error) => {
-          subject.next(i + 1);
-          // this.fourthStepProgress(i + 1);
-          subject.error(error);
+          this.fourthStepError(error);
         }
       );
-      subjects.push(subject);
+      promises.push(promise);
     }
 
-    forkJoin(subjects).subscribe({
-      next: (i) => { this.fourthStepProgress(i) },
-      complete: () => { this.fourthStepComplete() },
-      error: (error) => { this.fourthStepError(error) }
-    });
-    // const subject = new Subject<any>();
-    // indexedViews.forEach((view, i) => {
-    //   new Promise(() => {
-    //     this.localDB.query(view, { limit: 0 }).then(
-    //       () => {
-    //         subject.next(i + 1);
-    //         subject.complete();
-    //       },
-    //       (error) => {
-    //         subject.next(i + 1);
-    //         if (error.status === 409) {
-    //           subject.complete();
-    //         } else {
-    //           subject.error(error);
-    //         }
-    //       }
-    //     );
-    //     // return
-    //   });
-    // });
-
-    // subject.subscribe({
-    //   next: this.fourthStepProgress,
-    //   complete: this.fourthStepComplete,
-    //   error: this.fourthStepError
-    // })
+    Promise.all(promises)
+    .then(
+      () => {
+        this.fourthStepComplete();
+      },
+      (error) => {
+        this.fourthStepError(error);
+      }
+    )
   }
 
   fourthStepProgress(proceedViews) {
@@ -317,60 +287,18 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.step = 5;
     this.description = "Synchronisation avec la base de données distantes...";
     this.percent = 0;
-    this.completion = '0/' + syncViews.length;
+    this.completion = '0/1';
 
-    let subjects = [];
-
-    for (let i = 0, view; view = syncViews[i]; i++) {
-      const subject = new Subject<any>();
-      const options = { live: false, retry: false, filter: '_view', view: view };
-      this.localDB.sync(this.remoteDB, options)
-      .on('complete', () => {
-        subject.next(i + 1);
-        // this.fifthStepProgress(i + 1);
-          subject.complete();
-        })
-      .on('error', (error) => {
-        subject.next(i + 1);
-        // this.fifthStepProgress(i + 1);
-          subject.error(error);
-      });
-      subjects.push(subject);
-    }
-
-    forkJoin(subjects).subscribe({
-      next: (i) => { this.fifthStepProgress(i) },
-      complete: () => { this.fifthStepComplete() },
-      error: (error) => { this.fifthStepError(error) }
+    const options = { live: false, retry: false };
+    this.localDB.sync(this.remoteDB, options)
+    .on('complete', () => {
+      this.completion = "1/1";
+      this.percent = 100;
+      this.fifthStepComplete();
     })
-
-    // const subject = new Subject<any>();
-    // syncViews.forEach((view, i) => {
-    //   new Promise(() => {
-    //     const options = { live: false, retry: false, filter: '_view', view: view };
-    //     this.localDB.sync(view, options)
-    //     .on('complete', () => {
-    //         subject.next(i + 1);
-    //         subject.complete();
-    //     })
-    //     .on('error', (error) => {
-    //       subject.next(i + 1);
-    //       subject.error(error);
-    //     });
-    //     // return
-    //   });
-    // });
-
-    // subject.subscribe({
-    //   next: this.fifthStepProgress,
-    //   complete: this.fifthStepComplete,
-    //   error: this.fifthStepError
-    // })
-  }
-
-  fifthStepProgress(proceedViews) {
-    this.percent = (proceedViews / syncViews.length) * 100;
-    this.completion = proceedViews + '/' + syncViews.length;
+    .on('error', (error) => {
+      this.fifthStepError(error);
+    })
   }
 
   fifthStepComplete() {
@@ -379,7 +307,7 @@ export class ReplicateDatabaseComponent implements OnInit {
     this.dbService.updateDatabasesHardDisk(this.databases);
 
     console.log("FINIIIIIIIIIII");
-    this.router.navigateByUrl('/login');
+    // this.router.navigateByUrl('/login');
 
     //update databases in hardisk;
   }
