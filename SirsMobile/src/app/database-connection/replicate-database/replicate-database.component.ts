@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Subject } from 'rxjs';
@@ -6,13 +6,14 @@ import { DatabaseService } from './../../database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 import { designDocs, indexedViews, syncViews } from './couchDB-Vues';
 import { AlertController } from '@ionic/angular';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
 
 @Component({
   selector: 'app-replicate-database',
   templateUrl: './replicate-database.component.html',
   styleUrls: ['./replicate-database.component.scss'],
 })
-export class ReplicateDatabaseComponent implements OnInit {
+export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   databaseIndex = 0;
   step;
@@ -26,7 +27,7 @@ export class ReplicateDatabaseComponent implements OnInit {
 
   constructor(private nativeStorage: NativeStorage,
     private dbService: DatabaseService, private router: Router, private route: ActivatedRoute,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController, private insomnia: Insomnia) {
       this.step = 0;
       this.description = "Loading...";
       this.percent = 0;
@@ -34,6 +35,7 @@ export class ReplicateDatabaseComponent implements OnInit {
     }
 
   async ngOnInit() {
+    this.insomnia.keepAwake();
     this.databaseIndex = parseInt(this.route.snapshot.paramMap.get('id'));
     this.databases = await this.dbService.getDatabasesHardDisk();
     this.activeDb = this.databases[this.databaseIndex];
@@ -50,13 +52,16 @@ export class ReplicateDatabaseComponent implements OnInit {
     )
   }
 
+  ngOnDestroy(): void {
+    this.insomnia.allowSleepAgain();
+  }
+
   firstStep() {
     this.step = 1;
     this.description = "Connexion à la base de données...";
     this.percent = 0;
     this.completion = null;
-    // insomnia start
-    this.remoteDB.info()
+    this.remoteDB.info() // find another solution
     .then(
       (result) => {
         console.log(result);
@@ -303,7 +308,6 @@ export class ReplicateDatabaseComponent implements OnInit {
 
   fifthStepComplete() {
     this.databases[this.databaseIndex].replicated = true;
-    // insomnia stop
     this.dbService.updateDatabasesHardDisk(this.databases);
 
     console.log("FINIIIIIIIIIII");

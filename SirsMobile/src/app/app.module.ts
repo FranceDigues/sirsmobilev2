@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { DatabaseConnectionPageModule } from './database-connection/database-con
     StatusBar,
     SplashScreen,
     NativeStorage,
+    Insomnia,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

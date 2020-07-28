@@ -40,6 +40,7 @@ export class DatabaseService {
           iosDatabaseLocation: 'Library',
           androidDatabaseImplementation: 2
         });
+      this.localDB.setMaxListeners(15); // Indicate there is not memory leak in the Fourth Step (10 listeners by default)
     }
     return (this.localDB);
   }
