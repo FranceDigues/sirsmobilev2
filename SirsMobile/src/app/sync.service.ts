@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,7 @@ export class SyncService {
   completion;
   synch = null;
 
-  constructor(private dbService: DatabaseService, private insomnia: Insomnia,
-    private router: Router) { }
+  constructor(private dbService: DatabaseService, private insomnia: Insomnia) { }
 
   cancelSync() {
     this.sync ? this.synch.cancel() : () => {};
@@ -86,7 +84,6 @@ export class SyncService {
     this.insomnia.allowSleepAgain();
     setTimeout(() => {
       this.status = 3;
-    }, 2000);
-    this.router.navigateByUrl('/');
+    }, 1000);
   }
 }

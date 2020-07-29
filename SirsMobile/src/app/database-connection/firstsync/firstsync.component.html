@@ -25,4 +25,9 @@
 <div *ngIf="syncService.status === 3">
   <p>Une erreur s'est produite pendant la synchronisation.</p>
   <p>Vous allez être rediriger au menu des bases de données...</p>
+  <div class="sirs-card-action">
+    <button type="button" (click)="router.navigateByUrl('/')" class="btn-flat waves-effect waves-teal">
+      <ion-icon name="arrow-back-outline"></ion-icon>Retour
+    </button>
+  </div>
 </div>
