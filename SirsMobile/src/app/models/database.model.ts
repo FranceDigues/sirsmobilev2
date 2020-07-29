@@ -4,4 +4,5 @@ export interface DatabaseModel {
     user_id: string;
     password: string;
     replicated?: boolean;
+    lastSync?: number;
 }

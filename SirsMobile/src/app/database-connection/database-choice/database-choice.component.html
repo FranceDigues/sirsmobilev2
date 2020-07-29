@@ -20,11 +20,11 @@
           <ion-icon name="add-circle-outline"></ion-icon>
           Ajouter une base
       </button>
-  
+
       <button type="button" ion-button class="btn-flat waves-effect waves-light" icon-start [disabled]="!selectedDatabase" (click)="editDatabase()">
               <ion-icon name="pencil-outline"></ion-icon>Edition
       </button>
-  
+
       <button type="button" ion-button class="btn-flat waves-effect waves-light" icon-start [disabled]="!selectedDatabase" (click)="removeDatabase()">
               <ion-icon name="trash-outline"></ion-icon>Supprimer
       </button>
@@ -48,7 +48,7 @@
   </div>
 
   <div *ngSwitchCase="4">
-    <app-login-database></app-login-database>
+    <app-login-database (statusChange)="changeStatus($event)"></app-login-database>
   </div>
 
 </div>

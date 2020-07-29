@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseModel } from 'src/app/models/database.model';
 import { AlertController } from '@ionic/angular';
-import { EditDatabaseComponent } from '../edit-database/edit-database.component';
 import { DatabaseService } from '../../database.service';
 @Component({
   selector: 'app-database-choice',
@@ -46,15 +45,14 @@ export class DatabaseChoiceComponent implements OnInit {
   }
 
   selectDB(db) {
-    console.log(db);
     if (db != this.selectedDatabase) {
       this.dbService.changeDatabase();
     }
     this.selectedDatabase = db;
+    this.dbService.setActiveDB(this.selectedDatabase);
     for (let i = 0; i < this.databases.length; i++) {
       if (this.databases[i] === this.selectedDatabase) {
         this.databaseIndex = i;
-        console.log("index : " + this.databaseIndex);
         return;
       }
     }

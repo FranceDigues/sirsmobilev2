@@ -15,6 +15,7 @@ import { EditDatabaseComponent } from './edit-database/edit-database.component';
 import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
 import { DatabaseService } from '../database.service';
 import { LoginDatabaseComponent } from './login-database/login-database.component';
+import { AuthService } from '../auth.service';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { LoginDatabaseComponent } from './login-database/login-database.componen
   ],
   providers: [
     DatabaseService,
+    AuthService
   ],
   declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,
     ReplicateDatabaseComponent, LoginDatabaseComponent]
