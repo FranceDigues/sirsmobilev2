@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import MD5 from 'crypto-js/md5'
-import { Subject } from 'rxjs';
-import { rejects } from 'assert';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +27,6 @@ export class AuthService {
             let hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
               this.user = result.rows[0].doc
-              console.log("CA MARCHE LA CON DE TOI");
               resolve();
             } else {
               console.log("error");

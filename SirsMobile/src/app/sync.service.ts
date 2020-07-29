@@ -15,26 +15,25 @@ export class SyncService {
   completion;
   synch = null;
 
-  constructor(private dbService: DatabaseService, private insomnia: Insomnia) {
-    this.localDB = this.dbService.getLocalDB();
-    this.remoteDB = this.dbService.getRemoteDB();
-  }
+  constructor(private dbService: DatabaseService, private insomnia: Insomnia) { }
 
   cancelSync() {
-    // this.sync ? this.sync.cancel() : () => {}; // TODO this not working
+    this.sync ? this.synch.cancel() : () => {};
     // TODO GO PATH /MAIN
   }
 
-  sync() {
+  async sync() {
     this.percent = 0;
     this.completion = '0/1';
     this.status = 1;
 
     this.insomnia.keepAwake();
+    this.localDB = await this.dbService.getLocalDB();
+    this.remoteDB = await this.dbService.getRemoteDB();
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
-    this.sync = PouchDB.sync(this.localDB, this.remoteDB, options)
+    this.synch = PouchDB.sync(this.localDB, this.remoteDB, options)
     .on('complete', () => {
       subject.next(++index);
       subject.complete();
@@ -74,6 +73,7 @@ export class SyncService {
       () => {
         this.dbService.activeDB.lastSync = new Date().getTime();
         this.status = 2;
+        console.log("SYNC FINISH");
         // TODO MAP MANAGER CLEAR ALL
         // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
       }, 1000)

@@ -50,6 +50,7 @@ export class DatabaseChoiceComponent implements OnInit {
     }
     this.selectedDatabase = db;
     this.dbService.setActiveDB(this.selectedDatabase);
+    console.log("ACTIVE DB", this.dbService.activeDB);
     for (let i = 0; i < this.databases.length; i++) {
       if (this.databases[i] === this.selectedDatabase) {
         this.databaseIndex = i;
