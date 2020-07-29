@@ -17,16 +17,26 @@ export class DatabaseChoiceComponent implements OnInit {
   status = 0;
   databaseIndex = 0;
 
-  constructor(private router: Router, private nativeStorage: NativeStorage,
+  constructor(private router: Router,
     private alertCtrl: AlertController, private dbService: DatabaseService) {}
 
-  async ngOnInit() {
-    this.databases = await this.dbService.getDatabasesHardDisk();
+  ngOnInit() {
+    this.dbService.getDatabasesHardDisk()
+    .then(
+      (databases) => {
+        this.databases = databases;
+      }
+    )
   }
 
-  async changeStatus(status: number) {
+  changeStatus(status: number) {
     this.status = status;
-    this.databases = await this.dbService.getDatabasesHardDisk();
+    this.dbService.getDatabasesHardDisk()
+    .then(
+      (databases) => {
+        this.databases = databases;
+      }
+    )
   }
 
   selectDB(db) {

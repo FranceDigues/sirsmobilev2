@@ -36,23 +36,28 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       this.completion = null;
     }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.insomnia.keepAwake();
-    this.databases = await this.dbService.getDatabasesHardDisk();
-    this.activeDb = this.databases[this.databaseIndex];
-    this.localDB = await this.dbService.getLocalDB(this.activeDb);
-    this.remoteDB = await this.dbService.getRemoteDB(this.activeDb);
-    console.log(this.activeDb);
-    this.localDB.info( // faire une demande à Hilmi pour changer ça
-      () => {
-        console.log("it begins")
-
-        this.firstStep();
-      },
-      (error) => {
-        console.log("Error " + error);
+    this.dbService.getDatabasesHardDisk()
+    .then(
+      (databases) => {
+        this.databases = databases
       }
-    )
+    );
+    this.activeDb = this.databases[this.databaseIndex];
+    this.dbService.getLocalDB(this.activeDb)
+    .then(
+      (localDB) => {
+        this.localDB = localDB;
+      }
+    );
+    this.dbService.getRemoteDB(this.activeDb)
+    .then(
+      (remoteDB) => {
+        this.remoteDB = remoteDB;
+        this.firstStep();
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -64,7 +69,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.description = "Connexion à la base de données...";
     this.percent = 0;
     this.completion = null;
-    this.remoteDB.info() // find another solution
+    this.remoteDB.info()
     .then(
       (result) => {
         console.log(result);

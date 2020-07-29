@@ -43,12 +43,12 @@ export class AddDatabaseComponent implements OnInit {
   addStorage() {
     this.nativeStorage.getItem('databases')
     .then(
-      data => {
+      (data) => {
         data.push(this.databaseForm.value);
         this.nativeStorage.setItem('databases', data);
         this.onBack();
       },
-      error => {
+      (error) => {
         let array = [
           this.databaseForm.value
         ]

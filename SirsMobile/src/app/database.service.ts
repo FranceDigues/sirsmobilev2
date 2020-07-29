@@ -14,7 +14,7 @@ export class DatabaseService {
 
   constructor(private nativeStorage: NativeStorage) { }
 
-  async getRemoteDB(activeDB: DatabaseModel) {
+  getRemoteDB(activeDB: DatabaseModel) {
     if (this.remoteDB == null) {
       console.log("On rentre dans la fonction getRemoteDB");
       this.remoteDB = new PouchDB(activeDB.url,
@@ -24,15 +24,11 @@ export class DatabaseService {
             password: activeDB.password
           }
         });
-      // this.remoteDB.login(activeDB.name, activeDB.password).then(
-      //   () => { console.log("Login Works"); },
-      //   (error) => { console.log("Login error" + error) }
-      // )
     }
     return (this.remoteDB)
   }
 
-  async getLocalDB(activeDB: DatabaseModel) {
+  getLocalDB(activeDB: DatabaseModel) {
     if (this.localDB == null) {
       console.log("On RENTRE dans la fonction getLocalDB");
       this.localDB = new PouchDB(activeDB.name,

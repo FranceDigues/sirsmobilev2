@@ -49,7 +49,7 @@ ionic capacitor run android
 
 
 
-***Error fetch Android***
+***Error fetch Android Ionic Project***
 
 ***if you find this error '(failed)net::ERR_CLEARTEXT_NOT_PERMITTED', ADD THIS***
 
@@ -59,7 +59,6 @@ ionic capacitor run android
     <application android:networkSecurityConfig="@xml/network_security_config" android:usesCleartextTraffic="true" />
 </edit-config>
 ```
-
 
 ***in android/app/src/main/AndroidManifest.xml, in plateform tag***
 ```
