@@ -14,7 +14,7 @@ export class DatabaseService {
 
   constructor(private nativeStorage: NativeStorage) { }
 
-  getRemoteDB(activeDB: DatabaseModel) {
+  async getRemoteDB(activeDB: DatabaseModel) {
     if (this.remoteDB == null) {
       console.log("On rentre dans la fonction getRemoteDB");
       this.remoteDB = new PouchDB(activeDB.url,
@@ -45,7 +45,7 @@ export class DatabaseService {
     this.nativeStorage.setItem('databases', databases);
   }
 
-  async getDatabasesHardDisk() {
+  getDatabasesHardDisk() {
     return this.nativeStorage.getItem('databases');
   }
 

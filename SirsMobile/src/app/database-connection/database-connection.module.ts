@@ -14,6 +14,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { EditDatabaseComponent } from './edit-database/edit-database.component';
 import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
 import { DatabaseService } from '../database.service';
+import { LoginDatabaseComponent } from './login-database/login-database.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { DatabaseService } from '../database.service';
   providers: [
     DatabaseService,
   ],
-  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent, ReplicateDatabaseComponent]
+  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,
+    ReplicateDatabaseComponent, LoginDatabaseComponent]
 })
 export class DatabaseConnectionPageModule {}

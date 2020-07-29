@@ -40,22 +40,15 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.insomnia.keepAwake();
     this.dbService.getDatabasesHardDisk()
     .then(
-      (databases) => {
+      async (databases) => {
         this.databases = databases
-      }
-    );
-    this.activeDb = this.databases[this.databaseIndex];
-    this.dbService.getLocalDB(this.activeDb)
-    .then(
-      (localDB) => {
-        this.localDB = localDB;
-      }
-    );
-    this.dbService.getRemoteDB(this.activeDb)
-    .then(
-      (remoteDB) => {
-        this.remoteDB = remoteDB;
+        this.activeDb = this.databases[this.databaseIndex];
+        this.localDB = this.dbService.getLocalDB(this.activeDb)
+        this.remoteDB = await this.dbService.getRemoteDB(this.activeDb);
         this.firstStep();
+      },
+      (error) => {
+        console.log("no 'databases' in HardDisk " + error);
       }
     );
   }
@@ -323,8 +316,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.dbService.updateDatabasesHardDisk(this.databases);
 
     console.log("FINIIIIIIIIIII");
-    this.statusChange.emit(0);
-    // this.router.navigateByUrl('/login');
+    this.statusChange.emit(4);
   }
 
   async fifthStepError(error) {

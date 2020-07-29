@@ -25,6 +25,9 @@ export class DatabaseChoiceComponent implements OnInit {
     .then(
       (databases) => {
         this.databases = databases;
+      },
+      (error) => {
+        console.log("no 'databases' in HardDisk " + error);
       }
     )
   }
@@ -35,6 +38,9 @@ export class DatabaseChoiceComponent implements OnInit {
     .then(
       (databases) => {
         this.databases = databases;
+      },
+      (error) => {
+        console.log("no 'databases' in HardDisk " + error);
       }
     )
   }
@@ -93,7 +99,7 @@ export class DatabaseChoiceComponent implements OnInit {
     if (this.selectedDatabase.replicated == false) {
       this.status = 3;
     } else {
-      console.log("GO TO LOGIN BCS DB ALREADY REPLICATED");
+      this.status = 4;
     }
   }
 

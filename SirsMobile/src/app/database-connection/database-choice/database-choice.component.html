@@ -6,7 +6,7 @@
       <h2 class="sirs-card-title">Choix de la base de données</h2>
       <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
       <ul class="collection">
-          <li class="collection-item avatar" *ngFor="let db of databases | async"
+          <li class="collection-item avatar" *ngFor="let db of databases"
               [class.selected]="db === selectedDatabase" (click)="selectDB(db)">
               <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
               <span class="title">{{db.name}}</span>
@@ -45,6 +45,10 @@
 
   <div *ngSwitchCase="3">
     <app-replicate-database [databaseIndex]="databaseIndex" (statusChange)="changeStatus($event)" ></app-replicate-database>
+  </div>
+
+  <div *ngSwitchCase="4">
+    <app-login-database></app-login-database>
   </div>
 
 </div>
