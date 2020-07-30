@@ -14,7 +14,12 @@ export class FirstsyncComponent implements OnInit {
     public dbService: DatabaseService, public router: Router) { }
 
   ngOnInit() {
-    this.syncService.sync();
+    this.syncService.sync()
+    .then(
+      () => {
+        this.router.navigateByUrl('/main');
+      }
+    )
   }
 
 }
