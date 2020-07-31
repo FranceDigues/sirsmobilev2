@@ -14,12 +14,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
+import { LibMapModule } from './lib-map/map.module';
+import { LibCameraModule } from './lib-camera/camera.module';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
-  , HttpClientModule, DatabaseConnectionPageModule],
+  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule],
   providers: [
     StatusBar,
     SplashScreen,

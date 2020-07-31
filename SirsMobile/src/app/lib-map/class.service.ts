@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import { AMModel } from './am.model';
+import { ElementRef, Injectable } from '@angular/core';
+import { ClassMapModel } from './interface.model';
 import Map from 'ol/Map';
 import Layer from 'ol/layer';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export abstract class AmService implements AMModel {
+export abstract class ClassMapService implements ClassMapModel {
 
   map: Map;
 
@@ -16,7 +17,7 @@ export abstract class AmService implements AMModel {
     return (this.map);
   }
 
-  abstract createMap(name: string, target?: string): Map;
+  abstract createMap(name: string, target?: ElementRef): Map;
 
   abstract addLayer(layer: Layer): void;
 

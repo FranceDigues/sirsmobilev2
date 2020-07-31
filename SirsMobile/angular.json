@@ -32,8 +32,8 @@
               }
             ],
             "styles": [
-              "./node_modules/ol/ol.css",
-              "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
+              "node_modules/ol/ol.css",
+              "node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
               "node_modules/materialize-css/dist/css/materialize.min.css",
               {
                 "input": "src/theme/variables.scss"
@@ -108,7 +108,8 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css"
             ],
-            "scripts": [],
+            "scripts": [
+            ],
             "assets": [
               {
                 "glob": "favicon.ico",
