@@ -5,7 +5,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx'
 @Injectable({
     providedIn: 'root'
 })
-export class ClassCameraService implements CameraModel {
+export class CameraService implements CameraModel {
 
     image: string;
 

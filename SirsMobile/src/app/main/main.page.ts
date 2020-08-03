@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { OLService } from '../lib-map/ol.service';
-import { ClassCameraService } from '../lib-camera/class.service';
+import { CameraService } from '../lib-camera/camera.service';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -22,7 +22,7 @@ export class MainPage implements AfterViewInit {
   map: Map;
   image = "";
 
-  constructor(private ol: OLService, private cam: ClassCameraService) { }
+  constructor(private ol: OLService, private cam: CameraService) { }
 
   ngAfterViewInit() {
     this.ol.createMap('map');

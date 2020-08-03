@@ -1,0 +1,22 @@
+= README Librairie Map
+Doc Writer <alexandre.juan@geomatys.com>
+v1.0, 03-08-2020
+
+Afin de pouvoir utiliser cette librairie, vous devez avant ajouter dans votre projet ionic les dependances suivantes :
+
+[source, json]
+package.json
+----
+"ol": "^6.3.1"
+----
+
+Add the OpenLayers style in angular.json
+
+[source, json]
+package.json
+----
+"styles": [
+    "node_modules/ol/ol.css"
+    ...
+]
+----

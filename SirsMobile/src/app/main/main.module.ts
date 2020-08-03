@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
-import { ClassCameraService } from '../lib-camera/class.service';
+import { CameraService } from '../lib-camera/camera.service';
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { ClassCameraService } from '../lib-camera/class.service';
     MainPageRoutingModule,
   ],
   providers: [
-    ClassCameraService
+    CameraService
   ],
   declarations: [MainPage]
 })
