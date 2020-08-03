@@ -20,6 +20,7 @@ import OSM from 'ol/source/OSM';
 export class MainPage implements AfterViewInit {
 
   map: Map;
+  image = "";
 
   constructor(private ol: OLService, private cam: ClassCameraService) { }
 
@@ -36,6 +37,13 @@ export class MainPage implements AfterViewInit {
   takePhoto() {
     let res = this.cam.takePhoto();
     console.log(res);
+    this.image = res;
+  }
+
+  getPhoto() {
+    let res = this.cam.getPictureInGallery();
+    console.log(res);
+    this.image = res;
   }
 
 }

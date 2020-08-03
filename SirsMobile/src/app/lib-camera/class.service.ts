@@ -7,23 +7,40 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx'
 })
 export class ClassCameraService implements CameraModel {
 
-    defaultOptions: CameraOptions;
     image: string;
 
     constructor(private camera: Camera) { }
 
+    private async openGallery() {
+        const options: CameraOptions = {
+            quality: 100,
+            destinationType: this.camera.DestinationType.DATA_URL,
+            encodingType: this.camera.EncodingType.JPEG,
+            mediaType: this.camera.MediaType.PICTURE,
+            targetWidth: 1000,
+            targetHeight: 1000,
+            sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+        };
+        return await this.camera.getPicture(options);
+    }
+
     getPictureInGallery(): string {
-        return null;
+        this.openGallery().then(
+            (galleryImage) => {
+                this.image = 'data:image/jpeg;base64,' + galleryImage;
+            }
+        );
+        return this.image;
     }
 
     takePhoto(): string {
-        this.defaultOptions = {
+        const options: CameraOptions = {
             quality: 100,
-            destinationType: this.camera.DestinationType.FILE_URI,
+            destinationType: this.camera.DestinationType.DATA_URL,
             encodingType: this.camera.EncodingType.JPEG,
             mediaType: this.camera.MediaType.PICTURE
         }
-        this.camera.getPicture(this.defaultOptions).then(
+        this.camera.getPicture(options).then(
             (ImageData) => {
                 let base64Image = 'data:image/jpeg;base64,' + ImageData;
                 this.image = base64Image;
