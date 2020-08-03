@@ -14,7 +14,11 @@ export abstract class ClassMapService implements ClassMapModel {
   constructor() { }
 
   getMap(): Map {
-    return (this.map);
+    if (this.map === undefined) {
+      return null;
+    } else {
+      return (this.map);
+    }
   }
 
   abstract createMap(name: string, target?: ElementRef): Map;

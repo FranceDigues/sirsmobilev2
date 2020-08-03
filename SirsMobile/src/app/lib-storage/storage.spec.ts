@@ -2,11 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 import { Storage, IonicStorageModule } from '@ionic/storage';
 import { StorageService } from './storage.service';
-import { CommonModule } from '@angular/common';
-import { provideStorage } from '@ionic/storage/storage';
-import { resolve } from 'dns';
-import { exception } from 'console';
-
 
 describe('Testing StorageService', () => {
     let storageService: StorageService;

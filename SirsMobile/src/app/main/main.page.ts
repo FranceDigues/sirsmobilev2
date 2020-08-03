@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OLService } from '../lib-map/ol.service';
 import { CameraService } from '../lib-camera/camera.service';
 
@@ -22,6 +22,8 @@ export class MainPage implements AfterViewInit {
   map: Map;
   image = "";
 
+  // @ViewChild("map") map: ElementRef;
+
   constructor(private ol: OLService, private cam: CameraService) { }
 
   ngAfterViewInit() {
@@ -34,14 +36,14 @@ export class MainPage implements AfterViewInit {
     ));
   }
 
-  takePhoto() {
-    let res = this.cam.takePhoto();
+  async takePhoto() {
+    let res = await this.cam.takePhoto();
     console.log(res);
     this.image = res;
   }
 
-  getPhoto() {
-    let res = this.cam.getPictureInGallery();
+  async getPhoto() {
+    let res = await this.cam.getPictureInGallery();
     console.log(res);
     this.image = res;
   }
