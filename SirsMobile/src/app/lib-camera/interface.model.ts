@@ -2,7 +2,7 @@ import { CameraOptions } from '@ionic-native/camera/ngx';
 
 export interface CameraModel {
 
-    getPictureInGallery: () => string;
+    getPictureInGallery: () => Promise<string>;
 
-    takePhoto: () => string;
+    takePhoto: () => Promise<string>;
 }

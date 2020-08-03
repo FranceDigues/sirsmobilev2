@@ -11,36 +11,34 @@ export class CameraService implements CameraModel {
 
     constructor(private camera: Camera) { }
 
-    private async openGallery() {
+    async getPictureInGallery(): Promise<string> {
         const options: CameraOptions = {
             quality: 100,
             destinationType: this.camera.DestinationType.DATA_URL,
             encodingType: this.camera.EncodingType.JPEG,
             mediaType: this.camera.MediaType.PICTURE,
-            targetWidth: 1000,
-            targetHeight: 1000,
             sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
         };
-        return await this.camera.getPicture(options);
-    }
-
-    getPictureInGallery(): string {
-        this.openGallery().then(
-            (galleryImage) => {
-                this.image = 'data:image/jpeg;base64,' + galleryImage;
+        await this.camera.getPicture(options).then(
+            (ImageData) => {
+                let base64Image = 'data:image/jpeg;base64,' + ImageData;
+                this.image = base64Image;
+            },
+            (err) => {
+                console.log(err);
             }
-        );
+        )
         return this.image;
     }
 
-    takePhoto(): string {
+    async takePhoto(): Promise<string> {
         const options: CameraOptions = {
             quality: 100,
             destinationType: this.camera.DestinationType.DATA_URL,
             encodingType: this.camera.EncodingType.JPEG,
             mediaType: this.camera.MediaType.PICTURE
         }
-        this.camera.getPicture(options).then(
+        await this.camera.getPicture(options).then(
             (ImageData) => {
                 let base64Image = 'data:image/jpeg;base64,' + ImageData;
                 this.image = base64Image;
