@@ -1,8 +1,6 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CameraService } from "./camera.service"
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx'
-import { ResolveEnd } from '@angular/router';
-import { resolve } from 'dns';
 
 describe('Testing CameraService', () => {
     let cameraService: CameraService;
@@ -14,7 +12,7 @@ describe('Testing CameraService', () => {
                 CameraService,
                 Camera
             ]
-        })
+        });
     });
 
     beforeEach(() => {
@@ -22,12 +20,12 @@ describe('Testing CameraService', () => {
         camera = TestBed.inject(Camera);
     })
 
-    it("#getPictureInGallery should exists", () => {
+    it("getPictureInGallery method should exists", () => {
         let res = typeof cameraService.getPictureInGallery === "function";
         expect(res).toEqual(true);
     })
 
-    it("#getPicture should been called with options in getPictureInGallery", () => {
+    it("getPicture method should been called with options in getPictureInGallery", () => {
         const options: CameraOptions = {
             quality: 100,
             destinationType: camera.DestinationType.DATA_URL,
@@ -42,7 +40,7 @@ describe('Testing CameraService', () => {
         expect(camera.getPicture).toHaveBeenCalledWith(options);
     })
 
-    it("#getPictureInGallery should return data:image/jpeg;base64,test1", async () => {
+    it("getPictureInGallery method should return data:image/jpeg;base64,test1", async () => {
         spyOn(camera, 'getPicture').and
         .returnValue(new Promise((resolve) => {
             resolve('test1');
@@ -51,12 +49,12 @@ describe('Testing CameraService', () => {
         expect(res).toEqual('data:image/jpeg;base64,test1');
     })
 
-    it("#takePhoto should exists", () => {
+    it("takePhoto method should exists", () => {
         let res = typeof cameraService.takePhoto === "function";
         expect(res).toEqual(true);
     })
 
-    it("#getPicture should been called with options in takePhoto", () => {
+    it("getPicture method should been called with options in takePhoto", () => {
         const options: CameraOptions = {
             quality: 100,
             destinationType: camera.DestinationType.DATA_URL,
@@ -71,7 +69,7 @@ describe('Testing CameraService', () => {
         expect(camera.getPicture).toHaveBeenCalledWith(options);
     })
 
-    it("#takePhoto should return data:image/jpeg;base64,test2", async () => {
+    it("takePhoto method should return data:image/jpeg;base64,test2", async () => {
         spyOn(camera, 'getPicture').and
         .returnValue(new Promise((resolve) => {
             resolve('test2');

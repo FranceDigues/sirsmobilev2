@@ -15,10 +15,10 @@ export class StorageService extends ClassStorageService {
         this.storage.set(key, item);
     }
 
-    getItem(key: string): object {
+    async getItem(key: string): Promise<string> {
         let result = null;
 
-        this.storage.get(key)
+        await this.storage.get(key)
         .then(
             (res) => {
                 result = res;

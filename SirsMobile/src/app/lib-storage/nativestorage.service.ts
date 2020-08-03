@@ -15,10 +15,10 @@ export class NativeStorageService extends ClassStorageService {
         this.nativeStorage.setItem(key, item);
     }
 
-    getItem(key: string): object {
+    async getItem(key: string): Promise<object> {
         let result = null;
 
-        this.nativeStorage.getItem(key)
+        await this.nativeStorage.getItem(key)
         .then(
             (res) => {
                 result = res;
