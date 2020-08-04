@@ -15,8 +15,8 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
 })
 export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
-  @Input() databaseIndex: number;
-  @Output() readonly statusChange = new EventEmitter<Number>()
+  @Input() databaseIndex;
+  @Output() readonly statusChange = new EventEmitter<any>();
 
   step;
   description;
@@ -27,11 +27,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   remoteDB;
   localDB;
 
-  constructor(private nativeStorage: NativeStorage,
-    private dbService: DatabaseService, private router: Router, private route: ActivatedRoute,
-    private alertCtrl: AlertController, private insomnia: Insomnia) {
+  constructor(private nativeStorage: NativeStorage, private dbService: DatabaseService,
+              private router: Router, private route: ActivatedRoute, private alertCtrl: AlertController,
+              private insomnia: Insomnia) {
       this.step = 0;
-      this.description = "Loading...";
+      this.description = 'Loading...';
       this.percent = 0;
       this.completion = null;
     }
@@ -41,14 +41,14 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.dbService.getDatabasesHardDisk()
     .then(
       async (databases) => {
-        this.databases = databases
+        this.databases = databases;
         this.activeDb = this.databases[this.databaseIndex];
         this.localDB = this.dbService.getLocalDB();
         this.remoteDB = await this.dbService.getRemoteDB();
         this.firstStep();
       },
       (error) => {
-        console.log("no 'databases' in HardDisk " + error);
+        console.log('no databases in HardDisk ' + error);
       }
     );
   }
@@ -59,7 +59,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   firstStep() {
     this.step = 1;
-    this.description = "Connexion à la base de données...";
+    this.description = 'Connexion à la base de données...';
     this.percent = 0;
     this.completion = null;
     this.remoteDB.info()
@@ -85,8 +85,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: "Erreur",
-      message: "Une erreur s'est produite lors de la connexion à la base de données.",
+      header: 'Erreur',
+      message: 'Une erreur s\'est produite lors de la connexion à la base de données.',
       buttons: [
         {
           text: 'Ok',
@@ -96,24 +96,28 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 
   secondStep(docCount) {
     this.step = 2;
-    this.description = "Téléchargement des documents...";
+    this.description = 'Téléchargement des documents...';
     this.percent = 0;
     this.completion = '0/' + docCount;
 
     const subject = new Subject<any>();
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
-      console.log("2 - En COURS");
-      subject.next({ repCount: Math.min(result.docs_written, docCount), docCount: docCount });
+      console.log('2 - En COURS');
+      const arg = {
+        repCount: Math.min(result.docs_written, docCount),
+        docCount
+      };
+      subject.next(arg);
     })
     .on('complete', () => {
-      console.log("2 - COMPLETE")
+      console.log('2 - COMPLETE');
       subject.complete();
     })
     .on('error', (error) => {
@@ -122,10 +126,10 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     });
 
     subject.subscribe({
-      next: (state) => { this.secondStepProgress(state.repCount, state.docCount) },
-      complete: () => { this.secondStepComplete() },
-      error: (error) => { this.secondStepError(error) }
-    })
+      next: (state) => { this.secondStepProgress(state.repCount, state.docCount); },
+      complete: () => { this.secondStepComplete(); },
+      error: (error) => { this.secondStepError(error); }
+    });
   }
 
   secondStepProgress(repCount, docCount)  {
@@ -136,15 +140,15 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   secondStepComplete() {
     setTimeout(() => {
       this.thirdStep();
-    }, 1000)
+    }, 1000);
   }
 
   async secondStepError(error) {
     console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: "Erreur",
-      message: "Une erreur s'est produite lors du téléchargement des documents.",
+      header: 'Erreur',
+      message: 'Une erreur s\'est produite lors du téléchargement des documents.',
       buttons: [
         {
           text: 'Ok',
@@ -154,29 +158,29 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 
   thirdStep() {
     this.step = 3;
-    this.description = "Préparation de l'espace de travail...";
+    this.description = 'Préparation de l\'espace de travail...';
     this.percent = 0;
     this.completion = '0/' + designDocs.length;
 
-    let promises = [];
+    const promises = [];
 
-    for (let i = 0, element; element = designDocs[i]; i++) {
-      let promise = this.localDB.put(element).then(
+    for (let i = 0, element; i < designDocs.length;  element = designDocs[i], i++) {
+      const promise = this.localDB.put(element).then(
         () => {
-          console.log("3 - EN COURS");
+          console.log('3 - EN COURS');
           this.thirdStepProgess(i + 1);
         },
         (error) => {
-          console.log("SECOND CASE" + error);
+          console.log('SECOND CASE' + error);
           if (error.status === 409) { // already done
             this.thirdStepProgess(i + 1);
-            console.log("3 - COMPLETE");
+            console.log('3 - COMPLETE');
           } else {
             this.thirdStepError(error);
           }
@@ -190,23 +194,23 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         this.thirdStepComplete();
       },
       (error) => {
-        console.log("Faut check les views already in local db");
+        console.log('Faut check les views already in local db');
         console.log(error);
         this.thirdStepError(error);
       }
-    )
+    );
   }
 
   thirdStepProgess(proceedDocs) {
     this.percent = (proceedDocs / designDocs.length) * 100;
-    console.log("THIRD PROGRESS : " + proceedDocs);
+    console.log('THIRD PROGRESS : ' + proceedDocs);
     this.completion = proceedDocs + '/' + designDocs.length;
   }
 
   thirdStepComplete() {
-    console.log("3 - REAL COMPLETE");
+    console.log('3 - REAL COMPLETE');
     setTimeout(() => {
-      this.fourthStep()
+      this.fourthStep();
     }, 1000);
   }
 
@@ -214,8 +218,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: "Erreur",
-      message: "Une erreur s'est produite lors de la préparation de l'espace de travail.",
+      header: 'Erreur',
+      message: 'Une erreur s\'est produite lors de la préparation de l\'espace de travail.',
       buttons: [
         {
           text: 'Ok',
@@ -225,22 +229,22 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 
   fourthStep() {
-    console.log("FOURTH STEP");
+    console.log('FOURTH STEP');
     this.step = 4;
-    this.description = "Contruction des index...";
+    this.description = 'Contruction des index...';
     this.percent = 0;
     this.completion = '0/' + indexedViews.length;
 
-    let promises = [];
+    const promises = [];
     let proceedViews = 0;
 
-    for (let i = 0, view; view = indexedViews[i]; i++) {
-      let promise = this.localDB.query(view, { limit: 0 }).then(
+    for (let i = 0, view; i < indexedViews.length; view = indexedViews[i], i++) {
+      const promise = this.localDB.query(view, { limit: 0 }).then(
         () => {
           this.fourthStepProgress(++proceedViews);
         },
@@ -259,12 +263,12 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       (error) => {
         this.fourthStepError(error);
       }
-    )
+    );
   }
 
   fourthStepProgress(proceedViews) {
     this.percent = (proceedViews / indexedViews.length) * 100;
-    console.log("FOURTH PROGRESS : " + proceedViews);
+    console.log('FOURTH PROGRESS : ' + proceedViews);
     this.completion = proceedViews + '/' + indexedViews.length;
   }
 
@@ -278,8 +282,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: "Erreur",
-      message: "Une erreur s'est produite lors de la construction des index.",
+      header: 'Erreur',
+      message: 'Une erreur s\'est produite lors de la construction des index.',
       buttons: [
         {
           text: 'Ok',
@@ -289,33 +293,33 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 
   fifthStep() {
     this.step = 5;
-    this.description = "Synchronisation avec la base de données distantes...";
+    this.description = 'Synchronisation avec la base de données distantes...';
     this.percent = 0;
     this.completion = '0/1';
 
     const options = { live: false, retry: false };
     this.localDB.sync(this.remoteDB, options)
     .on('complete', () => {
-      this.completion = "1/1";
+      this.completion = '1/1';
       this.percent = 100;
       this.fifthStepComplete();
     })
     .on('error', (error) => {
       this.fifthStepError(error);
-    })
+    });
   }
 
   fifthStepComplete() {
     this.databases[this.databaseIndex].replicated = true;
     this.dbService.updateDatabasesHardDisk(this.databases);
 
-    console.log("FINIIIIIIIIIII");
+    console.log('FINIIIIIIIIIII');
     this.statusChange.emit(4);
   }
 
@@ -323,8 +327,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: "Erreur",
-      message: "Une erreur s'est produite lors de la synchronisation",
+      header: 'Erreur',
+      message: 'Une erreur s\'est produite lors de la synchronisation',
       buttons: [
         {
           text: 'Ok',
@@ -334,7 +338,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 

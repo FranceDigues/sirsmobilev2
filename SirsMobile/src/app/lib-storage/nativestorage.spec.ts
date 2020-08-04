@@ -14,64 +14,64 @@ describe('Testing NativeStorageService', () => {
                 NativeStorage
             ]
         });
-    })
+    });
 
     beforeEach(() => {
         nativeStorageService = TestBed.inject(NativeStorageService);
         nativeStorage = TestBed.inject(NativeStorage);
-    })
+    });
 
-    it("setItem method should exists", () => {
-        let res = typeof nativeStorageService.setItem === "function";
+    it('setItem method should exists', () => {
+        const res = typeof nativeStorageService.setItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("setItem method should call nativeStorage service with setItem method", () => {
+    it('setItem method should call nativeStorage service with setItem method', () => {
         spyOn(nativeStorage, 'setItem');
-        let arg1 = "key";
-        let arg2 = { result: "SUCESS" }
+        const arg1 = 'key';
+        const arg2 = { result: 'SUCESS' };
         nativeStorageService.setItem(arg1, arg2);
         expect(nativeStorage.setItem).toHaveBeenCalledWith(arg1, arg2);
-    })
+    });
 
-    it("getItem method should exists", () => {
-        let res = typeof nativeStorageService.getItem === "function";
+    it('getItem method should exists', () => {
+        const res = typeof nativeStorageService.getItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("getItem method should call nativeStorage service with getItem method", () => {
+    it('getItem method should call nativeStorage service with getItem method', () => {
         spyOn(nativeStorage, 'getItem').and
         .returnValue(new Promise((resolve) => {
-            resolve({ result: "SUCESS" })
+            resolve({ result: 'SUCESS' });
         }));
-        let arg = "key";
+        const arg = 'key';
 
         nativeStorageService.getItem(arg);
         expect(nativeStorage.getItem).toHaveBeenCalledWith(arg);
-    })
+    });
 
-    it("getItem method should return { result: 'SUCESS' }", async () => {
+    it('getItem method should return { result: SUCESS }', async () => {
         spyOn(nativeStorage, 'getItem').and
         .returnValue(new Promise((resolve) => {
-            resolve({ result: "SUCESS" })
+            resolve({ result: 'SUCESS' });
         }));
-        let arg = "key";
-        let expectedRes = { result: "SUCESS" }
+        const arg = 'key';
+        const expectedRes = { result: 'SUCESS' };
 
-        let res = await nativeStorageService.getItem(arg);
-        expect(res).toEqual(expectedRes)
-    })
+        const res = await nativeStorageService.getItem(arg);
+        expect(res).toEqual(expectedRes);
+    });
 
-    it("removeItem method should exists", () => {
-        let res = typeof nativeStorageService.removeItem === "function";
+    it('removeItem method should exists', () => {
+        const res = typeof nativeStorageService.removeItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("removeItem method should call nativeStorage service with removeItem method", () => {
+    it('removeItem method should call nativeStorage service with removeItem method', () => {
         spyOn(nativeStorage, 'remove');
-        let arg = "key";
+        const arg = 'key';
         nativeStorageService.removeItem(arg);
         expect(nativeStorage.remove).toHaveBeenCalledWith(arg);
-    })
+    });
 
 });

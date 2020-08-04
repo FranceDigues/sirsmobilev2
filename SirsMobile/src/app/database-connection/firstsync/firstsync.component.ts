@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class FirstsyncComponent implements OnInit {
 
   constructor(public syncService: SyncService,
-    public dbService: DatabaseService, public router: Router) { }
+              public dbService: DatabaseService, public router: Router) { }
 
   ngOnInit() {
     this.syncService.sync()
@@ -19,7 +19,7 @@ export class FirstsyncComponent implements OnInit {
       () => {
         this.router.navigateByUrl('/main');
       }
-    )
+    );
   }
 
 }

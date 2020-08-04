@@ -20,9 +20,9 @@ export class DatabaseService {
   async getRemoteDB() {
     if (this.remoteDB == null) {
       if (this.activeDB == null) {
-        console.log("ERROR");
+        console.log('ERROR');
       }
-      console.log("On rentre dans la fonction getRemoteDB");
+      console.log('On rentre dans la fonction getRemoteDB');
       this.remoteDB = new PouchDB(this.activeDB.url,
         {
           auth: {
@@ -31,15 +31,15 @@ export class DatabaseService {
           }
         });
     }
-    return (this.remoteDB)
+    return (this.remoteDB);
   }
 
   getLocalDB() {
     if (this.localDB == null) {
       if (this.activeDB == null) {
-        console.log("ERROR");
+        console.log('ERROR');
       }
-      console.log("On RENTRE dans la fonction getLocalDB");
+      console.log('On RENTRE dans la fonction getLocalDB');
       this.localDB = new PouchDB(this.activeDB.name,
         {
           iosDatabaseLocation: 'Library',

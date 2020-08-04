@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms'
+import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
@@ -10,27 +10,27 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 })
 export class AddDatabaseComponent implements OnInit {
 
-  @Output() readonly statusChange = new EventEmitter<Number>()
+  @Output() readonly statusChange = new EventEmitter<any>();
 
   databaseForm: FormGroup;
 
   name: FormControl;
   url: FormControl;
-  user_id: FormControl;
+  userId: FormControl;
   password: FormControl;
 
   constructor(private formBuilder: FormBuilder, private router: Router,
-    private nativeStorage: NativeStorage) {}
+              private nativeStorage: NativeStorage) {}
 
   ngOnInit() {
     this.name = this.formBuilder.control('', Validators.required);
     this.url = this.formBuilder.control('http://', Validators.required);
-    this.user_id = this.formBuilder.control('', Validators.required);
+    this.userId = this.formBuilder.control('', Validators.required);
     this.password = this.formBuilder.control('', Validators.required);
     this.databaseForm = this.formBuilder.group({
       name: this.name,
       url: this.url,
-      user_id: this.user_id,
+      userId: this.userId,
       password: this.password,
       replicated: false
     });
@@ -49,10 +49,10 @@ export class AddDatabaseComponent implements OnInit {
         this.onBack();
       },
       (error) => {
-        let array = [
+        const array = [
           this.databaseForm.value
-        ]
-        console.log("")
+        ];
+        console.log('');
         this.nativeStorage.setItem('databases', array);
         this.onBack();
       }

@@ -20,7 +20,7 @@ import OSM from 'ol/source/OSM';
 export class MainPage implements AfterViewInit {
 
   map: Map;
-  image = "";
+  image = '';
 
   // @ViewChild("map") map: ElementRef;
 

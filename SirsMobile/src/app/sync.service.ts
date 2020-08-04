@@ -18,7 +18,7 @@ export class SyncService {
   constructor(private dbService: DatabaseService, private insomnia: Insomnia) { }
 
   cancelSync() {
-    this.sync ? this.synch.cancel() : () => {};
+    this.sync ? this.synch.cancel() : () => { console.log('??'); };
     // TODO GO PATH /MAIN
   }
 
@@ -42,29 +42,29 @@ export class SyncService {
       subject.error(error);
     })
     .on('change', (info) => {
-      console.log("INFO");
+      console.log('INFO');
       console.log(info);
     })
     .on('paused', (error) => {
-      console.log("paused", error);
+      console.log('paused', error);
     })
     .on('active', () => {
-      console.log("active");
+      console.log('active');
     })
     .on('denied', (error) => {
-      console.log("denied", error);
-    })
+      console.log('denied', error);
+    });
 
     subject.subscribe({
-      next: (index) => { this.syncProgress(index); },
+      next: (i) => { this.syncProgress(i); },
       complete: () => { this.syncComplete(); },
       error: (error) => { this.syncError(error); return; }
-    })
+    });
   }
 
   syncProgress(proceedViews) {
     this.percent = (proceedViews / 1) * 100;
-    this.completion = proceedViews + '/1'
+    this.completion = proceedViews + '/1';
   }
 
   syncComplete() {
@@ -73,10 +73,10 @@ export class SyncService {
       () => {
         this.dbService.activeDB.lastSync = new Date().getTime();
         this.status = 2;
-        console.log("SYNC FINISH");
+        console.log('SYNC FINISH');
         // TODO MAP MANAGER CLEAR ALL
         // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
-      }, 1000)
+      }, 1000);
   }
 
   syncError(error) {

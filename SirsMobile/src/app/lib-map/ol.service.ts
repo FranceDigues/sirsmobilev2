@@ -22,32 +22,30 @@ export class OLService extends ClassMapService {
         });
         this.map.setTarget(name);
         return (this.map);
-    };
+    }
 
     addLayer(layer: Layer): void {
         this.map.addLayer(layer);
-    };
+    }
 
     getLayers(): Array<Layer> {
-        let layers = this.map.getLayers()
-        return (layers['array_']);
-    };
+        const layers = this.map.getLayers();
+        return (layers.array_);
+    }
 
     removeLayer(layer: Layer): void {
         this.map.removeLayer(layer);
-    };
+    }
 
     moveUp(layer: Layer): void {
         this.removeLayer(layer);
-        layer['values_'].zIndex += 1;
+        layer.values_.zIndex += 1;
         this.addLayer(layer);
-    };
+    }
 
     moveDown(layer: Layer): void {
         this.removeLayer(layer);
-        layer['values_'].zIndex -= 1;
+        layer.values_.zIndex -= 1;
         this.addLayer(layer);
-    };
-
-
+    }
 }

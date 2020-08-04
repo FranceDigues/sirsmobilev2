@@ -26,7 +26,7 @@ export class NativeStorageService extends ClassStorageService {
             (err) => {
                 result = { error: err };
             }
-        )
+        );
         return (result);
     }
 

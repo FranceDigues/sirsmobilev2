@@ -26,7 +26,7 @@ export class StorageService extends ClassStorageService {
             (err) => {
                 result = err;
             }
-        )
+        );
         return (result);
     }
 

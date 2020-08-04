@@ -17,60 +17,60 @@ describe('Testing StorageService', () => {
                 IonicModule.forRoot(),
             ]
         });
-    })
+    });
 
     beforeEach(() => {
         storageService = TestBed.inject(StorageService);
         storage = TestBed.inject(Storage);
-    })
+    });
 
-    it("setItem method should exists", () => {
-        let res = typeof storageService.setItem === "function";
+    it('setItem method should exists', () => {
+        const res = typeof storageService.setItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("setItem method should call Storage service with set method", () => {
+    it('setItem method should call Storage service with set method', () => {
         spyOn(storage, 'set');
-        let arg1 = "key";
-        let arg2 = "SUCESS";
+        const arg1 = 'key';
+        const arg2 = 'SUCESS';
         storageService.setItem(arg1, arg2);
         expect(storage.set).toHaveBeenCalledWith(arg1, arg2);
-    })
+    });
 
-    it("getItem method should exists", () => {
-        let res = typeof storageService.getItem === "function";
+    it('getItem method should exists', () => {
+        const res = typeof storageService.getItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("getItem method should call Storage service with get method", () => {
+    it('getItem method should call Storage service with get method', () => {
         spyOn(storage, 'get').and
         .returnValue(new Promise((resolve) => {
-            resolve("SUCESS");
-        }))
-        let arg1 = "key";
+            resolve('SUCESS');
+        }));
+        const arg1 = 'key';
         storageService.getItem(arg1);
         expect(storage.get).toHaveBeenCalledWith(arg1);
-    })
+    });
 
-    it("getItem method should return SUCESS", async () => {
+    it('getItem method should return SUCESS', async () => {
         spyOn(storage, 'get').and
         .returnValue(new Promise((resolve) => {
-            resolve("SUCESS");
-        }))
-        let arg1 = "key";
-        let res = await storageService.getItem(arg1);
-        expect(res).toEqual("SUCESS");
-    })
+            resolve('SUCESS');
+        }));
+        const arg1 = 'key';
+        const res = await storageService.getItem(arg1);
+        expect(res).toEqual('SUCESS');
+    });
 
-    it("removeItem method should exists", () => {
-        let res = typeof storageService.removeItem === "function";
+    it('removeItem method should exists', () => {
+        const res = typeof storageService.removeItem === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("setItem method should call Storage service with remove method", () => {
+    it('setItem method should call Storage service with remove method', () => {
         spyOn(storage, 'remove');
-        let arg1 = "key";
+        const arg1 = 'key';
         storageService.removeItem(arg1);
         expect(storage.remove).toHaveBeenCalledWith(arg1);
-    })
+    });
 });

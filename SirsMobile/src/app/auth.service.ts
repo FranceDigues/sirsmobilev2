@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
-import MD5 from 'crypto-js/md5'
+import MD5 from 'crypto-js/md5';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class AuthService {
   }
 
   login(login, password) {
-    let options = { key: login, include_docs: true }
+    const options = { key: login, include_docs: true };
     return new Promise((resolve, reject) =>
     {
       this.dbService.getLocalDB().query('Utilisateur/byLogin', options)
@@ -24,12 +24,12 @@ export class AuthService {
         (result) => {
           console.log(result);
           if (result.rows.length === 1) {
-            let hash = MD5(password);
+            const hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
-              this.user = result.rows[0].doc
+              this.user = result.rows[0].doc;
               resolve();
             } else {
-              console.log("error");
+              console.log('error');
               reject();
             }
           } else {
@@ -37,11 +37,11 @@ export class AuthService {
           }
         },
         (error) => {
-          console.log("HERE ???");
+          console.log('HERE ???');
           console.log(error);
           reject();
         }
-      )
+      );
     });
   }
 }

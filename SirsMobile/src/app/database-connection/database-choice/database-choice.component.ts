@@ -17,7 +17,7 @@ export class DatabaseChoiceComponent implements OnInit {
   databaseIndex = 0;
 
   constructor(private router: Router,
-    private alertCtrl: AlertController, private dbService: DatabaseService) {}
+              private alertCtrl: AlertController, private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.dbService.getDatabasesHardDisk()
@@ -26,9 +26,9 @@ export class DatabaseChoiceComponent implements OnInit {
         this.databases = databases;
       },
       (error) => {
-        console.log("no 'databases' in HardDisk " + error);
+        console.log('no \'databases\' in HardDisk ' + error);
       }
-    )
+    );
   }
 
   changeStatus(status: number) {
@@ -39,18 +39,18 @@ export class DatabaseChoiceComponent implements OnInit {
         this.databases = databases;
       },
       (error) => {
-        console.log("no 'databases' in HardDisk " + error);
+        console.log('no \'databases\' in HardDisk ' + error);
       }
-    )
+    );
   }
 
   selectDB(db) {
-    if (db != this.selectedDatabase) {
+    if (db !== this.selectedDatabase) {
       this.dbService.changeDatabase();
     }
     this.selectedDatabase = db;
     this.dbService.setActiveDB(this.selectedDatabase);
-    console.log("ACTIVE DB", this.dbService.activeDB);
+    console.log('ACTIVE DB', this.dbService.activeDB);
     for (let i = 0; i < this.databases.length; i++) {
       if (this.databases[i] === this.selectedDatabase) {
         this.databaseIndex = i;
@@ -72,8 +72,8 @@ export class DatabaseChoiceComponent implements OnInit {
       return;
     }
     const alert = await this.alertCtrl.create({
-      header: "Suppression d'une base de données",
-      message: "Voulez-vous vraiment supprimer cette base de données",
+      header: 'Suppression d\'une base de données',
+      message: 'Voulez-vous vraiment supprimer cette base de données',
       backdropDismiss: false,
       buttons: [
         {
@@ -90,12 +90,12 @@ export class DatabaseChoiceComponent implements OnInit {
           }
         }
       ]
-    })
+    });
     await alert.present();
   }
 
   validateDatabase() {
-    if (this.selectedDatabase.replicated == false) {
+    if (this.selectedDatabase.replicated === false) {
       this.status = 3;
     } else {
       this.status = 4;

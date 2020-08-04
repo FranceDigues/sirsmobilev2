@@ -1,5 +1,10 @@
 {
   "extends": "tslint:recommended",
+  "linterOptions":{
+    "exclude": [
+      "./src/app/database-connection/replicate-database/couchDB-Vues.ts"
+    ]
+  },
   "rules": {
     "align": {
       "options": [

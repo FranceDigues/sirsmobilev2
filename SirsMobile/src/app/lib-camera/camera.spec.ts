@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { CameraService } from "./camera.service"
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx'
+import { CameraService } from './camera.service';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 describe('Testing CameraService', () => {
     let cameraService: CameraService;
@@ -18,14 +18,14 @@ describe('Testing CameraService', () => {
     beforeEach(() => {
         cameraService = TestBed.inject(CameraService);
         camera = TestBed.inject(Camera);
-    })
+    });
 
-    it("getPictureInGallery method should exists", () => {
-        let res = typeof cameraService.getPictureInGallery === "function";
+    it('getPictureInGallery method should exists', () => {
+        const res = typeof cameraService.getPictureInGallery === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("getPicture method should been called with options in getPictureInGallery", () => {
+    it('getPicture method should been called with options in getPictureInGallery', () => {
         const options: CameraOptions = {
             quality: 100,
             destinationType: camera.DestinationType.DATA_URL,
@@ -35,46 +35,46 @@ describe('Testing CameraService', () => {
         };
         spyOn(camera, 'getPicture').and.returnValue(new Promise((resolve) => {
             resolve('test');
-        }))
+        }));
         cameraService.getPictureInGallery();
         expect(camera.getPicture).toHaveBeenCalledWith(options);
-    })
+    });
 
-    it("getPictureInGallery method should return data:image/jpeg;base64,test1", async () => {
+    it('getPictureInGallery method should return data:image/jpeg;base64,test1', async () => {
         spyOn(camera, 'getPicture').and
         .returnValue(new Promise((resolve) => {
             resolve('test1');
-        }))
-        let res = await cameraService.getPictureInGallery();
+        }));
+        const res = await cameraService.getPictureInGallery();
         expect(res).toEqual('data:image/jpeg;base64,test1');
-    })
+    });
 
-    it("takePhoto method should exists", () => {
-        let res = typeof cameraService.takePhoto === "function";
+    it('takePhoto method should exists', () => {
+        const res = typeof cameraService.takePhoto === 'function';
         expect(res).toEqual(true);
-    })
+    });
 
-    it("getPicture method should been called with options in takePhoto", () => {
+    it('getPicture method should been called with options in takePhoto', () => {
         const options: CameraOptions = {
             quality: 100,
             destinationType: camera.DestinationType.DATA_URL,
             encodingType: camera.EncodingType.JPEG,
             mediaType: camera.MediaType.PICTURE
-        }
+        };
         spyOn(camera, 'getPicture').and
         .returnValue(new Promise((resolve) => {
             resolve('test');
-        }))
+        }));
         cameraService.takePhoto();
         expect(camera.getPicture).toHaveBeenCalledWith(options);
-    })
+    });
 
-    it("takePhoto method should return data:image/jpeg;base64,test2", async () => {
+    it('takePhoto method should return data:image/jpeg;base64,test2', async () => {
         spyOn(camera, 'getPicture').and
         .returnValue(new Promise((resolve) => {
             resolve('test2');
-        }))
-        let res = await cameraService.takePhoto();
+        }));
+        const res = await cameraService.takePhoto();
         expect(res).toEqual('data:image/jpeg;base64,test2');
-    })
-})
+    });
+});

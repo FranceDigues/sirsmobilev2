@@ -9,7 +9,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginDatabaseComponent implements OnInit {
 
-  @Output() readonly statusChange = new EventEmitter<Number>()
+  @Output() readonly statusChange = new EventEmitter<any>();
 
   status = 0;
 
@@ -30,14 +30,14 @@ export class LoginDatabaseComponent implements OnInit {
     this.authService.login(this.auth.username, this.auth.password)
     .then(
       () => {
-        console.log("Login OK");
+        console.log('Login OK');
         this.status = 2;
       },
       async (error) => {
-        console.log("Login ERROR : " + error);
+        console.log('Login ERROR : ' + error);
         const alert = await this.alrtCtrl.create({
-          header: "Erreur",
-          message: "Impossible de d'authentifier. Veuillez vérifier vos informations de connexion.",
+          header: 'Erreur',
+          message: 'Impossible de d\'authentifier. Veuillez vérifier vos informations de connexion.',
           buttons: [
             {
               text: 'Ok',
@@ -47,7 +47,7 @@ export class LoginDatabaseComponent implements OnInit {
         });
         await alert.present();
       }
-    )
+    );
   }
 
 }
