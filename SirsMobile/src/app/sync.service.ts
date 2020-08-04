@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-import { Subject } from 'rxjs';
+import { Subject, noop } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +16,11 @@ export class SyncService {
   completion;
   synch = null;
 
-  constructor(private dbService: DatabaseService, private insomnia: Insomnia) { }
+  constructor(private dbService: DatabaseService, private insomnia: Insomnia, private route: Router) { }
 
   cancelSync() {
-    this.sync ? this.synch.cancel() : () => { console.log('??'); };
-    // TODO GO PATH /MAIN
+    this.sync ? this.synch.cancel() : noop();
+    this.route.navigateByUrl('/main');
   }
 
   async sync() {

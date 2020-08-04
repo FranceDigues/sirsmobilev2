@@ -36,16 +36,4 @@ export class MainPage implements AfterViewInit {
     ));
   }
 
-  async takePhoto() {
-    let res = await this.cam.takePhoto();
-    console.log(res);
-    this.image = res;
-  }
-
-  async getPhoto() {
-    let res = await this.cam.getPictureInGallery();
-    console.log(res);
-    this.image = res;
-  }
-
 }
