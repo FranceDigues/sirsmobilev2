@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CameraService } from './camera.service';
+import { CameraModel, Options } from './interface.model';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 describe('Testing CameraService', () => {
@@ -27,7 +28,7 @@ describe('Testing CameraService', () => {
 
     it('getPicture method should been called with options in getPictureInGallery', () => {
         const options: CameraOptions = {
-            quality: 100,
+            quality: 50,
             destinationType: camera.DestinationType.DATA_URL,
             encodingType: camera.EncodingType.JPEG,
             mediaType: camera.MediaType.PICTURE,
@@ -56,7 +57,7 @@ describe('Testing CameraService', () => {
 
     it('getPicture method should been called with options in takePhoto', () => {
         const options: CameraOptions = {
-            quality: 100,
+            quality: 50,
             destinationType: camera.DestinationType.DATA_URL,
             encodingType: camera.EncodingType.JPEG,
             mediaType: camera.MediaType.PICTURE

@@ -14,8 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-import { LibMapModule } from './lib-map/map.module';
-import { LibCameraModule } from './lib-camera/camera.module';
+import { LibMapModule } from '@lib-map/map.module';
+import { LibCameraModule } from '@lib-camera/camera.module';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import { LibCameraModule } from './lib-camera/camera.module';
     SplashScreen,
     NativeStorage,
     Insomnia,
+    Geolocation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

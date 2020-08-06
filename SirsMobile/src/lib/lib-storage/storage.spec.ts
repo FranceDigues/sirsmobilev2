@@ -32,9 +32,10 @@ describe('Testing StorageService', () => {
     it('setItem method should call Storage service with set method', () => {
         spyOn(storage, 'set');
         const arg1 = 'key';
-        const arg2 = 'SUCESS';
+        const arg2 = { success: 'SUCCESS' };
+        const expectedSecondArg = '{"success":"SUCCESS"}';
         storageService.setItem(arg1, arg2);
-        expect(storage.set).toHaveBeenCalledWith(arg1, arg2);
+        expect(storage.set).toHaveBeenCalledWith(arg1, expectedSecondArg);
     });
 
     it('getItem method should exists', () => {
@@ -45,7 +46,7 @@ describe('Testing StorageService', () => {
     it('getItem method should call Storage service with get method', () => {
         spyOn(storage, 'get').and
         .returnValue(new Promise((resolve) => {
-            resolve('SUCESS');
+            resolve('{"success":"SUCCESS"}');
         }));
         const arg1 = 'key';
         storageService.getItem(arg1);
@@ -55,11 +56,12 @@ describe('Testing StorageService', () => {
     it('getItem method should return SUCESS', async () => {
         spyOn(storage, 'get').and
         .returnValue(new Promise((resolve) => {
-            resolve('SUCESS');
+            resolve('{"success":"SUCCESS"}');
         }));
         const arg1 = 'key';
+        const expectedRes = { success: 'SUCCESS' };
         const res = await storageService.getItem(arg1);
-        expect(res).toEqual('SUCESS');
+        expect(res).toEqual(expectedRes);
     });
 
     it('removeItem method should exists', () => {

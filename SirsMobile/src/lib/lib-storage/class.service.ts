@@ -8,9 +8,9 @@ export abstract class ClassStorageService implements StorageModel {
 
     constructor() { }
 
-    abstract setItem(key: string, item: string | object): void;
+    abstract setItem(key: string, item: object): void;
 
-    abstract getItem(key: string): string | object;
+    abstract getItem(key: string): object;
 
     abstract removeItem(key: string): void;
 }

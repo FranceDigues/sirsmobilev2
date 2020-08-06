@@ -34,12 +34,14 @@ export class SyncService {
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
+    console.log('Before ?');
     this.synch = PouchDB.sync(this.localDB, this.remoteDB, options)
     .on('complete', () => {
       subject.next(++index);
       subject.complete();
     })
     .on('error', (error) => {
+      console.log('After');
       subject.error(error);
     })
     .on('change', (info) => {

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Camera } from '@ionic-native/camera/ngx';
+import { CameraService } from './camera.service';
 
 
 
@@ -12,6 +13,7 @@ import { Camera } from '@ionic-native/camera/ngx';
   ],
   providers: [
     Camera,
+    CameraService
   ]
 })
 export class LibCameraModule { }

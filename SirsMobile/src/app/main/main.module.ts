@@ -7,7 +7,10 @@ import { IonicModule } from '@ionic/angular';
 import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
-import { CameraService } from '../lib-camera/camera.service';
+import { OLService } from '@lib-map/ol.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { GeolocService } from '../geoloc.service';
+import { MapService } from '../map.service';
 
 @NgModule({
   imports: [
@@ -17,7 +20,10 @@ import { CameraService } from '../lib-camera/camera.service';
     MainPageRoutingModule,
   ],
   providers: [
-    CameraService
+    OLService,
+    Geolocation,
+    GeolocService,
+    MapService
   ],
   declarations: [MainPage]
 })

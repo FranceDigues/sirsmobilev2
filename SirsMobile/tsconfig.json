@@ -14,7 +14,27 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@lib-map": [
+        "src/lib/lib-map"
+      ],
+      "@lib-map/*": [
+        "src/lib/lib-map/*"
+      ],
+      "@lib-storage": [
+        "src/lib/lib-storage"
+      ],
+      "@lib-storage/*": [
+        "src/lib/lib-storage/*"
+      ],
+      "@lib-camera": [
+        "src/lib/lib-camera"
+      ],
+      "@lib-camera/*": [
+        "src/lib/lib-camera/*"
+      ],
+    },
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

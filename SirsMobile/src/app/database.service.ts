@@ -26,7 +26,7 @@ export class DatabaseService {
       this.remoteDB = new PouchDB(this.activeDB.url,
         {
           auth: {
-            username: this.activeDB.user_id,
+            username: this.activeDB.userId,
             password: this.activeDB.password
           }
         });
