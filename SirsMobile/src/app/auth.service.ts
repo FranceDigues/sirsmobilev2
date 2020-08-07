@@ -7,7 +7,7 @@ import MD5 from 'crypto-js/md5';
 })
 export class AuthService {
 
-  user = null;
+  user = null; // TODO set type interface
 
   constructor(private dbService: DatabaseService) { }
 
@@ -27,6 +27,7 @@ export class AuthService {
             const hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
               this.user = result.rows[0].doc;
+              console.log('NOTE THE TYPE PLS', this.user);
               resolve();
             } else {
               console.log('error');

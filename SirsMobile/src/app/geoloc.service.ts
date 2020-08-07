@@ -65,12 +65,4 @@ export class GeolocService {
             );
         });
     }
-
-    // zoomToCoords(coords) { // TODO change this fonction to another service
-    //   if (coords) {
-    //     let map = this.ol.getMap();
-    //     map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
-    //     map.getView().setZoom(18);
-    //   }
-    // }
 }

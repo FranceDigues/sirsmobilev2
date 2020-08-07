@@ -29,6 +29,7 @@ export class MainPage implements AfterViewInit {
 
   ngAfterViewInit() {
     this.ol.createMap('map');
+    this.ol.getMap().setView(this.testMapService.currentView);
     this.ol.addLayer(new TileLayer(
       {
         title: 'Global Imagery',
