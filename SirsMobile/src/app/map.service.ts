@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 // import OSM from 'ol/source/OSM';
 // import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-// import WKT from 'ol/format/WKT';
+import WKT from 'ol/format/WKT';
 // import * as olSphere from 'ol/sphere';
 // import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
@@ -19,8 +19,13 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import Circle from 'ol/geom/Circle';
 
+import LineString from 'ol/geom/LineString';
+
 import ImageLayer from 'ol/layer/Image';
 import ImageSource from 'ol/source/Image';
+import { EditionModeService } from './editionmode.service';
+import { SirsDocService } from './sirsdoc.service';
+import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 // import { LocalDatabase } from './usingLocalDatabase.service';
 // import { defaults } from 'ol/interaction';
 // import Select from 'ol/interaction/Select';
@@ -39,7 +44,7 @@ export class MapService {
         list: [],
         active: null
     }
-    // wktFormat = new WKT(); // ? mb useful
+    wktFormat = new WKT(); // ? mb useful
     // wgs84Sphere = new olSphere(6378137); // ? mb useful
     // selectInteraction = new Select({
     //     style: new Style({
@@ -94,48 +99,84 @@ export class MapService {
         }
     });
 
-    createEditionLayerInstance() { // TODO
-        // var olLayer = new ImageLayer({
-        //     name: 'Edition',
-        //     arch_objects: false,
-        //     source: new ImageSource({
-        //         source: new Vector({useSpatialIndex: false})
-        //     })
-        // });
+    constructor(private EditionService: EditionModeService, private SirsDoc: SirsDocService) { }
 
-        // setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
-        // return olLayer;
+    redrawEditionModeLayer(layer) {
+        layer.getSource().clear();
+        this.editionLayer = layer;
+        this.setEditionLayerFeatures(this.editionLayer);
     }
 
-    createEditionFeatureInstance(featureDoc) { // TODO
+    redrawEditionLayerAfterSynchronization() {
+        this.editionLayer.getSource().clear();
+        this.setEditionLayerFeatures(this.editionLayer);
+    }
+
+    createEditionLayerInstance() {
+        var olLayer = new ImageLayer({
+            name: 'Edition',
+            arch_objects: false,
+            source: new VectorSource({ useSpatialIndex: false })
+        });
+
+        this.setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
+        return olLayer;
+    }
+
+    setEditionLayerFeatures(olLayer) {
+        let olSource = olLayer.getSource();
+
+        this.EditionService.getEditionModeObjects5()
+        .then(
+            (results) => {
+                olSource.clear();
+                olSource.addFeatures(this.createEditionFeatureInstances(results))
+            }
+        )
+    }
+
+    createEditionFeatureInstances(featureDocs) {
+        let features = [];
+        featureDocs.forEach((featureDoc) => {
+            if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
+                || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
+                    features.push(this.createEditionFeatureInstance(featureDoc.doc));
+                }
+        });
+        return features;
+    }
+
+    createEditionFeatureInstance(featureDoc) {
         // Compute geometry.
-        // var geometry;
-        // var dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
+        let SirsDoc = this.SirsDoc;
+        let geometry = null;
+        let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
-        // if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
-        //     geometry = wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
-        // } else {
-        //     geometry = wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857');
-        //     if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
-        //         || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
-        //         geometry = new ol.geom.LineString([
-        //             geometry.getFirstCoordinate(),
-        //             wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
-        //         ]);
-        //     }
-        // }
+        if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
+            geometry = this.wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
+        } else {
+            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857');
+            if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
+                || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
+                geometry = new LineString([
+                    geometry.getFirstCoordinate(),
+                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                ]);
+            }
+        }
 
-        // // Create feature.
-        // var feature = new ol.Feature({geometry: geometry});
-        // feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType()));
-        // feature.set('id', featureDoc._id);
-        // feature.set('rev', featureDoc._rev);
-        // feature.set('author', featureDoc.author);
-        // feature.set('description', featureDoc.description);
-        // feature.set('designation', featureDoc.designation);
-        // feature.set('@class', featureDoc['@class']);
+        let feature = new Feature({ geometry: geometry });
+        // feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType())); // ! REALPOSITIONSTYLE CREATE STYLE SERVICE (SVS_MAP -> l.932)
+        // * pour le problème des arguments, Hilmi a dis que angularJS gérait tout seul le cas
+        // * où le nb d'arguments donné soit < au nb d'arguments souhaité
+        feature.set('id', featureDoc._id);
+        feature.set('rev', featureDoc._rev);
+        feature.set('author', featureDoc.author);
+        feature.set('description', featureDoc.description);
+        feature.set('designation', featureDoc.designation);
+        feature.set('@class', featureDoc['@class']);
 
-        // return feature;
+        return feature;
     }
 
     createGeolocFeatureInstances(coords) {
