@@ -46,8 +46,7 @@ export class MainPage implements AfterViewInit {
     .then(
       (result) => {
         console.log(result);
-        this.zoomToCoords(result);
-        // this.geoloc.zoomToCoords(result);
+        this.zoomToMe();
       },
       (error) => {
         console.log('Error getting location', error);
@@ -55,29 +54,16 @@ export class MainPage implements AfterViewInit {
     )
   }
 
-  zoomToCoords(coords) { // TODO change this fonction to another service
+  zoomToMe() {
+    const coords = this.geoloc.getCoords();
     if (coords) {
       let map = this.ol.getMap();
       map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
       map.getView().setZoom(18);
-      // TODO try another way to change the source (with this.ol.getLayers ...)
-      this.testMapService.geolocLayer.getSource().clear();
-      this.testMapService.geolocLayer.getSource().addFeatures(this.createGeolocFeatureInstances(coords));
-      console.log(this.ol.getLayers());
+      let geolocLayerSource = this.testMapService.geolocLayer.getSource();
+      geolocLayerSource.clear();
+      geolocLayerSource.addFeatures(this.testMapService.createGeolocFeatureInstances(coords));
     }
   }
-
-  createGeolocFeatureInstances(pos) {
-    // var pos = [location.longitude, location.latitude];
-    return [
-        new Feature({
-            geometry: new Point(transform([pos.longitude, pos.latitude], 'EPSG:4326', 'EPSG:3857'))
-        }),
-        // new Feature({
-        //     geometry: Circle(pos, 200)
-        //         .transform('EPSG:4326', 'EPSG:3857')
-        // })
-    ];
-}
 
 }

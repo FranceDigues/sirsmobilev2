@@ -12,7 +12,12 @@ import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Stroke from 'ol/style/Stroke';
 import VectorSource from 'ol/source/Vector';
-// import * as transform from 'ol/proj';
+import GeoJSON from 'ol/format/GeoJSON';
+
+import { transform } from 'ol/proj';
+import Feature from 'ol/Feature';
+import Point from 'ol/geom/Point';
+import Circle from 'ol/geom/Circle';
 // import { LocalDatabase } from './usingLocalDatabase.service';
 // import { defaults } from 'ol/interaction';
 // import Select from 'ol/interaction/Select';
@@ -59,24 +64,26 @@ export class MapService {
     geolocLayer = new VectorLayer({
         name: 'Geolocation',
         visible: true,
-        source: new VectorSource({ useSpatialIndex: false }),
+        source: new VectorSource({
+            format: new GeoJSON({ dataProjection: 'EPSG:3857' })
+        }),
         style: (feature) => {
             switch (feature.getGeometry().getType()) {
-                case 'Polygon':
+                case 'Circle':
                     return [
                         new Style({
-                            fill: new Fill({ color: [255, 255, 255, 0.2] }),
+                            fill: new Fill({ color: [255, 255, 255, 0.3] }),
                             stroke: new Stroke({ color: [0, 0, 255, 1], width: 1 })
                         })
                     ];
-                case 'Circle':
+                case 'Point':
                     return [
                         new Style({
                             image: new Icon({
                                 anchor: [0.5, 1],
                                 anchorXUnits: 'fraction',
                                 anchorYUnits: 'fraction',
-                                src: './src/assets/img/pin-icon.png'
+                                src: '../assets/img/pin-icon.png'
                             })
                         })
                     ];
@@ -85,6 +92,18 @@ export class MapService {
             }
         }
     });
+
+    createGeolocFeatureInstances(coords) {
+        return [
+            new Feature({
+                geometry: new Point(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857')),
+                name: 'Location Pointer'
+            }),
+            new Feature({
+                geometry: new Circle(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'), 25)
+            })
+        ];
+      }
 
     // constructor(private localDB: LocalDatabase) { }
 

@@ -3,6 +3,14 @@ import { Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import { OLService } from '@lib-map/ol.service';
 import * as moment from 'moment';
+
+import VectorLayer from 'ol/layer/Vector';
+import Style from 'ol/style/Style';
+import Fill from 'ol/style/Fill';
+import Icon from 'ol/style/Icon';
+import Stroke from 'ol/style/Stroke';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 import { transform } from 'ol/proj';
 
 @Injectable({
