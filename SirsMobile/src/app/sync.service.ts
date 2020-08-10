@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 export class SyncService {
 
   status = 0;
-  localDB;
-  remoteDB;
   percent;
   completion;
   synch = null;
@@ -29,19 +27,21 @@ export class SyncService {
     this.status = 1;
 
     this.insomnia.keepAwake();
-    this.localDB = await this.dbService.getLocalDB();
-    this.remoteDB = await this.dbService.getRemoteDB();
+    console.log('Juste acant ???');
+    let localDB = await this.dbService.getLocalDB();
+    let remoteDB = await this.dbService.getRemoteDB();
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
     console.log('Before ?');
-    this.synch = PouchDB.sync(this.localDB, this.remoteDB, options)
+    this.synch = PouchDB.sync(localDB, remoteDB, options)
     .on('complete', () => {
+      console.log('Next (GOOD)');
       subject.next(++index);
       subject.complete();
     })
     .on('error', (error) => {
-      console.log('After');
+      console.log('Error Sync', error);
       subject.error(error);
     })
     .on('change', (info) => {

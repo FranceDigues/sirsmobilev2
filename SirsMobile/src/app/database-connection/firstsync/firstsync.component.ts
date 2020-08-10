@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from '../../database.service';
 import { SyncService } from '../../sync.service';
 import { Router } from '@angular/router';
 
@@ -10,8 +9,7 @@ import { Router } from '@angular/router';
 })
 export class FirstsyncComponent implements OnInit {
 
-  constructor(public syncService: SyncService,
-              public dbService: DatabaseService, public router: Router) { }
+  constructor(public syncService: SyncService, public router: Router) { }
 
   ngOnInit() {
     this.syncService.sync()

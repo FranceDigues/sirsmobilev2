@@ -23,7 +23,6 @@ import LineString from 'ol/geom/LineString';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageSource from 'ol/source/Image';
-import { EditionModeService } from './editionmode.service';
 import { SirsDocService } from './sirsdoc.service';
 import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { RealPositionStyle } from './style.service';
@@ -102,7 +101,7 @@ export class MapService {
     });
 
     constructor(private SirsDoc: SirsDocService, private realPositionService: RealPositionStyle,
-                private localDB: LocalDatabase, private editionService: EditionModeService) { }
+                private localDB: LocalDatabase) { }
 
     get getSelection() {
         return this.selection;
@@ -120,12 +119,14 @@ export class MapService {
     }
 
     createEditionLayerInstance() {
-        var olLayer = new ImageLayer({
+        console.log('DEBUGSPAWN')
+        let olLayer = new ImageLayer({
             name: 'Edition',
-            arch_objects: false,
             source: new VectorSource({ useSpatialIndex: false })
         });
+        console.log('here');
 
+        console.log('DEBUG-2');
         this.setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
         return olLayer;
     }
@@ -133,11 +134,18 @@ export class MapService {
     setEditionLayerFeatures(olLayer) {
         let olSource = olLayer.getSource();
 
-        this.editionService.getEditionModeObjects5() // ! don't use it bcs circle dependencies
+        console.log('DEBUG-1');
+        this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
         .then(
             (results) => {
+                console.log('resultsss', results);
+                console.log('DEBUG-0.5');
                 olSource.clear();
+                console.log('DEBUG0');
                 olSource.addFeatures(this.createEditionFeatureInstances(results))
+            },
+            (error) => {
+                console.log('Error debug', error);
             }
         );
     }
@@ -147,6 +155,7 @@ export class MapService {
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
                 || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
+                    console.log('DEBUG00');
                     features.push(this.createEditionFeatureInstance(featureDoc.doc));
                 }
         });
@@ -159,21 +168,27 @@ export class MapService {
         let geometry = null;
         let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
+        console.log('DEBUG1');
+        console.log('dataprojec', dataProjection);
         if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
-            geometry = this.wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
+            console.log('DEBUG2');
+            geometry = this.wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857'); // ! ERROR
+            console.log('DEBUG3');
         } else {
-            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857');
+            console.log('DEBUG$');
+            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857'); // ! ERROR
             if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
                 || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
+                console.log('featureDoc', featureDoc);
                 geometry = new LineString([
                     geometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate() // ! ERROR
                 ]);
             }
         }
 
         let feature = new Feature({ geometry: geometry });
-        feature.setStyle(this.realPositionService.style([0, 0, 255, 1], geometry.getType()));
+        feature.setStyle(this.realPositionService.style(this.selection, [0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);

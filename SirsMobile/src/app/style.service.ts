@@ -11,39 +11,35 @@ export class RealPositionStyle {
 
     mapService: MapService;
 
-    constructor(private injector: Injector, private getStyle: GetStyle) {
-        setTimeout(() => {
-            this.mapService = injector.get(MapService);
-        });
-    }
+    constructor(private getStyle: GetStyle) { }
 
-    style(feature?, color?, type?, featureModel?, layerModel?): Array<Style> {
+    style(selection, feature?, color?, type?, featureModel?, layerModel?): Array<Style> {
         switch (type) {
             case 'LineString':
-                return this.createLineStyle(feature, color, featureModel, layerModel);
+                return this.createLineStyle(selection, feature, color, featureModel, layerModel);
             case 'Point':
-                return this.createPointStyle(feature, color, featureModel, layerModel);
+                return this.createPointStyle(selection, feature, color, featureModel, layerModel);
             case 'Polygon':
-                return this.createPolygonStyle(feature, color, featureModel, layerModel);
+                return this.createPolygonStyle(selection, feature, color, featureModel, layerModel);
         }
     }
 
-    private createPointStyle(feature?, color?, featureModel?, layerModel?): Array<Style> {
-        color[3] = this.opacityHandling(feature);
-        let highlight = this.highlightHandling(feature);
+    private createPointStyle(selection, feature?, color?, featureModel?, layerModel?): Array<Style> {
+        color[3] = this.opacityHandling(selection, feature);
+        let highlight = this.highlightHandling(selection, feature);
         let fillColor = highlight ? color : [255, 255, 255, color[3]];
         let strokeColor = highlight ? [255, 255, 255, color[3]] : color;
         const strokeWidth = 2;
         const circleRadius = 6;
 
-        return [this.getStyle.point(fillColor, strokeColor, strokeWidth, circleRadius, this.zIndexHandling(feature), featureModel, layerModel)];
+        return [this.getStyle.point(fillColor, strokeColor, strokeWidth, circleRadius, this.zIndexHandling(selection, feature), featureModel, layerModel)];
     }
 
-    private createLineStyle(feature?, color?, featureModel?, layerModel?): Array<Style> {
-        color[3] = this.opacityHandling(feature);
+    private createLineStyle(selection, feature?, color?, featureModel?, layerModel?): Array<Style> {
+        color[3] = this.opacityHandling(selection, feature);
         let styles = [];
-        let highlight = this.highlightHandling(feature);
-        let zIndex = this.zIndexHandling(feature);
+        let highlight = this.highlightHandling(selection, feature);
+        let zIndex = this.zIndexHandling(selection, feature);
         let pointFillColor = highlight ? color : [255, 255, 255, color[3]];
         let pointStrokeColor = highlight ? [255, 255, 255, color[3]] : color;
         let pointStrokeWidth = 2;
@@ -65,11 +61,11 @@ export class RealPositionStyle {
         return styles;
     }
 
-    private createPolygonStyle(feature?, color?, featureModel?, layerModel?): Array<Style> {
-        color[3] = this.opacityHandling(feature);
+    private createPolygonStyle(selection, feature?, color?, featureModel?, layerModel?): Array<Style> {
+        color[3] = this.opacityHandling(selection, feature);
         let styles = [];
-        let highlight = this.highlightHandling(feature)
-        let zIndex = this.zIndexHandling(feature)
+        let highlight = this.highlightHandling(selection, feature)
+        let zIndex = this.zIndexHandling(selection, feature)
         let lineStrokeColor = color
         const lineStrokeWidth = 3;
 
@@ -80,9 +76,7 @@ export class RealPositionStyle {
         return styles;
     }
 
-    private opacityHandling(feature): Number {
-        let selection = this.mapService.getSelection;
-
+    private opacityHandling(selection, feature): Number {
         if (selection.active && feature !== selection.active) {
             return 0.5;
         } else if (selection.list.length && !feature.get('selected')) {
@@ -92,15 +86,11 @@ export class RealPositionStyle {
         }
     }
 
-    private highlightHandling(feature) {
-        let selection = this.mapService.getSelection;
-
+    private highlightHandling(selection, feature) {
         return selection.list.length && ((!selection.active && feature.get('selected')) || (selection.active && selection.active === feature));
     }
 
-    private zIndexHandling(feature): Number {
-        let selection = this.mapService.getSelection;
-
+    private zIndexHandling(selection, feature): Number {
         if (feature === selection.active) {
             return 3;
         } else if (feature.get('selected')) {
@@ -111,7 +101,7 @@ export class RealPositionStyle {
     }
 }
 
-class GetStyle {
+export class GetStyle {
 
     point(fillColor, strokeColor, strokeWidth, circleRadius, zIndex, featureModel?, layerModel?): Style {
         const fill = new Fill({color: fillColor});

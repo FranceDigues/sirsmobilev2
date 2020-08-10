@@ -18,7 +18,10 @@ import { LibMapModule } from '@lib-map/map.module';
 import { LibCameraModule } from '@lib-camera/camera.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EditionModeService } from './editionmode.service';
-import { RealPositionStyle } from './style.service';
+import { GetStyle, RealPositionStyle } from './style.service';
+import { SyncService } from './sync.service';
+import { DatabaseService } from './database.service';
+import { AuthService } from './auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,6 +36,10 @@ import { RealPositionStyle } from './style.service';
     Geolocation,
     EditionModeService,
     RealPositionStyle,
+    GetStyle,
+    SyncService,
+    DatabaseService,
+    AuthService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

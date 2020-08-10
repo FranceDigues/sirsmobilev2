@@ -43,7 +43,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       async (databases) => {
         this.databases = databases;
         this.activeDb = this.databases[this.databaseIndex];
-        this.localDB = this.dbService.getLocalDB();
+        this.localDB = await this.dbService.getLocalDB();
         this.remoteDB = await this.dbService.getRemoteDB();
         this.firstStep();
       },
