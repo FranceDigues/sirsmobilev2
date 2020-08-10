@@ -26,6 +26,8 @@ import ImageSource from 'ol/source/Image';
 import { EditionModeService } from './editionmode.service';
 import { SirsDocService } from './sirsdoc.service';
 import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { RealPositionStyle } from './style.service';
+import { LocalDatabase } from './usingLocalDatabase.service';
 // import { LocalDatabase } from './usingLocalDatabase.service';
 // import { defaults } from 'ol/interaction';
 // import Select from 'ol/interaction/Select';
@@ -68,7 +70,7 @@ export class MapService {
     //     name: 'Objects',
     //     // layers: AppLayersService.getFavorites().map(createAppLayerInstance) // TODO
     // })
-    editionLayer: ImageLayer = this.createEditionLayerInstance(); // TODO FINISH
+    editionLayer: ImageLayer = this.createEditionLayerInstance(); // ! Ranger toutes les méthodes permettant de créer l'Edition Layer dans un autre Service
     geolocLayer = new VectorLayer({
         name: 'Geolocation',
         visible: true,
@@ -99,7 +101,12 @@ export class MapService {
         }
     });
 
-    constructor(private EditionService: EditionModeService, private SirsDoc: SirsDocService) { }
+    constructor(private SirsDoc: SirsDocService, private realPositionService: RealPositionStyle,
+                private localDB: LocalDatabase, private editionService: EditionModeService) { }
+
+    get getSelection() {
+        return this.selection;
+    }
 
     redrawEditionModeLayer(layer) {
         layer.getSource().clear();
@@ -126,13 +133,13 @@ export class MapService {
     setEditionLayerFeatures(olLayer) {
         let olSource = olLayer.getSource();
 
-        this.EditionService.getEditionModeObjects5()
+        this.editionService.getEditionModeObjects5() // ! don't use it bcs circle dependencies
         .then(
             (results) => {
                 olSource.clear();
                 olSource.addFeatures(this.createEditionFeatureInstances(results))
             }
-        )
+        );
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -146,7 +153,7 @@ export class MapService {
         return features;
     }
 
-    createEditionFeatureInstance(featureDoc) {
+    createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
         let SirsDoc = this.SirsDoc;
         let geometry = null;
@@ -166,9 +173,7 @@ export class MapService {
         }
 
         let feature = new Feature({ geometry: geometry });
-        // feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType())); // ! REALPOSITIONSTYLE CREATE STYLE SERVICE (SVS_MAP -> l.932)
-        // * pour le problème des arguments, Hilmi a dis que angularJS gérait tout seul le cas
-        // * où le nb d'arguments donné soit < au nb d'arguments souhaité
+        feature.setStyle(this.realPositionService.style([0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);
@@ -179,7 +184,7 @@ export class MapService {
         return feature;
     }
 
-    createGeolocFeatureInstances(coords) {
+    createGeolocFeatureInstances(coords): Array<Feature> {
         return [
             new Feature({
                 geometry: new Point(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857')),

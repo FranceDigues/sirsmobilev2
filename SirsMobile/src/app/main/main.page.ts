@@ -36,6 +36,7 @@ export class MainPage implements AfterViewInit {
         source: new OSM()
       }
     ));
+    this.ol.addLayer(this.testMapService.editionLayer);
     this.ol.addLayer(this.testMapService.geolocLayer);
     console.log(this.ol.map);
     console.log(this.ol.getLayers());
