@@ -124,9 +124,7 @@ export class MapService {
             name: 'Edition',
             source: new VectorSource({ useSpatialIndex: false })
         });
-        console.log('here');
 
-        console.log('DEBUG-2');
         this.setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
         return olLayer;
     }
@@ -134,14 +132,10 @@ export class MapService {
     setEditionLayerFeatures(olLayer) {
         let olSource = olLayer.getSource();
 
-        console.log('DEBUG-1');
         return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
         .then(
             (results) => {
-                console.log('resultsss', results);
-                console.log('DEBUG-0.5');
                 olSource.clear();
-                console.log('DEBUG0');
                 olSource.addFeatures(this.createEditionFeatureInstances(results))
                 return;
             },
@@ -157,7 +151,6 @@ export class MapService {
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
                 || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
-                    console.log('DEBUG00');
                     features.push(this.createEditionFeatureInstance(featureDoc.doc));
                 }
         });
@@ -167,24 +160,31 @@ export class MapService {
     createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
         let SirsDoc = this.SirsDoc;
-        let geometry = null;
+        let geometry = undefined;
         let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
-        console.log('DEBUG1');
-        console.log('dataprojec', dataProjection);
         if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
-            console.log('DEBUG2');
-            geometry = this.wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857'); // ! ERROR
-            console.log('DEBUG3');
+            geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+                dataProjection: dataProjection,
+                featureProjection: 'EPSG:3857'
+            }); // ? mb working
         } else {
-            console.log('DEBUG$');
-            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857'); // ! ERROR
+            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
+                {
+                    dataProjection: dataProjection,
+                    featureProjection: 'EPSG:3857'
+                }
+            ); // ? mb working
             if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
                 || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
-                console.log('featureDoc', featureDoc);
                 geometry = new LineString([
                     geometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate() // ! ERROR
+                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
+                        {
+                            dataProjection: dataProjection,
+                            featureProjection: 'EPSG:3857'
+                        }
+                    ).getFirstCoordinate() // ! ERROR
                 ]);
             }
         }
