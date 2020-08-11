@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 export class SyncService {
 
   status = 0;
-  localDB;
-  remoteDB;
   percent;
   completion;
   synch = null;
@@ -29,19 +27,21 @@ export class SyncService {
     this.status = 1;
 
     this.insomnia.keepAwake();
-    this.localDB = await this.dbService.getLocalDB();
-    this.remoteDB = await this.dbService.getRemoteDB();
+    console.log('Juste acant ???');
+    let localDB = await this.dbService.getLocalDB();
+    let remoteDB = await this.dbService.getRemoteDB();
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
     console.log('Before ?');
-    this.synch = PouchDB.sync(this.localDB, this.remoteDB, options)
+    this.synch = PouchDB.sync(localDB, remoteDB, options)
     .on('complete', () => {
+      console.log('Next (GOOD)');
       subject.next(++index);
       subject.complete();
     })
     .on('error', (error) => {
-      console.log('After');
+      console.log('Error Sync', error);
       subject.error(error);
     })
     .on('change', (info) => {
@@ -58,10 +58,12 @@ export class SyncService {
       console.log('denied', error);
     });
 
-    subject.subscribe({
-      next: (i) => { this.syncProgress(i); },
-      complete: () => { this.syncComplete(); },
-      error: (error) => { this.syncError(error); return; }
+    return new Promise((resolve, rejects) => {
+      subject.subscribe({
+        next: (i) => { this.syncProgress(i); },
+        complete: async () => { await this.syncComplete(); resolve(); },
+        error: async (error) => { await this.syncError(); rejects(error); }
+      });
     });
   }
 
@@ -72,21 +74,15 @@ export class SyncService {
 
   syncComplete() {
     this.insomnia.allowSleepAgain();
-    setTimeout(
-      () => {
-        this.dbService.activeDB.lastSync = new Date().getTime();
-        this.status = 2;
-        console.log('SYNC FINISH');
-        // TODO MAP MANAGER CLEAR ALL
-        // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
-      }, 1000);
+    this.dbService.activeDB.lastSync = new Date().getTime();
+    this.status = 2;
+    console.log('SYNC FINISH');
+    // TODO MAP MANAGER CLEAR ALL
+    // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
   }
 
-  syncError(error) {
-    console.log(error);
+  syncError() {
     this.insomnia.allowSleepAgain();
-    setTimeout(() => {
-      this.status = 3;
-    }, 1000);
+    this.status = 3;
   }
 }

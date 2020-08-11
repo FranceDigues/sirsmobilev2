@@ -11,6 +11,8 @@ import { OLService } from '@lib-map/ol.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GeolocService } from '../geoloc.service';
 import { MapService } from '../map.service';
+import { RealPositionStyle } from '../style.service';
+import { EditionModeService } from '../editionmode.service';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import { MapService } from '../map.service';
     OLService,
     Geolocation,
     GeolocService,
-    MapService
+    MapService,
+    RealPositionStyle,
+    EditionModeService
   ],
   declarations: [MainPage]
 })

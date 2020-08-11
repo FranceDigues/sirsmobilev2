@@ -23,9 +23,10 @@ import LineString from 'ol/geom/LineString';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageSource from 'ol/source/Image';
-import { EditionModeService } from './editionmode.service';
 import { SirsDocService } from './sirsdoc.service';
 import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { RealPositionStyle } from './style.service';
+import { LocalDatabase } from './usingLocalDatabase.service';
 // import { LocalDatabase } from './usingLocalDatabase.service';
 // import { defaults } from 'ol/interaction';
 // import Select from 'ol/interaction/Select';
@@ -68,7 +69,7 @@ export class MapService {
     //     name: 'Objects',
     //     // layers: AppLayersService.getFavorites().map(createAppLayerInstance) // TODO
     // })
-    editionLayer: ImageLayer = this.createEditionLayerInstance(); // TODO FINISH
+    editionLayer: ImageLayer = this.createEditionLayerInstance(); // ! Ranger toutes les méthodes permettant de créer l'Edition Layer dans un autre Service
     geolocLayer = new VectorLayer({
         name: 'Geolocation',
         visible: true,
@@ -99,7 +100,12 @@ export class MapService {
         }
     });
 
-    constructor(private EditionService: EditionModeService, private SirsDoc: SirsDocService) { }
+    constructor(private SirsDoc: SirsDocService, private realPositionService: RealPositionStyle,
+                private localDB: LocalDatabase) { }
+
+    get getSelection() {
+        return this.selection;
+    }
 
     redrawEditionModeLayer(layer) {
         layer.getSource().clear();
@@ -113,9 +119,9 @@ export class MapService {
     }
 
     createEditionLayerInstance() {
-        var olLayer = new ImageLayer({
+        console.log('DEBUGSPAWN')
+        let olLayer = new VectorLayer({
             name: 'Edition',
-            arch_objects: false,
             source: new VectorSource({ useSpatialIndex: false })
         });
 
@@ -126,13 +132,18 @@ export class MapService {
     setEditionLayerFeatures(olLayer) {
         let olSource = olLayer.getSource();
 
-        this.EditionService.getEditionModeObjects5()
+        return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
         .then(
             (results) => {
                 olSource.clear();
                 olSource.addFeatures(this.createEditionFeatureInstances(results))
+                return;
+            },
+            (error) => {
+                console.log('Error debug', error);
+                return;
             }
-        )
+        );
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -146,29 +157,41 @@ export class MapService {
         return features;
     }
 
-    createEditionFeatureInstance(featureDoc) {
+    createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
         let SirsDoc = this.SirsDoc;
-        let geometry = null;
+        let geometry = undefined;
         let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
 
         if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
-            geometry = this.wktFormat.readGeometry(featureDoc.geometry).transform(dataProjection, 'EPSG:3857');
+            geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+                dataProjection: dataProjection,
+                featureProjection: 'EPSG:3857'
+            }); // ? mb working
+            console.log(geometry);
         } else {
-            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut).transform(dataProjection, 'EPSG:3857');
+            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
+                {
+                    dataProjection: dataProjection,
+                    featureProjection: 'EPSG:3857'
+                }
+            ); // ? mb working
             if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
                 || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                 geometry = new LineString([
                     geometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin).transform(dataProjection, 'EPSG:3857').getFirstCoordinate()
+                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
+                        {
+                            dataProjection: dataProjection,
+                            featureProjection: 'EPSG:3857'
+                        }
+                    ).getFirstCoordinate() // ? nb working
                 ]);
             }
         }
 
         let feature = new Feature({ geometry: geometry });
-        // feature.setStyle(RealPositionStyle([0, 0, 255, 1], geometry.getType())); // ! REALPOSITIONSTYLE CREATE STYLE SERVICE (SVS_MAP -> l.932)
-        // * pour le problème des arguments, Hilmi a dis que angularJS gérait tout seul le cas
-        // * où le nb d'arguments donné soit < au nb d'arguments souhaité
+        feature.setStyle(this.realPositionService.style(this.selection, [0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);
@@ -179,7 +202,7 @@ export class MapService {
         return feature;
     }
 
-    createGeolocFeatureInstances(coords) {
+    createGeolocFeatureInstances(coords): Array<Feature> {
         return [
             new Feature({
                 geometry: new Point(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857')),

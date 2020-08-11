@@ -28,9 +28,6 @@ import { SyncService } from '../sync.service';
     FlexLayoutModule
   ],
   providers: [
-    DatabaseService,
-    AuthService,
-    SyncService
   ],
   declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,
     ReplicateDatabaseComponent, LoginDatabaseComponent, FirstsyncComponent]

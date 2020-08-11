@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { element } from 'protractor';
 import { AuthService } from './auth.service';
 import { MapService } from './map.service';
 import { LocalDatabase } from './usingLocalDatabase.service';

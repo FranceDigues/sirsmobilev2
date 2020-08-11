@@ -43,7 +43,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       async (databases) => {
         this.databases = databases;
         this.activeDb = this.databases[this.databaseIndex];
-        this.localDB = this.dbService.getLocalDB();
+        this.localDB = await this.dbService.getLocalDB();
         this.remoteDB = await this.dbService.getRemoteDB();
         this.firstStep();
       },
@@ -170,23 +170,23 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
     const promises = [];
 
-    for (let i = 0, element; i < designDocs.length;  element = designDocs[i], i++) {
+    designDocs.forEach((element, i) => {
       const promise = this.localDB.put(element).then(
         () => {
           console.log('3 - EN COURS');
           this.thirdStepProgess(i + 1);
         },
         (error) => {
-          console.log('SECOND CASE' + error);
+          console.log('SECOND CASE', error, element);
           if (error.status === 409) { // already done
             this.thirdStepProgess(i + 1);
             console.log('3 - COMPLETE');
           } else {
             this.thirdStepError(error);
           }
-      });
-      promises.push(promise);
-    }
+        });
+        promises.push(promise);
+    });
 
     Promise.all(promises)
     .then(
@@ -243,7 +243,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     const promises = [];
     let proceedViews = 0;
 
-    for (let i = 0, view; i < indexedViews.length; view = indexedViews[i], i++) {
+    indexedViews.forEach((view) => {
       const promise = this.localDB.query(view, { limit: 0 }).then(
         () => {
           this.fourthStepProgress(++proceedViews);
@@ -253,7 +253,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         }
       );
       promises.push(promise);
-    }
+    });
 
     Promise.all(promises)
     .then(

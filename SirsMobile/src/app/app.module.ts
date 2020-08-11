@@ -17,6 +17,11 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
 import { LibMapModule } from '@lib-map/map.module';
 import { LibCameraModule } from '@lib-camera/camera.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { EditionModeService } from './editionmode.service';
+import { GetStyle, RealPositionStyle } from './style.service';
+import { SyncService } from './sync.service';
+import { DatabaseService } from './database.service';
+import { AuthService } from './auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,6 +34,12 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
     NativeStorage,
     Insomnia,
     Geolocation,
+    EditionModeService,
+    RealPositionStyle,
+    GetStyle,
+    SyncService,
+    DatabaseService,
+    AuthService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
