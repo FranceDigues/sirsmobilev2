@@ -16,6 +16,9 @@ import { transform } from 'ol/proj';
 import { MapService } from '../map.service';
 import Feature from 'ol/Feature';
 import Circle from 'ol/geom/Circle';
+import proj4 from 'proj4';
+import { register } from 'ol/proj/proj4'
+import { SirsDocService } from '../sirsdoc.service';
 
 @Component({
   selector: 'app-main',
@@ -25,7 +28,16 @@ import Circle from 'ol/geom/Circle';
 export class MainPage implements AfterViewInit {
 
   constructor(private ol: OLService, private geoloc: GeolocService,
-              private testMapService: MapService) { }
+              private testMapService: MapService,
+              private sirsDocSrvc: SirsDocService) {
+                console.log('antes');
+                this.sirsDocSrvc.get().then(
+                  (sirsDoc) => {
+                    proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
+                    register(proj4);
+                  }
+                )
+              }
 
   ngAfterViewInit() {
     this.ol.createMap('map');
@@ -38,8 +50,6 @@ export class MainPage implements AfterViewInit {
     ));
     this.ol.addLayer(this.testMapService.editionLayer);
     this.ol.addLayer(this.testMapService.geolocLayer);
-    console.log(this.ol.map);
-    console.log(this.ol.getLayers());
     this.locateMe();
   }
 

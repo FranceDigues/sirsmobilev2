@@ -168,6 +168,7 @@ export class MapService {
                 dataProjection: dataProjection,
                 featureProjection: 'EPSG:3857'
             }); // ? mb working
+            console.log(geometry);
         } else {
             geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
                 {
@@ -184,7 +185,7 @@ export class MapService {
                             dataProjection: dataProjection,
                             featureProjection: 'EPSG:3857'
                         }
-                    ).getFirstCoordinate() // ! ERROR
+                    ).getFirstCoordinate() // ? nb working
                 ]);
             }
         }

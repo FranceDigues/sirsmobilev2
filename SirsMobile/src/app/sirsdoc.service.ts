@@ -3,7 +3,7 @@ import { LocalDatabase } from './usingLocalDatabase.service';
 
 
 @Injectable({
-providedIn: 'root',
+    providedIn: 'root',
 })
 export class SirsDocService {
 
