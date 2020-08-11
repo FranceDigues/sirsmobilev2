@@ -58,10 +58,12 @@ export class SyncService {
       console.log('denied', error);
     });
 
-    subject.subscribe({
-      next: (i) => { this.syncProgress(i); },
-      complete: () => { this.syncComplete(); },
-      error: (error) => { this.syncError(error); return; }
+    return new Promise((resolve, rejects) => {
+      subject.subscribe({
+        next: (i) => { this.syncProgress(i); },
+        complete: async () => { await this.syncComplete(); resolve(); },
+        error: async (error) => { await this.syncError(); rejects(error); }
+      });
     });
   }
 
@@ -72,21 +74,15 @@ export class SyncService {
 
   syncComplete() {
     this.insomnia.allowSleepAgain();
-    setTimeout(
-      () => {
-        this.dbService.activeDB.lastSync = new Date().getTime();
-        this.status = 2;
-        console.log('SYNC FINISH');
-        // TODO MAP MANAGER CLEAR ALL
-        // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
-      }, 1000);
+    this.dbService.activeDB.lastSync = new Date().getTime();
+    this.status = 2;
+    console.log('SYNC FINISH');
+    // TODO MAP MANAGER CLEAR ALL
+    // TODO REDRAW EDITION LAYER AFTER SYNCHRONIZATION
   }
 
-  syncError(error) {
-    console.log(error);
+  syncError() {
     this.insomnia.allowSleepAgain();
-    setTimeout(() => {
-      this.status = 3;
-    }, 1000);
+    this.status = 3;
   }
 }
