@@ -120,7 +120,7 @@ export class MapService {
 
     createEditionLayerInstance() {
         console.log('DEBUGSPAWN')
-        let olLayer = new ImageLayer({
+        let olLayer = new VectorLayer({
             name: 'Edition',
             source: new VectorSource({ useSpatialIndex: false })
         });
@@ -135,7 +135,7 @@ export class MapService {
         let olSource = olLayer.getSource();
 
         console.log('DEBUG-1');
-        this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
+        return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
         .then(
             (results) => {
                 console.log('resultsss', results);
@@ -143,9 +143,11 @@ export class MapService {
                 olSource.clear();
                 console.log('DEBUG0');
                 olSource.addFeatures(this.createEditionFeatureInstances(results))
+                return;
             },
             (error) => {
                 console.log('Error debug', error);
+                return;
             }
         );
     }
