@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
+import { EditionLayer } from './layers.service';
 import { MapService } from './map.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
 
@@ -44,7 +45,7 @@ export class EditionModeService {
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-                private testMapService: MapService) { }
+                private editionLayer: EditionLayer) { }
 
     newObject(type) {
         let objectDoc: any = {
@@ -65,8 +66,8 @@ export class EditionModeService {
         .then(
             () => {
                 if (objectDoc.positionDebut && objectDoc.positionFin) {
-                    let source = this.testMapService.editionLayer.getSource()
-                    let features = source.getFeatures(); // ! ATTENTION VERIFIER QUE C'EST TJS UN SEUL GETSOURCE
+                    let source = this.editionLayer.editionLayer.getSource()
+                    let features = source.getFeatures();
                     let i = features.length;
                     while (i--) {
                         if (features[i].get('id') === objectDoc._id) {
@@ -74,7 +75,7 @@ export class EditionModeService {
                             break;
                         }
                     }
-                    source.addFeature(this.testMapService.createEditionFeatureInstance(objectDoc));
+                    source.addFeature(this.editionLayer.createEditionFeatureInstance(objectDoc));
                 }
                 return objectDoc;
             }

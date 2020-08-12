@@ -19,6 +19,7 @@ import Circle from 'ol/geom/Circle';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4'
 import { SirsDocService } from '../sirsdoc.service';
+import { EditionLayer, GeolocLayer } from '../layers.service';
 
 @Component({
   selector: 'app-main',
@@ -28,9 +29,8 @@ import { SirsDocService } from '../sirsdoc.service';
 export class MainPage implements AfterViewInit {
 
   constructor(private ol: OLService, private geoloc: GeolocService,
-              private testMapService: MapService,
-              private sirsDocSrvc: SirsDocService) {
-                console.log('antes');
+              private editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
+              private sirsDocSrvc: SirsDocService, private mapService: MapService) {
                 this.sirsDocSrvc.get().then(
                   (sirsDoc) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
@@ -41,15 +41,15 @@ export class MainPage implements AfterViewInit {
 
   ngAfterViewInit() {
     this.ol.createMap('map');
-    this.ol.getMap().setView(this.testMapService.currentView);
+    this.ol.getMap().setView(this.mapService.currentView);
     this.ol.addLayer(new TileLayer(
       {
         title: 'Global Imagery',
         source: new OSM()
       }
     ));
-    this.ol.addLayer(this.testMapService.editionLayer);
-    this.ol.addLayer(this.testMapService.geolocLayer);
+    this.ol.addLayer(this.editionLayer.editionLayer);
+    this.ol.addLayer(this.geolocLayer.geolocLayer);
     this.locateMe();
   }
 
@@ -72,9 +72,7 @@ export class MainPage implements AfterViewInit {
       let map = this.ol.getMap();
       map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
       map.getView().setZoom(18);
-      let geolocLayerSource = this.testMapService.geolocLayer.getSource();
-      geolocLayerSource.clear();
-      geolocLayerSource.addFeatures(this.testMapService.createGeolocFeatureInstances(coords));
+      this.geolocLayer.redrawGeolocLayer(coords);
     }
   }
 

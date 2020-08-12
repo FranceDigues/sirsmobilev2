@@ -27,25 +27,22 @@ import { SirsDocService } from './sirsdoc.service';
 import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { RealPositionStyle } from './style.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
-// import { LocalDatabase } from './usingLocalDatabase.service';
-// import { defaults } from 'ol/interaction';
-// import Select from 'ol/interaction/Select';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapService {
 
-    currentView = new View({
+    public currentView = new View({
         zoom: 6,
         center: transform([2.7246, 47.0874], 'EPSG:4326', 'EPSG:3857'),
         enableRotation: false
     });
-    selection = {
+    public selection = {
         list: [],
         active: null
     }
-    wktFormat = new WKT(); // ? mb useful
+    wktFormat = new WKT();
     // wgs84Sphere = new olSphere(6378137); // ? mb useful
     // selectInteraction = new Select({
     //     style: new Style({
@@ -59,162 +56,10 @@ export class MapService {
     //         return olLayer.get('name') === 'Edition' // && editionLayer.getVisible // TODO
     //     }
     // })
-    // backLayers = new LayerGroup({ // TODO
-    //     name: 'Background',
-    //     layers: [
-    //         // createBackLayerInstance(BackLayerService.getActive) // TODO
-    //     ]
-    // })
-    // appLayers = new LayerGroup({ // TODO
-    //     name: 'Objects',
-    //     // layers: AppLayersService.getFavorites().map(createAppLayerInstance) // TODO
-    // })
-    editionLayer: ImageLayer = this.createEditionLayerInstance(); // ! Ranger toutes les méthodes permettant de créer l'Edition Layer dans un autre Service
-    geolocLayer = new VectorLayer({
-        name: 'Geolocation',
-        visible: true,
-        source: new VectorSource({useSpatialIndex: false}),
-        style: (feature) => {
-            switch (feature.getGeometry().getType()) {
-                case 'Circle':
-                    return [
-                        new Style({
-                            fill: new Fill({ color: [255, 255, 255, 0.3] }),
-                            stroke: new Stroke({ color: [0, 0, 255, 1], width: 1 })
-                        })
-                    ];
-                case 'Point':
-                    return [
-                        new Style({
-                            image: new Icon({
-                                anchor: [0.5, 1],
-                                anchorXUnits: 'fraction',
-                                anchorYUnits: 'fraction',
-                                src: '../assets/img/pin-icon.png'
-                            })
-                        })
-                    ];
-                default:
-                    return [];
-            }
-        }
-    });
 
     constructor(private SirsDoc: SirsDocService, private realPositionService: RealPositionStyle,
                 private localDB: LocalDatabase) { }
 
-    get getSelection() {
-        return this.selection;
-    }
-
-    redrawEditionModeLayer(layer) {
-        layer.getSource().clear();
-        this.editionLayer = layer;
-        this.setEditionLayerFeatures(this.editionLayer);
-    }
-
-    redrawEditionLayerAfterSynchronization() {
-        this.editionLayer.getSource().clear();
-        this.setEditionLayerFeatures(this.editionLayer);
-    }
-
-    createEditionLayerInstance() {
-        console.log('DEBUGSPAWN')
-        let olLayer = new VectorLayer({
-            name: 'Edition',
-            source: new VectorSource({ useSpatialIndex: false })
-        });
-
-        this.setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
-        return olLayer;
-    }
-
-    setEditionLayerFeatures(olLayer) {
-        let olSource = olLayer.getSource();
-
-        return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
-        .then(
-            (results) => {
-                olSource.clear();
-                olSource.addFeatures(this.createEditionFeatureInstances(results))
-                return;
-            },
-            (error) => {
-                console.log('Error debug', error);
-                return;
-            }
-        );
-    }
-
-    createEditionFeatureInstances(featureDocs) {
-        let features = [];
-        featureDocs.forEach((featureDoc) => {
-            if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
-                || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
-                    features.push(this.createEditionFeatureInstance(featureDoc.doc));
-                }
-        });
-        return features;
-    }
-
-    createEditionFeatureInstance(featureDoc): Feature {
-        // Compute geometry.
-        let SirsDoc = this.SirsDoc;
-        let geometry = undefined;
-        let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
-
-        if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
-            geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
-                featureProjection: 'EPSG:3857'
-            }); // ? mb working
-            console.log(geometry);
-        } else {
-            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
-                {
-                    dataProjection: dataProjection,
-                    featureProjection: 'EPSG:3857'
-                }
-            ); // ? mb working
-            if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
-                || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
-                geometry = new LineString([
-                    geometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
-                        {
-                            dataProjection: dataProjection,
-                            featureProjection: 'EPSG:3857'
-                        }
-                    ).getFirstCoordinate() // ? nb working
-                ]);
-            }
-        }
-
-        let feature = new Feature({ geometry: geometry });
-        feature.setStyle(this.realPositionService.style(this.selection, [0, 0, 255, 1], geometry.getType()));
-        feature.set('id', featureDoc._id);
-        feature.set('rev', featureDoc._rev);
-        feature.set('author', featureDoc.author);
-        feature.set('description', featureDoc.description);
-        feature.set('designation', featureDoc.designation);
-        feature.set('@class', featureDoc['@class']);
-
-        return feature;
-    }
-
-    createGeolocFeatureInstances(coords): Array<Feature> {
-        return [
-            new Feature({
-                geometry: new Point(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857')),
-                name: 'Location Pointer'
-            }),
-            new Feature({
-                geometry: new Circle(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'), 40)
-            })
-        ];
-    }
-
-    // constructor(private localDB: LocalDatabase) { }
 
     // buildMap(element): Map {
     //     if (!this.currentView.get('touched')) { // ? interresting
