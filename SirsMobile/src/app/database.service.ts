@@ -58,6 +58,36 @@ export class DatabaseService {
     return this.nativeStorage.getItem('databases');
   }
 
+  getCurrentDatabaseHardDisk() {
+    return new Promise((resolve) => {
+      this.nativeStorage.getItem('databases')
+      .then(
+        (databases) => {
+          databases.forEach((database) => {
+            if (database.name === this.activeDB.name) {
+              resolve(database);
+            }
+          })
+          resolve();
+        }
+      );
+    });
+  }
+
+  updateCurrentDatabaseHardDisk(updatedDatabase) {
+    this.getDatabasesHardDisk()
+    .then(
+      (databases) => {
+        databases.forEach((database, i) => {
+          if (database.name === this.activeDB.name) {
+            databases[i] = updatedDatabase;
+            this.updateDatabasesHardDisk(databases);
+          }
+        })
+      }
+    )
+  }
+
   changeDatabase() {
     this.remoteDB = this.localDB = this.activeDB = null;
   }

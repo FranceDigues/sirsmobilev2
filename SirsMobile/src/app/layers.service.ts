@@ -25,6 +25,10 @@ import { RealPositionStyle } from './style.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
 import { MapService } from './map.service';
 import LayerGroup from 'ol/layer/Group';
+import XYZ from 'ol/source/XYZ';
+import TileLayer from 'ol/layer/Tile';
+import Source from 'ol/source/Source';
+import OSM from 'ol/source/OSM';
 
 @Injectable({
     providedIn: 'root'
@@ -211,7 +215,51 @@ export class GeolocLayer {
     providedIn: 'root'
 })
 export class BackLayer {
-    backLayer: LayerGroup;
+    backLayer: LayerGroup = this.createBackLayer();
+
+    createBackLayer() {
+        return new LayerGroup({
+            name: 'Background',
+            layers: [
+                this.createBackLayerInstance('') // TODO change argument
+            ]
+        });
+    }
+
+    createBackLayerInstance(layerModel): TileLayer { // TODO FINISH
+        let layer = null;
+
+        console.log('LayerModel', layerModel);
+        // if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
+        //     const extent = layerModel.cache.extent;
+
+        //     const source = new XYZ({
+        //         url: layerModel.cache.url
+        //     });
+        //     layer = new TileLayer({
+        //         name: layerModel.name,
+        //         extent: extent,
+        //         source: source
+        //     });
+        // } else {
+        //     layer = new TileLayer({
+        //         name: layerModel.name,
+        //         model: layerModel,
+        //         source: new Source(layerModel.source) // ? not sure
+        //     });
+        // }
+        layer = new TileLayer({
+            source: new OSM({
+                        url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    })
+        })
+        return layer;
+    }
+
+    syncBackLayer() {
+        const olLayer = this.createBackLayerInstance('') // TODO change argument
+        this.backLayer.getLayers().setAt(0, olLayer);
+    }
 }
 
 @Injectable({

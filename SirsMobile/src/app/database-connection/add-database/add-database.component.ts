@@ -40,7 +40,40 @@ export class AddDatabaseComponent implements OnInit {
     this.statusChange.emit(0);
   }
 
+  private addDefaultProperties() {
+    this.databaseForm.value.context = {
+      authUser: null,
+      backLayer: {
+        active: 'OpenStreetMap',
+        list:
+        [
+          {
+              name: 'OpenStreetMap',
+              source: {
+                  type: 'OSM',
+                  url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              }
+          },
+          {
+              name: 'Landscape',
+              source: {
+                  type: 'OSM',
+                  url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+              }
+          }
+        ]
+      },
+      settings: {
+        geolocation: true,
+        edition: false,
+      },
+      lastLocation: null,
+      version: null
+    };
+  }
+
   addStorage() {
+    this.addDefaultProperties();
     this.nativeStorage.getItem('databases')
     .then(
       (data) => {

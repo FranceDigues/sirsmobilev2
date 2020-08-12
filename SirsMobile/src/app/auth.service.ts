@@ -1,18 +1,40 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import MD5 from 'crypto-js/md5';
+import { DatabaseModel } from './models/database.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  user = null; // TODO set type interface
+  user;
 
   constructor(private dbService: DatabaseService) { }
 
+  isAuth() {
+    this.dbService.getCurrentDatabaseHardDisk()
+    .then(
+      (database: DatabaseModel) => {
+        if (database.context.authUser !== null) {
+          this.user = database.context.authUser;
+          return true;
+        } else {
+          return false;
+        }
+      }
+    );
+  }
+
   logout() {
     this.user = null;
+    this.dbService.getCurrentDatabaseHardDisk()
+    .then(
+      (database: DatabaseModel) => {
+        database.context.authUser = null;
+        this.dbService.updateCurrentDatabaseHardDisk(database);
+      }
+    )
   }
 
   login(login, password) {
@@ -27,8 +49,15 @@ export class AuthService {
             const hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
               this.user = result.rows[0].doc;
+              this.dbService.getCurrentDatabaseHardDisk()
+              .then(
+                (database: DatabaseModel) => {
+                  database.context.authUser = this.user;
+                  this.dbService.updateCurrentDatabaseHardDisk(database);
+                  resolve();
+                }
+              )
               console.log('NOTE THE TYPE PLS', this.user);
-              resolve();
             } else {
               console.log('error');
               reject();
