@@ -19,7 +19,7 @@ import Circle from 'ol/geom/Circle';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4'
 import { SirsDocService } from '../sirsdoc.service';
-import { BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
+import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
 
 @Component({
   selector: 'app-main',
@@ -31,7 +31,7 @@ export class MainPage implements AfterViewInit {
   constructor(private ol: OLService, private geoloc: GeolocService,
               private editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
               private sirsDocSrvc: SirsDocService, private mapService: MapService,
-              private backLayer: BackLayer) {
+              private backLayer: BackLayer, private appLayer: AppLayer) {
                 this.sirsDocSrvc.get().then(
                   (sirsDoc) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
@@ -44,6 +44,7 @@ export class MainPage implements AfterViewInit {
     this.ol.createMap('map');
     this.ol.getMap().setView(this.mapService.currentView);
     this.ol.addLayer(this.backLayer.backLayer);
+    this.ol.addLayer(this.appLayer.appLayer)
     this.ol.addLayer(this.editionLayer.editionLayer);
     this.ol.addLayer(this.geolocLayer.geolocLayer);
     this.locateMe();

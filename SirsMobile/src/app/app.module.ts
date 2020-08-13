@@ -18,15 +18,17 @@ import { LibMapModule } from '@lib-map/map.module';
 import { LibCameraModule } from '@lib-camera/camera.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EditionModeService } from './editionmode.service';
-import { GetStyle, RealPositionStyle } from './style.service';
+import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
 import { SyncService } from './sync.service';
 import { DatabaseService } from './database.service';
 import { AuthService } from './auth.service';
+import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './layers.service';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
+  imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
   , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule],
   providers: [
     StatusBar,
@@ -37,6 +39,12 @@ import { AuthService } from './auth.service';
     EditionModeService,
     RealPositionStyle,
     GetStyle,
+    HandlingStyle,
+    DefaultStyle,
+    AppLayer,
+    GeolocLayer,
+    EditionLayer,
+    BackLayer,
     SyncService,
     DatabaseService,
     AuthService,

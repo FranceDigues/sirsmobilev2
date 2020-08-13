@@ -33,5 +33,7 @@ export interface BackLayerModel {
 
 export interface FavoritesModel {
     visible: boolean;
+    title?: string;
+    filterValue?: string;
 }
 

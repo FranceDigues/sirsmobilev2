@@ -42,6 +42,7 @@ export class MapService {
         list: [],
         active: null
     }
+    public archiveObjectsFlag: boolean = false;
     wktFormat = new WKT();
     // wgs84Sphere = new olSphere(6378137); // ? mb useful
     // selectInteraction = new Select({
@@ -57,8 +58,7 @@ export class MapService {
     //     }
     // })
 
-    constructor(private SirsDoc: SirsDocService, private realPositionService: RealPositionStyle,
-                private localDB: LocalDatabase) { }
+    constructor() { }
 
 
     // buildMap(element): Map {

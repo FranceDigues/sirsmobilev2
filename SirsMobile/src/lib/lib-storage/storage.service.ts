@@ -11,12 +11,12 @@ export class StorageService extends ClassStorageService {
         super();
     }
 
-    setItem(key: string, item: object): void {
-        const object = JSON.stringify(item);
-        this.storage.set(key, object);
+    setItem(key: string, item): void {
+        const jsonItem = JSON.stringify(item);
+        this.storage.set(key, jsonItem);
     }
 
-    async getItem(key: string): Promise<object> {
+    async getItem(key: string): Promise<any> {
         let result = null;
 
         await this.storage.get(key)

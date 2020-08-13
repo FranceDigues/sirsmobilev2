@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import View from 'ol/View';
 import WKT from 'ol/format/WKT';
-// import * as olSphere from 'ol/sphere';
-// import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
 import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
@@ -21,7 +19,7 @@ import LineString from 'ol/geom/LineString';
 import ImageLayer from 'ol/layer/Image';
 import ImageSource from 'ol/source/Image';
 import { SirsDocService } from './sirsdoc.service';
-import { RealPositionStyle } from './style.service';
+import { RealPositionStyle, DefaultStyle } from './style.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
 import { MapService } from './map.service';
 import LayerGroup from 'ol/layer/Group';
@@ -29,13 +27,18 @@ import XYZ from 'ol/source/XYZ';
 import TileLayer from 'ol/layer/Tile';
 import Source from 'ol/source/Source';
 import OSM from 'ol/source/OSM';
+import Cluster from 'ol/source/Cluster';
+import { FeatureCache } from './cache.service';
+import { noop } from 'rxjs';
+import { StorageService } from '@lib-storage/storage.service';
+import { AppLayersService } from './applayers.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EditionLayer {
 
-    editionLayer: ImageLayer = this.createEditionLayerInstance();
+    editionLayer = this.createEditionLayerInstance();
 
     wktFormat = new WKT();
 
@@ -122,7 +125,7 @@ export class EditionLayer {
         }
 
         let feature = new Feature({ geometry: geometry });
-        feature.setStyle(this.realPositionService.style(this.mapService.selection, [0, 0, 255, 1], geometry.getType()));
+        feature.setStyle(this.realPositionService.style(this.mapService.selection, feature, [0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);
@@ -266,5 +269,314 @@ export class BackLayer {
     providedIn: 'root'
 })
 export class AppLayer {
-    appLayer: LayerGroup;
+
+    appLayer: LayerGroup = this.createAppLayer();
+    wktFormat = new WKT();
+
+    constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
+                private storageService: StorageService, private SirsDoc: SirsDocService,
+                private mapService: MapService, private RealPositionStyle: RealPositionStyle,
+                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) {}
+
+    createAppLayer(): LayerGroup {
+        return new LayerGroup({
+            name: 'Objects',
+            layers: this.appLayersService.getFavorites().map((layerModel) => { console.log('start', layerModel); return (this.createAppLayerInstance(layerModel)); })
+        })
+    }
+
+    createAppLayerInstance(layerModel) {
+        let olLayer: VectorLayer;
+        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
+            //@hb Change the layer Source to Cluster source
+            olLayer = new VectorLayer ({
+                name: layerModel.title,
+                visible: layerModel.visible,
+                model: layerModel,
+                source: new VectorSource({
+                    style: (feature, resolution) => {
+                        var features = feature.get('features');
+                        var styles = [];
+
+                        if (Array.isArray(features) && features.length > 0) {
+                            features.forEach((_feature) => {
+                                var style = _feature.getStyle();
+                                if (typeof style === 'function') {
+                                    style = style.call(_feature, _feature, resolution);
+                                } else if (style instanceof Style) {
+                                    style = [].concat(style);
+                                }
+
+                                if (Array.isArray(style)) {
+                                    style.forEach((_style) => {
+                                        _style.setGeometry(_feature.getGeometry());
+                                        if (_style.getText() !== undefined && _style.getText() !== null) {
+                                            _style.getText().setText(undefined);
+                                        }
+                                        styles.push(_style);
+                                    });
+                                }
+                            });
+
+                            var style = features[0].getStyle();
+                            if (typeof style === "function") {
+                                style = style.call(feature, feature, resolution);
+                            } else if (style instanceof Style) {
+                                style = [].concat(style);
+                            }
+
+
+                            if (Array.isArray(style)) {
+                                style.forEach((_style) => {
+                                    styles.push(new Style({
+                                        zIndex: _style.getZIndex(),
+                                        text: _style.getText()
+                                    }));
+                                });
+                            }
+                        }
+                        return styles;
+                    },
+                    source: new Cluster({
+                        distance: 24,
+                        source: new VectorSource({useSpatialIndex: true})
+                    })
+                })
+            });
+
+        } else {
+            olLayer = new VectorLayer({
+                name: layerModel.title,
+                visible: layerModel.visible,
+                model: layerModel,
+                source: new VectorSource({
+                    source: new VectorSource({useSpatialIndex: false})
+                })
+            });
+        }
+
+        if (layerModel.visible === true) {
+            this.setAppLayerFeatures(olLayer);
+        }
+        console.log('end', olLayer);
+        return olLayer;
+    }
+
+    async setAppLayerFeatures(olLayer) {
+        let layerModel = olLayer.get('model');
+        let olSource = null;
+
+        console.log('olLayer ATTENTION VERIF', olLayer);
+        if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+            olSource = olLayer.getSource().getSource().getSource();
+        } else {
+            olSource = olLayer.getSource().getSource();
+        }
+
+        // Try to get the promise of a previous query.
+        let promise = this.featureCache.get(layerModel.title);
+
+        if (typeof promise === 'undefined') {
+
+            if (layerModel.filterValue !== "fr.sirs.core.model.BorneDigue" && layerModel.filterValue !== "fr.sirs.core.model.TronconDigue") {
+                //Get all the favorites tronçons ids
+                let favorites = await this.storageService.getItem("AppTronconsFavorities");
+                let keys = [];
+                if (favorites !== null && favorites.length !== 0) {
+                    favorites.forEach((key) => {
+                        keys.push([layerModel.filterValue, key.id]);
+                    });
+
+                    promise = this.localDB.query('ElementSpecial3', {
+                        keys: keys
+                    }).then(
+                        (results) => {
+                            return results.map(this.createAppFeatureModel);
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                } else {
+                    if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
+                        promise = this.localDB.query('Element/byClassAndLinear', {
+                            startkey: [layerModel.filterValue],
+                            endkey: [layerModel.filterValue, {}],
+                            include_docs: true
+                        }).then((results) => {
+                                return results.filter((item) => {
+                                    return !item.doc.editMode;
+                                }).map(this.createAppFeatureModel);
+                            },
+                            (error) => {
+                                console.error(error);
+                            });
+                    } else {
+                        noop();
+                        // var deferred = $q.defer();
+                        // promise = deferred.promise
+                        //     .then(function () {
+                        //         return [];
+                        //     });
+                        // deferred.resolve();
+                    }
+                }
+            } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
+                let tmp = await this.storageService.getItem("AppTronconsFavorities");
+                promise = this.localDB.query('TronconDigue/streamLight', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                }).then(
+                    (results) => {
+                        return results.map(this.createAppFeatureModel);
+                    },
+                    (error) => {
+                        console.log(error);
+                    });
+            } else {
+                let tmp = await this.storageService.getItem("AppTronconsFavorities");
+                promise = this.localDB.query('getBornesFromTronconID', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                }).then(
+                    (results) => {
+                        return this.localDB.query('getBornesIdsHB', {
+                            keys: results.map((obj) => {
+                                return obj.value;
+                            })
+                        }).then(
+                            function (results2) {
+                                return results2.map(this.createAppFeatureModel());
+                            });
+                    },
+                    (error) => {
+                        console.log(error);
+                    });
+            }
+
+
+            // Set and store the promise.
+            this.featureCache.put(layerModel.title, promise);
+        }
+
+        // Wait for promise resolution or rejection.
+        promise.then(
+            (featureModels) => {
+                // @hb get the featureModels from the promise
+
+                olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
+                // $rootScope.loadingflag = false; // TODO remplace ?
+            },
+            (error) => {
+                // TODO → handle error
+            });
+
+
+    }
+
+    createAppFeatureModel(featureDoc) {
+        featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
+
+        let dataProjection = typeof this.SirsDoc.get().epsgCode === 'undefined' ? "EPSG:2154" : this.SirsDoc.get().epsgCode;
+
+        let projGeometry = null;
+        let realGeometry = null;
+
+        if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
+            projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+                dataProjection: dataProjection,
+                featureProjection: 'EPSG:3857'
+            });
+            realGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+                dataProjection: dataProjection,
+                featureProjection: 'EPSG:3857'
+            });
+        } else {
+            projGeometry = featureDoc.geometry ? this.wktFormat.readGeometry(featureDoc.geometry, {
+                dataProjection: dataProjection,
+                featureProjection: 'EPSG:3857'
+            }) : undefined;
+
+            if (projGeometry instanceof LineString && projGeometry.getCoordinates().length === 2 &&
+                projGeometry.getCoordinates()[0][0] === projGeometry.getCoordinates()[1][0] &&
+                projGeometry.getCoordinates()[0][1] === projGeometry.getCoordinates()[1][1]) {
+                projGeometry = new Point(projGeometry.getCoordinates()[0]);
+            }
+
+            realGeometry = featureDoc.positionDebut ?
+                this.wktFormat.readGeometry(featureDoc.positionDebut, {
+                    dataProjection: dataProjection,
+                    featureProjection: 'EPSG:3857'
+                }) : undefined;
+
+            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+                realGeometry = new LineString([
+                    realGeometry.getFirstCoordinate(),
+                    this.wktFormat.readGeometry(featureDoc.positionFin, {
+                        dataProjection: dataProjection,
+                        featureProjection: 'EPSG:3857'
+                    }).getFirstCoordinate()
+                ]);
+            }
+
+        }
+
+        return {
+            id: featureDoc.id || featureDoc._id,
+            rev: featureDoc.rev || featureDoc._rev,
+            designation: featureDoc.designation,
+            title: featureDoc.libelle,
+            projGeometry: projGeometry,
+            realGeometry: realGeometry,
+            archive: featureDoc.date_fin ? true : false
+        };
+    }
+
+    createAppFeatureInstances(featureModels, layerModel) {
+        var features = [];
+        // get each feature from the featureModel
+        featureModels.forEach((featureModel) => {
+            if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                if (this.mapService.archiveObjectsFlag) {
+                    // Show all the objects
+                    var feature = new Feature();
+                    if (layerModel.realPosition) {
+                        feature.setGeometry(featureModel.realGeometry);
+                        feature.setStyle(this.RealPositionStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                    } else {
+                        feature.setGeometry(featureModel.projGeometry);
+                        feature.setStyle(this.DefaultStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                    }
+                    feature.set('id', featureModel.id);
+                    feature.set('categories', layerModel.categories);
+                    feature.set('rev', featureModel.rev);
+                    feature.set('designation', featureModel.designation);
+                    feature.set('@class', layerModel.filterValue);
+                    feature.set('title', featureModel.libelle);
+                    features.push(feature);
+                } else {
+                    //Show only not archived objects
+                    if (!featureModel.archive) {
+                        var feature = new Feature();
+                        if (layerModel.realPosition) {
+                            feature.setGeometry(featureModel.realGeometry);
+                            feature.setStyle(this.RealPositionStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                        } else {
+                            feature.setGeometry(featureModel.projGeometry);
+                            feature.setStyle(this.DefaultStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                        }
+                        feature.set('id', featureModel.id);
+                        feature.set('categories', layerModel.categories);
+                        feature.set('rev', featureModel.rev);
+                        feature.set('designation', featureModel.designation);
+                        feature.set('@class', layerModel.filterValue);
+                        feature.set('title', featureModel.libelle);
+                        features.push(feature);
+                    }
+                }
+            }
+        });
+        return features;
+    }
 }

@@ -41,6 +41,14 @@ export class AddDatabaseComponent implements OnInit {
   }
 
   private addDefaultProperties() {
+    this.databaseForm.value.favorites = [
+      {
+        title: null,
+        visible: false,
+        filterValue: null,
+        model: null
+      }
+    ]
     this.databaseForm.value.context = {
       authUser: null,
       backLayer: {
