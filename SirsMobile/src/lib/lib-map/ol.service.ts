@@ -3,6 +3,7 @@ import { ClassMapService } from './class.service';
 import Map from 'ol/Map';
 import Layer from 'ol/layer';
 import View from 'ol/View';
+import { defaults } from 'ol/control';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,11 @@ export class OLService extends ClassMapService {
             view: new View({
                 zoom: 0,
                 center: [0, 0]
+            }),
+            controls: new defaults({
+                attribution: false,
+                zoom: false,
+                rotate: false
             })
         });
         this.map.setTarget(name);
