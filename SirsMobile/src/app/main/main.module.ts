@@ -13,6 +13,9 @@ import { GeolocService } from '../geoloc.service';
 import { MapService } from '../map.service';
 import { RealPositionStyle } from '../style.service';
 import { EditionModeService } from '../editionmode.service';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -20,6 +23,8 @@ import { EditionModeService } from '../editionmode.service';
     FormsModule,
     IonicModule,
     MainPageRoutingModule,
+    NgbCollapseModule,MatIconModule,
+    FlexLayoutModule
   ],
   providers: [
     OLService,

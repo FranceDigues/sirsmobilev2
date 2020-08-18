@@ -1,1 +1,24 @@
+<header>
+    <nav class="navbar navbar-custom navbar-expand-sm">
+        <div class="collapse navbar-collapse" id="navbarToggler">
+                <a *ngIf="editionLayer.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
+                <div style="padding: 0 60px; line-height: 30px !important;" fxLayout="column" fxLayoutAlign="center center" *ngIf="geoloc.lastGPSUpdate">
+                    <span style="height: 30px;">Précision du signal GPS : {{ geoloc.gpsAccuracy }}m</span>
+                    <span style="height: 30px;">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
+                </div>
+        </div>
+        <a class="nav-item nav-link" href='#' (click)="locateMe()">
+            <span><i class="material-icons">gps_fixed</i></span>
+        </a>
+        <a class="nav-item nav-link" href='#' (click)="zoomToMe()">
+            <span><i class="material-icons">place</i></span>
+        </a>
+        <a class="nav-item nav-link">
+            <span><i class="material-icons">refresh</i></span>
+        </a>
+        <a class="nav-item nav-link" (click)="logout()">
+            <span><i class="material-icons">power_settings_new</i></span>
+        </a>
+    </nav>
+</header>
 <div id="map"></div>

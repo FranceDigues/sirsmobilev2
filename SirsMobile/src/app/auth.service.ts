@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import MD5 from 'crypto-js/md5';
 import { DatabaseModel } from './models/database.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class AuthService {
 
   user;
 
-  constructor(private dbService: DatabaseService) { }
+  constructor(private dbService: DatabaseService, private route: Router) { }
 
   isAuth() {
     this.dbService.getCurrentDatabaseHardDisk()
@@ -33,6 +34,7 @@ export class AuthService {
       (database: DatabaseModel) => {
         database.context.authUser = null;
         this.dbService.updateCurrentDatabaseHardDisk(database);
+        this.route.navigateByUrl('/');
       }
     )
   }

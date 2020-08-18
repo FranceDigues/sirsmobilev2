@@ -24,12 +24,15 @@ import { DatabaseService } from './database.service';
 import { AuthService } from './auth.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './layers.service';
 import { IonicStorageModule } from '@ionic/storage';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
-  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule],
+  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule],
   providers: [
     StatusBar,
     SplashScreen,

@@ -20,6 +20,7 @@ import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4'
 import { SirsDocService } from '../sirsdoc.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-main',
@@ -28,10 +29,13 @@ import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.servic
 })
 export class MainPage implements AfterViewInit {
 
-  constructor(private ol: OLService, private geoloc: GeolocService,
-              private editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
+  navbarController = true;
+
+  constructor(private ol: OLService, public geoloc: GeolocService,
+              public editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
               private sirsDocSrvc: SirsDocService, private mapService: MapService,
-              private backLayer: BackLayer, private appLayer: AppLayer) {
+              private backLayer: BackLayer, private appLayer: AppLayer,
+              private authService: AuthService) {
                 this.sirsDocSrvc.get().then(
                   (sirsDoc) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
@@ -71,6 +75,10 @@ export class MainPage implements AfterViewInit {
       map.getView().setZoom(18);
       this.geolocLayer.redrawGeolocLayer(coords);
     }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
 }
