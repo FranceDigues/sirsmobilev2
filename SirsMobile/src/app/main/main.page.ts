@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { OLService } from '@lib-map/ol.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { GeolocService } from '../geoloc.service';
 
 import Map from 'ol/Map';
@@ -21,6 +21,8 @@ import { register } from 'ol/proj/proj4'
 import { SirsDocService } from '../sirsdoc.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
 import { AuthService } from '../auth.service';
+import { MenuController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-main',
@@ -35,7 +37,7 @@ export class MainPage implements AfterViewInit {
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
               private sirsDocSrvc: SirsDocService, private mapService: MapService,
               private backLayer: BackLayer, private appLayer: AppLayer,
-              private authService: AuthService) {
+              private authService: AuthService, private menu: MenuController) {
                 this.sirsDocSrvc.get().then(
                   (sirsDoc) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
@@ -77,8 +79,20 @@ export class MainPage implements AfterViewInit {
     }
   }
 
+  refresh() {
+    // window.location.reload();
+  }
+
   logout() {
     this.authService.logout();
+  }
+
+  openSliderLeft() {
+    this.menu.open('left-slider');
+  }
+
+  openSliderRight() {
+    this.menu.open('right-slider');
   }
 
 }

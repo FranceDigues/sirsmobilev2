@@ -1,24 +1,70 @@
-<header>
-    <nav class="navbar navbar-custom navbar-expand-sm">
-        <div class="collapse navbar-collapse" id="navbarToggler">
-                <a *ngIf="editionLayer.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
-                <div style="padding: 0 60px; line-height: 30px !important;" fxLayout="column" fxLayoutAlign="center center" *ngIf="geoloc.lastGPSUpdate">
-                    <span style="height: 30px;">Précision du signal GPS : {{ geoloc.gpsAccuracy }}m</span>
-                    <span style="height: 30px;">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
-                </div>
-        </div>
-        <a class="nav-item nav-link" href='#' (click)="locateMe()">
-            <span><i class="material-icons">gps_fixed</i></span>
-        </a>
-        <a class="nav-item nav-link" href='#' (click)="zoomToMe()">
-            <span><i class="material-icons">place</i></span>
-        </a>
-        <a class="nav-item nav-link">
-            <span><i class="material-icons">refresh</i></span>
-        </a>
-        <a class="nav-item nav-link" (click)="logout()">
-            <span><i class="material-icons">power_settings_new</i></span>
-        </a>
-    </nav>
-</header>
-<div id="map"></div>
+<ion-menu side="start" menuId="left-slider" contentId="slide" type="push">
+    <ion-header>
+        <ion-toolbar class="header-slide center" color="secondary">
+          <ion-title>Menu Principal</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item>Example Text 1</ion-item>
+          <ion-item>Example Text 2</ion-item>
+          <ion-item>Example Text 3</ion-item>
+          <ion-item>Example Text 4</ion-item>
+          <ion-item>Example Text 5</ion-item>
+        </ion-list>
+      </ion-content>
+</ion-menu>
+
+<ion-menu side="end" menuId="right-slider" contentId="slide" type="push">
+    <ion-header>
+        <ion-toolbar class="header-slide center" color="secondary">
+          <ion-title>Création d'Objets</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item>Example Text 1</ion-item>
+          <ion-item>Example Text 2</ion-item>
+          <ion-item>Example Text 3</ion-item>
+          <ion-item>Example Text 4</ion-item>
+          <ion-item>Example Text 5</ion-item>
+        </ion-list>
+      </ion-content>
+</ion-menu>
+
+<div class="map" id="slide">
+  <header>
+      <nav class="navbar navbar-custom navbar-expand-sm">
+          <div class="collapse navbar-collapse" id="navbarToggler">
+                  <a *ngIf="editionLayer.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
+                  <div class="gps-infos" fxLayout="column" fxLayoutAlign="center center" *ngIf="geoloc.lastGPSUpdate">
+                      <span class="gps-text">Précision du signal GPS : {{ geoloc.gpsAccuracy }}m</span>
+                      <span class="gps-text">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
+                  </div>
+          </div>
+          <a class="nav-item nav-link" (click)="locateMe()">
+              <span><i class="material-icons">gps_fixed</i></span>
+          </a>
+          <a class="nav-item nav-link" (click)="zoomToMe()">
+              <span><i class="material-icons">place</i></span>
+          </a>
+          <a class="nav-item nav-link" (click)="refresh()">
+              <span><i class="material-icons">refresh</i></span>
+          </a>
+          <a class="nav-item nav-link" (click)="logout()">
+              <span><i class="material-icons">power_settings_new</i></span>
+          </a>
+      </nav>
+  </header>
+
+  <div class="map">
+    <div id="map" #map></div>
+    <div class="left-slider">
+        <img src="../../assets/img/slider1.png" (click)="openSliderLeft()" />
+    </div>
+    <div class="right-slider">
+        <img src="../../assets/img/slider2.png" (click)="openSliderRight()"/>
+    </div>
+  </div>
+</div>
+

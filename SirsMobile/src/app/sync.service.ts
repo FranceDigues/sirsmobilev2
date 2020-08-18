@@ -18,6 +18,7 @@ export class SyncService {
 
   cancelSync() {
     this.sync ? this.synch.cancel() : noop();
+    console.log('Come back main');
     this.route.navigateByUrl('/main');
   }
 
