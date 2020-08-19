@@ -1,0 +1,30 @@
+<div [ngSwitch]="slidePath">
+  <div *ngSwitchCase="'menu'">
+    <ion-header>
+      <ion-toolbar class="header-slide center" color="secondary">
+        <ion-title>Création d'Objets</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-list>
+      <ion-item>Example Text 1</ion-item>
+      <ion-item>Example Text 2</ion-item>
+      <ion-item>Example Text 3</ion-item>
+      <ion-item>Example Text 4</ion-item>
+      <ion-item>Example Text 5</ion-item>
+    </ion-list>
+  </div>
+  <div *ngSwitchDefault>
+    <ion-header>
+      <ion-toolbar class="header-slide center" color="secondary">
+        <ion-title>Error Default</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-list>
+      <ion-item>Error Default 1</ion-item>
+      <ion-item>Error Default 2</ion-item>
+      <ion-item>Error Default 3</ion-item>
+      <ion-item>Error Default 4</ion-item>
+      <ion-item>Error Default 5</ion-item>
+    </ion-list>
+  </div>
+</div>

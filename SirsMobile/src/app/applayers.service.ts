@@ -13,7 +13,6 @@ export class AppLayersService {
 
     cachedDescriptions = null;
 
-
     moduleDescriptions() {
         return new Promise((resolve, rejects) => {
             if (!this.cachedDescriptions) {

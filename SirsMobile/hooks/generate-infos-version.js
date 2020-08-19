@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const keyWords = [
+    'cordova',
+    'pouchdb',
+    'proj4',
+    'plugin'
+];
+
+const fs = require('fs');
+
+fs.readFile('package.json', (err, data) =>  {
+    if (err) {
+        console.log("\x1b[31mError\nCan not find package.json.\n\x1b[0m");
+        exit(84);
+    } else {
+        console.log("\x1b[32mUpdating src/versions.json\x1b[0m")
+        const jsonData = JSON.parse(data);
+        const res = selectDependencies(jsonData.dependencies)
+        let dataObject = JSON.stringify(res, null, 2);
+        fs.writeFile('src/assets/versions.json', dataObject + '\n', (err) => {
+            if (err) return console.log("\x1b[31m" + err + "\x1b[0m");
+        });
+    }
+});
+
+function includesKeyWords(word) {
+    for (let i = 0, key = null; i < keyWords.length; i++) {
+        key = keyWords[i]
+        if (word.includes(key) === true || word == "ol") {
+            return true;
+        }
+    }
+    return false;
+}
+
+function selectDependencies(dependencies) {
+    let res = { };
+    for (tmp in dependencies) {
+        if (includesKeyWords(tmp)) {
+            let version = dependencies[tmp].replace('^', '');
+            res[tmp] = version;
+        }
+    }
+    return res;
+}

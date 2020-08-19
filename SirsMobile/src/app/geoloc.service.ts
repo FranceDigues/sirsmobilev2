@@ -21,6 +21,7 @@ export class GeolocService {
     gpsAccuracy = null;
     coords = null;
     lastGPSUpdate = null;
+    enableGeoloc = true;
 
     constructor(private geoloc: Geolocation, private loadingCtrl: LoadingController,
                 private ol: OLService) {}

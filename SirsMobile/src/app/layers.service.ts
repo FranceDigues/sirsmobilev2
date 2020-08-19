@@ -293,65 +293,61 @@ export class AppLayer {
                 name: layerModel.title,
                 visible: layerModel.visible,
                 model: layerModel,
-                source: new VectorSource({
-                    style: (feature, resolution) => {
-                        var features = feature.get('features');
-                        var styles = [];
+                style: (feature, resolution) => {
+                    var features = feature.get('features');
+                    var styles = [];
 
-                        if (Array.isArray(features) && features.length > 0) {
-                            features.forEach((_feature) => {
-                                var style = _feature.getStyle();
-                                if (typeof style === 'function') {
-                                    style = style.call(_feature, _feature, resolution);
-                                } else if (style instanceof Style) {
-                                    style = [].concat(style);
-                                }
-
-                                if (Array.isArray(style)) {
-                                    style.forEach((_style) => {
-                                        _style.setGeometry(_feature.getGeometry());
-                                        if (_style.getText() !== undefined && _style.getText() !== null) {
-                                            _style.getText().setText(undefined);
-                                        }
-                                        styles.push(_style);
-                                    });
-                                }
-                            });
-
-                            var style = features[0].getStyle();
-                            if (typeof style === "function") {
-                                style = style.call(feature, feature, resolution);
+                    if (Array.isArray(features) && features.length > 0) {
+                        features.forEach((_feature) => {
+                            var style = _feature.getStyle();
+                            if (typeof style === 'function') {
+                                style = style.call(_feature, _feature, resolution);
                             } else if (style instanceof Style) {
                                 style = [].concat(style);
                             }
 
-
                             if (Array.isArray(style)) {
                                 style.forEach((_style) => {
-                                    styles.push(new Style({
-                                        zIndex: _style.getZIndex(),
-                                        text: _style.getText()
-                                    }));
+                                    _style.setGeometry(_feature.getGeometry());
+                                    if (_style.getText() !== undefined && _style.getText() !== null) {
+                                        _style.getText().setText(undefined);
+                                    }
+                                    styles.push(_style);
                                 });
                             }
+                        });
+
+                        var style = features[0].getStyle();
+                        if (typeof style === "function") {
+                            style = style.call(feature, feature, resolution);
+                        } else if (style instanceof Style) {
+                            style = [].concat(style);
                         }
-                        return styles;
-                    },
-                    source: new Cluster({
-                        distance: 24,
-                        source: new VectorSource({useSpatialIndex: true})
-                    })
+
+
+                        if (Array.isArray(style)) {
+                            style.forEach((_style) => {
+                                styles.push(new Style({
+                                    zIndex: _style.getZIndex(),
+                                    text: _style.getText()
+                                }));
+                                });
+                        }
+                    }
+                    return styles;
+                },
+                source: new Cluster({
+                    distance: 24,
+                    source: new VectorSource({useSpatialIndex: true})
                 })
             });
 
         } else {
             olLayer = new VectorLayer({
-                name: layerModel.title,
+                name: 'test-amigo',
                 visible: layerModel.visible,
                 model: layerModel,
-                source: new VectorSource({
-                    source: new VectorSource({useSpatialIndex: false})
-                })
+                source: new VectorSource({useSpatialIndex: false})
             });
         }
 
@@ -368,9 +364,9 @@ export class AppLayer {
 
         console.log('olLayer ATTENTION VERIF', olLayer);
         if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
-            olSource = olLayer.getSource().getSource().getSource();
-        } else {
             olSource = olLayer.getSource().getSource();
+        } else {
+            olSource = olLayer.getSource();
         }
 
         // Try to get the promise of a previous query.
@@ -578,5 +574,31 @@ export class AppLayer {
             }
         });
         return features;
+    }
+
+
+    syncAllAppLayer() {
+        let layers = this.appLayer.getLayers();
+        layers.forEach((layer) => {
+            let layerModel = layer.get('model');
+            let olLayer = this.getAppLayerInstance(layerModel);
+
+            olLayer.setVisible(layerModel.visible);
+            olLayer.getSource().clear();
+            if (layerModel.visible === true) {
+                this.setAppLayerFeatures(olLayer);
+            }
+        });
+    }
+
+    private getAppLayerInstance(layerModel) {
+        let layers = this.appLayer.getLayers();
+        let i = layers.getLength();
+        while (i--) {
+            if (layers.item(i).get('model') === layerModel) {
+                return layers.item(i);
+            }
+        }
+        return null;
     }
 }

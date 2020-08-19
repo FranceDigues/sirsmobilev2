@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar class="header-slide center" color="secondary">
+    <ion-title>Menu Principale</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-list>
+  <ion-item (click)="goCraftLayers()">Couches métiers</ion-item>
+  <ion-item (click)="goChoiceOfSectionsDigues()">Choix des Tronçons/Digues</ion-item>
+  <ion-item (click)="goBackMap()">Fonds de carte</ion-item>
+  <ion-item (click)="goGallery()">Gallerie</ion-item>
+  <ion-item (click)="goSynchronisation()">Synchronisation</ion-item>
+  <ion-item>
+    Localisation GPS
+    <ion-toggle slot="end" color="success" checked={{geoloc.enableGeoloc}} (ionChange)="changeLocationGPS()"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    Mode Edition
+    <ion-toggle slot="end" color="success" checked={{editionLayer.editionLayer.getVisible()}} (ionChange)="changeEditionMode()"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    Afficher les objets archivés
+    <ion-toggle slot="end" color="success" checked={{mapService.archiveObjectsFlag}} (ionChange)="changeShowArchivedObjects()"></ion-toggle>
+  </ion-item>
+  <ion-item (click)="goAppInfos()">Informations application</ion-item>
+  <ion-item (click)="goAppSettings()">Configuration de l'application</ion-item>
+</ion-list>

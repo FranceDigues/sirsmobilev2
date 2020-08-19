@@ -31,7 +31,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class MainPage implements AfterViewInit {
 
-  navbarController = true;
+  navbarController = true; // ? mb remove bcs unused
 
   constructor(private ol: OLService, public geoloc: GeolocService,
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer,

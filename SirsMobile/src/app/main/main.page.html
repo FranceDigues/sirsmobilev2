@@ -1,35 +1,9 @@
 <ion-menu side="start" menuId="left-slider" contentId="slide" type="push">
-    <ion-header>
-        <ion-toolbar class="header-slide center" color="secondary">
-          <ion-title>Menu Principal</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-list>
-          <ion-item>Example Text 1</ion-item>
-          <ion-item>Example Text 2</ion-item>
-          <ion-item>Example Text 3</ion-item>
-          <ion-item>Example Text 4</ion-item>
-          <ion-item>Example Text 5</ion-item>
-        </ion-list>
-      </ion-content>
+  <left-slide></left-slide>
 </ion-menu>
 
 <ion-menu side="end" menuId="right-slider" contentId="slide" type="push">
-    <ion-header>
-        <ion-toolbar class="header-slide center" color="secondary">
-          <ion-title>Création d'Objets</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-list>
-          <ion-item>Example Text 1</ion-item>
-          <ion-item>Example Text 2</ion-item>
-          <ion-item>Example Text 3</ion-item>
-          <ion-item>Example Text 4</ion-item>
-          <ion-item>Example Text 5</ion-item>
-        </ion-list>
-      </ion-content>
+  <right-slide></right-slide>
 </ion-menu>
 
 <div class="map" id="slide">
@@ -42,7 +16,7 @@
                       <span class="gps-text">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
                   </div>
           </div>
-          <a class="nav-item nav-link" (click)="locateMe()">
+          <a *ngIf="geoloc.enableGeoloc" class="nav-item nav-link" (click)="locateMe()">
               <span><i class="material-icons">gps_fixed</i></span>
           </a>
           <a class="nav-item nav-link" (click)="zoomToMe()">

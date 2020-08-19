@@ -16,6 +16,10 @@ import { EditionModeService } from '../editionmode.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LeftSlideComponent } from '../sliders/left/left.component';
+import { RightSlideComponent } from '../sliders/right/right.component';
+import { LeftSlideMenuComponent } from '../sliders/left/menu/menu.component';
+import { AppinfosLeftSlideComponent } from '../sliders/left/appinfos/appinfos.component';
 
 @NgModule({
   imports: [
@@ -24,7 +28,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     IonicModule,
     MainPageRoutingModule,
     NgbCollapseModule,MatIconModule,
-    FlexLayoutModule
+    FlexLayoutModule,
   ],
   providers: [
     OLService,
@@ -34,6 +38,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RealPositionStyle,
     EditionModeService
   ],
-  declarations: [MainPage]
+  declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
+    AppinfosLeftSlideComponent]
 })
 export class MainPageModule {}

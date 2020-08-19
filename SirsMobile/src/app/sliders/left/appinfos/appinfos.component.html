@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar class="header-slide center" color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Versions Composants</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-list>
+  <div *ngFor="let item of versionsObject | keyvalue">
+    <ion-item>{{ item.key }}: {{ item.value }}</ion-item>
+  </div>
+</ion-list>
