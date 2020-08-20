@@ -19,7 +19,7 @@
     <span class="right">{{ syncService.completion }}</span>
   </p>
 </div>
-<div *ngIf="syncService.status == 2">
+<div *ngIf="syncService.status === 2">
   <p>Synchronisation effectuée avec succès.</p>
 </div>
 <div *ngIf="syncService.status === 3">

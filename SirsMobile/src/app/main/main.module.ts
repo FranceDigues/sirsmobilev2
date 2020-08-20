@@ -21,6 +21,9 @@ import { RightSlideComponent } from '../sliders/right/right.component';
 import { LeftSlideMenuComponent } from '../sliders/left/menu/menu.component';
 import { AppinfosLeftSlideComponent } from '../sliders/left/appinfos/appinfos.component';
 import { AppsettingsLeftSlideComponent } from '../sliders/left/appsettings/appsettings.component';
+import { DatabaseService } from '../database.service';
+import { SynchronisationComponent } from '../sliders/left/synchronisation/synchronisation.component';
+import { SirsDocService } from '../sirsdoc.service';
 
 @NgModule({
   imports: [
@@ -37,9 +40,11 @@ import { AppsettingsLeftSlideComponent } from '../sliders/left/appsettings/appse
     GeolocService,
     MapService,
     RealPositionStyle,
-    EditionModeService
+    EditionModeService,
+    DatabaseService,
+    SirsDocService,
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
-    AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent]
+    AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, SynchronisationComponent]
 })
 export class MainPageModule {}

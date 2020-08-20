@@ -16,7 +16,12 @@ export class AppinfosLeftSlideComponent implements OnInit {
   constructor(private appVersions: AppVersionsService) { }
 
   ngOnInit() {
-    this.versionsObject = this.appVersions.getVersions();
+    this.versionsObject = this.appVersions.getVersions()
+    .then(
+      (versionsObject) => {
+        this.versionsObject = versionsObject;
+      }
+    )
   }
 
   goBack() {

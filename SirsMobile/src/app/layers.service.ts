@@ -576,7 +576,6 @@ export class AppLayer {
         return features;
     }
 
-
     syncAllAppLayer() {
         let layers = this.appLayer.getLayers();
         layers.forEach((layer) => {
@@ -600,5 +599,40 @@ export class AppLayer {
             }
         }
         return null;
+    }
+
+    syncAppLayer(layerModel) {
+        let olLayer = this.getAppLayerInstance(layerModel);
+
+        olLayer.setVisible(layerModel.visible);
+        if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+            olLayer.getSource().getSource().clear();
+        } else {
+            olLayer.getSource().clear();
+        }
+        if (layerModel.visible === true) {
+            // TODO loading here
+            setTimeout(() => {
+                this.setAppLayerFeatures(olLayer);
+            }, 1000);
+        }
+    }
+
+    clearAll() {
+        this.appLayersService.getFavorites().forEach(
+            (layer) => {
+                this.forceRefresh(layer);
+            }
+        );
+    }
+
+    forceRefresh(layer) {
+        const cache = this.featureCache.get(layer.title);
+        if (cache === undefined) {
+            this.featureCache.remove(layer.title);
+            if (layer.visible) {
+                this.syncAppLayer(layer);
+            }
+        }
     }
 }

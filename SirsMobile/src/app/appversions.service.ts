@@ -11,19 +11,21 @@ export class AppVersionsService {
     constructor(private http: HttpClient) { }
 
     getVersions() {
-        if (!this.versions) {
-            return this.http.get('../assets/versions.json')
-            .subscribe(
-                (data) => {
-                    this.versions = data;
-                    return this.versions
-                },
-                (err) => {
-                    console.log('err', err);
-                }
-            );
-        } else {
-            return this.versions;
-        }
+        return new Promise((resolve) => {
+            if (!this.versions) {
+                this.http.get('../assets/versions.json')
+                .subscribe(
+                    (data) => {
+                        this.versions = data;
+                        resolve(this.versions);
+                    },
+                    (err) => {
+                        console.log('err', err);
+                    }
+                );
+            } else {
+                resolve(this.versions);
+            }
+        })
     }
 }

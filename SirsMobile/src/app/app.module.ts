@@ -27,7 +27,7 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { GlobalConfigService } from './globalconfig.service';
 import { AppVersionsService } from './appversions.service';
-
+import { SirsDocService } from './sirsdoc.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,6 +54,7 @@ import { AppVersionsService } from './appversions.service';
     AuthService,
     GlobalConfigService,
     AppVersionsService,
+    SirsDocService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
