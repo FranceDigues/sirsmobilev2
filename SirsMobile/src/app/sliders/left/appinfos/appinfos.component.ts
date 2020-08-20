@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AppVersionsService } from 'src/app/appversions.service';
 
 @Component({
   selector: 'left-slide-appinfos',
@@ -12,19 +13,10 @@ export class AppinfosLeftSlideComponent implements OnInit {
 
   @Output() readonly slidePathChange = new EventEmitter<String>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private appVersions: AppVersionsService) { }
 
   ngOnInit() {
-    this.http.get('../../../../assets/versions.json')
-    .subscribe(
-      (data) => {
-        console.log('data', data);
-        this.versionsObject = data;
-      },
-      (err) => {
-        console.log('err', err);
-      }
-    )
+    this.versionsObject = this.appVersions.getVersions();
   }
 
   goBack() {

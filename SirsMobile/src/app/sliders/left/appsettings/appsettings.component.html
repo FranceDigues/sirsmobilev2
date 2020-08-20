@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar class="header-slide center" color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Configuration</ion-title>
+  </ion-toolbar>
+</ion-header>
+<label>Affichage de texte : </label>
+<ion-list>
+  <ion-radio-group value='{{getGlobalConfig()}}'>
+    <ion-item>
+      Abrégé
+      <ion-radio value="abstract" slot="end" color="success" (click)="updateGlobalConfig('abstract')"></ion-radio>
+    </ion-item>
+    <ion-item>
+      Nom complet
+      <ion-radio value="fullName" slot="end" color="success" (click)="updateGlobalConfig('fullName')"></ion-radio>
+    </ion-item>
+    <ion-item>
+      Abrégé / Nom complet
+      <ion-radio value="both" slot="end" color="success" (click)="updateGlobalConfig('both')"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</ion-list>

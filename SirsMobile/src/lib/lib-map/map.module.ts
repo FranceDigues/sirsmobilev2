@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OLService } from './ol.service';
+import { ClassMapService } from './class.service';
 
 
 
@@ -10,8 +10,7 @@ import { OLService } from './ol.service';
     CommonModule
   ],
   providers: [
-    OLService
   ],
-  exports: [ OLService ]
+  exports: []
 })
 export class LibMapModule { }

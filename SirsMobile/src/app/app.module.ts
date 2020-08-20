@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-import { LibMapModule } from '@lib-map/map.module';
 import { LibCameraModule } from '@lib-camera/camera.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EditionModeService } from './editionmode.service';
@@ -26,6 +25,8 @@ import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './layers.service
 import { IonicStorageModule } from '@ionic/storage';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { GlobalConfigService } from './globalconfig.service';
+import { AppVersionsService } from './appversions.service';
 
 
 @NgModule({
@@ -51,6 +52,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     SyncService,
     DatabaseService,
     AuthService,
+    GlobalConfigService,
+    AppVersionsService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

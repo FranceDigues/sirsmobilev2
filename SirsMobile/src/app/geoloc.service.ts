@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
-import { OLService } from '@lib-map/ol.service';
 import * as moment from 'moment';
 
 import VectorLayer from 'ol/layer/Vector';
@@ -23,8 +22,7 @@ export class GeolocService {
     lastGPSUpdate = null;
     enableGeoloc = true;
 
-    constructor(private geoloc: Geolocation, private loadingCtrl: LoadingController,
-                private ol: OLService) {}
+    constructor(private geoloc: Geolocation, private loadingCtrl: LoadingController) {}
 
     getCoords() {
         return this.coords;

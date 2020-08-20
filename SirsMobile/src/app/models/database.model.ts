@@ -11,6 +11,7 @@ export interface DatabaseModel {
 
 export interface ContextModel {
     authUser?;
+    showText?: string;
     backLayer?: {
         active?: string,
         list?: Array<BackLayerModel>

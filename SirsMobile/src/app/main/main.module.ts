@@ -20,6 +20,7 @@ import { LeftSlideComponent } from '../sliders/left/left.component';
 import { RightSlideComponent } from '../sliders/right/right.component';
 import { LeftSlideMenuComponent } from '../sliders/left/menu/menu.component';
 import { AppinfosLeftSlideComponent } from '../sliders/left/appinfos/appinfos.component';
+import { AppsettingsLeftSlideComponent } from '../sliders/left/appsettings/appsettings.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,6 @@ import { AppinfosLeftSlideComponent } from '../sliders/left/appinfos/appinfos.co
     EditionModeService
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
-    AppinfosLeftSlideComponent]
+    AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent]
 })
 export class MainPageModule {}
