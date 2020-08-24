@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { SynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
+import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
+import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 
 const routes: Routes = [
   {
@@ -18,7 +19,11 @@ const routes: Routes = [
   },
   {
     path: 'sync',
-    component: SynchronisationComponent
+    component: LeftSlideSynchronisationComponent
+  },
+  {
+    path: 'gallery',
+    component: LeftSlideGalleryComponent
   }
 ];
 

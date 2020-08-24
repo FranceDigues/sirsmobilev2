@@ -31,7 +31,7 @@ export class LeftSlideMenuComponent implements OnInit {
   }
 
   goGallery() {
-    console.log('TODO: Gallery');
+    this.route.navigateByUrl('/gallery');
   }
 
   goSynchronisation() {

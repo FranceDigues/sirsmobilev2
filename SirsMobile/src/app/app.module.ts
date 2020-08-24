@@ -28,6 +28,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { GlobalConfigService } from './globalconfig.service';
 import { AppVersionsService } from './appversions.service';
 import { SirsDocService } from './sirsdoc.service';
+import { GalleryService } from './gallery.service';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +43,8 @@ import { SirsDocService } from './sirsdoc.service';
     SplashScreen,
     NativeStorage,
     Insomnia,
+    File,
+    FileOpener,
     Geolocation,
     EditionModeService,
     RealPositionStyle,
@@ -55,6 +61,7 @@ import { SirsDocService } from './sirsdoc.service';
     GlobalConfigService,
     AppVersionsService,
     SirsDocService,
+    GalleryService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

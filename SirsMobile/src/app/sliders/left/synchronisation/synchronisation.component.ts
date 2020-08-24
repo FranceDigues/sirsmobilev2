@@ -8,7 +8,7 @@ import { SyncService } from 'src/app/sync.service';
   templateUrl: './synchronisation.component.html',
   styleUrls: ['./synchronisation.component.scss'],
 })
-export class SynchronisationComponent implements OnInit {
+export class LeftSlideSynchronisationComponent implements OnInit {
 
   constructor(public syncService: SyncService, private router: Router,
     public dbService: DatabaseService) { }

@@ -1,0 +1,20 @@
+<ion-content>
+  <ion-tabs style="background-color: #00BCD0;">
+    <ion-tab-bar slot="top">
+      <ion-tab-button (click)="gallery.setActiveTab('documents')" [selected]="gallery.activeTab === 'documents'">
+        <ion-label>Documents</ion-label>
+        <ion-icon name="document-text-outline"></ion-icon>
+      </ion-tab-button>
+      <ion-tab-button (click)="gallery.setActiveTab('medias')" [selected]="gallery.activeTab === 'medias'">
+        <ion-label>Médias</ion-label>
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+  <div class="gallery-content" *ngIf="gallery.activeTab === 'documents'">
+    <gallery-document></gallery-document>
+  </div>
+  <div class="gallery-content" *ngIf="gallery.activeTab === 'medias'">
+    <gallery-medias></gallery-medias>
+  </div>
+</ion-content>
