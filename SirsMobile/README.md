@@ -37,6 +37,7 @@ Execute this both commands :
 
 ```bash
 npm install
+
 ```
 
 ## Launch App on device
@@ -46,6 +47,21 @@ npm install
 ```bash
 ionic capacitor run android
 ```
+
+***Error compiling first time with capacitor***
+```
+error: package android.support.v4.content does not exist
+import android.support.v4.content.FileProvider;
+```
+***You should change every android.support.v4.content.FileProvider***
+***by***
+```java
+androidx.core.content.FileProvider
+```
+
+
+
+
 
 
 

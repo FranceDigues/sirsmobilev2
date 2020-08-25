@@ -53,7 +53,13 @@ export class AddDatabaseComponent implements OnInit {
       showText: 'fullName',
       authUser: null,
       backLayer: {
-        active: 'OpenStreetMap',
+        active: {
+                  name: 'OpenStreetMap',
+                  source: {
+                      type: 'OSM',
+                      url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                  }
+                },
         list:
         [
           {

@@ -1,0 +1,42 @@
+<div *ngIf="path === 'select'">
+  <ion-header>
+    <ion-toolbar class="header-slide center" color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Fonds de carte</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-list>
+    <div *ngFor="let layer of backLayerService.getList()">
+      <ion-item-sliding side="end">
+        <ion-item (click)="backLayer.setActiveBackLayers(layer)">
+          {{ layer.name }}
+          <span *ngIf="layer.cache && layer.cache.active">(hors ligne)</span>
+          <i slot="end" class="material-icons" *ngIf="layer.name === backLayerService.getActive().name">check</i>
+        </ion-item>
+        <ion-item-options style="width: 150px">
+          <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
+            <ion-icon *ngIf="backLayerService.getActive() && (!layer.cache || !layer.cache.active)" name="cloud-download-outline"></ion-icon>
+            <ion-icon *ngIf="layer.name === backLayerService.getActive().name && layer.cache && layer.cache.active" name="cloud-offline-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option style="width: 50px" color="danger" (click)="removeLayer(layer)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </div>
+  </ion-list>
+  <ion-fab class="position-absolute" style="top: 85%;" horizontal="center" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="goToAddBackLayer()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</div>
+<!-- TODO mettre dans un autre composant -->
+<div *ngIf="path === 'addBackLayer'">
+  <left-slide-addbacklayer (slidePathChange)="changeSlidePath($event)"></left-slide-addbacklayer>
+</div>

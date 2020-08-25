@@ -19,9 +19,11 @@ import Circle from 'ol/geom/Circle';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4'
 import { SirsDocService } from '../sirsdoc.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
+import { AppLayer, EditionLayer, GeolocLayer, BackLayer } from '../layers.service';
 import { AuthService } from '../auth.service';
 import { MenuController } from '@ionic/angular';
+import { BackLayerService } from '../backlayer.service';
+import { AppVersionsService } from '../appversions.service';
 
 
 @Component({
@@ -33,11 +35,12 @@ export class MainPage implements AfterViewInit {
 
   navbarController = true; // ? mb remove bcs unused
 
-  constructor(private ol: OLService, public geoloc: GeolocService,
-              public editionLayer: EditionLayer, private geolocLayer: GeolocLayer,
-              private sirsDocSrvc: SirsDocService, private mapService: MapService,
-              private backLayer: BackLayer, private appLayer: AppLayer,
-              private authService: AuthService, private menu: MenuController) { }
+  constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocService,
+              public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService, private mapService: MapService,
+              private appLayer: AppLayer, private authService: AuthService, private menu: MenuController,
+              private appVersionsService: AppVersionsService, private backLayer: BackLayer,) {
+                this.appVersionsService.init();
+              }
 
   ngAfterViewInit() {
     this.sirsDocSrvc.initializeDoc()
@@ -46,13 +49,18 @@ export class MainPage implements AfterViewInit {
         proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
         register(proj4);
       }
+    );
+    this.backLayerService.init()
+    .then(
+      () => {
+        this.ol.createMap('map');
+        this.ol.getMap().setView(this.mapService.currentView);
+        this.ol.addLayer(this.backLayer.backLayer);
+        this.ol.addLayer(this.appLayer.appLayer)
+        this.ol.addLayer(this.editionLayer.editionLayer);
+        this.ol.addLayer(this.geolocLayer.geolocLayer);
+      }
     )
-    this.ol.createMap('map');
-    this.ol.getMap().setView(this.mapService.currentView);
-    this.ol.addLayer(this.backLayer.backLayer);
-    this.ol.addLayer(this.appLayer.appLayer)
-    this.ol.addLayer(this.editionLayer.editionLayer);
-    this.ol.addLayer(this.geolocLayer.geolocLayer);
   }
 
   locateMe() {

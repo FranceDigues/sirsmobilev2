@@ -27,6 +27,8 @@ import { SirsDocService } from '../sirsdoc.service';
 import { LeftSlideGalleryComponent } from '../sliders/left/gallery/gallery.component';
 import { GalleryDocumentComponent } from '../sliders/left/gallery/document/document.component';
 import { GalleryMediasComponent } from '../sliders/left/gallery/medias/medias.component';
+import { LeftSlideBackmapComponent } from '../sliders/left/backmap/backmap.component';
+import { LeftSlideAddBackLayerComponent } from '../sliders/left/backmap/addbacklayer/addbacklayer.component';
 
 @NgModule({
   imports: [
@@ -49,6 +51,7 @@ import { GalleryMediasComponent } from '../sliders/left/gallery/medias/medias.co
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
-    LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent]
+    LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
+    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent]
 })
 export class MainPageModule {}

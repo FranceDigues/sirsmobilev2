@@ -1,4 +1,5 @@
 {
+  "cordova-plugin-androidx-adapter": "1.1.1",
   "cordova-plugin-camera": "4.1.0",
   "cordova-plugin-geolocation": "4.0.2",
   "cordova-plugin-insomnia": "4.3.0",

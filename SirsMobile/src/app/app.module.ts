@@ -21,7 +21,7 @@ import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './styl
 import { SyncService } from './sync.service';
 import { DatabaseService } from './database.service';
 import { AuthService } from './auth.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './layers.service';
+import { AppLayer, EditionLayer, GeolocLayer, BackLayer } from './layers.service';
 import { IonicStorageModule } from '@ionic/storage';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -29,8 +29,9 @@ import { GlobalConfigService } from './globalconfig.service';
 import { AppVersionsService } from './appversions.service';
 import { SirsDocService } from './sirsdoc.service';
 import { GalleryService } from './gallery.service';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { File } from '@ionic-native/file/ngx';
+// import { FileOpener } from '@ionic-native/file-opener/ngx';
+// import { File } from '@ionic-native/file/ngx';
+import { BackLayerService } from './backlayer.service';
 
 
 @NgModule({
@@ -43,8 +44,8 @@ import { File } from '@ionic-native/file/ngx';
     SplashScreen,
     NativeStorage,
     Insomnia,
-    File,
-    FileOpener,
+    // File,
+    // FileOpener,
     Geolocation,
     EditionModeService,
     RealPositionStyle,
@@ -62,6 +63,8 @@ import { File } from '@ionic-native/file/ngx';
     AppVersionsService,
     SirsDocService,
     GalleryService,
+    BackLayerService,
+    BackLayer,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

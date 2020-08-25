@@ -107,6 +107,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.completion = '0/' + docCount;
 
     const subject = new Subject<any>();
+    console.log('remote', this.remoteDB);
+    console.log('local', this.localDB);
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
       console.log('2 - En COURS');
@@ -119,6 +121,12 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     .on('complete', () => {
       console.log('2 - COMPLETE');
       subject.complete();
+    })
+    .on('paused', (err) => {
+      console.log('paused', err);
+    })
+    .on('denied', (err) => {
+      console.log('denied', err);
     })
     .on('error', (error) => {
       console.log(error);

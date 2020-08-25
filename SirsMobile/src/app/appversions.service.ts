@@ -10,22 +10,19 @@ export class AppVersionsService {
 
     constructor(private http: HttpClient) { }
 
-    getVersions() {
-        return new Promise((resolve) => {
-            if (!this.versions) {
-                this.http.get('../assets/versions.json')
-                .subscribe(
-                    (data) => {
-                        this.versions = data;
-                        resolve(this.versions);
-                    },
-                    (err) => {
-                        console.log('err', err);
-                    }
-                );
-            } else {
-                resolve(this.versions);
+    init() {
+        this.http.get('../assets/versions.json')
+        .subscribe(
+            (data) => {
+                this.versions = data;
+            },
+            (err) => {
+                console.log('init err', err);
             }
-        })
+        );
+    }
+
+    getVersions() {
+        return this.versions;
     }
 }

@@ -32,6 +32,10 @@ import { FeatureCache } from './cache.service';
 import { noop } from 'rxjs';
 import { StorageService } from '@lib-storage/storage.service';
 import { AppLayersService } from './applayers.service';
+import { ListBackLayer } from './models/database.model';
+import TileWMS from 'ol/source/TileWMS';
+import { BackLayerService } from './backlayer.service';
+import { OLService } from '@lib-map/ol.service';
 
 @Injectable({
     providedIn: 'root'
@@ -218,50 +222,85 @@ export class GeolocLayer {
     providedIn: 'root'
 })
 export class BackLayer {
-    backLayer: LayerGroup = this.createBackLayer();
+
+    backLayer: LayerGroup;
+
+    constructor(private backLayerService: BackLayerService, private mapService: MapService,
+                private ol: OLService) {
+                    this.backLayerService.init()
+                    .then(
+                        () => {
+                            this.backLayer = this.createBackLayer();
+                        }
+                    )
+                }
 
     createBackLayer() {
+        // * give time for backLayerService to init
         return new LayerGroup({
             name: 'Background',
             layers: [
-                this.createBackLayerInstance('') // TODO change argument
+                this.createBackLayerInstance(this.backLayerService.getActive())
             ]
         });
     }
 
-    createBackLayerInstance(layerModel): TileLayer { // TODO FINISH
+    private goodBackLayerSource(layerModel: ListBackLayer) {
+        console.log(layerModel);
+        if (layerModel.source.type === 'OSM') {
+            return new OSM(layerModel.source);
+        } else if (layerModel.source.type === 'TileWMS') {
+            return new TileWMS(layerModel.source)
+        } else if (layerModel.source.type === 'XYZ') {
+            return new XYZ(layerModel.source);
+        } else {
+            return new OSM({
+                url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            });
+        }
+    }
+
+    createBackLayerInstance(layerModel): TileLayer {
         let layer = null;
 
         console.log('LayerModel', layerModel);
-        // if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
-        //     const extent = layerModel.cache.extent;
+        if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
+            const extent = layerModel.cache.extent;
 
-        //     const source = new XYZ({
-        //         url: layerModel.cache.url
-        //     });
-        //     layer = new TileLayer({
-        //         name: layerModel.name,
-        //         extent: extent,
-        //         source: source
-        //     });
-        // } else {
-        //     layer = new TileLayer({
-        //         name: layerModel.name,
-        //         model: layerModel,
-        //         source: new Source(layerModel.source) // ? not sure
-        //     });
-        // }
-        layer = new TileLayer({
-            source: new OSM({
-                        url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                    })
-        })
+            const source = new XYZ({
+                url: layerModel.cache.url
+            });
+            layer = new TileLayer({
+                name: layerModel.name,
+                extent: extent,
+                source: source
+            });
+        } else {
+            layer = new TileLayer({
+                name: layerModel.name,
+                model: layerModel,
+                source: this.goodBackLayerSource(layerModel)
+            });
+        }
         return layer;
     }
 
+    setActiveBackLayers(layer) {
+        this.backLayerService.backLayers.active = layer;
+        this.updateBackLayerMap(layer);
+    }
+
+    updateBackLayerMap(layer: ListBackLayer) {
+        this.backLayer.getLayers().setAt(0, this.createBackLayerInstance(layer));
+
+        if (typeof layer.cache === 'object') {
+            this.mapService.currentView.fit(layer.cache.extent, this.ol.map.getSize())
+        }
+    }
+
     syncBackLayer() {
-        const olLayer = this.createBackLayerInstance('') // TODO change argument
-        this.backLayer.getLayers().setAt(0, olLayer);
+        const olLayer = this.backLayer.createBackLayerInstance(this.backLayerService.getActive())
+        this.backLayer.backLayer.getLayers().setAt(0, olLayer);
     }
 }
 

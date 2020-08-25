@@ -12,10 +12,7 @@ export interface DatabaseModel {
 export interface ContextModel {
     authUser?;
     showText?: string;
-    backLayer?: {
-        active?: string,
-        list?: Array<BackLayerModel>
-    };
+    backLayer?: BackLayerModel;
     settings?: {
         geolocation: boolean,
         edition: boolean
@@ -25,11 +22,25 @@ export interface ContextModel {
 }
 
 export interface BackLayerModel {
+    active?: ListBackLayer;
+    list?: Array<ListBackLayer>
+}
+
+export interface ListBackLayer {
     name: string;
+    cache?: {
+        active?: any,
+        extent?: any,
+        url?: any,
+    };
     source: {
         type: string,
-        url: string
-    }
+        url: string,
+        params?: {
+            version?: string,
+            layers?: any
+        }
+    };
 }
 
 export interface FavoritesModel {

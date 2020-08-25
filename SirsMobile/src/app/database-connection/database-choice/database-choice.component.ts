@@ -4,6 +4,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseModel } from 'src/app/models/database.model';
 import { AlertController } from '@ionic/angular';
 import { DatabaseService } from '../../database.service';
+import { BackLayerService } from 'src/app/backlayer.service';
 @Component({
   selector: 'app-database-choice',
   templateUrl: './database-choice.component.html',

@@ -1,0 +1,56 @@
+import { Injectable } from '@angular/core';
+import { OLService } from '@lib-map/ol.service';
+import { DatabaseService } from './database.service';
+import { BackLayerModel, DatabaseModel } from './models/database.model';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class BackLayerService {
+
+    backLayers: BackLayerModel;
+
+    constructor(private dbService: DatabaseService) {
+    }
+
+    init() {
+        return new Promise((resolve) => {
+            this.dbService.getCurrentDatabaseHardDisk()
+            .then(
+                (db: DatabaseModel) => {
+                    this.backLayers = db.context.backLayer;
+                    resolve();
+                }
+            );
+        });
+    }
+
+    getList() {
+        return this.backLayers.list;
+    }
+
+    getActive() {
+        return this.backLayers.active;
+    }
+
+    add(layer) {
+        this.backLayers.list.push(layer);
+        this.updateListInHardDisk();
+    }
+
+    remove(layer) {
+        this.backLayers.list.splice(this.backLayers.list.indexOf(layer.name), 1);
+        this.updateListInHardDisk()
+    }
+
+    private updateListInHardDisk() {
+        this.dbService.getCurrentDatabaseHardDisk()
+        .then(
+            (db: DatabaseModel) => {
+                db.context.backLayer = this.backLayers
+                this.dbService.updateCurrentDatabaseHardDisk(db);
+            }
+        )
+    }
+
+}

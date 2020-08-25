@@ -1,0 +1,68 @@
+<form class="form-group" #layerForm="ngForm">
+    <ion-header>
+        <ion-toolbar class="header-slide center" color="secondary">
+          <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+          </ion-buttons>
+          <ion-title>Ajouter une couche</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div>
+        <div>
+            <div class="add-back-layer col s12">
+            <label for="name">Titre</label>
+            <input id="name" type="text" class="validate" required  [(ngModel)]="backLayerForm.name"/>
+            </div>
+        </div>
+        <div>
+            <div class="add-back-layer col s12">
+            <label for="type" class="active">Type de service</label>
+                <select id="type" name="type" class="browser-default"
+                [(ngModel)]="backLayerForm.source.type" (change)="prepareType()">
+                <option *ngFor="let service of backLayerForm.servicesTypes" [value]="service.value">
+                    {{ service.label }}
+                </option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <div class="add-back-layer col s12">
+                <label for="url" class="active">URL du service</label>
+                <input id="url" type="url" class="validate" required [(ngModel)]="backLayerForm.source.url"/>
+            </div>
+        </div>
+        <div *ngIf="backLayerForm.source.type === 'TileWMS'">
+            <div class="add-back-layer col s12">
+                <label for="version" class="active">Version du service</label>
+                <select id="version" name="version" class="browser-default"
+                [(ngModel)]="backLayerForm.source.params.version" (change)="prepareType()">
+                <option *ngFor="let version of ['1.1.1', '1.3.0']" [value]="version" >
+                    {{ version }}
+                </option>
+                </select>
+            </div>
+        </div>
+        <div *ngIf="backLayerForm.source.type === 'TileWMS'">
+            <div class="add-back-layer col s12">
+                <label for="layers">Couche(s) WMS</label>
+                <input id="layers" type="text" class="validate" required [(ngModel)]="backLayerForm.source.params.layers"/>
+            </div>
+        </div>
+        <div>
+            <div class="add-back-layer col s12">
+                <label for="logina">Identifiant dans le cas d'un WMS sécuriser</label>
+                <input id="logina" type="text" class="validate" [(ngModel)]="backLayerForm.authorization.login"/>
+            </div>
+        </div>
+        <div>
+            <div class="add-back-layer col s12">
+                <label for="pw">Mot de passe dans le cas d'un WMS sécuriser</label>
+                <input id="pw" type="password" class="validate" [(ngModel)]="backLayerForm.authorization.pw"/>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn-floating btn-large waves-effect waves-light pink" style="bottom: 15px; left: 200px;"
+            [class]="{disabled: layerForm.invalid} " [disabled]='layerForm.invalid' (click)="addBackLayer()">
+        <i class="large material-icons">check</i>
+    </button>
+</form>

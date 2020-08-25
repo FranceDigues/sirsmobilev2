@@ -25,15 +25,7 @@
     </ion-header>
   </div>
   <div *ngSwitchCase="'backMap'">
-    <!-- TODO TODO -->
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="main" (click)="goReset()"></ion-back-button>
-        </ion-buttons>
-        <ion-title>NOT FINISHED</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <left-slide-backmap (slidePathChange)="changeSlidePath($event)"></left-slide-backmap>
   </div>
   <div *ngSwitchCase="'appInfos'">
     <left-slide-appinfos (slidePathChange)="changeSlidePath($event)"></left-slide-appinfos>
