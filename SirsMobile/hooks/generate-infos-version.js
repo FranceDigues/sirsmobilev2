@@ -17,12 +17,25 @@ fs.readFile('package.json', (err, data) =>  {
         console.log("\x1b[32mUpdating src/versions.json\x1b[0m")
         const jsonData = JSON.parse(data);
         const res = selectDependencies(jsonData.dependencies)
-        let dataObject = JSON.stringify(res, null, 2);
-        fs.writeFile('src/assets/versions.json', dataObject + '\n', (err) => {
+        let androidDataObject = JSON.stringify(res, null, 2);
+        let iosDataObject = JSON.stringify(handleIOS(res), null, 2);
+        fs.writeFile('src/assets/android-versions.json', androidDataObject + '\n', (err) => {
+            if (err) return console.log("\x1b[31m" + err + "\x1b[0m");
+        });
+        fs.writeFile('src/assets/ios-versions.json', iosDataObject + '\n', (err) => {
             if (err) return console.log("\x1b[31m" + err + "\x1b[0m");
         });
     }
 });
+
+function handleIOS(object) {
+    for (tmp in object) {
+        if (tmp.includes('android')) {
+            delete object[tmp];
+        }
+    }
+    return object;
+}
 
 function includesKeyWords(word) {
     for (let i = 0, key = null; i < keyWords.length; i++) {
