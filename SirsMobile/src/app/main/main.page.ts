@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { OLService } from '@lib-map/ol.service';
 import { LoadingController, NavController } from '@ionic/angular';
 import { GeolocService } from '../geoloc.service';
@@ -24,6 +24,7 @@ import { AuthService } from '../auth.service';
 import { MenuController } from '@ionic/angular';
 import { BackLayerService } from '../backlayer.service';
 import { AppVersionsService } from '../appversions.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class MainPage implements AfterViewInit {
   constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocService,
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService, private mapService: MapService,
               private appLayer: AppLayer, private authService: AuthService, private menu: MenuController,
-              private appVersionsService: AppVersionsService, private backLayer: BackLayer,) {
+              private appVersionsService: AppVersionsService, private backLayer: BackLayer, private route: Router) {
                 this.appVersionsService.init();
               }
 
@@ -87,7 +88,11 @@ export class MainPage implements AfterViewInit {
   }
 
   refresh() {
-    // window.location.reload();
+    setTimeout(() => {
+      this.ol.map.updateSize();
+      this.ol.map.render();
+    }, 100)
+    // this.route.navigateByUrl('/refresh');
   }
 
   logout() {

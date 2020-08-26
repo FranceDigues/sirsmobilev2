@@ -32,10 +32,11 @@ import { FeatureCache } from './cache.service';
 import { noop } from 'rxjs';
 import { StorageService } from '@lib-storage/storage.service';
 import { AppLayersService } from './applayers.service';
-import { ListBackLayer } from './models/database.model';
+import { DatabaseModel, ListBackLayer } from './models/database.model';
 import TileWMS from 'ol/source/TileWMS';
 import { BackLayerService } from './backlayer.service';
 import { OLService } from '@lib-map/ol.service';
+import { DatabaseService } from './database.service';
 
 @Injectable({
     providedIn: 'root'
@@ -226,7 +227,7 @@ export class BackLayer {
     backLayer: LayerGroup;
 
     constructor(private backLayerService: BackLayerService, private mapService: MapService,
-                private ol: OLService) {
+                private ol: OLService, private dbService: DatabaseService) {
                     this.backLayerService.init()
                     .then(
                         () => {
@@ -286,8 +287,20 @@ export class BackLayer {
     }
 
     setActiveBackLayers(layer) {
-        this.backLayerService.backLayers.active = layer;
-        this.updateBackLayerMap(layer);
+        if (layer !== this.backLayerService.backLayers.active) {
+            this.backLayerService.backLayers.active = layer;
+            this.updateBackLayerMap(layer);
+            this.updateActiveBackLayerInHardDisk(layer)
+        }
+    }
+    private updateActiveBackLayerInHardDisk(backLayer) {
+        this.dbService.getCurrentDatabaseHardDisk()
+        .then(
+            (db: DatabaseModel) => {
+                db.context.backLayer.active = backLayer
+                this.dbService.updateCurrentDatabaseHardDisk(db);
+            }
+        )
     }
 
     updateBackLayerMap(layer: ListBackLayer) {

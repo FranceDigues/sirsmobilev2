@@ -44,7 +44,7 @@ export class GeolocService {
         };
         let loading = await this.loadingCtrl.create({
           message: 'En attente de location'
-        })
+        });
         loading.present();
         return new Promise((resolve, rejects) => {
             this.geoloc.getCurrentPosition(options)

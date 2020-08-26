@@ -1,8 +1,8 @@
-<div [ngSwitch]="slidePath">
-  <div *ngSwitchCase="'menu'">
+<div [ngSwitch]="slidePath" class="full-height">
+  <div class="full-height" *ngSwitchCase="'menu'">
     <left-slide-menu (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
   </div>
-  <div *ngSwitchCase="'craftLayers'">
+  <div class="full-height" *ngSwitchCase="'craftLayers'">
     <!-- TODO TODO -->
     <ion-header>
       <ion-toolbar class="header-slide center" color="secondary">
@@ -13,7 +13,7 @@
       </ion-toolbar>
     </ion-header>
   </div>
-  <div *ngSwitchCase="'choiceOfSectionsDigues'">
+  <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
     <!-- TODO TODO -->
     <ion-header>
       <ion-toolbar class="header-slide center" color="secondary">
@@ -24,13 +24,13 @@
       </ion-toolbar>
     </ion-header>
   </div>
-  <div *ngSwitchCase="'backMap'">
+  <div class="full-height" *ngSwitchCase="'backMap'">
     <left-slide-backmap (slidePathChange)="changeSlidePath($event)"></left-slide-backmap>
   </div>
-  <div *ngSwitchCase="'appInfos'">
-    <left-slide-appinfos (slidePathChange)="changeSlidePath($event)"></left-slide-appinfos>
+  <div class="full-height" *ngSwitchCase="'appInfos'">
+    <left-slide-appinfos class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-appinfos>
   </div>
-  <div *ngSwitchCase="'appSettings'">
+  <div class="full-height" *ngSwitchCase="'appSettings'">
     <left-slide-appsettings (slidePathChange)="changeSlidePath($event)"></left-slide-appsettings>
   </div>
   <div *ngSwitchDefault>

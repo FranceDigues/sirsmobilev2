@@ -7,7 +7,7 @@ ion-back-button {
 }
 
 .add-back-layer {
-    margin-top: 3rem;
+    margin-top: 0.5rem;
     margin-bottom: 3rem;
 }
 
@@ -195,14 +195,6 @@ ion-back-button {
     border-bottom-width: 3px !important;
 }
 
-/* icon-content */
-ion-content.has-fab-bottom > div.scroll {
-    padding-bottom: 80px;
-}
-ion-content.has-fbb-bottom > div.scroll {
-    padding-bottom: 62px;
-}
-
 /* forms */
 #documents > ion-header-bar,
 #objectEdition > ion-header-bar {
@@ -213,9 +205,6 @@ ion-content.has-fbb-bottom > div.scroll {
 #objectEdition > ion-header-bar > h1,
 #objectEdition > ion-header-bar > .button.ion-arrow-left-a {
     color: #FFFFFF;
-}
-#objectEdition > ion-content select {
-    margin-top: 8px;
 }
 
 div.fixed-button-bar {

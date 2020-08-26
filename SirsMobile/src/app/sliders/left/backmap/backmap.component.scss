@@ -195,14 +195,6 @@ add-back-layer {
     border-bottom-width: 3px !important;
 }
 
-/* icon-content */
-ion-content.has-fab-bottom > div.scroll {
-    padding-bottom: 80px;
-}
-ion-content.has-fbb-bottom > div.scroll {
-    padding-bottom: 62px;
-}
-
 /* forms */
 #documents > ion-header-bar,
 #objectEdition > ion-header-bar {
@@ -213,9 +205,6 @@ ion-content.has-fbb-bottom > div.scroll {
 #objectEdition > ion-header-bar > h1,
 #objectEdition > ion-header-bar > .button.ion-arrow-left-a {
     color: #FFFFFF;
-}
-#objectEdition > ion-content select {
-    margin-top: 8px;
 }
 
 
@@ -531,16 +520,6 @@ ion-content.has-fbb-bottom > div.scroll {
     display: inline-block;
     width: 25px;
     color: #A9A9A9;
-}
-
-#documents > ion-content > div.scroll,
-#documents > ion-content > div.scroll > div,
-#documents > ion-content > div.scroll > div > .h-tree {
-    height: 100%;
-}
-
-#settings > ion-content > ion-toggle p.help-block {
-    white-space: normal;
 }
 
 div.fixed-button-bar {

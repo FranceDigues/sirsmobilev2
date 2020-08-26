@@ -176,6 +176,7 @@ export class RealPositionStyle {
     }
 }
 
+@Injectable()
 export class HandlingStyle {
 
     highlightHandling(selection, feature) {
@@ -219,6 +220,7 @@ export class HandlingStyle {
     }
 }
 
+@Injectable()
 export class GetStyle {
 
     point(fillColor, strokeColor, strokeWidth, circleRadius, zIndex, featureModel?, layerModel?): Style {

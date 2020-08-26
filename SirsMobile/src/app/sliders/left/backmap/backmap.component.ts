@@ -51,7 +51,7 @@ export class LeftSlideBackmapComponent implements OnInit {
         {
           text: 'Oui',
           handler: () => {
-            let isCurrent = (layer.name === this.backLayerService.getActive());
+            let isCurrent = (layer.name === this.backLayerService.getActive().name);
             this.backLayerService.remove(layer);
             if (isCurrent) {
               this.backLayer.setActiveBackLayers(this.backLayerService.getList()[0]);
