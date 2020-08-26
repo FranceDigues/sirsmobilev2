@@ -32,6 +32,8 @@ export interface ListBackLayer {
         active?: any,
         extent?: any,
         url?: any,
+        minZoom?: any,
+        maxZoom?: any
     };
     source: {
         type: string,

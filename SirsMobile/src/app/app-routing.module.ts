@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.component';
 import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'gallery',
     component: LeftSlideGalleryComponent
+  },
+  {
+    path: 'cache/:id',
+    component: LeftSlideCacheComponent
   }
 ];
 
