@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { OLService } from '@lib-map/ol.service';
 import { LoadingController, NavController } from '@ionic/angular';
 import { GeolocService } from '../geoloc.service';
@@ -37,13 +37,19 @@ export class MainPage implements AfterViewInit {
   navbarController = true; // ? mb remove bcs unused
 
   constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocService,
-              public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService, private mapService: MapService,
-              private appLayer: AppLayer, private authService: AuthService, private menu: MenuController,
-              private appVersionsService: AppVersionsService, private backLayer: BackLayer, private route: Router) {
+              public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
+              private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
+              private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
+              private loadingCtrl: LoadingController) {
                 this.appVersionsService.init();
+                this.backLayer.init();
+                this.appLayer.init();
+                this.editionLayer.init();
+                this.geolocLayer.init();
               }
 
   ngAfterViewInit() {
+    let loading: HTMLIonLoadingElement = null;
     this.sirsDocSrvc.initializeDoc()
     .then(
       (sirsDoc: any) => {
@@ -53,15 +59,20 @@ export class MainPage implements AfterViewInit {
     );
     this.backLayerService.init()
     .then(
-      () => {
+      async () => {
+        loading = await this.loadingCtrl.create({
+          message: 'Déploiement de la carte en cours'
+        })
+        loading.present();
         this.ol.createMap('map');
         this.ol.getMap().setView(this.mapService.currentView);
         this.ol.addLayer(this.backLayer.backLayer);
-        this.ol.addLayer(this.appLayer.appLayer)
+        this.ol.addLayer(this.appLayer.appLayer);
         this.ol.addLayer(this.editionLayer.editionLayer);
         this.ol.addLayer(this.geolocLayer.geolocLayer);
+        setTimeout(() => { loading.dismiss() }, 1000);
       }
-    )
+    );
   }
 
   locateMe() {
@@ -88,11 +99,6 @@ export class MainPage implements AfterViewInit {
   }
 
   refresh() {
-    setTimeout(() => {
-      this.ol.map.updateSize();
-      this.ol.map.render();
-    }, 100)
-    // this.route.navigateByUrl('/refresh');
   }
 
   logout() {

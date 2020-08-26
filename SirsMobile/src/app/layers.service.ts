@@ -43,12 +43,17 @@ import { DatabaseService } from './database.service';
 })
 export class EditionLayer {
 
-    editionLayer = this.createEditionLayerInstance();
+    editionLayer = null;
+    // editionLayer = this.createEditionLayerInstance();
 
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase, private SirsDoc: SirsDocService,
                 private realPositionService: RealPositionStyle, private mapService: MapService) { }
+
+    init() {
+        this.editionLayer = this.createEditionLayerInstance();
+    }
 
     get getEditionLayer() {
         if (!this.editionLayer) {
@@ -157,7 +162,12 @@ export class EditionLayer {
     providedIn: 'root'
 })
 export class GeolocLayer {
-    geolocLayer: VectorLayer = this.createGeolocLayer();
+    geolocLayer: VectorLayer = null;
+    // geolocLayer: VectorLayer = this.createGeolocLayer();
+
+    init() {
+        this.geolocLayer = this.createGeolocLayer();
+    }
 
     get getGeolocLayer() {
         if (!this.geolocLayer) {
@@ -228,13 +238,16 @@ export class BackLayer {
 
     constructor(private backLayerService: BackLayerService, private mapService: MapService,
                 private ol: OLService, private dbService: DatabaseService) {
-                    this.backLayerService.init()
-                    .then(
-                        () => {
-                            this.backLayer = this.createBackLayer();
-                        }
-                    )
                 }
+
+    init() {
+        this.backLayerService.init()
+        .then(
+            () => {
+                this.backLayer = this.createBackLayer()
+            }
+        )
+    }
 
     createBackLayer() {
         // * give time for backLayerService to init
@@ -322,13 +335,18 @@ export class BackLayer {
 })
 export class AppLayer {
 
-    appLayer: LayerGroup = this.createAppLayer();
+    appLayer: LayerGroup = null;
+    // appLayer: LayerGroup = this.createAppLayer();
     wktFormat = new WKT();
 
     constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
                 private storageService: StorageService, private SirsDoc: SirsDocService,
                 private mapService: MapService, private RealPositionStyle: RealPositionStyle,
                 private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) {}
+
+    init() {
+        this.appLayer = this.createAppLayer();
+    }
 
     createAppLayer(): LayerGroup {
         return new LayerGroup({
