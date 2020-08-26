@@ -33,6 +33,18 @@ export class BackLayerService {
         return this.backLayers.active;
     }
 
+    getByName(name) {
+        let i = this.backLayers.list.length;
+
+        while (i--) {
+            let layer = this.backLayers.list[i];
+            if (layer.name === name) {
+                return layer;
+            }
+        }
+        return null;
+    }
+
     add(layer) {
         this.backLayers.list.push(layer);
         this.updateListInHardDisk();

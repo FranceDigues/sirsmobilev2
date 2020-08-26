@@ -29,6 +29,8 @@ import { GalleryDocumentComponent } from '../sliders/left/gallery/document/docum
 import { GalleryMediasComponent } from '../sliders/left/gallery/medias/medias.component';
 import { LeftSlideBackmapComponent } from '../sliders/left/backmap/backmap.component';
 import { LeftSlideAddBackLayerComponent } from '../sliders/left/backmap/addbacklayer/addbacklayer.component';
+import { LeftSlideCacheComponent } from '../sliders/left/backmap/cache/cache.component';
+// import { File } from '@ionic-native/file/ngx';
 
 @NgModule({
   imports: [
@@ -48,10 +50,11 @@ import { LeftSlideAddBackLayerComponent } from '../sliders/left/backmap/addbackl
     EditionModeService,
     DatabaseService,
     SirsDocService,
+    // File,
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
-    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent]
+    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent]
 })
 export class MainPageModule {}
