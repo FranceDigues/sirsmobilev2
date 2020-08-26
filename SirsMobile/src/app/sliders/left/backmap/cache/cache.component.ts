@@ -23,7 +23,7 @@ import { transformExtent } from 'ol/proj';
 import { MapService } from 'src/app/map.service';
 import { BackLayerService } from 'src/app/backlayer.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isDefined } from '@angular/compiler/src/util';
+import { BackLayer } from 'src/app/layers.service';
 
 @Component({
   selector: 'cache',
@@ -40,7 +40,7 @@ export class LeftSlideCacheComponent implements OnInit {
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
               private mapService: MapService, private cacheMapManager: CacheMapManager,
-              private route: Router) {
+              private route: Router, private backLayer: BackLayer) {
                 this.id = this.activeRoute.snapshot.paramMap.get('id');
               }
 
@@ -107,7 +107,7 @@ export class LeftSlideCacheComponent implements OnInit {
 
   getCurrentZoom() {
     let zoom = this.currentView.getZoom();
-    if (isDefined(zoom)) {
+    if (typeof zoom !== 'undefined') {
         this.lastZoom = zoom;
     }
     return this.lastZoom;
@@ -140,21 +140,21 @@ export class LeftSlideCacheComponent implements OnInit {
     }
   }
 
-  validate() {
+  validate() { // TODO
     let extent = this.cacheMapManager.getCurrentArea();
 
-    // // Update layer model and force update.
-    // this.layerModel.cache = {
-    //     active: true,
-    //     minZoom: self.minZoom,
-    //     maxZoom: self.maxZoom,
-    //     extent: extent,
-    //     url: cordova.file.externalDataDirectory + 'tiles/' + this.layerModel.name + '/{z}/{x}/{y}.png'
-    // };
-    // MapManager.syncBackLayer();
+    // Update layer model and force update.
+    this.layerModel.cache = {
+        active: true,
+        minZoom: this.minZoom,
+        maxZoom: this.maxZoom,
+        extent: extent,
+        // url: cordova.file.externalDataDirectory + 'tiles/' + this.layerModel.name + '/{z}/{x}/{y}.png'
+    };
+    this.backLayer.syncBackLayer();
 
-    // // Run cache plugin task.
-    // extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
+    // Run cache plugin task.
+    extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
 
     // CacheMapPlugin.updateCache([{
     //     name: this.layerModel.name,
@@ -168,6 +168,42 @@ export class LeftSlideCacheComponent implements OnInit {
 
     this.route.navigateByUrl('/main');
   };
+
+  deleteCache() { // TODO
+    // $ionicPopup.confirm({
+    //     title: 'Suppression de cache',
+    //     template: 'Voulez vous supprimer le cache de cette couche de données ?'
+    // }).then(function (confirmed) {
+    //     if (confirmed) {
+    //         CacheMapPlugin.clearOneCache({
+    //             name: this.layerModel.name,
+    //             layerSource: null,
+    //             typeSource: this.layerModel.source.type,
+    //             zMin: this.layerModel.cache.minZoom,
+    //             zMax: this.layerModel.cache.maxZoom,
+    //             urlSource: this.layerModel.source.url,
+    //             bbox: this.layerModel.cache.extent
+    //         });
+
+    //         delete this.layerModel.cache;
+    //         this.backLayerService.setActive(this.layerModel.name);
+    //     }
+    //     return confirmed;
+    // });
+  };
+
+
+  // CacheMapManager.setTargetLayer(self.layerModel);
+
+  // currentView.on('change:center', onCenterChanged);
+
+  // currentView.on('change:resolution', onResolutionChanged);
+
+  // $scope.$on('$destroy', function () {
+  //     CacheMapManager.clearTargetLayer();
+  //     currentView.un('change:center', onCenterChanged);
+  //     currentView.un('change:resolution', onResolutionChanged);
+  // });
 
 }
 

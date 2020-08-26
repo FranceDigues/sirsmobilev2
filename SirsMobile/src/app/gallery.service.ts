@@ -26,7 +26,7 @@ export class GalleryService {
         this.initDirectory();
     }
 
-    initDirectory() {
+    initDirectory() { // TODO
         console.log('hey !');
         // this.file.checkDir(this.file.externalDataDirectory, this.activeTab)
         // .then(
@@ -92,7 +92,7 @@ export class GalleryService {
         return this.selected ? decodeURI(this.selected._entry.nativeURL) : '';
     }
 
-    open() {
+    open() { // TODO
         // this.fileOpener.open(
         //     decodeURI(this.selected._entry.nativeURL),
         // 'image/jpeg',)
@@ -183,7 +183,7 @@ export class GalleryService {
         }
     }
 
-    downloadRemoteDocuments() {
+    downloadRemoteDocuments() { // TODO
         // this.localDocument.query('getAllFilesAttachments', { attachments: true })
         // .then(
         //     (results) => {
