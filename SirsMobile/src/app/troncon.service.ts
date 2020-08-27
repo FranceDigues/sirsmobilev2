@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '@lib-storage/storage.service';
 import { DatabaseService } from './database.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LoadingController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root',
@@ -11,25 +11,33 @@ export class SystemeEndiguement {
     systemEndiguements = [];
     prelod = true;
 
-    constructor(private dbService: DatabaseService) {
-        this.dbService.getLocalDB().query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.SystemeEndiguement'],
-            endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
-        }).then(
-            (results) => {
-                setTimeout(() => {
-                    this.systemEndiguements = results.rows;
-                    this.systemEndiguements.push({
-                        id: 'withoutSystem',
-                        value: {
-                            libelle: 'Sans système d\'endiguement'
-                        }
-                    });
-                }, 100)
-            },
-            (err) => {
-                console.log('err Endiguement', err);
-            }
+    constructor(private dbService: DatabaseService, private loadingCtrl: LoadingController) {
+        this.loadingCtrl.create({message: 'Chargement'})
+        .then(
+          (loading: HTMLIonLoadingElement) => {
+            loading.present();
+            this.dbService.getLocalDB().query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.SystemeEndiguement'],
+                endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
+            }).then(
+                (results) => {
+                    setTimeout(() => {
+                        this.systemEndiguements = results.rows;
+                        this.systemEndiguements.push({
+                            id: 'withoutSystem',
+                            value: {
+                                libelle: 'Sans système d\'endiguement'
+                            }
+                        });
+                        loading.dismiss();
+                    }, 100);
+                },
+                (err) => {
+                    console.log('err Endiguement', err);
+                    loading.dismiss();
+                }
+            );
+          }
         );
     }
 }
@@ -41,29 +49,36 @@ export class DigueController {
 
     digues = [];
 
-    constructor(private dbService: DatabaseService) { }
+    constructor(private dbService: DatabaseService, private loadingCtrl: LoadingController) { }
 
     getDigues(SEID) {
-        let key = SEID === "withoutSystem" ? null : SEID;
-        this.dbService.getLocalDB().query('bySEIdHB', {
-            key: key
-        })
+        this.loadingCtrl.create({message: 'Chargement'})
         .then(
-            (results) => {
-                this.digues = results.rows;
-                if (SEID === "withoutSystem") {
-                    this.digues.push({
-                        id: 'SansDigue',
-                        value: {
-                            libelle: "Sans digue"
-                        }
-                    });
+          (loading: HTMLIonLoadingElement) => {
+            loading.present();
+            let key = SEID === "withoutSystem" ? null : SEID;
+            this.dbService.getLocalDB().query('bySEIdHB', {
+                key: key
+            })
+            .then(
+                (results) => {
+                    this.digues = results.rows;
+                    if (SEID === "withoutSystem") {
+                        this.digues.push({
+                            id: 'SansDigue',
+                            value: {
+                                libelle: "Sans digue"
+                            }
+                        });
+                    }
+                    loading.dismiss();
+                },
+                (err) => {
+                    console.log('err Digue', err);
+                    loading.dismiss();
                 }
-            },
-            (err) => {
-                console.log('err Digue', err);
-            }
-        )
+            );
+        });
     }
 }
 
@@ -75,42 +90,52 @@ export class TronconController {
     troncons = [];
 
     constructor(private dbService: DatabaseService, private appTronconsService: AppTronconsService,
-                private storageService: StorageService) { }
+                private storageService: StorageService, private loadingCtrl: LoadingController) { }
 
     getTroncons(DID) {
-        if (DID === "SansDigue") {
-            this.dbService.getLocalDB().query('Element/byClassAndLinear', {
-                startkey: ['fr.sirs.core.model.TronconDigue'],
-                endkey: ['fr.sirs.core.model.TronconDigue', {}],
-                include_docs: true
-            })
-            .then(
-                (results) => {
-                    setTimeout(() => {
-                        this.troncons = results.rows.filter((item) => {
-                            return !item.doc.digueId;
-                        });
-                    }, 100);
-                },
-                (err) => {
-                console.log(err);
+        this.loadingCtrl.create({message: 'Chargement'})
+        .then(
+            (loading: HTMLIonLoadingElement) => {
+                loading.present();
+                if (DID === "SansDigue") {
+                    this.dbService.getLocalDB().query('Element/byClassAndLinear', {
+                        startkey: ['fr.sirs.core.model.TronconDigue'],
+                        endkey: ['fr.sirs.core.model.TronconDigue', {}],
+                        include_docs: true
+                    })
+                    .then(
+                        (results) => {
+                            setTimeout(() => {
+                                this.troncons = results.rows.filter((item) => {
+                                    return !item.doc.digueId;
+                                });
+                                loading.dismiss();
+                            }, 100);
+                        },
+                        (err) => {
+                            console.log(err);
+                            loading.dismiss();
+                        }
+                    );
+                } else {
+                    this.dbService.getLocalDB().query('byDigueId', {
+                        key: DID
+                    })
+                    .then(
+                        (results) => {
+                            setTimeout(() => {
+                                this.troncons = results.rows;
+                                loading.dismiss();
+                            }, 100);
+                        },
+                        (err) => {
+                            console.log(err);
+                            loading.dismiss();
+                        }
+                    );
                 }
-            );
-        } else {
-            this.dbService.getLocalDB().query('byDigueId', {
-                key: DID
-            })
-            .then(
-                (results) => {
-                    setTimeout(() => {
-                        this.troncons = results.rows;
-                    }, 100);
-                },
-                (err) => {
-                    console.log(err);
-                }
-            );
-        }
+            }
+        );
     }
 
     isActive(id) {
