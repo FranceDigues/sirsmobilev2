@@ -25,7 +25,7 @@ export class StorageService extends ClassStorageService {
                 result = res;
             },
             (err) => {
-                result = err;
+                result = null;
             }
         );
         return (JSON.parse(result));

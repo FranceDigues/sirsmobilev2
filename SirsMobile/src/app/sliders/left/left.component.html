@@ -1,6 +1,6 @@
 <div [ngSwitch]="slidePath" class="full-height">
   <div class="full-height" *ngSwitchCase="'menu'">
-    <left-slide-menu (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
+    <left-slide-menu class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
   </div>
   <div class="full-height" *ngSwitchCase="'craftLayers'">
     <!-- TODO TODO -->
@@ -14,15 +14,7 @@
     </ion-header>
   </div>
   <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
-    <!-- TODO TODO -->
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="main" (click)="goReset()"></ion-back-button>
-        </ion-buttons>
-        <ion-title>NOT FINISHED</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <left-slide-troncon class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-troncon>
   </div>
   <div class="full-height" *ngSwitchCase="'backMap'">
     <left-slide-backmap (slidePathChange)="changeSlidePath($event)"></left-slide-backmap>

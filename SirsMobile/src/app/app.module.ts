@@ -29,9 +29,8 @@ import { GlobalConfigService } from './globalconfig.service';
 import { AppVersionsService } from './appversions.service';
 import { SirsDocService } from './sirsdoc.service';
 import { GalleryService } from './gallery.service';
-// import { FileOpener } from '@ionic-native/file-opener/ngx';
-// import { File } from '@ionic-native/file/ngx';
 import { BackLayerService } from './backlayer.service';
+import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
 
 
 @NgModule({
@@ -44,8 +43,6 @@ import { BackLayerService } from './backlayer.service';
     SplashScreen,
     NativeStorage,
     Insomnia,
-    // File,
-    // FileOpener,
     Geolocation,
     EditionModeService,
     RealPositionStyle,
@@ -65,6 +62,10 @@ import { BackLayerService } from './backlayer.service';
     GalleryService,
     BackLayerService,
     BackLayer,
+    SystemeEndiguement,
+    AppTronconsService,
+    DigueController,
+    TronconController,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
