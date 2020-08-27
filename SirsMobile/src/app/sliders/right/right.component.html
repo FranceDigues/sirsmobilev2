@@ -1,7 +1,7 @@
 <div [ngSwitch]="slidePath">
   <div *ngSwitchCase="'menu'">
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
+    <ion-header translucent>
+      <ion-toolbar class="header-slide" color="secondary">
         <ion-title>Création d'Objets</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -14,8 +14,8 @@
     </ion-list>
   </div>
   <div *ngSwitchDefault>
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
+    <ion-header translucent>
+      <ion-toolbar class="header-slide" color="secondary">
         <ion-title>Error Default</ion-title>
       </ion-toolbar>
     </ion-header>

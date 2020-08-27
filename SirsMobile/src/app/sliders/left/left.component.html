@@ -4,8 +4,8 @@
   </div>
   <div class="full-height" *ngSwitchCase="'craftLayers'">
     <!-- TODO TODO -->
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
+    <ion-header translucent>
+      <ion-toolbar class="header-slide" color="secondary">
         <ion-buttons slot="start">
           <ion-back-button defaultHref="main" (click)="goReset()"></ion-back-button>
         </ion-buttons>
@@ -26,8 +26,8 @@
     <left-slide-appsettings (slidePathChange)="changeSlidePath($event)"></left-slide-appsettings>
   </div>
   <div *ngSwitchDefault>
-    <ion-header>
-      <ion-toolbar class="header-slide center" color="secondary">
+    <ion-header translucent>
+      <ion-toolbar class="header-slide" color="secondary">
         <ion-title>Error Default</ion-title>
       </ion-toolbar>
     </ion-header>
