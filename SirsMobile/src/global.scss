@@ -32,6 +32,22 @@
     height: 100%;
 }
 
+ion-toolbar {
+    --min-height: 64px;
+}
+
+ion-reorder-group {
+    touch-action: none;
+}
+
+ion-reorder {
+    touch-action: none;
+}
+
+.header-slide {
+    height: 64px;
+}
+
 .scroll-all-content {
     height: 100%;
 }

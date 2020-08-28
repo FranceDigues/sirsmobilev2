@@ -3,15 +3,7 @@
     <left-slide-menu class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
   </div>
   <div class="full-height" *ngSwitchCase="'craftLayers'">
-    <!-- TODO TODO -->
-    <ion-header translucent>
-      <ion-toolbar class="header-slide" color="secondary">
-        <ion-buttons slot="start">
-          <ion-back-button defaultHref="main" (click)="goReset()"></ion-back-button>
-        </ion-buttons>
-        <ion-title>NOT FINISHED</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <left-slide-craftlayers class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-craftlayers>
   </div>
   <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
     <left-slide-troncon class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-troncon>
@@ -24,19 +16,5 @@
   </div>
   <div class="full-height" *ngSwitchCase="'appSettings'">
     <left-slide-appsettings (slidePathChange)="changeSlidePath($event)"></left-slide-appsettings>
-  </div>
-  <div *ngSwitchDefault>
-    <ion-header translucent>
-      <ion-toolbar class="header-slide" color="secondary">
-        <ion-title>Error Default</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-list>
-      <ion-item>Error Default 1</ion-item>
-      <ion-item>Error Default 2</ion-item>
-      <ion-item>Error Default 3</ion-item>
-      <ion-item>Error Default 4</ion-item>
-      <ion-item>Error Default 5</ion-item>
-    </ion-list>
   </div>
 </div>

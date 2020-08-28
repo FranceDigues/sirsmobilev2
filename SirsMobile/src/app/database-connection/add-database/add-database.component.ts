@@ -43,10 +43,24 @@ export class AddDatabaseComponent implements OnInit {
   private addDefaultProperties() {
     this.databaseForm.value.favorites = [
       {
-        title: null,
         visible: false,
-        filterValue: null,
-        model: null
+        title: 'Ouvrage revanche de berge',
+        filterValue: '',
+        realPosition: true,
+        featLabels: true,
+        selectable: true,
+        editable: true,
+        color: [255, 0, 0]
+      },
+      {
+        visible: false,
+        title: 'Ouvrage particulier',
+        filterValue: '',
+        realPosition: false,
+        featLabels: false,
+        selectable: false,
+        editable: false,
+        color: [0, 0, 0]
       }
     ];
     this.databaseForm.value.context = {

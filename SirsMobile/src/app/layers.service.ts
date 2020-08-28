@@ -705,4 +705,27 @@ export class AppLayer {
             }
         }
     }
+
+    moveAppLayer(from, to) {
+        const collection = this.appLayer.getLayers().getArray();
+        const tmp = collection[from];
+
+        collection[from] = collection[to];
+        collection[to] = tmp;
+    }
+
+    addLabelFeatureLayer(layerModel) {
+        let olLayer = this.getAppLayerInstance(layerModel);
+        olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
+        olLayer.getSource().clear();
+        this.setAppLayerFeatures(olLayer);
+    }
+
+    reloadLayer(layerModel) {
+        let olLayer = this.getAppLayerInstance(layerModel);
+        // Load data if necessary.
+        olLayer.getSource().clear();
+        this.setAppLayerFeatures(olLayer);
+    };
+
 }

@@ -31,6 +31,8 @@ import { LeftSlideBackmapComponent } from '../sliders/left/backmap/backmap.compo
 import { LeftSlideAddBackLayerComponent } from '../sliders/left/backmap/addbacklayer/addbacklayer.component';
 import { LeftSlideCacheComponent } from '../sliders/left/backmap/cache/cache.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from '../sliders/left/troncon/troncon.component';
+import { LeftSlideCraftlayersComponent } from '../sliders/left/craftlayers/craftlayers.component';
+import { ModalComponent } from '../sliders/left/craftlayers/modal/modal.component';
 
 @NgModule({
   imports: [
@@ -55,6 +57,6 @@ import { ArraySortPipe, LeftSlideTronconComponent } from '../sliders/left/tronco
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
-    ArraySortPipe, LeftSlideTronconComponent]
+    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent]
 })
 export class MainPageModule {}

@@ -49,5 +49,9 @@ export interface FavoritesModel {
     visible: boolean;
     title?: string;
     filterValue?: string;
+    realPosition?: any;
+    featLabels?: boolean;
+    selectable?: boolean;
+    editable?: boolean;
+    color?: Array<any>
 }
-
