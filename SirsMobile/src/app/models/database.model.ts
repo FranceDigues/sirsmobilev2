@@ -17,6 +17,10 @@ export interface ContextModel {
         geolocation: boolean,
         edition: boolean
     };
+    currentView?: {
+        zoom?: any,
+        coords?: any
+    },
     lastLocation?;
     version?;
 }

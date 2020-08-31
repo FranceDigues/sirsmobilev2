@@ -13,7 +13,6 @@ export class ModalComponent implements OnInit {
   colors = colorFactory.colors;
 
   selectedColor = null;
-  index = null;
   constructor(private navCtrl: NavController, private modalCtrl : ModalController ,
               private navParams: NavParams) {
               }

@@ -35,6 +35,15 @@ export class AppLayersService {
     extraLeaves(nodes, parent?) {
         let leaves = [];
 
+        // for (let node_tmp in nodes) {
+        //     let node = nodes[node_tmp];
+        //     node.categories = typeof parent === 'object' ? parent.categories.concat(parent.title) : [];
+        //     if (Array.isArray(node.children)) {
+        //         leaves = leaves.concat(this.extraLeaves(node.children, node));
+        //     } else {
+        //         leaves.push(node);
+        //     }
+        // }
         nodes.forEach((node) => {
             node.categories = typeof parent === 'object' ? parent.categories.concat(parent.title) : [];
             if (Array.isArray(node.children)) {
@@ -50,11 +59,13 @@ export class AppLayersService {
         return new Promise((resolve, rejects) => {
             this.moduleDescriptions()
             .then(
-                (modules: Array<any>) => {
+                (modules: any) => {
                     let leaves = []
-                    modules.forEach((module) => {
-                        leaves = leaves.concat(this.extraLeaves(module.layers));
-                    });
+                    for (let module in modules) {
+                        if (modules[module].layers) {
+                            leaves = leaves.concat(this.extraLeaves(modules[module].layers));
+                        }
+                    };
                     resolve(leaves);
                 },
                 (error) => {
@@ -85,7 +96,6 @@ export class AppLayersService {
             1                                   // alpha
         ];
         this.favorites.push(layer);
-        // $rootScope.$broadcast('appLayerAdded', layer); // TODO reproduce this same comportement -> will mb not be same like circle dependency
     }
 
     removeFavorite(layer) {
@@ -93,6 +103,6 @@ export class AppLayersService {
             return item.title;
         }).indexOf(layer.title);
         this.favorites.splice(index, 1);
-        // $rootScope.$broadcast('appLayerRemoved', layer, index); // TODO SAME
+        return index;
     }
 }

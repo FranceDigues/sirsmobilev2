@@ -1,0 +1,27 @@
+.layer-categories {
+    font-size: 12px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.layer-state {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+.couches-metiers-title {
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.couches-metiers-description {
+    font-size: 12px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

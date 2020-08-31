@@ -33,6 +33,7 @@ import { LeftSlideCacheComponent } from '../sliders/left/backmap/cache/cache.com
 import { ArraySortPipe, LeftSlideTronconComponent } from '../sliders/left/troncon/troncon.component';
 import { LeftSlideCraftlayersComponent } from '../sliders/left/craftlayers/craftlayers.component';
 import { ModalComponent } from '../sliders/left/craftlayers/modal/modal.component';
+import { LeftSlideDisponibleLayersComponent } from '../sliders/left/craftlayers/disponible/disponible.component';
 
 @NgModule({
   imports: [
@@ -47,16 +48,15 @@ import { ModalComponent } from '../sliders/left/craftlayers/modal/modal.componen
     OLService,
     Geolocation,
     GeolocService,
-    MapService,
     RealPositionStyle,
     EditionModeService,
-    DatabaseService,
     SirsDocService,
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
-    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent]
+    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent,
+    LeftSlideDisponibleLayersComponent]
 })
 export class MainPageModule {}

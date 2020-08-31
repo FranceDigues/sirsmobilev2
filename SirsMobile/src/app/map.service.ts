@@ -27,27 +27,18 @@ import { SirsDocService } from './sirsdoc.service';
 import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { RealPositionStyle } from './style.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
+import { DatabaseService } from './database.service';
+import { DatabaseModel } from './models/database.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapService {
 
-    public currentView = new View({
-        zoom: 6,
-        center: transform([2.7246, 47.0874], 'EPSG:4326', 'EPSG:3857'),
-        enableRotation: false
-    });
-    public selection = {
-        list: [],
-        active: null
-    }
-    public archiveObjectsFlag: boolean = false;
-    wktFormat = new WKT();
     // wgs84Sphere = new olSphere(6378137); // ? mb useful
     // selectInteraction = new Select({
-    //     style: new Style({
-    //         fill: new Fill({ color: [255, 255, 255, 0.5] })
+        //     style: new Style({
+            //         fill: new Fill({ color: [255, 255, 255, 0.5] })
     //     }),
     //     layers: (olLayer) => {
     //         const model = olLayer.get('model');
@@ -58,8 +49,38 @@ export class MapService {
     //     }
     // })
 
-    constructor() { }
+    currentView = null;
+    constructor(private dbService: DatabaseService) {
 
+        this.currentView = this.getCurrentView();
+    }
+    public selection = {
+        list: [],
+        active: null
+    }
+    public archiveObjectsFlag: boolean = false;
+
+    getCurrentView() {
+        if (!this.currentView) {
+            console.log('r y srs', this.dbService.activeDB);
+            const isCurrentView = this.dbService.activeDB.context.currentView;
+            if (isCurrentView) {
+                console.log('the new last view');
+                return new View({
+                    zoom: isCurrentView.zoom,
+                    center: isCurrentView.coords,
+                    enableRotation: false
+                });
+            } else {
+                console.log('the default view');
+                return new View({
+                    zoom: 6,
+                    center: transform([2.7246, 47.0874], 'EPSG:4326', 'EPSG:3857'),
+                    enableRotation: false
+                });
+            }
+        }
+    }
 
     // buildMap(element): Map {
     //     if (!this.currentView.get('touched')) { // ? interresting

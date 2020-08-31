@@ -31,7 +31,7 @@
     <ion-list *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue">
       <ion-item (click)="tronconCtrl.toggleLayer(troncon)">
         {{troncon.value.libelle}}
-        <ion-checkbox (checked)="tronconCtrl.isActive(troncon.id)" slot="end">
+        <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" slot="end">
         </ion-checkbox>
       </ion-item>
     </ion-list>

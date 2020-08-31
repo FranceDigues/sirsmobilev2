@@ -66,6 +66,7 @@ export class AddDatabaseComponent implements OnInit {
     this.databaseForm.value.context = {
       showText: 'fullName',
       authUser: null,
+      currentView: null,
       backLayer: {
         active: {
                   name: 'OpenStreetMap',

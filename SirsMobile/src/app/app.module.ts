@@ -31,6 +31,7 @@ import { SirsDocService } from './sirsdoc.service';
 import { GalleryService } from './gallery.service';
 import { BackLayerService } from './backlayer.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
+import { MapService } from './map.service';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { AppTronconsService, DigueController, SystemeEndiguement, TronconControl
     StatusBar,
     SplashScreen,
     NativeStorage,
+    MapService,
     Insomnia,
     Geolocation,
     EditionModeService,

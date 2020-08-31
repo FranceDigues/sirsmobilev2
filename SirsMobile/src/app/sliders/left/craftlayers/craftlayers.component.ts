@@ -19,12 +19,20 @@ export class LeftSlideCraftlayersComponent implements OnInit {
 
     order = false;
 
+    path = 0;
+
     constructor(private appLayersService: AppLayersService,
                 public appLayer: AppLayer, private modalCtrl: ModalController,
                 private navCtrl: NavController) { }
 
     goBack() {
         this.slidePathChange.emit('menu');
+    }
+
+    changeSlidePath(event) {
+        this.path = event;
+        this.layerTemp = Object.assign([], this.appLayersService.getFavorites());
+        this.layers = this.layerTemp.reverse();
     }
 
     getClassIcon(condition) {
@@ -42,7 +50,6 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log('couches metiers layers', this.layers);
     }
 
     onRenderItems(event) {
@@ -79,7 +86,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     goToLayerList() {
-        // TODO
+        this.path = 1;
     }
 
     featureLabels(layer) {
@@ -87,8 +94,6 @@ export class LeftSlideCraftlayersComponent implements OnInit {
             this.appLayer.addLabelFeatureLayer(layer);
         }, 1000);
     }
-
-    // TODO select color
 
     async openModal(layer) {
         const modal = await this.modalCtrl.create({

@@ -25,6 +25,10 @@ import { MenuController } from '@ionic/angular';
 import { BackLayerService } from '../backlayer.service';
 import { AppVersionsService } from '../appversions.service';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
+import { DatabaseService } from '../database.service';
+import { DatabaseModel } from '../models/database.model';
+
 
 
 @Component({
@@ -40,12 +44,30 @@ export class MainPage implements AfterViewInit {
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
               private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
               private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
-              private loadingCtrl: LoadingController) {
+              private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService) {
                 this.appVersionsService.init();
                 this.backLayer.init();
                 this.appLayer.init();
                 this.editionLayer.init();
                 this.geolocLayer.init();
+                this.platform.pause.subscribe(
+                  async () => {
+                    console.log('here ?????');
+                    const currentView = this.mapService.currentView;
+                    if (currentView) {
+                      this.dbService.getCurrentDatabaseHardDisk().
+                      then(
+                        (db: DatabaseModel) => {
+                          db.context.currentView = {
+                            zoom: this.ol.map.getView().getZoom(),
+                            coords: this.ol.map.getView().getCenter()
+                          };
+                          this.dbService.updateCurrentDatabaseHardDisk(db);
+                          console.log('Update View');
+                        }
+                      )
+                    }
+                });
               }
 
   ngAfterViewInit() {
