@@ -127,12 +127,30 @@ export class MainPage implements AfterViewInit {
     this.authService.logout();
   }
 
-  openSliderLeft() {
-    this.menu.open('left-slider');
+  handleSliderLeft() {
+    this.menu.isOpen('left-slider')
+    .then(
+      (bool) => {
+        if (bool) {
+          this.menu.close('left-slider');
+        } else {
+          this.menu.open('left-slider');
+        }
+      }
+    );
   }
 
-  openSliderRight() {
-    this.menu.open('right-slider');
+  handleSliderRight() {
+    this.menu.isOpen('right-slider')
+    .then(
+      (bool) => {
+        if (bool) {
+          this.menu.close('right-slider');
+        } else {
+          this.menu.open('right-slider');
+        }
+      }
+    );
   }
 
 }

@@ -44,6 +44,12 @@ ion-reorder {
     touch-action: none;
 }
 
+.menu-content-open {
+    pointer-events: auto; // if menu is active, the map stays interactive
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
 .header-slide {
     height: 64px;
 }
