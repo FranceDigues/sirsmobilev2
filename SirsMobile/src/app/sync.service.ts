@@ -31,8 +31,8 @@ export class SyncService {
 
     this.insomnia.keepAwake();
     console.log('Juste acant ???');
-    let localDB = await this.dbService.getLocalDB();
-    let remoteDB = await this.dbService.getRemoteDB();
+    const localDB = await this.dbService.getLocalDB();
+    const remoteDB = await this.dbService.getRemoteDB();
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};

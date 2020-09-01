@@ -20,7 +20,6 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   constructor(private appLayersService: AppLayersService,
               private appLayer: AppLayer, private dbService: DatabaseService,
               private loadingCtrl: LoadingController) {
-
                 this.loadingCtrl.create({ message: 'Chargement' })
                 .then(
                   (loading) => {
@@ -33,8 +32,8 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
                       }
                     );
                   }
-                )
-  }
+                );
+              }
 
   private order(value: any) {
     const data = value.sort(this.sortOn());
@@ -45,12 +44,12 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     return (a, b) => {
       if (a.title.toLowerCase() < b.title.toLowerCase()) {
         return -1;
-      } else if(a.title.toLowerCase() > b.title.toLowerCase()){
+      } else if (a.title.toLowerCase() > b.title.toLowerCase()){
         return 1;
       } else {
           return 0;
       }
-    }
+    };
   }
 
   ngOnInit() {}
@@ -62,7 +61,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   isActive(layer) {
     const favorites = this.appLayersService.getFavorites();
 
-    for (let favorite of favorites) {
+    for (const favorite of favorites) {
       // console.log('favorite.title / layer.title', favorite.title, layer.title);
       if (favorite.title === layer.title) {
         return true;

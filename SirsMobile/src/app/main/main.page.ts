@@ -17,7 +17,7 @@ import { MapService } from '../map.service';
 import Feature from 'ol/Feature';
 import Circle from 'ol/geom/Circle';
 import proj4 from 'proj4';
-import { register } from 'ol/proj/proj4'
+import { register } from 'ol/proj/proj4';
 import { SirsDocService } from '../sirsdoc.service';
 import { AppLayer, EditionLayer, GeolocLayer, BackLayer } from '../layers.service';
 import { AuthService } from '../auth.service';
@@ -65,7 +65,7 @@ export class MainPage implements AfterViewInit {
                           this.dbService.updateCurrentDatabaseHardDisk(db);
                           console.log('Update View');
                         }
-                      )
+                      );
                     }
                 });
               }
@@ -84,7 +84,7 @@ export class MainPage implements AfterViewInit {
       async () => {
         loading = await this.loadingCtrl.create({
           message: 'Déploiement de la carte en cours'
-        })
+        });
         loading.present();
         this.ol.createMap('map');
         this.ol.getMap().setView(this.mapService.currentView);
@@ -92,7 +92,7 @@ export class MainPage implements AfterViewInit {
         this.ol.addLayer(this.appLayer.appLayer);
         this.ol.addLayer(this.editionLayer.editionLayer);
         this.ol.addLayer(this.geolocLayer.geolocLayer);
-        setTimeout(() => { loading.dismiss() }, 1000);
+        setTimeout(() => { loading.dismiss(); }, 1000);
       }
     );
   }
@@ -107,13 +107,13 @@ export class MainPage implements AfterViewInit {
       (error) => {
         console.log('Error getting location', error);
       }
-    )
+    );
   }
 
   zoomToMe() {
     const coords = this.geoloc.getCoords();
     if (coords) {
-      let map = this.ol.getMap();
+      const map = this.ol.getMap();
       map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
       map.getView().setZoom(18);
       this.geolocLayer.redrawGeolocLayer(coords);

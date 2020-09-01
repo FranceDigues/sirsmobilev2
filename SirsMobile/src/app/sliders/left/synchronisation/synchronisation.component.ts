@@ -10,8 +10,9 @@ import { SyncService } from 'src/app/sync.service';
 })
 export class LeftSlideSynchronisationComponent implements OnInit {
 
-  constructor(public syncService: SyncService, private router: Router,
-    public dbService: DatabaseService) { }
+  constructor(public syncService: SyncService,
+              private router: Router,
+              public dbService: DatabaseService) { }
 
   ngOnInit() { }
 

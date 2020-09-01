@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StorageService } from '@lib-storage/storage.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from 'src/app/troncon.service';
-import { Pipe, PipeTransform } from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 
 @Component({
@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class LeftSlideTronconComponent implements OnInit {
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   view = 'SE';
   SEID = null;
@@ -58,19 +58,17 @@ export class LeftSlideTronconComponent implements OnInit {
   cleanAll() {
     this.appTronconsService.favorites = [];
     this.storageService.setItem('AppTronconsFavorities', []);
-  };
+  }
 
 }
 
 @Pipe({
-  name: "sortByLibelleValue"
+  name: 'sortByLibelleValue'
 })
 export class ArraySortPipe  implements PipeTransform {
 
   transform(value: any, exponent: any) {
-    console.log('pipe value', value);
     const data = value.sort(this.sortOn());
-    console.log("pipe data", data);
     return data;
   }
 
@@ -78,11 +76,11 @@ export class ArraySortPipe  implements PipeTransform {
     return (a, b) => {
       if (a.value.libelle.toLowerCase() < b.value.libelle.toLowerCase()) {
         return -1;
-      } else if(a.value.libelle.toLowerCase() > b.value.libelle.toLowerCase()){
+      } else if (a.value.libelle.toLowerCase() > b.value.libelle.toLowerCase()){
         return 1;
       } else {
           return 0;
       }
-    }
+    };
   }
 }

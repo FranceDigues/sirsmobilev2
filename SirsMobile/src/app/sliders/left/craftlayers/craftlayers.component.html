@@ -59,18 +59,20 @@
                     </ion-item-options>
                 </ion-item-sliding>
             </ion-reorder-group>
+            <ion-item lines="none"></ion-item>
         </ion-list>
-        <ion-fab class="position-absolute" style="top: 85%" horizontal="start" vertical="end" slot="fixed">
-            <ion-fab-button color="danger" (click)="order = !order">
-                <ion-icon name="list-outline"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-        <ion-fab class="position-absolute" style="top: 85%" horizontal="end" vertical="end" slot="fixed">
-            <ion-fab-button color="danger" (click)="goToLayerList()">
-                <ion-icon name="add"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
     </ion-content>
+    <ion-fab class="position-absolute" style="top: 85%" horizontal="start" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="order = !order">
+            <ion-icon *ngIf="!order" name="list-outline"></ion-icon>
+            <ion-icon *ngIf="order" name="lock-closed-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab class="position-absolute" style="top: 85%" horizontal="end" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="goToLayerList()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 </div>
 <div class="full-height" *ngIf="path === 1">
     <left-slide-disponible-layers class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-disponible-layers>

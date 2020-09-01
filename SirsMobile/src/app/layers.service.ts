@@ -105,18 +105,18 @@ export class EditionLayer {
         // Compute geometry.
         let SirsDoc = this.SirsDoc;
         let geometry = undefined;
-        let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : "EPSG:2154";
+        let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
         if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             });
             console.log(geometry);
         } else {
             geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
                 {
-                    dataProjection: dataProjection,
+                    dataProjection,
                     featureProjection: 'EPSG:3857'
                 }
             );
@@ -126,7 +126,7 @@ export class EditionLayer {
                     geometry.getFirstCoordinate(),
                     this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
                         {
-                            dataProjection: dataProjection,
+                            dataProjection,
                             featureProjection: 'EPSG:3857'
                         }
                     ).getFirstCoordinate()
@@ -364,12 +364,12 @@ export class AppLayer {
                 visible: layerModel.visible,
                 model: layerModel,
                 style: (feature, resolution) => {
-                    var features = feature.get('features');
-                    var styles = [];
+                    let features = feature.get('features');
+                    let styles = [];
 
                     if (Array.isArray(features) && features.length > 0) {
                         features.forEach((_feature) => {
-                            var style = _feature.getStyle();
+                            let style = _feature.getStyle();
                             if (typeof style === 'function') {
                                 style = style.call(_feature, _feature, resolution);
                             } else if (style instanceof Style) {
@@ -387,8 +387,8 @@ export class AppLayer {
                             }
                         });
 
-                        var style = features[0].getStyle();
-                        if (typeof style === "function") {
+                        let style = features[0].getStyle();
+                        if (typeof style === 'function') {
                             style = style.call(feature, feature, resolution);
                         } else if (style instanceof Style) {
                             style = [].concat(style);
@@ -433,7 +433,7 @@ export class AppLayer {
         let olSource = null;
 
         console.log('olLayer ATTENTION VERIF', olLayer);
-        if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             olSource = olLayer.getSource().getSource();
         } else {
             olSource = olLayer.getSource();
@@ -444,9 +444,9 @@ export class AppLayer {
 
         if (typeof promise === 'undefined') {
 
-            if (layerModel.filterValue !== "fr.sirs.core.model.BorneDigue" && layerModel.filterValue !== "fr.sirs.core.model.TronconDigue") {
+            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' && layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 //Get all the favorites tronçons ids
-                let favorites = await this.storageService.getItem("AppTronconsFavorities");
+                let favorites = await this.storageService.getItem('AppTronconsFavorities');
                 let keys = [];
                 if (favorites !== null && favorites.length !== 0) {
                     favorites.forEach((key) => {
@@ -478,7 +478,7 @@ export class AppLayer {
                             });
                     } else {
                         noop();
-                        // var deferred = $q.defer();
+                        // let deferred = $q.defer();
                         // promise = deferred.promise
                         //     .then(function () {
                         //         return [];
@@ -486,8 +486,8 @@ export class AppLayer {
                         // deferred.resolve();
                     }
                 }
-            } else if (layerModel.filterValue === "fr.sirs.core.model.TronconDigue") {
-                let tmp = await this.storageService.getItem("AppTronconsFavorities");
+            } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
+                let tmp = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                             return item.id;
@@ -500,7 +500,7 @@ export class AppLayer {
                         console.log(error);
                     });
             } else {
-                let tmp = await this.storageService.getItem("AppTronconsFavorities");
+                let tmp = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                             return item.id;
@@ -542,25 +542,25 @@ export class AppLayer {
     }
 
     createAppFeatureModel(featureDoc) {
-        featureDoc = featureDoc.doc || featureDoc.value; // depending on "include_docs" option when querying docs
+        featureDoc = featureDoc.doc || featureDoc.value; // depending on 'include_docs' option when querying docs
 
-        let dataProjection = typeof this.SirsDoc.get().epsgCode === 'undefined' ? "EPSG:2154" : this.SirsDoc.get().epsgCode;
+        const dataProjection = typeof this.SirsDoc.get().epsgCode === 'undefined' ? 'EPSG:2154' : this.SirsDoc.get().epsgCode;
 
         let projGeometry = null;
         let realGeometry = null;
 
         if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             });
             realGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             });
         } else {
             projGeometry = featureDoc.geometry ? this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             }) : undefined;
 
@@ -572,7 +572,7 @@ export class AppLayer {
 
             realGeometry = featureDoc.positionDebut ?
                 this.wktFormat.readGeometry(featureDoc.positionDebut, {
-                    dataProjection: dataProjection,
+                    dataProjection,
                     featureProjection: 'EPSG:3857'
                 }) : undefined;
 
@@ -580,7 +580,7 @@ export class AppLayer {
                 realGeometry = new LineString([
                     realGeometry.getFirstCoordinate(),
                     this.wktFormat.readGeometry(featureDoc.positionFin, {
-                        dataProjection: dataProjection,
+                        dataProjection,
                         featureProjection: 'EPSG:3857'
                     }).getFirstCoordinate()
                 ]);
@@ -593,26 +593,28 @@ export class AppLayer {
             rev: featureDoc.rev || featureDoc._rev,
             designation: featureDoc.designation,
             title: featureDoc.libelle,
-            projGeometry: projGeometry,
-            realGeometry: realGeometry,
+            projGeometry,
+            realGeometry,
             archive: featureDoc.date_fin ? true : false
         };
     }
 
     createAppFeatureInstances(featureModels, layerModel) {
-        var features = [];
+        const features = [];
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
             if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
                 if (this.mapService.archiveObjectsFlag) {
                     // Show all the objects
-                    var feature = new Feature();
+                    const feature = new Feature();
                     if (layerModel.realPosition) {
                         feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(this.RealPositionStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                        feature.setStyle(this.RealPositionStyle.style(this.mapService.selection,
+                            feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                     } else {
                         feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(this.DefaultStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                        feature.setStyle(this.DefaultStyle.style(this.mapService.selection,
+                            feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
                     }
                     feature.set('id', featureModel.id);
                     feature.set('categories', layerModel.categories);
@@ -622,15 +624,17 @@ export class AppLayer {
                     feature.set('title', featureModel.libelle);
                     features.push(feature);
                 } else {
-                    //Show only not archived objects
+                    // Show only not archived objects
                     if (!featureModel.archive) {
-                        var feature = new Feature();
+                        const feature = new Feature();
                         if (layerModel.realPosition) {
                             feature.setGeometry(featureModel.realGeometry);
-                            feature.setStyle(this.RealPositionStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                            feature.setStyle(this.RealPositionStyle.style(this.mapService.selection,
+                                feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                         } else {
                             feature.setGeometry(featureModel.projGeometry);
-                            feature.setStyle(this.DefaultStyle.style(this.mapService.selection, feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                            feature.setStyle(this.DefaultStyle.style(this.mapService.selection,
+                                feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
                         }
                         feature.set('id', featureModel.id);
                         feature.set('categories', layerModel.categories);
@@ -647,10 +651,10 @@ export class AppLayer {
     }
 
     syncAllAppLayer() {
-        let layers = this.appLayer.getLayers();
+        const layers = this.appLayer.getLayers();
         layers.forEach((layer) => {
-            let layerModel = layer.get('model');
-            let olLayer = this.getAppLayerInstance(layerModel);
+            const layerModel = layer.get('model');
+            const olLayer = this.getAppLayerInstance(layerModel);
 
             olLayer.setVisible(layerModel.visible);
             olLayer.getSource().clear();
@@ -661,7 +665,7 @@ export class AppLayer {
     }
 
     private getAppLayerInstance(layerModel) {
-        let layers = this.appLayer.getLayers();
+        const layers = this.appLayer.getLayers();
         let i = layers.getLength();
         while (i--) {
             if (layers.item(i).get('model') === layerModel) {
@@ -672,10 +676,10 @@ export class AppLayer {
     }
 
     syncAppLayer(layerModel) {
-        let olLayer = this.getAppLayerInstance(layerModel);
+        const olLayer = this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
-        if (layerModel.filterValue === "fr.sirs.core.model.BorneDigue") {
+        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             olLayer.getSource().getSource().clear();
         } else {
             olLayer.getSource().clear();
@@ -715,17 +719,17 @@ export class AppLayer {
     }
 
     addLabelFeatureLayer(layerModel) {
-        let olLayer = this.getAppLayerInstance(layerModel);
+        const olLayer = this.getAppLayerInstance(layerModel);
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 
     reloadLayer(layerModel) {
-        let olLayer = this.getAppLayerInstance(layerModel);
+        const olLayer = this.getAppLayerInstance(layerModel);
         // Load data if necessary.
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
-    };
+    }
 
 }

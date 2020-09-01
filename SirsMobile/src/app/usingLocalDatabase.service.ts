@@ -31,7 +31,7 @@ export class LocalDatabase {
                     if (result.rows.length === 1) {
                         resolve(result.rows[0]);
                     } else {
-                        rejects({ error: "ERROR" });
+                        rejects({ error: 'ERROR' });
                     }
                 },
                 (error) => {

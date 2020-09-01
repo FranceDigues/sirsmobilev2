@@ -45,7 +45,7 @@ export class LeftSlideCacheComponent implements OnInit {
               }
 
   currentView = this.mapService.currentView;
-  layerModel = this.backLayerService.getByName(this.id)
+  layerModel = this.backLayerService.getByName(this.id);
   lastZoom = this.currentView.getZoom();
 
   ngOnInit() {
@@ -65,9 +65,9 @@ export class LeftSlideCacheComponent implements OnInit {
         this.currentView.fit(this.layerModel.cache.extent, map.getSize());
     } else {
         // Create default area.
-        let extent = map.getView().calculateExtent(map.getSize());
-        let wDelta = getWidth(extent) / 10;
-        let hDelta = getHeight(extent) / 10;
+        const extent = map.getView().calculateExtent(map.getSize());
+        const wDelta = getWidth(extent) / 10;
+        const hDelta = getHeight(extent) / 10;
         extent[0] = extent[0] + wDelta;
         extent[1] = extent[1] + hDelta;
         extent[2] = extent[2] - wDelta;
@@ -76,17 +76,17 @@ export class LeftSlideCacheComponent implements OnInit {
     }
     // Compute the number of tiles.
     this.updateTileCount();
-  };
+  }
 
-  editCorner = function (corner) {
+  editCorner(corner) {
     if (corner === this.selectedCorner) {
         this.selectedCorner = null;
     } else {
         this.selectedCorner = corner;
 
         // Center view on target corner.
-        let extent = this.cacheMapManager.getCurrentArea(),
-            center;
+        const extent = this.cacheMapManager.getCurrentArea();
+        let center = null;
         switch (corner) {
             case 'tl':
                 center = [extent[0], extent[3]];
@@ -106,7 +106,7 @@ export class LeftSlideCacheComponent implements OnInit {
   }
 
   getCurrentZoom() {
-    let zoom = this.currentView.getZoom();
+    const zoom = this.currentView.getZoom();
     if (typeof zoom !== 'undefined') {
         this.lastZoom = zoom;
     }
@@ -115,8 +115,8 @@ export class LeftSlideCacheComponent implements OnInit {
 
   onCenterChanged(event) {
     if (this.selectedCorner) {
-      let extent = this.cacheMapManager.getCurrentArea(),
-          center = event.target.getCenter();
+      const extent = this.cacheMapManager.getCurrentArea();
+      const center = event.target.getCenter();
       switch (this.selectedCorner) {
           case 'tl':
               extent[0] = center[0];
@@ -148,7 +148,7 @@ export class LeftSlideCacheComponent implements OnInit {
         active: true,
         minZoom: this.minZoom,
         maxZoom: this.maxZoom,
-        extent: extent,
+        extent,
         // url: cordova.file.externalDataDirectory + 'tiles/' + this.layerModel.name + '/{z}/{x}/{y}.png'
     };
     this.backLayer.syncBackLayer();
@@ -167,7 +167,7 @@ export class LeftSlideCacheComponent implements OnInit {
     // }]);
 
     this.route.navigateByUrl('/main');
-  };
+  }
 
   deleteCache() { // TODO
     // $ionicPopup.confirm({
@@ -190,7 +190,7 @@ export class LeftSlideCacheComponent implements OnInit {
     //     }
     //     return confirmed;
     // });
-  };
+  }
 
 
   // CacheMapManager.setTargetLayer(self.layerModel);
@@ -228,7 +228,7 @@ export class CacheMapManager {
           }),
           geometry: (feature) => {
               // return the coordinates of the first ring of the polygon
-              let coordinates = feature.getGeometry().getCoordinates()[0];
+              const coordinates = feature.getGeometry().getCoordinates()[0];
               return new MultiPoint(coordinates);
           }
       })
@@ -248,9 +248,9 @@ export class CacheMapManager {
                 radius: 5,
                 fill: new Fill({color: [0, 0, 255, 1]})
             }),
-            geometry: function (feature) {
+            geometry: (feature) => {
                 // return the coordinates of the first ring of the polygon
-                let coordinates = feature.getGeometry().getCoordinates()[0];
+                const coordinates = feature.getGeometry().getCoordinates()[0];
                 return new MultiPoint(coordinates);
             }
         })
@@ -277,13 +277,13 @@ export class CacheMapManager {
           shiftDragZoom: false
         })
     };
-  };
+  }
 
   handleTypesSource(layerModel) {
     if (layerModel.source.type === 'OSM') {
       return new OSM(layerModel.source);
     } else if (layerModel.source.type === 'TileWMS') {
-        return new TileWMS(layerModel.source)
+        return new TileWMS(layerModel.source);
     } else if (layerModel.source.type === 'XYZ') {
         return new XYZ(layerModel.source);
     } else {
@@ -299,54 +299,55 @@ export class CacheMapManager {
     if (typeof layerModel.cache === 'object') {
         this.previousAreaLayer.getSource().addFeature(this.createFeatureInstance(layerModel.cache.extent));
     }
-  };
+  }
 
   clearTargetLayer() {
     this.targetLayer.setSource(null);
     this.previousAreaLayer.getSource().clear();
     this.currentAreaLayer.getSource().clear();
-  };
+  }
 
   setCurrentArea(extent) {
     this.currentAreaLayer.getSource().clear();
     if (Array.isArray(extent)) {
         this.currentAreaLayer.getSource().addFeature(this.createFeatureInstance(extent));
     }
-  };
+  }
 
   getCurrentArea() {
-    let feature = this.currentAreaLayer.getSource().getFeatures()[0];
+    const feature = this.currentAreaLayer.getSource().getFeatures()[0];
     if (feature instanceof Feature) {
         return feature.getGeometry().getExtent();
     }
     return null;
-  };
+  }
 
-  countTiles = function (minZoom, maxZoom) {
+  countTiles(minZoom, maxZoom) {
 
     let tileGrid = this.targetLayer.getSource().getTileGrid();
 
-    let extent = this.getCurrentArea(), tileCount = 0;
+    const extent = this.getCurrentArea();
+    let tileCount = 0;
 
     // In the case the tileGrid not exist use the default tileGrid
     if (!tileGrid) {
-        let projExtent = get('EPSG:3857').getExtent();
-        let startResolution = getWidth(projExtent) / 256;
-        let resolutions = new Array(22);
+        const projExtent = get('EPSG:3857').getExtent();
+        const startResolution = getWidth(projExtent) / 256;
+        const resolutions = new Array(22);
         for (let i = 0, j = resolutions.length; i < j; ++i) {
           resolutions[i] = startResolution / Math.pow(2, i);
         }
         tileGrid = new TileGrid({
             origin: [0, 0],
-            resolutions: resolutions
+            resolutions
         });
     }
     for (let i = minZoom; i <= maxZoom; i++) {
-        let tileRange = tileGrid.getTileRangeForExtentAndZ(extent, i);
-        tileCount += (tileRange.getWidth() * tileRange.getHeight())
+        const tileRange = tileGrid.getTileRangeForExtentAndZ(extent, i);
+        tileCount += (tileRange.getWidth() * tileRange.getHeight());
     }
 
     return tileCount;
-  };
+  }
 
 }

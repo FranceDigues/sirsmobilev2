@@ -41,7 +41,8 @@ import { LeftSlideDisponibleLayersComponent } from '../sliders/left/craftlayers/
     FormsModule,
     IonicModule,
     MainPageRoutingModule,
-    NgbCollapseModule,MatIconModule,
+    NgbCollapseModule,
+    MatIconModule,
     FlexLayoutModule,
   ],
   providers: [

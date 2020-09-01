@@ -11,7 +11,7 @@ export class AppinfosLeftSlideComponent implements OnInit {
 
   versionsObject = { };
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   constructor(private appVersions: AppVersionsService) { }
 

@@ -12,7 +12,7 @@ import { ModalComponent } from './modal/modal.component';
 })
 export class LeftSlideCraftlayersComponent implements OnInit {
 
-    @Output() readonly slidePathChange = new EventEmitter<String>();
+    @Output() readonly slidePathChange = new EventEmitter<string>();
     layerTemp = Object.assign([], this.appLayersService.getFavorites());
     layers = this.layerTemp.reverse();
     colors = colorFactory.colors;
@@ -46,14 +46,14 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     getStyleColor(layer) {
         return {
             'background-color': 'rgb(' + layer.color[0].toString() + ',' + layer.color[1].toString() + ',' + layer.color[2].toString() + ')'
-        }
+        };
     }
 
     ngOnInit() {
     }
 
     onRenderItems(event) {
-        if (event.detail.to == this.layers.length) {
+        if (event.detail.to === this.layers.length) {
             event.detail.to -= 1;
         }
         this.move(event.detail.from, event.detail.to);
@@ -100,7 +100,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
             component: ModalComponent,
             animated: true,
             cssClass: 'modal-css',
-            componentProps: { layer: layer }
+            componentProps: { layer }
         });
         modal.onDidDismiss()
         .then(
@@ -113,17 +113,9 @@ export class LeftSlideCraftlayersComponent implements OnInit {
                     }, 1000);
                 }
             }
-        )
+        );
         return await modal.present();
     }
-
-    // $ionicModal.fromTemplateUrl('color-modal.html', {
-    //         scope: $scope,
-    //         animation: 'slide-in-up',
-    //         backdropClickToClose: false
-    //     }).then(function (modal) {
-    //         self.colorModal = modal;
-    //     });
 
     onBack() {
         this.slidePathChange.emit('menu');

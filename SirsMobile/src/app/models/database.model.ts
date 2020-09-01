@@ -15,19 +15,19 @@ export interface ContextModel {
     backLayer?: BackLayerModel;
     settings?: {
         geolocation: boolean,
-        edition: boolean
+        edition: boolean,
     };
     currentView?: {
         zoom?: any,
-        coords?: any
-    },
+        coords?: any,
+    };
     lastLocation?;
     version?;
 }
 
 export interface BackLayerModel {
     active?: ListBackLayer;
-    list?: Array<ListBackLayer>
+    list?: Array<ListBackLayer>;
 }
 
 export interface ListBackLayer {
@@ -44,8 +44,8 @@ export interface ListBackLayer {
         url: string,
         params?: {
             version?: string,
-            layers?: any
-        }
+            layers?: any;
+        },
     };
 }
 
@@ -57,5 +57,5 @@ export interface FavoritesModel {
     featLabels?: boolean;
     selectable?: boolean;
     editable?: boolean;
-    color?: Array<any>
+    color?: Array<any>;
 }

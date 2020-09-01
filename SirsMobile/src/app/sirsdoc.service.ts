@@ -20,12 +20,12 @@ export class SirsDocService {
                     resolve(this.doc);
                 }
             );
-        })
+        });
     }
 
     get(): any {
         if (this.doc) {
-            return this.doc
+            return this.doc;
         } else {
             this.localDB.get('$sirs')
             .then(

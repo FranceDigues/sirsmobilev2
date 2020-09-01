@@ -13,9 +13,7 @@ export class ModalComponent implements OnInit {
   colors = colorFactory.colors;
 
   selectedColor = null;
-  constructor(private navCtrl: NavController, private modalCtrl : ModalController ,
-              private navParams: NavParams) {
-              }
+  constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {}
 
@@ -25,7 +23,7 @@ export class ModalComponent implements OnInit {
 
   calculateBackGroundColor(color) {
     return color.hex;
-  };
+  }
 
   selectColor(color) {
     this.selectedColor = color;
@@ -33,15 +31,15 @@ export class ModalComponent implements OnInit {
 
   ifSelected(color) {
     if (color === this.selectedColor) {
-      return "default";
+      return 'default';
     } else {
-      return "outline";
+      return 'outline';
     }
   }
 
   validate() {
     if (this.selectedColor) {
-      console.log(this.selectedColor)
+      console.log(this.selectedColor);
       this.modalCtrl.dismiss(this.selectedColor);
     }
   }

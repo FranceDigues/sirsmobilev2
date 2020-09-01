@@ -9,7 +9,7 @@ import TileImage from 'ol/source/TileImage';
 })
 export class LeftSlideAddBackLayerComponent {
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   backLayerForm = {
       name: null,
@@ -40,11 +40,11 @@ export class LeftSlideAddBackLayerComponent {
     constructor(public backLayerService: BackLayerService) { }
 
     goBack() {
-      this.slidePathChange.emit('select')
+      this.slidePathChange.emit('select');
     }
 
     prepareType() {
-        switch(this.backLayerForm.source.type) {
+        switch (this.backLayerForm.source.type) {
           case 'TileWMS':
             this.backLayerForm.source.params.version = '1.3.0';
             break;
@@ -52,25 +52,26 @@ export class LeftSlideAddBackLayerComponent {
             this.backLayerForm.source.params = {
               version: null,
               layers: null
-            }
+            };
         }
     }
 
     addBackLayer() {
-      if (this.backLayerForm.authorization.login !== "" && this.backLayerForm.authorization.pw !== "") {
-        let tileImage: TileImage = this.backLayerForm.source;
+      if (this.backLayerForm.authorization.login !== '' && this.backLayerForm.authorization.pw !== '') {
+        const tileImage: TileImage = this.backLayerForm.source;
         tileImage.tileLoadFunction((imageTile, src) => {
-            let oReq = new XMLHttpRequest();
-            oReq.open("GET", src, true);
-            oReq.setRequestHeader("Authorization", 'Basic ' + btoa(this.backLayerForm.authorization.login + ":" + this.backLayerForm.authorization.pw));
-            oReq.responseType = "blob";
-            oReq.onload = function (oEvent) {
-                let blob = oReq.response;
-                let reader = new FileReader();
-                reader.onload = function (event) {
-                    imageTile.getImage().src = event.target.result; //event.target.results contains the base64 code to create the image.
+            const oReq = new XMLHttpRequest();
+            oReq.open('GET', src, true);
+            oReq.setRequestHeader('Authorization', 'Basic ' +
+            btoa(this.backLayerForm.authorization.login + ':' + this.backLayerForm.authorization.pw));
+            oReq.responseType = 'blob';
+            oReq.onload = function (oEvent) { // TODO check this (prbly not working)
+                const blob = oReq.response;
+                const reader = new FileReader();
+                reader.onload = function(event) { // TODO check this (prbly not working)
+                    imageTile.getImage().src = event.target.result; // event.target.results contains the base64 code to create the image.
                 };
-                reader.readAsDataURL(blob);//Convert the blob from clipboard to base64
+                reader.readAsDataURL(blob); // Convert the blob from clipboard to base64
             };
 
             oReq.send();

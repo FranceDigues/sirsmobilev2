@@ -10,30 +10,33 @@
   <div *ngIf="view === 'SE'">
     <p style="padding: 5px;"><b>Choisir un système d'endiguement : </b></p>
     <!--La liste de tous les systéme d'endigument dans la base-->
-    <ion-list *ngFor="let SystemeEndiguement of systemeEndiguementService.systemEndiguements | sortByLibelleValue">
-      <ion-item (click)="changeView('D'); putSE(SystemeEndiguement.id)">
+    <ion-list>
+      <ion-item *ngFor="let SystemeEndiguement of systemeEndiguementService.systemEndiguements | sortByLibelleValue" (click)="changeView('D'); putSE(SystemeEndiguement.id)">
         {{ SystemeEndiguement.value.libelle }}
       </ion-item>
+      <ion-item lines="none"></ion-item>
     </ion-list>
   </div>
   <div *ngIf="view === 'D'">
     <p style="padding: 5px;"><b>Choisir une Digue : </b></p>
       <!--La liste de tous les digues  de ce systéme d'endigument-->
-      <ion-list *ngFor="let digue of digueController.digues | sortByLibelleValue">
-        <ion-item (click)="changeView('T'); putD(digue.id)">
+      <ion-list>
+        <ion-item *ngFor="let digue of digueController.digues | sortByLibelleValue" (click)="changeView('T'); putD(digue.id)">
           {{ digue.value.libelle }}
         </ion-item>
+        <ion-item lines="none"></ion-item>
       </ion-list>
   </div>
   <div *ngIf="view === 'T'">
     <p style="padding: 5px;"><b>Choisir les tronçons favoris</b></p>
     <!--La liste de tous les tronçons d'un digue-->
-    <ion-list *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue">
-      <ion-item (click)="tronconCtrl.toggleLayer(troncon)">
+    <ion-list >
+      <ion-item *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue" (click)="tronconCtrl.toggleLayer(troncon)">
         {{troncon.value.libelle}}
         <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" slot="end">
         </ion-checkbox>
       </ion-item>
+      <ion-item lines="none"></ion-item>
     </ion-list>
   </div>
 </ion-content>

@@ -12,11 +12,10 @@ import { MapService } from 'src/app/map.service';
 })
 export class LeftSlideMenuComponent implements OnInit {
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   constructor(public editionLayer: EditionLayer, public geoloc: GeolocService,
-    public mapService: MapService, private appLayer: AppLayer, private route: Router,
-    private ol: OLService) { }
+              public mapService: MapService, private appLayer: AppLayer, private route: Router) { }
 
   ngOnInit() {}
 

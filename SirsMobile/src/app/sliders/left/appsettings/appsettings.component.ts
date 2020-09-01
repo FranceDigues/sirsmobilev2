@@ -8,7 +8,7 @@ import { GlobalConfigService } from 'src/app/globalconfig.service';
 })
 export class AppsettingsLeftSlideComponent implements OnInit {
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   constructor(private globalConfig: GlobalConfigService) { }
 

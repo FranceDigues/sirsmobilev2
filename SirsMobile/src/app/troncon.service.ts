@@ -56,18 +56,18 @@ export class DigueController {
         .then(
           (loading: HTMLIonLoadingElement) => {
             loading.present();
-            let key = SEID === "withoutSystem" ? null : SEID;
+            const key = SEID === 'withoutSystem' ? null : SEID;
             this.dbService.getLocalDB().query('bySEIdHB', {
-                key: key
+                key
             })
             .then(
                 (results) => {
                     this.digues = results.rows;
-                    if (SEID === "withoutSystem") {
+                    if (SEID === 'withoutSystem') {
                         this.digues.push({
                             id: 'SansDigue',
                             value: {
-                                libelle: "Sans digue"
+                                libelle: 'Sans digue'
                             }
                         });
                     }
@@ -97,7 +97,7 @@ export class TronconController {
         .then(
             (loading: HTMLIonLoadingElement) => {
                 loading.present();
-                if (DID === "SansDigue") {
+                if (DID === 'SansDigue') {
                     this.dbService.getLocalDB().query('Element/byClassAndLinear', {
                         startkey: ['fr.sirs.core.model.TronconDigue'],
                         endkey: ['fr.sirs.core.model.TronconDigue', {}],
@@ -147,7 +147,7 @@ export class TronconController {
     toggleLayer(troncon) {
         if (this.isActive(troncon.id)) {
             this.appTronconsService.favorites.splice(this.appTronconsService.favorites
-                .map(function (item) {
+                .map((item) => {
                     return item.id;
                 }).indexOf(troncon.id), 1);
         } else {
@@ -162,7 +162,6 @@ export class TronconController {
         this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites);
     }
 }
-
 
 @Injectable({
     providedIn: 'root',

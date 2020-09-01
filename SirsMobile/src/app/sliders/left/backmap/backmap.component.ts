@@ -11,12 +11,12 @@ import { BackLayer } from 'src/app/layers.service';
 })
 export class LeftSlideBackmapComponent implements OnInit {
 
-  @Output() readonly slidePathChange = new EventEmitter<String>();
+  @Output() readonly slidePathChange = new EventEmitter<string>();
 
   path = 'select';
 
   constructor(public backLayerService: BackLayerService, private alertCtrl: AlertController,
-    private route: Router, public backLayer: BackLayer) { }
+              private route: Router, public backLayer: BackLayer) { }
 
   ngOnInit() {}
 
@@ -51,7 +51,7 @@ export class LeftSlideBackmapComponent implements OnInit {
         {
           text: 'Oui',
           handler: () => {
-            let isCurrent = (layer.name === this.backLayerService.getActive().name);
+            const isCurrent = (layer.name === this.backLayerService.getActive().name);
             this.backLayerService.remove(layer);
             if (isCurrent) {
               this.backLayer.setActiveBackLayers(this.backLayerService.getList()[0]);
@@ -64,7 +64,7 @@ export class LeftSlideBackmapComponent implements OnInit {
   }
 
   goToAddBackLayer() {
-    this.path = 'addBackLayer'
+    this.path = 'addBackLayer';
   }
 
 }

@@ -57,8 +57,8 @@ export class MapService {
     public selection = {
         list: [],
         active: null
-    }
-    public archiveObjectsFlag: boolean = false;
+    };
+    public archiveObjectsFlag = false;
 
     getCurrentView() {
         if (!this.currentView) {

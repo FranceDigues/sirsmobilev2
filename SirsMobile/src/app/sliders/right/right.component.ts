@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RightSlideComponent implements OnInit {
 
-  slidePath = "menu";
+  slidePath = 'menu';
 
   constructor() { }
 
