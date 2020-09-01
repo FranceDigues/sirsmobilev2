@@ -34,7 +34,7 @@
                         <h5 class="couches-metiers-title">{{ layer.title }}</h5>
                         <ion-reorder slot="end"></ion-reorder>
                     </ion-item>
-                    <ion-item-options>
+                    <ion-item-options (click)="updateFavorites()">
                         <ion-item-option color="light" (click)="togglePosition(layer)">
                             <i class="material-icons" [ngClass]="getClassIcon(layer.realPosition)">call_merge</i>
                         </ion-item-option>

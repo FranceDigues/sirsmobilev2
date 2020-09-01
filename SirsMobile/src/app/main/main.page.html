@@ -3,7 +3,7 @@
 </ion-menu>
 
 <ion-menu swipeGesture="false" side="end" menuId="right-slider" contentId="slide" type="push">
-  <right-slide class="full-height"></right-slide>
+  <right-slide [slidePath]="pathRightSlide" class="full-height"></right-slide>
 </ion-menu>
 
 <div class="map full-height" id="slide">
@@ -40,5 +40,18 @@
         <img src="../../assets/img/slider2.png" (click)="handleSliderRight()"/>
     </div>
   </div>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="secondary">
+      <ion-icon md="caret-back" ios="chevron-back-circle-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="start">
+      <ion-fab-button color="light">
+        <ion-icon name="add" (click)="openObjectsCreate()"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light">
+        <ion-icon name="analytics-outline" (click)="openShoreLine()"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </div>
 

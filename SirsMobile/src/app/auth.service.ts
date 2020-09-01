@@ -27,6 +27,10 @@ export class AuthService {
     );
   }
 
+  getValue() {
+    return this.dbService.activeDB.context.authUser;
+  }
+
   logout() {
     this.user = null;
     this.dbService.getCurrentDatabaseHardDisk()

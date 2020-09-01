@@ -4,6 +4,8 @@ import { AppLayer } from 'src/app/layers.service';
 import { colorFactory } from 'src/app/color-factory';
 import { ModalController, NavController } from '@ionic/angular';
 import { ModalComponent } from './modal/modal.component';
+import { DatabaseService } from '../../../database.service';
+import { DatabaseModel } from '../../../models/database.model';
 
 @Component({
   selector: 'left-slide-craftlayers',
@@ -13,8 +15,7 @@ import { ModalComponent } from './modal/modal.component';
 export class LeftSlideCraftlayersComponent implements OnInit {
 
     @Output() readonly slidePathChange = new EventEmitter<string>();
-    layerTemp = Object.assign([], this.appLayersService.getFavorites());
-    layers = this.layerTemp.reverse();
+    layers = Object.assign([], this.appLayersService.getFavorites());
     colors = colorFactory.colors;
 
     order = false;
@@ -23,7 +24,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
 
     constructor(private appLayersService: AppLayersService,
                 public appLayer: AppLayer, private modalCtrl: ModalController,
-                private navCtrl: NavController) { }
+                private navCtrl: NavController, private dbService: DatabaseService) { }
 
     goBack() {
         this.slidePathChange.emit('menu');
@@ -31,8 +32,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
 
     changeSlidePath(event) {
         this.path = event;
-        this.layerTemp = Object.assign([], this.appLayersService.getFavorites());
-        this.layers = this.layerTemp.reverse();
+        this.layers = Object.assign([], this.appLayersService.getFavorites());
     }
 
     getClassIcon(condition) {
@@ -52,6 +52,19 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     ngOnInit() {
     }
 
+    updateFavorites() {
+        console.log('update de favorites');
+        this.appLayersService.favorites = Object.assign([], this.layers);
+        console.log(this.layers);
+        this.dbService.getCurrentDatabaseHardDisk()
+        .then(
+            (db: DatabaseModel) => {
+                db.favorites = this.appLayersService.favorites;
+                this.dbService.updateCurrentDatabaseHardDisk(db);
+            }
+        )
+    }
+
     onRenderItems(event) {
         if (event.detail.to === this.layers.length) {
             event.detail.to -= 1;
@@ -68,7 +81,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
         this.appLayer.moveAppLayer((this.layers.length - (from + 1)), (this.layers.length - (to + 1)));
         this.clearAll();
         const tmpLayersAfterSort = Object.assign([], this.layers);
-        this.appLayersService.setFavorites(tmpLayersAfterSort.reverse());
+        this.appLayersService.setFavorites(tmpLayersAfterSort);
     }
 
     clearAll() {

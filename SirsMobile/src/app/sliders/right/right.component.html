@@ -1,8 +1,11 @@
-<div [ngSwitch]="slidePath">
-  <div *ngSwitchCase="'menu'">
+<div class="full-height" [ngSwitch]="slidePath">
+  <div class="full-height" *ngSwitchCase="'objectsCreation'">
+    <right-slide-create-objects class="full-height"></right-slide-create-objects>
+  </div>
+  <div class="full-height" *ngSwitchCase="'shoreLine'">
     <ion-header translucent>
       <ion-toolbar class="header-slide" color="secondary">
-        <ion-title>Création d'Objets</ion-title>
+        <ion-title>Trait de berge</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-list>

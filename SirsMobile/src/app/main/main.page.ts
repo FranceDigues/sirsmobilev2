@@ -40,6 +40,8 @@ export class MainPage implements AfterViewInit {
 
   navbarController = true; // ? mb remove bcs unused
 
+  pathRightSlide = 'objectsCreation';
+
   constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocService,
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
               private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
@@ -148,6 +150,34 @@ export class MainPage implements AfterViewInit {
           this.menu.close('right-slider');
         } else {
           this.menu.open('right-slider');
+        }
+      }
+    );
+  }
+
+  openObjectsCreate() {
+    this.menu.isOpen('right-slider')
+    .then(
+      (bool) => {
+        if (bool) {
+          this.pathRightSlide = 'objectsCreation';
+        } else {
+          this.menu.open('right-slider');
+          this.pathRightSlide = 'objectsCreation';
+        }
+      }
+    );
+  }
+
+  openShoreLine() {
+    this.menu.isOpen('right-slider')
+    .then(
+      (bool) => {
+        if (bool) {
+          this.pathRightSlide = 'shoreLine';
+        } else {
+          this.menu.open('right-slider');
+          this.pathRightSlide = 'shoreLine';
         }
       }
     );
