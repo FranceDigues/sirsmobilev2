@@ -105,7 +105,7 @@ export class EditionLayer {
         // Compute geometry.
         let SirsDoc = this.SirsDoc;
         let geometry = undefined;
-        let dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
+        const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
         if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
@@ -114,7 +114,8 @@ export class EditionLayer {
             });
             console.log(geometry);
         } else {
-            geometry = this.wktFormat.readGeometry(featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
+            geometry = this.wktFormat.readGeometry(
+                featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
                 {
                     dataProjection,
                     featureProjection: 'EPSG:3857'
@@ -134,7 +135,7 @@ export class EditionLayer {
             }
         }
 
-        let feature = new Feature({ geometry: geometry });
+        const feature = new Feature({ geometry });
         feature.setStyle(this.realPositionService.style(this.mapService.selection, feature, [0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
@@ -223,7 +224,7 @@ export class GeolocLayer {
     }
 
     redrawGeolocLayer(coords) {
-        let geolocLayerSource = this.getGeolocLayer.getSource();
+        const geolocLayerSource = this.getGeolocLayer.getSource();
         geolocLayerSource.clear();
         geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
     }
@@ -244,9 +245,9 @@ export class BackLayer {
         this.backLayerService.init()
         .then(
             () => {
-                this.backLayer = this.createBackLayer()
+                this.backLayer = this.createBackLayer();
             }
-        )
+        );
     }
 
     createBackLayer() {
@@ -264,7 +265,7 @@ export class BackLayer {
         if (layerModel.source.type === 'OSM') {
             return new OSM(layerModel.source);
         } else if (layerModel.source.type === 'TileWMS') {
-            return new TileWMS(layerModel.source)
+            return new TileWMS(layerModel.source);
         } else if (layerModel.source.type === 'XYZ') {
             return new XYZ(layerModel.source);
         } else {
@@ -286,8 +287,8 @@ export class BackLayer {
             });
             layer = new TileLayer({
                 name: layerModel.name,
-                extent: extent,
-                source: source
+                extent,
+                source
             });
         } else {
             layer = new TileLayer({
@@ -303,7 +304,7 @@ export class BackLayer {
         if (layer !== this.backLayerService.backLayers.active) {
             this.backLayerService.backLayers.active = layer;
             this.updateBackLayerMap(layer);
-            this.updateActiveBackLayerInHardDisk(layer)
+            this.updateActiveBackLayerInHardDisk(layer);
         }
     }
     private updateActiveBackLayerInHardDisk(backLayer) {
@@ -313,19 +314,19 @@ export class BackLayer {
                 db.context.backLayer.active = backLayer
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
-        )
+        );
     }
 
     updateBackLayerMap(layer: ListBackLayer) {
         this.backLayer.getLayers().setAt(0, this.createBackLayerInstance(layer));
 
         if (typeof layer.cache === 'object') {
-            this.mapService.currentView.fit(layer.cache.extent, this.ol.map.getSize())
+            this.mapService.currentView.fit(layer.cache.extent, this.ol.map.getSize());
         }
     }
 
     syncBackLayer() {
-        const olLayer = this.backLayer.createBackLayerInstance(this.backLayerService.getActive())
+        const olLayer = this.backLayer.createBackLayerInstance(this.backLayerService.getActive());
         this.backLayer.backLayer.getLayers().setAt(0, olLayer);
     }
 }
@@ -342,7 +343,7 @@ export class AppLayer {
     constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
                 private storageService: StorageService, private SirsDoc: SirsDocService,
                 private mapService: MapService, private RealPositionStyle: RealPositionStyle,
-                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) {}
+                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) { }
 
     init() {
         this.appLayer = this.createAppLayer();
@@ -351,8 +352,11 @@ export class AppLayer {
     createAppLayer(): LayerGroup {
         return new LayerGroup({
             name: 'Objects',
-            layers: this.appLayersService.getFavorites().map((layerModel) => { console.log('start', layerModel); return (this.createAppLayerInstance(layerModel)); })
-        })
+            layers: this.appLayersService.getFavorites().map(
+                (layerModel) => {
+                    console.log('start', layerModel); return (this.createAppLayerInstance(layerModel));
+                })
+        });
     }
 
     createAppLayerInstance(layerModel) {
@@ -368,21 +372,21 @@ export class AppLayer {
                     let styles = [];
 
                     if (Array.isArray(features) && features.length > 0) {
-                        features.forEach((_feature) => {
-                            let style = _feature.getStyle();
+                        features.forEach((tmpFeature) => {
+                            let style = tmpFeature.getStyle();
                             if (typeof style === 'function') {
-                                style = style.call(_feature, _feature, resolution);
+                                style = style.call(tmpFeature, tmpFeature, resolution);
                             } else if (style instanceof Style) {
                                 style = [].concat(style);
                             }
 
                             if (Array.isArray(style)) {
-                                style.forEach((_style) => {
-                                    _style.setGeometry(_feature.getGeometry());
-                                    if (_style.getText() !== undefined && _style.getText() !== null) {
-                                        _style.getText().setText(undefined);
+                                style.forEach((tmpStyle) => {
+                                    tmpStyle.setGeometry(tmpFeature.getGeometry());
+                                    if (tmpStyle.getText() !== undefined && tmpStyle.getText() !== null) {
+                                        tmpStyle.getText().setText(undefined);
                                     }
-                                    styles.push(_style);
+                                    styles.push(tmpStyle);
                                 });
                             }
                         });
@@ -396,10 +400,10 @@ export class AppLayer {
 
 
                         if (Array.isArray(style)) {
-                            style.forEach((_style) => {
+                            style.forEach((tmpStyle) => {
                                 styles.push(new Style({
-                                    zIndex: _style.getZIndex(),
-                                    text: _style.getText()
+                                    zIndex: tmpStyle.getZIndex(),
+                                    text: tmpStyle.getText()
                                 }));
                                 });
                         }
@@ -429,7 +433,7 @@ export class AppLayer {
     }
 
     async setAppLayerFeatures(olLayer) {
-        let layerModel = olLayer.get('model');
+        const layerModel = olLayer.get('model');
         let olSource = null;
 
         console.log('olLayer ATTENTION VERIF', olLayer);
@@ -444,17 +448,18 @@ export class AppLayer {
 
         if (typeof promise === 'undefined') {
 
-            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' && layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                //Get all the favorites tronçons ids
-                let favorites = await this.storageService.getItem('AppTronconsFavorities');
-                let keys = [];
+            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
+            layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
+                // Get all the favorites tronçons ids
+                const favorites = await this.storageService.getItem('AppTronconsFavorities');
+                const keys = [];
                 if (favorites !== null && favorites.length !== 0) {
                     favorites.forEach((key) => {
                         keys.push([layerModel.filterValue, key.id]);
                     });
 
                     promise = this.localDB.query('ElementSpecial3', {
-                        keys: keys
+                        keys
                     }).then(
                         (results) => {
                             return results.map(this.createAppFeatureModel);
@@ -487,7 +492,7 @@ export class AppLayer {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                let tmp = await this.storageService.getItem('AppTronconsFavorities');
+                const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                             return item.id;
@@ -500,7 +505,7 @@ export class AppLayer {
                         console.log(error);
                     });
             } else {
-                let tmp = await this.storageService.getItem('AppTronconsFavorities');
+                const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                             return item.id;

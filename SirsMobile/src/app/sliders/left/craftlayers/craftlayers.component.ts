@@ -62,7 +62,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
                 db.favorites = this.appLayersService.favorites;
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
-        )
+        );
     }
 
     onRenderItems(event) {
