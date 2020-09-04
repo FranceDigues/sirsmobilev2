@@ -34,7 +34,9 @@ import { ArraySortPipe, LeftSlideTronconComponent } from '../sliders/left/tronco
 import { LeftSlideCraftlayersComponent } from '../sliders/left/craftlayers/craftlayers.component';
 import { ModalComponent } from '../sliders/left/craftlayers/modal/modal.component';
 import { LeftSlideDisponibleLayersComponent } from '../sliders/left/craftlayers/disponible/disponible.component';
-import { FilterPipe, RightSlideCreateObjetsComponent } from '../sliders/right/createobjets/createobjets.component';
+import { FilterPipe, RightSlideCreateObjectsComponent } from '../sliders/right/createobjects/createobjects.component';
+import { RightSlideEditObjectsComponent, LonLatPipe, ObjectEditPosByBorneController } from '../sliders/right/createobjects/editobjects/editobjects.component';
+import { FormsTemplateComponent } from '../sliders/right/createobjects/editobjects/forms-template/forms-template.component';
 
 @NgModule({
   imports: [
@@ -59,6 +61,8 @@ import { FilterPipe, RightSlideCreateObjetsComponent } from '../sliders/right/cr
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
     ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent,
-    LeftSlideDisponibleLayersComponent, RightSlideCreateObjetsComponent, FilterPipe]
+    LeftSlideDisponibleLayersComponent, RightSlideCreateObjectsComponent, FilterPipe,
+    RightSlideEditObjectsComponent, LonLatPipe, ObjectEditPosByBorneController,
+    FormsTemplateComponent]
 })
 export class MainPageModule {}

@@ -1,0 +1,254 @@
+<!-- Form -->
+<div *ngIf="view === 'form' && objectDoc" class="full-height edit-screen">
+  <div class="edit-object">
+    <ion-content [scrollEvents]="tab === 'fields'">
+      <div fxLayout="column" fxLayoutAlign="center">
+        <form class="sirs-card" #objectForm="ngForm">
+          <div class="sirs-card-content">
+            <h2 *ngIf="isNew" class="sirs-card-title">Nouveau/Nouvelle {{ type }}</h2>
+            <h2 *ngIf="!isNew && isClosed" class="sirs-card-title">Détail d'un(e) {{ type }}</h2>
+            <!-- Tabs -->
+            <div class="sirs-nav-tabs" *ngIf="type !== 'BorneDigue' && type !== 'TronconDigue' && type !== 'Desordre' && type !== 'Berge' && !isDependance()">
+              <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'fields'}"
+                    (click)="setTab('fields')">Attributs</span>
+              <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}"
+                    (click)="setTab('medias')">Medias</span>
+            </div>
+            <!-- Fields Part -->
+            <div class="full-height full-width" *ngIf="tab === 'fields'">
+              <div class="common">
+                <div class="sirs-field">
+                  <label for="designation" class="active label-edit">Désignation</label>
+                  <input id="designation" type="text" class="validate"
+                    [(ngModel)]="designation" name="designation" placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."
+                  />
+                </div>
+
+
+                <div *ngIf="!isDependance() && (isNew || isClosed)" class="switch">
+                  <label class="label-edit">
+                      Objet ponctuel
+                      <input type="checkbox" [(ngModel)]="isLinear" name="checkbox"
+                        (ngModelChange)="changeObjectType()"/>
+                      <span class="lever"></span>
+                      Objet linéaire
+                  </label>
+                </div>
+
+                <div *ngIf="isDependance() && (isNew || isClosed)" class="switch">
+                    <select id="objectType" class="browser-default"
+                          [(ngModel)]="objDependanceType" name="objectType"
+                          (ngModelChange)="changeObjectTypeDependance()">
+                      <option [ngValue]="'point'"
+                              [(ngModel)]="objDependanceType" name="point"
+                              (ngModelChange)="changeObjectTypeDependance()"
+                              [selected]="objDependanceType === 'point'">
+                          Objet ponctuel
+                      </option>
+                      <option [ngValue]="'line'"
+                              [(ngModel)]="objDependanceType" name="line"
+                              (ngModelChange)="changeObjectTypeDependance()"
+                              [selected]="objDependanceType === 'line'">
+                          Objet linéaire
+                      </option>
+                      <option [ngValue]="'polygon'" name="polygon"
+                              [(ngModel)]="objDependanceType"
+                              (ngModelChange)="changeObjectTypeDependance()"
+                              [selected]="objDependanceType === 'polygon'">
+                          Objet polygonale
+                      </option>
+                    </select>
+                </div>
+
+
+                <div class="sirs-field-inline" *ngIf="!isLinear && !isDependance()">
+                  <span class="sirs-field-title" *ngIf="!objectDoc.systemeRepId || (objectDoc.valid && objectDoc.positionDebut)">Position : </span>
+                  <span class="sirs-field-value" *ngIf="!objectDoc.systemeRepId || (objectDoc.valid && objectDoc.positionDebut)">{{ getStartPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="objectDoc.systemeRepId && !objectDoc.positionDebut">
+                      Position via la borne : {{ getStartPosBorne() }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="!isLinear && !isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="locateMe()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPos()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPosBySR()"
+                            *ngIf="activatedPositionButton() && !isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- TODO va falloir utiliser le systeme de startPoint et endPoint pour remplacer le systeme en 2 fois pour le faire en 1 fois pour les lignes -->
+                <!-- TODO faut enlever les deux blocks suivants => not need début/fin si on peut faire en un coup -->
+                <div class="sirs-field-inline" *ngIf="isLinear && !isDependance()">
+                  <span class="sirs-field-title" *ngIf="!objectDoc.systemeRepId">Position de début : </span>
+                  <span class="sirs-field-value" *ngIf="!objectDoc.systemeRepId">{{ getStartPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="objectDoc.systemeRepId">
+                      Position de début via la borne : {{ getStartPosBorne() }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="isLinear && !isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = true; linearPosEditionHandler.endPoint = false; locateMe()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = true; linearPosEditionHandler.endPoint = false; selectPos()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = true; linearPosEditionHandler.endPoint = false; selectPosBySR()"
+                            *ngIf="activatedPositionButton() && !isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="isLinear && !isNew && !isDependance()">
+                  <span class="sirs-field-title" *ngIf="!objectDoc.systemeRepId">Position de fin : </span>
+                  <span class="sirs-field-value" *ngIf="!objectDoc.systemeRepId">{{ getEndPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="objectDoc.systemeRepId">
+                      Position de fin via la borne : {{ getEndPosBorne() }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="isLinear && !isNew && !isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = false; linearPosEditionHandler.endPoint = true; locateMe()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = false; linearPosEditionHandler.endPoint = true; selectPos()"
+                            *ngIf="activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="linearPosEditionHandler.startPoint = false; linearPosEditionHandler.endPoint = true; selectPosBySR()"
+                            *ngIf="activatedPositionButton() && !isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="isDependance() && !objectDoc.geometry">
+                  <span class="sirs-field-title" *ngIf="objDependanceType === 'polygon'">Dessiner un polygone</span>
+                  <span class="sirs-field-value" *ngIf="objDependanceType === 'polygon'"></span>
+
+                  <span class="sirs-field-title" *ngIf="objDependanceType === 'point'">Position : </span>
+                  <span class="sirs-field-value" *ngIf="objDependanceType === 'point'">{{ getStartPosDependance() | lonlat:'à définir' }}</span>
+
+                  <span class="sirs-field-title" *ngIf="objDependanceType === 'line'">Position de début : </span>
+                  <span class="sirs-field-value" *ngIf="objDependanceType === 'line'">{{ getStartPosDependance() | lonlat:'à définir' }}</span>
+
+                  <div class="edit-position-buttons right">
+                    <a class="nav-item nav-link"
+                            (click)="locateMe()"
+                            *ngIf="objDependanceType !== 'polygon'">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPos()"
+                            *ngIf="objDependanceType !== 'polygon'">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="drawPolygon()"
+                            *ngIf="objDependanceType === 'polygon'">
+                        <span><i class="material-icons">format_shapes</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="isDependance() && objDependanceType === 'line' && objectDoc.geometry">
+                  <span class="sirs-field-title">Position de fin : </span>
+                  <span class="sirs-field-value">{{ getEndPosDependance() | lonlat:'à définir' }}</span>
+
+                  <div class="edit-position-buttons right">
+                    <a class="nav-item nav-link"
+                            (click)="locateMeEnd()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPosEnd()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="!isDependance()">
+                <div class="sirs-field col col-100">
+                  <label for="trancon" class="active edit-label">La liste des Tronçons</label>
+                  <select id="trancon" class="browser-default" [(ngModel)]="objectDoc.linearId" name="trancon">
+                    <option *ngFor="let troncon of troncons" [ngValue]="troncon">{{ troncon.libelle }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="objectType === 'DesordreDependance'">
+                <div class="sirs-field col col-100">
+                  <label for="dependance" class="active edit-label">La liste des Dependances</label>
+                  <select id="dependance" class="browser-default" [(ngModel)]="objectDoc.dependanceId">
+                    <option *ngFor="let d of dependances" (change)="objectDoc.dependaceId = d.id" [selected]="objectDoc.dependanceId === d.id" [ngValue]="d">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation :d.id)}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="sirs-field col col-100">
+                  <label for="date_fin" class="active edit-label">La date de Fin</label>
+                  <input id="date_fin" type="date" [(ngModel)]="dateWrapper" name="date_fin" (change)="formatDate()" />
+                </div>
+              </div>
+
+              <forms-template class="full-height" [type]="type" [objectDoc]="objectDoc"></forms-template>
+
+              <div class="sirs-field">
+                <label for="commentaire" class="active edit-label">Commentaire</label>
+                <textarea id="commentaire" class="materialize-textarea" name="commentaire"
+                [(ngModel)]="objectDoc.commentaire"></textarea>
+              </div>
+
+            </div>
+            <!-- Medias Part -->
+            <div class="full-height full-width" *ngIf="tab === 'medias'">
+
+            </div>
+          </div>
+          <div class="sirs-card-action">
+            <a (click)="backToMain()" class="btn-flat waves-effect waves-teal">
+              <i class="material-icons left">arrow_back</i>Annuler
+            </a>
+            <button type="button" class="btn pink waves-effect waves-teal right"
+            [disabled]="!objectForm.valid" (click)="save()">
+              <i class="material-icons left">check</i>Terminer
+            </button>
+          </div>
+        </form>
+      </div>
+    </ion-content>
+  </div>
+</div>
+<div class="full-height" *ngIf="view === 'map'">
+
+</div>
+<div class="full-height" *ngIf="view === 'mapEnd'">
+
+</div>
+<div class="full-height" *ngIf="view === 'drawMap'">
+
+</div>
+<div class="full-height" *ngIf="view === 'note'">
+
+</div>
+<div class="full-height" *ngIf="view === 'media'">
+
+</div>

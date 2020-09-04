@@ -10,45 +10,46 @@ import { LocalDatabase } from './usingLocalDatabase.service';
 export class EditionModeService {
 
     refTypes = [
-        {name: 'Berge', include_docs: false},
-        {name: 'EchelleLimnimetrique', include_docs: false},
-        {name: 'OuvrageRevanche', include_docs: false},
-        {name: 'OuvrageTelecomEnergie', include_docs: false},
-        {name: 'RefCote', include_docs: false},
-        {name: 'RefCategorieDesordre', include_docs: false},
-        {name: 'RefConduiteFermee', include_docs: false},
-        {name: 'RefEcoulement', include_docs: false},
-        {name: 'RefFonction', include_docs: false},
-        {name: 'RefImplantation', include_docs: false},
-        {name: 'RefLargeurFrancBord', include_docs: false},
-        {name: 'RefMateriau', include_docs: false},
-        {name: 'RefNature', include_docs: false},
-        {name: 'RefOuvrageFranchissement', include_docs: false},
-        {name: 'RefOuvrageParticulier', include_docs: false},
-        {name: 'RefOrientationOuvrage', include_docs: false},
-        {name: 'RefOuvrageHydrauliqueAssocie', include_docs: false},
-        {name: 'RefOuvrageTelecomEnergie', include_docs: false},
-        {name: 'RefOuvrageVoirie', include_docs: false},
-        {name: 'RefPosition', include_docs: false},
-        {name: 'RefReferenceHauteur', include_docs: false},
-        {name: 'RefRevetement', include_docs: false},
-        {name: 'RefSeuil', include_docs: false},
-        {name: 'RefTypeDesordre', include_docs: true},
-        {name: 'RefTypeGlissiere', include_docs: false},
-        {name: 'RefReseauHydroCielOuvert', include_docs: false},
-        {name: 'RefReseauTelecomEnergie', include_docs: false},
-        {name: 'RefUsageVoie', include_docs: false},
-        {name: 'RefUtilisationConduite', include_docs: false},
-        {name: 'RefVoieDigue', include_docs: false},
-        {name: 'ReseauHydrauliqueFerme', include_docs: false},
-        {name: 'ReseauTelecomEnergie', include_docs: false}
+        { name: 'Berge', include_docs: false },
+        { name: 'EchelleLimnimetrique', include_docs: false },
+        { name: 'OuvrageRevanche', include_docs: false },
+        { name: 'OuvrageTelecomEnergie', include_docs: false },
+        { name: 'RefCote', include_docs: false },
+        { name: 'RefCategorieDesordre', include_docs: false },
+        { name: 'RefConduiteFermee', include_docs: false },
+        { name: 'RefEcoulement', include_docs: false },
+        { name: 'RefFonction', include_docs: false },
+        { name: 'RefImplantation', include_docs: false },
+        { name: 'RefLargeurFrancBord', include_docs: false },
+        { name: 'RefMateriau', include_docs: false },
+        { name: 'RefNature', include_docs: false },
+        { name: 'RefOuvrageFranchissement', include_docs: false },
+        { name: 'RefOuvrageParticulier', include_docs: false },
+        { name: 'RefOrientationOuvrage', include_docs: false },
+        { name: 'RefOuvrageHydrauliqueAssocie', include_docs: false },
+        { name: 'RefOuvrageTelecomEnergie', include_docs: false },
+        { name: 'RefOuvrageVoirie', include_docs: false },
+        { name: 'RefPosition', include_docs: false },
+        { name: 'RefReferenceHauteur', include_docs: false },
+        { name: 'RefRevetement', include_docs: false },
+        { name: 'RefSeuil', include_docs: false },
+        { name: 'RefTypeDesordre', include_docs: true },
+        { name: 'RefTypeGlissiere', include_docs: false },
+        { name: 'RefReseauHydroCielOuvert', include_docs: false },
+        { name: 'RefReseauTelecomEnergie', include_docs: false },
+        { name: 'RefUsageVoie', include_docs: false },
+        { name: 'RefUtilisationConduite', include_docs: false },
+        { name: 'RefVoieDigue', include_docs: false },
+        { name: 'ReseauHydrauliqueFerme', include_docs: false },
+        { name: 'ReseauTelecomEnergie', include_docs: false }
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
                 private editionLayer: EditionLayer) { }
 
     newObject(type) {
-        let objectDoc: any = {
+        console.log(this.authService);
+        const objectDoc: any = {
             '@class': 'fr.sirs.core.model.' + type,
             'author': this.authService.user._id,
             'valid': false,
@@ -63,23 +64,23 @@ export class EditionModeService {
 
     saveObject(objectDoc) {
         return (this.localDB.save(objectDoc)
-        .then(
-            () => {
-                if (objectDoc.positionDebut && objectDoc.positionFin) {
-                    let source = this.editionLayer.editionLayer.getSource()
-                    let features = source.getFeatures();
-                    let i = features.length;
-                    while (i--) {
-                        if (features[i].get('id') === objectDoc._id) {
-                            features.splice(i, 1);
-                            break;
+            .then(
+                () => {
+                    if (objectDoc.positionDebut && objectDoc.positionFin) {
+                        const source = this.editionLayer.editionLayer.getSource()
+                        const features = source.getFeatures();
+                        let i = features.length;
+                        while (i--) {
+                            if (features[i].get('id') === objectDoc._id) {
+                                features.splice(i, 1);
+                                break;
+                            }
                         }
+                        source.addFeature(this.editionLayer.createEditionFeatureInstance(objectDoc));
                     }
-                    source.addFeature(this.editionLayer.createEditionFeatureInstance(objectDoc));
+                    return objectDoc;
                 }
-                return objectDoc;
-            }
-        ));
+            ));
     }
 
     getClosableObjects() {
@@ -109,19 +110,19 @@ export class EditionModeService {
     }
 
     getReferenceTypes() {
-        let promises = [];
+        const promises = [];
 
         this.refTypes.forEach((refType) => {
 
             const classPath = 'fr.sirs.core.model.' + refType.name;
-            let promise = new Promise((resolve, rejects) => {
+            const promise = new Promise((resolve, rejects) => {
                 this.localDB.query('byClassAndLinearRef', {
                     startkey: [classPath],
                     endkey: [classPath, {}],
                     include_docs: refType.include_docs
                 }).then(
                     (results) => {
-                        let values = results.map((item) => { return refType.include_docs ? item.doc : item.value });
+                        const values = results.map((item) => { return refType.include_docs ? item.doc : item.value });
                         resolve(values);
                     },
                     (error) => {

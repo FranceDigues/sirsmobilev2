@@ -42,7 +42,7 @@ export class GeolocService {
             timeout: 50000,
             enableHighAccuracy: true
         };
-        let loading = await this.loadingCtrl.create({
+        const loading = await this.loadingCtrl.create({
           message: 'En attente de location'
         });
         loading.present();

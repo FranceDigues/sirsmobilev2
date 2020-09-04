@@ -61,7 +61,7 @@ export class AppLayersService {
             .then(
                 (modules: any) => {
                     let leaves = []
-                    for (let module in modules) {
+                    for (const module in modules) {
                         if (modules[module].layers) {
                             leaves = leaves.concat(this.extraLeaves(modules[module].layers));
                         }
@@ -99,7 +99,7 @@ export class AppLayersService {
     }
 
     removeFavorite(layer) {
-        let index = this.favorites.map((item) => {
+        const index = this.favorites.map((item) => {
             return item.title;
         }).indexOf(layer.title);
         this.favorites.splice(index, 1);

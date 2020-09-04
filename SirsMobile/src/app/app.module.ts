@@ -32,6 +32,7 @@ import { GalleryService } from './gallery.service';
 import { BackLayerService } from './backlayer.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
 import { MapService } from './map.service';
+import { ObjectDocService } from './objectdoc.service';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { MapService } from './map.service';
     AppTronconsService,
     DigueController,
     TronconController,
+    ObjectDocService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

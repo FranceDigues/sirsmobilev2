@@ -37,7 +37,7 @@ export class BackLayerService {
         let i = this.backLayers.list.length;
 
         while (i--) {
-            let layer = this.backLayers.list[i];
+            const layer = this.backLayers.list[i];
             if (layer.name === name) {
                 return layer;
             }

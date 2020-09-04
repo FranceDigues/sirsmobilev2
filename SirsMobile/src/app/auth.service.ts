@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  user;
+  user = null;
 
   constructor(private dbService: DatabaseService, private route: Router) { }
 
