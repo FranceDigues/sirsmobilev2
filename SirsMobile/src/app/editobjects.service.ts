@@ -82,9 +82,9 @@ export class EditObjectService {
                 this.editionModeService.getReferenceTypes()
                 .then(
                     (refs) => {
-                        let res = { };
+                        const res = { };
 
-                        for (let ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
+                        for (const ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
                             res[ref[0]] = ref[1];
                         }
                         this.refs = res;
@@ -92,7 +92,7 @@ export class EditObjectService {
                         this.initTronconList();
                         this.checkDependance(loading);
                     }
-                )
+                );
             });
         });
         this.config = this.globalConfigService.context;
@@ -173,14 +173,14 @@ export class EditObjectService {
     }
 
     calculateDistanceObjectTroncon(point, list) {
-        let nearTronconList = [];
+        const nearTronconList = [];
         // geomatryPosition is instance of ol.geom.Point
-        let geomatryPosition = new WKT().readGeometry(point, {
+        const geomatryPosition = new WKT().readGeometry(point, {
             dataProjection: this.sirsDoc.get().epsgCode,
             featureProjection: 'EPSG:3857'
         });
 
-        let positionCoord = geomatryPosition.getCoordinates();
+        const positionCoord = geomatryPosition.getCoordinates();
         let geom = null;
         let geomTronc = null;
         // Get of the LineStrings from the list of Troncons
@@ -197,7 +197,7 @@ export class EditObjectService {
             // Calculate the distance between two point
 
             // The distance
-            let dist = getDistance(transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
+            const dist = getDistance(transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
                 transform(geomTronc, 'EPSG:3857', 'EPSG:4326'), 6378137) / 1000;
             if (dist <= 1) {
                 nearTronconList.push(elt);
@@ -262,7 +262,7 @@ export class EditObjectService {
 
           if (this.objectType['@class'] === 'fr.sirs.core.model.DesordreDependance') {
               this.objectType.dependanceId = null;
-              let promises = [];
+              const promises = [];
               promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                       startkey: ['fr.sirs.core.model.CheminAccesDependance'],
                       endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
@@ -292,7 +292,7 @@ export class EditObjectService {
                           results.map((item) => {
                               item.rows.map((elt) => {
                                   this.dependances.push(elt);
-                              })
+                              });
                           });
                           loading.dismiss();
                       }, 100);
@@ -330,8 +330,8 @@ export class EditObjectService {
         }
 
         //@hb Add the source of the Desordre
-        if (this.objectDoc['@class'] === "fr.sirs.core.model.Desordre") {
-            this.objectDoc["sourceId"] = "RefSource:4";
+        if (this.objectDoc['@class'] === 'fr.sirs.core.model.Desordre') {
+            this.objectDoc['sourceId'] = 'RefSource:4';
         }
 
         this.objectDoc.valid = false;
@@ -557,7 +557,7 @@ export class EditObjectService {
           this.databaseService.getLocalDB().query('byId', {
               key: this.objectDoc.borneDebutId
           }).then((results) => {
-              let libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+              const libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
 
               this.startPosBorneLabel = this.objectDoc.borneDebutId ? 'à ' + this.objectDoc.borne_debut_distance + ' m de la borne : ' +
                   libelle + ' en ' + (this.objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
@@ -575,7 +575,7 @@ export class EditObjectService {
           this.databaseService.getLocalDB().query('byId', {
               key: this.objectDoc.borneFinId
           }).then((results) => {
-              let libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+              const libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
 
               this.endPosBorneLabel = this.objectDoc.borneFinId ? 'à ' + this.objectDoc.borne_fin_distance + ' m de la borne : ' +
                   libelle + ' en ' + (this.objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
@@ -597,12 +597,12 @@ export class EditObjectService {
     }
 
     parsePos(position) {
-        let geometry = this.wktFormat.readGeometry(position);
+        const geometry = this.wktFormat.readGeometry(position);
         return transform(geometry.getFirstCoordinate(), this.dataProjection, 'EPSG:4326');
     }
 
     parsePosEnd(position) {
-        let geometry = this.wktFormat.readGeometry(position);
+        const geometry = this.wktFormat.readGeometry(position);
         return transform(geometry.getLastCoordinate(), this.dataProjection, 'EPSG:4326');
     }
 

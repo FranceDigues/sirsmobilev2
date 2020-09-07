@@ -60,7 +60,7 @@ export class AppLayersService {
             this.moduleDescriptions()
             .then(
                 (modules: any) => {
-                    let leaves = []
+                    let leaves = [];
                     for (const module in modules) {
                         if (modules[module].layers) {
                             leaves = leaves.concat(this.extraLeaves(modules[module].layers));
@@ -71,8 +71,8 @@ export class AppLayersService {
                 (error) => {
                     rejects(error);
                 }
-            )
-        })
+            );
+        });
     }
 
     getFavorites() {

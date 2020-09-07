@@ -23,19 +23,19 @@ export class DesordreComponent implements OnInit {
   }
 
   initCategorie() {
-    this.EOS.setupRef('categorieDesordreId', this.EOS.refs.RefCategorieDesordre[0])
+    this.EOS.setupRef('categorieDesordreId', this.EOS.refs.RefCategorieDesordre[0]);
   }
 
   initType() {
-    this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || (this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId }))[0]._id
+    this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || (this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId }))[0]._id;
   }
 
   initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0])
+    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
   }
 
   initCoteID() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0])
+    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 }
 

@@ -7,7 +7,7 @@ import { DatabaseModel } from './models/database.model';
 })
 export class GlobalConfigService {
 
-    context = "fullName";
+    context = 'fullName';
 
     constructor(private dbService: DatabaseService) { }
 
@@ -19,10 +19,10 @@ export class GlobalConfigService {
                 database.context.showText = value;
                 this.dbService.updateCurrentDatabaseHardDisk(database);
             },
-        )
+        );
     }
 
     getValue() {
-        return this.context
+        return this.context;
     }
 }

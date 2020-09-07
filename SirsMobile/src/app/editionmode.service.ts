@@ -67,7 +67,7 @@ export class EditionModeService {
             .then(
                 () => {
                     if (objectDoc.positionDebut && objectDoc.positionFin) {
-                        const source = this.editionLayer.editionLayer.getSource()
+                        const source = this.editionLayer.editionLayer.getSource();
                         const features = source.getFeatures();
                         let i = features.length;
                         while (i--) {
@@ -122,7 +122,7 @@ export class EditionModeService {
                     include_docs: refType.include_docs
                 }).then(
                     (results) => {
-                        const values = results.map((item) => { return refType.include_docs ? item.doc : item.value });
+                        const values = results.map((item) => { return refType.include_docs ? item.doc : item.value; });
                         resolve([refType.name, values]);
                     },
                     (error) => {

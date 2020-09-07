@@ -80,7 +80,7 @@ export class EditionLayer {
         .then(
             (results) => {
                 olSource.clear();
-                olSource.addFeatures(this.createEditionFeatureInstances(results))
+                olSource.addFeatures(this.createEditionFeatureInstances(results));
                 return;
             },
             (error) => {
@@ -311,7 +311,7 @@ export class BackLayer {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
-                db.context.backLayer.active = backLayer
+                db.context.backLayer.active = backLayer;
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
         );

@@ -271,4 +271,4 @@ export const colorFactory = {
        selectedLayer: undefined,
        selectedColor: undefined,
        selectedElement: undefined
-}
+};

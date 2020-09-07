@@ -12,9 +12,9 @@ export class ObjectDocService {
 
     async getObjectDoc(routeParams): Promise<any> {
         if (routeParams.id && routeParams.id !== '') {
-            return this.localDB.get(routeParams.id)
+            return this.localDB.get(routeParams.id);
         } else {
-            return this.localDB.create(this.editionService.newObject(routeParams.type))
+            return this.localDB.create(this.editionService.newObject(routeParams.type));
         }
     }
 }

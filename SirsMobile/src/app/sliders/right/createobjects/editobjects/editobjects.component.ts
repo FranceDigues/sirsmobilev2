@@ -84,7 +84,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
   selectPos() {
     this.alertCtrl.create({
       header: 'Localisation manuelle',
-      message: "Voulez vous localiser l'\objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation",
+      message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
       backdropDismiss: false,
       buttons: [
         {
@@ -108,7 +108,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
   selectPosEnd() {
       this.alertCtrl.create({
         header: 'Localisation manuelle',
-        message: "Voulez vous localiser l'\objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation",
+        message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
         backdropDismiss: false,
         buttons: [
           {
@@ -132,7 +132,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
   drawPolygon() {
       this.alertCtrl.create({
         header: 'Localisation manuelle',
-        message: "Voulez vous localiser l'\objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation",
+        message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
         backdropDismiss: false,
         buttons: [
           {
@@ -836,7 +836,7 @@ export class LonLatPipe  implements PipeTransform {
 
   transform(coordinate: any, fallback: any) {
     if (coordinate) {
-      return (coordinate[0].toFixed(3).toString() + ', ' + coordinate[1].toFixed(3).toString())
+      return (coordinate[0].toFixed(3).toString() + ', ' + coordinate[1].toFixed(3).toString());
     }
     return fallback;
   }

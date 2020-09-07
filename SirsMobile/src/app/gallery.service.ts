@@ -83,9 +83,9 @@ export class GalleryService {
                 (err) => {
                     rejects(err);
                 }
-            )
-            resolve(files)
-        })
+            );
+            resolve(files);
+        });
     }
 
     getPhotoPath() {
@@ -163,7 +163,7 @@ export class GalleryService {
                                 this.fileDoc = undefined;
                                 this.initDirectory();
                             }
-                        )
+                        );
                     }
                 }
             ]

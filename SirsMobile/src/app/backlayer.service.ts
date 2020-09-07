@@ -52,17 +52,17 @@ export class BackLayerService {
 
     remove(layer) {
         this.backLayers.list.splice(this.backLayers.list.indexOf(layer.name), 1);
-        this.updateListInHardDisk()
+        this.updateListInHardDisk();
     }
 
     private updateListInHardDisk() {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
-                db.context.backLayer = this.backLayers
+                db.context.backLayer = this.backLayers;
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
-        )
+        );
     }
 
 }
