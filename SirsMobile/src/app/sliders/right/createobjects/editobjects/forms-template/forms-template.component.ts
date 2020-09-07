@@ -8,10 +8,11 @@ import { Component, Input, OnInit } from '@angular/core';
 export class FormsTemplateComponent implements OnInit {
 
   @Input() type: string;
-  @Input() objectDoc;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log('type :', this.type);
+  }
 
 }

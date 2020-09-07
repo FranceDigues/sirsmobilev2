@@ -37,6 +37,7 @@ import { LeftSlideDisponibleLayersComponent } from '../sliders/left/craftlayers/
 import { FilterPipe, RightSlideCreateObjectsComponent } from '../sliders/right/createobjects/createobjects.component';
 import { RightSlideEditObjectsComponent, LonLatPipe, ObjectEditPosByBorneController } from '../sliders/right/createobjects/editobjects/editobjects.component';
 import { FormsTemplateComponent } from '../sliders/right/createobjects/editobjects/forms-template/forms-template.component';
+import { DesordreComponent, RefSortPipe } from '../sliders/right/createobjects/editobjects/forms-template/desordre/desordre.component';
 
 @NgModule({
   imports: [
@@ -54,15 +55,15 @@ import { FormsTemplateComponent } from '../sliders/right/createobjects/editobjec
     GeolocService,
     RealPositionStyle,
     EditionModeService,
-    SirsDocService,
+    SirsDocService
   ],
   declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
     ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent,
-    LeftSlideDisponibleLayersComponent, RightSlideCreateObjectsComponent, FilterPipe,
+    LeftSlideDisponibleLayersComponent, RightSlideCreateObjectsComponent,
     RightSlideEditObjectsComponent, LonLatPipe, ObjectEditPosByBorneController,
-    FormsTemplateComponent]
+    FormsTemplateComponent, DesordreComponent, FilterPipe, RefSortPipe]
 })
 export class MainPageModule {}

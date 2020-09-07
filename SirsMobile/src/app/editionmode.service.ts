@@ -123,16 +123,16 @@ export class EditionModeService {
                 }).then(
                     (results) => {
                         const values = results.map((item) => { return refType.include_docs ? item.doc : item.value });
-                        resolve(values);
+                        resolve([refType.name, values]);
                     },
                     (error) => {
-                        rejects(error);
+                        rejects([refType.name, error]);
                     }
                 );
             });
-            promises[refType.name] = promise; // ? why an order
+            promises.push(promise);
         });
-        Promise.all(promises);
+        return Promise.all(promises);
     }
 
 }
