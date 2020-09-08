@@ -17,7 +17,7 @@
                   name="width" [(ngModel)]="m.referenceHauteurId">
                 <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="m.referenceHauteurId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
             </select>
       </div>
@@ -48,11 +48,11 @@
     <div class="sirs-field col col-25">
       <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.mesures.length === 1"
               (click)="EOS.objectDoc.mesures.splice(index, 1)">
-          <i class="material-icons center">remove</i>
+          <i class="material-icons">remove</i>
       </button>
       <button class="btn pink waves-effect waves-teal"
               (click)="EOS.objectDoc.mesures.splice(index + 1, 0, createMeasure())">
-          <i class="material-icons center">add</i>
+          <i class="material-icons">add</i>
       </button>
     </div>
   </div>
@@ -65,7 +65,7 @@
                   name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
                 <option *ngFor="let r of EOS.refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
             </select>
       </div>
@@ -100,7 +100,7 @@
                   <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
                     [selected]="EOS.objectDoc.positionId === r.id">
-                        {{ r.libelle }}
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>
@@ -130,7 +130,7 @@
                   name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
                   <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')" [value]="r.id"
                     [selected]="EOS.objectDoc.coteId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>

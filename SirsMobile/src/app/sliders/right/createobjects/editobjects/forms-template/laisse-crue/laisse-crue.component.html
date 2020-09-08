@@ -6,7 +6,7 @@
                   name="heightRef" [(ngModel)]="EOS.objectDoc.referenceHauteurId">
                 <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.referenceHauteurId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
             </select>
       </div>
@@ -50,7 +50,7 @@
                 name="damPosition" [(ngModel)]="EOS.objectDoc.positionId">
               <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')" [value]="r.id"
               [selected]="EOS.objectDoc.positionId === r.id">
-                  {{ r.libelle }}
+                  {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
               </option>
           </select>
     </div>
@@ -82,7 +82,7 @@
                 name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
               <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')" [value]="r.id"
               [selected]="EOS.objectDoc.coteId === r.id">
-                  {{ r.libelle }}
+                  {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
               </option>
           </select>
     </div>

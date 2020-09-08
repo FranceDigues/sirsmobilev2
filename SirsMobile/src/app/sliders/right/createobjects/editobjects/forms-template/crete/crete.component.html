@@ -6,7 +6,7 @@
                   name="material" [(ngModel)]="EOS.objectDoc.materiauId">
                 <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.materiauId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
             </select>
       </div>
@@ -38,7 +38,7 @@
                   name="type" [(ngModel)]="EOS.objectDoc.natureId">
                   <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
                   [value]="r.id" [selected]="EOS.objectDoc.natureId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>
@@ -71,7 +71,7 @@
                   <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
                     [selected]="EOS.objectDoc.functionId === r.id">
-                        {{ r.libelle }}
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>

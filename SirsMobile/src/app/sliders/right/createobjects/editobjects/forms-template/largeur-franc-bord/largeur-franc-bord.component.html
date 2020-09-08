@@ -1,12 +1,12 @@
 <div class="row">
-  <div class="sirs-field">
+  <div class="sirs-field col col-100">
       <label for="width" class="active">Largeur</label>
       <div *ngIf="EOS.showText('fullName')">
             <select id="width" class="browser-default"
                   name="width" [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
                 <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
             </select>
       </div>

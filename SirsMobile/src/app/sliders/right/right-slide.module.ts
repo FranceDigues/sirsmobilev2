@@ -14,6 +14,7 @@ import { LargeurFrancBordComponent } from './createobjects/editobjects/forms-tem
 import { MonteeEauxComponent } from './createobjects/editobjects/forms-template/montee-eaux/montee-eaux.component';
 import { OuvertureBatardableComponent } from './createobjects/editobjects/forms-template/ouverture-batardable/ouverture-batardable.component';
 import { OuvrageFranchissementComponent } from './createobjects/editobjects/forms-template/ouvrage-franchissement/ouvrage-franchissement.component';
+import { OuvrageHydrauliqueComponent } from './createobjects/editobjects/forms-template/ouvrage-hydraulique/ouvrage-hydraulique.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { OuvrageFranchissementComponent } from './createobjects/editobjects/form
     RightSlideEditObjectsComponent, LonLatPipe,
     FormsTemplateComponent, DesordreComponent, FilterPipe, RefSortPipe,
     CreteComponent, LaisseCrueComponent, LargeurFrancBordComponent,
-    MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent],
+    MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent,
+    OuvrageHydrauliqueComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}

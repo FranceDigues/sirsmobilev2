@@ -25,7 +25,7 @@
                 <option *ngFor="let r of EOS.refs.RefSeuil | refSort: EOS.showText('fullName')"
                   [ngValue]="r.id"
                   [selected]="EOS.objectDoc.typeSeuilId === r.id">
-                      {{ r.libelle }}
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
         </select>
     </div>
@@ -58,7 +58,7 @@
                 <option *ngFor="let r of EOS.refs.RefTypeGlissiere | refSort: EOS.showText('fullName')"
                   [ngValue]="r.id"
                   [selected]="EOS.objectDoc.typeGlissiereId === r.id">
-                      {{ r.libelle }}
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
         </select>
     </div>
@@ -93,7 +93,7 @@
                   <option *ngFor="let r of EOS.refs.OuvrageRevanche | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
                     [selected]="EOS.objectDoc.ouvrageRevancheIds[index] === r.id">
-                        {{ r.libelle }}
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
         </div>
@@ -138,7 +138,7 @@
                   <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
                     [selected]="EOS.objectDoc.positionId === r.id">
-                        {{ r.libelle }}
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>
@@ -168,7 +168,7 @@
                   name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
                   <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')" [value]="r.id"
                     [selected]="EOS.objectDoc.coteId === r.id">
-                    {{ r.libelle }}
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>
