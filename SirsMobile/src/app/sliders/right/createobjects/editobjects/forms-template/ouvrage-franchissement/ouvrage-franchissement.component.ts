@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
 
 @Component({
-  selector: 'app-ouvrage-franchissement',
+  selector: 'form-ouvrage-franchissement',
   templateUrl: './ouvrage-franchissement.component.html',
   styleUrls: ['./ouvrage-franchissement.component.scss'],
 })
