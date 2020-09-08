@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { EditObjectService } from 'src/app/editobjects.service';
 
 @Component({
-  selector: 'app-largeur-franc-bord',
+  selector: 'form-largeur-franc-bord',
   templateUrl: './largeur-franc-bord.component.html',
   styleUrls: ['./largeur-franc-bord.component.scss'],
 })
 export class LargeurFrancBordComponent implements OnInit {
 
-  constructor() { }
+  constructor(public EOS: EditObjectService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.EOS.setupRef('typeLargeurFrancBord', this.EOS.refs.RefLargeurFrancBord[0]);
+  }
 
 }

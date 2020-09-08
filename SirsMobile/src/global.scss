@@ -44,6 +44,10 @@ ion-reorder {
     touch-action: none;
 }
 
+ion-modal {
+    --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+}
+
 .menu-content-open {
     pointer-events: auto; // if menu is active, the map stays interactive
     cursor: pointer;
@@ -56,4 +60,10 @@ ion-reorder {
 
 .scroll-all-content {
     height: 100%;
+}
+
+.modal-css .modal-wrapper {
+    width: 80%;
+    height: 80%;
+    position: fixed;
 }

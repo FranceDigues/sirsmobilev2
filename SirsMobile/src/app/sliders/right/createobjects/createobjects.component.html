@@ -16,10 +16,6 @@
         </ion-radio-group>
       </ion-list>
     </ion-content>
+    <ion-button class="button-footer" [disabled]="!selectedLayer && !showAddButtons()" expand="full" color="success" (click)="addObject()">Ajouter un objet</ion-button>
   </div>
-  <ion-footer class="ion-no-border">
-    <ion-toolbar>
-      <ion-button [disabled]="!selectedLayer && !showAddButtons()" expand="full" color="success" (click)="addObject()">Ajouter un objet</ion-button>
-    </ion-toolbar>
-  </ion-footer>
 </div>

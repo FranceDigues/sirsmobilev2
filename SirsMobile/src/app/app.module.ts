@@ -36,6 +36,9 @@ import { ObjectDocService } from './objectdoc.service';
 import { NgInitDirective } from './ng-init.directive';
 import { FilterPipe } from './sliders/right/createobjects/createobjects.component';
 import { EditObjectService } from './editobjects.service';
+import { LeftSlideModule } from './sliders/left/left-slide.module';
+import { RightSlideModule } from './sliders/right/right-slide.module';
+import { ObjectEditPosByBorneController } from './sliders/right/createobjects/editobjects/editobjects.component';
 
 @NgModule({
   declarations: [AppComponent, NgInitDirective],
@@ -74,6 +77,7 @@ import { EditObjectService } from './editobjects.service';
     ObjectDocService,
     FilterPipe,
     EditObjectService,
+    ObjectEditPosByBorneController,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

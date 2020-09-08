@@ -62,13 +62,13 @@
             <ion-item lines="none"></ion-item>
         </ion-list>
     </ion-content>
-    <ion-fab class="position-absolute" style="top: 85%" horizontal="start" vertical="end" slot="fixed">
+    <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="start" vertical="end" slot="fixed">
         <ion-fab-button color="danger" (click)="order = !order">
             <ion-icon *ngIf="!order" name="list-outline"></ion-icon>
             <ion-icon *ngIf="order" name="lock-closed-outline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-fab class="position-absolute" style="top: 85%" horizontal="end" vertical="end" slot="fixed">
+    <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
         <ion-fab-button color="danger" (click)="goToLayerList()">
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>

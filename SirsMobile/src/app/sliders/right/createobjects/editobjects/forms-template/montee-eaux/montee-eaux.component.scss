@@ -1,0 +1,10 @@
+.mesures > .mesure-labels,
+.mesures > .mesure-values,
+.mesures > .mesure-values input {
+    margin-bottom: 0;
+}
+
+.mesures > .mesure-values .btn {
+    height: 42px;
+    line-height: 42px;
+}
