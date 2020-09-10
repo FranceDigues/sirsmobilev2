@@ -56,8 +56,8 @@ export class RightSlideEditObjectsComponent implements OnInit {
   constructor(public EOS: EditObjectService, private route: Router, private alertCtrl: AlertController,
               private activeRoute: ActivatedRoute) {
                 const type = this.activeRoute.snapshot.paramMap.get('type');
-                const isNew = !this.activeRoute.snapshot.paramMap.get('id');
-                this.EOS.init(type, isNew);
+                const id = this.activeRoute.snapshot.paramMap.get('id');
+                this.EOS.init(type, id);
   }
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
   }
 
   backToMain() {
-    console.log(this.EOS.objectDoc);
+    console.log('EOS ObjectDoc', this.EOS.objectDoc);
     this.route.navigateByUrl('/main');
   }
 

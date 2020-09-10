@@ -67,28 +67,28 @@
       <label for="function" class="active">Fonction</label>
       <div *ngIf="EOS.showText('fullName')">
           <select id="function" class="browser-default"
-                  name="function" [(ngModel)]="EOS.objectDoc.functionId">
+                  name="function" [(ngModel)]="EOS.objectDoc.fonctionId">
                   <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
-                    [selected]="EOS.objectDoc.functionId === r.id">
+                    [selected]="EOS.objectDoc.fonctionId === r.id">
                         {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                   </option>
           </select>
       </div>
       <div *ngIf="EOS.showText('abstract')">
-          <select id="function" class="browser-default" name="function" [(ngModel)]="EOS.objectDoc.functionId">
+          <select id="function" class="browser-default" name="function" [(ngModel)]="EOS.objectDoc.fonctionId">
               <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName')"
                       [ngValue]="r.id"
-                      [selected]="EOS.objectDoc.functionId === r.id">
+                      [selected]="EOS.objectDoc.fonctionId === r.id">
                   {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
               </option>
           </select>
       </div>
       <div *ngIf="EOS.showText('both')">
-        <select id="function" class="browser-default" name="function" [(ngModel)]="EOS.objectDoc.functionId">
+        <select id="function" class="browser-default" name="function" [(ngModel)]="EOS.objectDoc.fonctionId">
             <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName')"
                     [ngValue]="r.id"
-                    [selected]="EOS.objectDoc.functionId === r.id">
+                    [selected]="EOS.objectDoc.fonctionId === r.id">
                     {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
             </option>
         </select>

@@ -10,11 +10,11 @@ export class ObjectDocService {
 
     constructor(private localDB: LocalDatabase, private editionService: EditionModeService) { }
 
-    async getObjectDoc(routeParams): Promise<any> {
-        if (routeParams.id && routeParams.id !== '') {
-            return this.localDB.get(routeParams.id);
+    async getObjectDoc(type, id): Promise<any> {
+        if (id && id !== '') {
+            return this.localDB.get(id);
         } else {
-            return this.localDB.create(this.editionService.newObject(routeParams.type));
+            return this.localDB.create(this.editionService.newObject(type));
         }
     }
 }

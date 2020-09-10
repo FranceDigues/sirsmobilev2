@@ -20,6 +20,7 @@ export class OuvrageFranchissementComponent implements OnInit {
     this.initPositionHaut();
     this.initPositionBas();
     this.initCoteID();
+    this.initPosition();
   }
 
   initOrientationOuvrage() {
@@ -48,6 +49,10 @@ export class OuvrageFranchissementComponent implements OnInit {
 
   initPositionBas() {
     this.EOS.setupRef('positionBasId', this.EOS.refs.RefPosition[0]);
+  }
+
+  initPosition() {
+    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
   }
 
   initCoteID() {

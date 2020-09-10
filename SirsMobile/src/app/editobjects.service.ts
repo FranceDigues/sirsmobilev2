@@ -54,15 +54,15 @@ export class EditObjectService {
         private geolocService: GeolocService, private alertCtrl: AlertController,
         private editPosByBornCtrl: ObjectEditPosByBorneController, private storageService: StorageService) { }
 
-    init(type, isNew) {
+    init(type, id) {
         this.resetValues();
         this.type = type;
-        this.isNew = isNew;
+        this.isNew = !id;
         this.loadingCtrl.create({ message: 'Chargement' })
         .then(
             (loading) => {
-                loading.present();
-            this.objectDocService.getObjectDoc(this.activeRoute.snapshot.params)
+            loading.present();
+            this.objectDocService.getObjectDoc(type, id)
             .then(
                 (objectDoc) => {
                 console.log('la base : ', objectDoc);
@@ -216,6 +216,7 @@ export class EditObjectService {
         } else {
             this.objectDoc[field] = isMultiple ? [] : undefined;
         }
+        console.log('RES SETUP REF', this.objectDoc);
     }
 
     createMeasure() {

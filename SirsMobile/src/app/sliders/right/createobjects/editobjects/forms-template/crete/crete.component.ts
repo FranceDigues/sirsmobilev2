@@ -26,6 +26,7 @@ export class CreteComponent implements OnInit {
   }
 
   initFunction() {
+    console.log('setup fonction Id');
     this.EOS.setupRef('fonctionId', this.EOS.refs.RefFonction[0]);
   }
 
