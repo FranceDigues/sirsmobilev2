@@ -27,36 +27,16 @@ import { EditObjectService } from 'src/app/editobjects.service';
 })
 export class RightSlideEditObjectsComponent implements OnInit {
 
-  // wktFormat = new WKT();
   tab = 'fields';
   view = 'form';
-  // designation = '';
-  // objectDoc = null;
-  // isLinear = false;
-  // objDependanceType = null;
-  // dependances = [];
-  // linearPosEditionHandler = {
-  //   startPoint: false,
-  //   endPoint: false
-  // };
-  // config = null;
-  // troncons = [];
-  // allTroncons = [];
-  // geoloc = undefined;
-  // refs = null;
-  // dateWrapper = null;
-  // objectType = null;
-  // dataProjection = this.sirsDoc.get().epsgCode;
-  // startPosBorneLabel = null;
-  // endPosBorneLabel = null;
-  // isClosed;
 
   // * EOS for Edit Object Service -> to have better lisibility
 
   constructor(public EOS: EditObjectService, private route: Router, private alertCtrl: AlertController,
-              private activeRoute: ActivatedRoute) {
+              private activeRoute: ActivatedRoute, private databaseService: DatabaseService) {
                 const type = this.activeRoute.snapshot.paramMap.get('type');
                 const id = this.activeRoute.snapshot.paramMap.get('id');
+                console.log('init Service');
                 this.EOS.init(type, id);
   }
 

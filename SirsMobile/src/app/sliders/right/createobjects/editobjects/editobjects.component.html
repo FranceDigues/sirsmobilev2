@@ -62,10 +62,10 @@
 
 
                 <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()">
-                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position : </span>
-                  <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
-                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId && !EOS.objectDoc.positionDebut">
-                      Position via la borne : {{ EOS.getStartPosBorne() }}
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position : </span>
+                  <span class="sirs-field-value" *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
+                      Position via la borne : {{ EOS.startPosBorneLabel | async }}
                   </span>
                   <div class="edit-position-buttons right" *ngIf="!EOS.isLinear && !EOS.isDependance()">
                     <a class="nav-item nav-link"
@@ -92,7 +92,7 @@
                   <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">Position de début : </span>
                   <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
                   <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
-                      Position de début via la borne : {{ EOS.getStartPosBorne() }}
+                      Position de début via la borne : {{ EOS.startPosBorneLabel | async }}
                   </span>
                   <div class="edit-position-buttons right" *ngIf="EOS.isLinear && !EOS.isDependance()">
                     <a class="nav-item nav-link"
@@ -117,7 +117,7 @@
                   <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">Position de fin : </span>
                   <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId">{{ EOS.getEndPos() | lonlat:'à définir' }}</span>
                   <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
-                      Position de fin via la borne : {{ EOS.getEndPosBorne() }}
+                    Position de fin via la borne : {{ EOS.endPosBorneLabel | async }}
                   </span>
                   <div class="edit-position-buttons right" *ngIf="EOS.isLinear && !EOS.isNew && !EOS.isDependance()">
                     <a class="nav-item nav-link"

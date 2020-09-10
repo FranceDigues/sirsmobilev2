@@ -14,6 +14,7 @@ import { UuidUtils as uuid } from './uuid-utils';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { getDistance } from 'ol/sphere';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -42,8 +43,8 @@ export class EditObjectService {
     dateWrapper = null;
     objectType = null;
     dataProjection = this.sirsDoc.get().epsgCode;
-    startPosBorneLabel = null;
-    endPosBorneLabel = null;
+    startPosBorneLabel: Promise<string>|null = null;
+    endPosBorneLabel: Promise<string>|null = null;
     isClosed;
 
     constructor(private activeRoute: ActivatedRoute, private objectDocService: ObjectDocService,
@@ -91,25 +92,27 @@ export class EditObjectService {
                         console.log('refss: ', this.refs);
                         this.initTronconList();
                         this.checkDependance(loading);
+                        this.getStartPosBorne();
+                        this.getEndPosBorne();
                     }
                 );
+                this.config = this.globalConfigService.context;
+                if (this.isNew) {
+                    this.isLinear = false;
+                } else {
+                    if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
+                        this.isLinear = false;
+                    } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
+                        && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
+                            || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
+                            || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
+                                this.isLinear = false;
+                    } else {
+                        this.isLinear = true;
+                    }
+                }
             });
         });
-        this.config = this.globalConfigService.context;
-        if (this.isNew) {
-            this.isLinear = false;
-        } else {
-            if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
-                this.isLinear = false;
-            } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
-            && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
-            || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
-            || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
-                this.isLinear = false;
-            } else {
-                this.isLinear = true;
-            }
-        }
     }
 
     resetValues() {
@@ -554,39 +557,27 @@ export class EditObjectService {
     }
 
     getStartPosBorne() {
-        if (!this.startPosBorneLabel) {
-          this.databaseService.getLocalDB().query('byId', {
-              key: this.objectDoc.borneDebutId
-          }).then((results) => {
-              const libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-
-              this.startPosBorneLabel = this.objectDoc.borneDebutId ? 'à ' + this.objectDoc.borne_debut_distance + ' m de la borne : ' +
-                  libelle + ' en ' + (this.objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
-
-              this.watchDocPositionDebut();
-
-          });
-        } else {
-            return this.startPosBorneLabel;
-        }
+        this.startPosBorneLabel = new Promise<string>((resolve) => {
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneDebutId },
+            (results) => {
+                const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                const res = this.objectDoc.borneDebutId ? 'à ' + this.objectDoc.borne_debut_distance + ' m de la borne : ' +
+                    libelle + ' en ' + (this.objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
+                resolve(res);
+            });
+        });
     }
 
     getEndPosBorne() {
-        if (!this.endPosBorneLabel) {
-          this.databaseService.getLocalDB().query('byId', {
-              key: this.objectDoc.borneFinId
-          }).then((results) => {
-              const libelle = results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-
-              this.endPosBorneLabel = this.objectDoc.borneFinId ? 'à ' + this.objectDoc.borne_fin_distance + ' m de la borne : ' +
+        this.endPosBorneLabel = new Promise<string>((resolve) => {
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneFinId },
+            (results) => {
+                const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
+                const res = this.objectDoc.borneFinId ? 'à ' + this.objectDoc.borne_fin_distance + ' m de la borne : ' +
                   libelle + ' en ' + (this.objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
-
-              this.watchDocPositionFin(); // ? not sure
-
-          });
-        } else {
-            return this.endPosBorneLabel;
-        }
+                resolve(res);
+            });
+        });
     }
 
     getStartPosDependance() {
