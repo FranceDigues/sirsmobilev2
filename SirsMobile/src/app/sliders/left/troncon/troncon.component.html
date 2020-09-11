@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
     </ion-buttons>
     <ion-title>Tronçon</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cleanAll()">
+          <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content *ngIf="systemeEndiguementService.systemEndiguements">
