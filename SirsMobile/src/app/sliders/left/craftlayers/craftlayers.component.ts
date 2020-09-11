@@ -66,18 +66,13 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     onRenderItems(event) {
-        if (event.detail.to === this.layers.length) {
-            event.detail.to -= 1;
-        }
+        const draggedItem = this.layers.splice(event.detail.from, 1)[0];
+        this.layers.splice(event.detail.to, 0, draggedItem);
         this.move(event.detail.from, event.detail.to);
         event.detail.complete();
     }
 
     move(from, to) {
-        const tmp = this.layers[from];
-
-        this.layers[from] = this.layers[to];
-        this.layers[to] = tmp;
         this.appLayer.moveAppLayer((this.layers.length - (from + 1)), (this.layers.length - (to + 1)));
         this.clearAll();
         const tmpLayersAfterSort = Object.assign([], this.layers);
