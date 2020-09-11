@@ -23,6 +23,7 @@ import { PiedDigueComponent } from './createobjects/editobjects/forms-template/p
 import { ReseauHydrauliqueCielOuvertComponent } from './createobjects/editobjects/forms-template/reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
 import { ReseauHydrauliqueFermeComponent } from './createobjects/editobjects/forms-template/reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { ReseauTelecomEnergieComponent } from './createobjects/editobjects/forms-template/reseau-telecom-energie/reseau-telecom-energie.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent,
     OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent,
     OuvrageTelecomEnergieComponent, OuvrageVoirieComponent, PiedDigueComponent,
-    ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent],
+    ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
+    ReseauTelecomEnergieComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}
