@@ -21,12 +21,15 @@ import { OuvrageTelecomEnergieComponent } from './createobjects/editobjects/form
 import { OuvrageVoirieComponent } from './createobjects/editobjects/forms-template/ouvrage-voirie/ouvrage-voirie.component';
 import { PiedDigueComponent } from './createobjects/editobjects/forms-template/pied-digue/pied-digue.component';
 import { ReseauHydrauliqueCielOuvertComponent } from './createobjects/editobjects/forms-template/reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
+import { ReseauHydrauliqueFermeComponent } from './createobjects/editobjects/forms-template/reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    MatCheckboxModule
   ],
   providers: [
   ],
@@ -38,7 +41,7 @@ import { ReseauHydrauliqueCielOuvertComponent } from './createobjects/editobject
     MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent,
     OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent,
     OuvrageTelecomEnergieComponent, OuvrageVoirieComponent, PiedDigueComponent,
-    ReseauHydrauliqueCielOuvertComponent],
+    ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}

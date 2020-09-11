@@ -68,7 +68,7 @@
               </span>
           </option>
         </select>
-        <select class="browser-default" [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
+        <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
           <option *ngFor="let r of EOS.refs.ReseauHydrauliqueFerme">
             {{ !r.abrege && r.designation && r.libelle ? r.designation + ' : ' + r.libelle : 'id:  ' + r.id }}
           </option>
