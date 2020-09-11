@@ -17,6 +17,8 @@ import { OuvrageFranchissementComponent } from './createobjects/editobjects/form
 import { OuvrageHydrauliqueComponent } from './createobjects/editobjects/forms-template/ouvrage-hydraulique/ouvrage-hydraulique.component';
 import { OuvrageParticulierComponent } from './createobjects/editobjects/forms-template/ouvrage-particulier/ouvrage-particulier.component';
 import { OuvrageRevancheComponent } from './createobjects/editobjects/forms-template/ouvrage-revanche/ouvrage-revanche.component';
+import { OuvrageTelecomEnergieComponent } from './createobjects/editobjects/forms-template/ouvrage-telecom-energie/ouvrage-telecom-energie.component';
+import { OuvrageVoirieComponent } from './createobjects/editobjects/forms-template/ouvrage-voirie/ouvrage-voirie.component';
 
 @NgModule({
   imports: [
@@ -32,7 +34,8 @@ import { OuvrageRevancheComponent } from './createobjects/editobjects/forms-temp
     FormsTemplateComponent, DesordreComponent, FilterPipe, RefSortPipe,
     CreteComponent, LaisseCrueComponent, LargeurFrancBordComponent,
     MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent,
-    OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent],
+    OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent,
+    OuvrageTelecomEnergieComponent, OuvrageVoirieComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}
