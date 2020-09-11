@@ -70,6 +70,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
         this.layers.splice(event.detail.to, 0, draggedItem);
         this.move(event.detail.from, event.detail.to);
         event.detail.complete();
+        this.updateFavorites();
     }
 
     move(from, to) {
@@ -98,9 +99,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     featureLabels(layer) {
-        setTimeout(() => {
-            this.appLayer.addLabelFeatureLayer(layer);
-        }, 1000);
+        this.appLayer.addLabelFeatureLayer(layer);
     }
 
     async openModal(layer) {
