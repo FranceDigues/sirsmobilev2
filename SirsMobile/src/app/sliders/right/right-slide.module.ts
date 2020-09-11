@@ -25,6 +25,7 @@ import { ReseauHydrauliqueFermeComponent } from './createobjects/editobjects/for
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ReseauTelecomEnergieComponent } from './createobjects/editobjects/forms-template/reseau-telecom-energie/reseau-telecom-energie.component';
 import { SommetRisbermeComponent } from './createobjects/editobjects/forms-template/sommet-risberme/sommet-risberme.component';
+import { StationPompageComponent } from './createobjects/editobjects/forms-template/station-pompage/station-pompage.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,7 @@ import { SommetRisbermeComponent } from './createobjects/editobjects/forms-templ
     OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent,
     OuvrageTelecomEnergieComponent, OuvrageVoirieComponent, PiedDigueComponent,
     ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
-    ReseauTelecomEnergieComponent, SommetRisbermeComponent],
+    ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}
