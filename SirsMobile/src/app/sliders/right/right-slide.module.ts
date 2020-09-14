@@ -29,6 +29,7 @@ import { StationPompageComponent } from './editobjects/forms-template/station-po
 import { TalusDigueComponent } from './editobjects/forms-template/talus-digue/talus-digue.component';
 import { TalusRisbermeComponent } from './editobjects/forms-template/talus-risberme/talus-risberme.component';
 import { TronconDigueComponent } from './editobjects/forms-template/troncon-digue/troncon-digue.component';
+import { VoieAccesComponent } from './editobjects/forms-template/voie-acces/voie-acces.component';
 
 @NgModule({
   imports: [
@@ -49,7 +50,7 @@ import { TronconDigueComponent } from './editobjects/forms-template/troncon-digu
     OuvrageTelecomEnergieComponent, OuvrageVoirieComponent, PiedDigueComponent,
     ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
-    TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent],
+    TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}
