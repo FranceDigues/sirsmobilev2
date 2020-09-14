@@ -35,7 +35,7 @@
         </select>
     </div>
     <div *ngIf="EOS.showText('both')">
-      <select id="material" class="browser-default" name="orientation" [(ngModel)]="EOS.objectDoc.materiauId">
+      <select id="material" class="browser-default" name="material" [(ngModel)]="EOS.objectDoc.materiauId">
           <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName')"
                   [ngValue]="r.id"
                   [selected]="EOS.objectDoc.materiauId === r.id">

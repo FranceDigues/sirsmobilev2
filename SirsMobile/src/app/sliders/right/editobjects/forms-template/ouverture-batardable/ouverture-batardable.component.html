@@ -1,21 +1,21 @@
 <div class="sirs-field">
   <label for="label" class="active">Libellé</label>
-  <input id="label" type="text" [(ngModel)]="EOS.objectDoc.libelle"/>
+  <input id="label" name="label" type="text" [(ngModel)]="EOS.objectDoc.libelle"/>
 </div>
 <div class="row">
   <div class="sirs-field col col-50">
       <label for="width" class="active">Largeur</label>
-      <input id="width" type="number" [(ngModel)]="EOS.objectDoc.largeur"/>
+      <input id="width" name="width" type="number" [(ngModel)]="EOS.objectDoc.largeur"/>
   </div>
   <div class="sirs-field col col-50">
       <label for="height" class="active">Hauteur</label>
-      <input id="height" type="number" [(ngModel)]="EOS.objectDoc.hauteur"/>
+      <input id="height" name="height" type="number" [(ngModel)]="EOS.objectDoc.hauteur"/>
   </div>
 </div>
 <div class="row">
   <div class="sirs-field col col-50">
     <label for="zThreshold" class="active">Z du seuil</label>
-    <input id="zThreshold" type="number" [(ngModel)]="EOS.objectDoc.zSeuil"/>
+    <input id="zThreshold" name="zThreshold" type="number" [(ngModel)]="EOS.objectDoc.zSeuil"/>
   </div>
   <div class="sirs-field col col-50">
     <label for="thresholdType" class="active">Type de seuil</label>

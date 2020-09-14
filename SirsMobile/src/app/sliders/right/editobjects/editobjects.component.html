@@ -28,7 +28,7 @@
                 <div *ngIf="!EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
                   <label class="label-edit">
                       Objet ponctuel
-                      <input type="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
+                      <input type="checkbox" id="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
                         (ngModelChange)="EOS.changeObjectType()"/>
                       <span class="lever"></span>
                       Objet linéaire
@@ -39,19 +39,19 @@
                     <select id="objectType" class="browser-default"
                           [(ngModel)]="EOS.objDependanceType" name="objectType"
                           (ngModelChange)="EOS.changeObjectTypeDependance()">
-                      <option [ngValue]="'point'"
+                      <option [ngValue]="'point'" id="point"
                               [(ngModel)]="EOS.objDependanceType" name="point"
                               (ngModelChange)="EOS.changeObjectTypeDependance()"
                               [selected]="EOS.objDependanceType === 'point'">
                           Objet ponctuel
                       </option>
-                      <option [ngValue]="'line'"
+                      <option [ngValue]="'line'" id="line"
                               [(ngModel)]="EOS.objDependanceType" name="line"
                               (ngModelChange)="EOS.changeObjectTypeDependance()"
                               [selected]="EOS.objDependanceType === 'line'">
                           Objet linéaire
                       </option>
-                      <option [ngValue]="'polygon'" name="polygon"
+                      <option [ngValue]="'polygon'" name="polygon" id="polygon"
                               [(ngModel)]="EOS.objDependanceType"
                               (ngModelChange)="EOS.changeObjectTypeDependance()"
                               [selected]="EOS.objDependanceType === 'polygon'">
@@ -196,7 +196,7 @@
               <div class="row" *ngIf="EOS.objectType === 'DesordreDependance'">
                 <div class="sirs-field col col-100">
                   <label for="dependance" class="active edit-label">La liste des Dependances</label>
-                  <select id="dependance" class="browser-default" [(ngModel)]="EOS.objectDoc.dependanceId">
+                  <select id="dependance" name="dependance" class="browser-default" [(ngModel)]="EOS.objectDoc.dependanceId">
                     <option *ngFor="let d of EOS.dependances" (change)="EOS.objectDoc.dependaceId = d.id" [selected]="EOS.objectDoc.dependanceId === d.id" [ngValue]="d">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation :d.id)}}</option>
                   </select>
                 </div>
