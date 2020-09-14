@@ -59,7 +59,8 @@ ion-modal {
 }
 
 .scroll-all-content {
-    height: 100%;
+    padding-bottom: 20px;
+    height: calc(100% - 15px);
 }
 
 .modal-css .modal-wrapper {
