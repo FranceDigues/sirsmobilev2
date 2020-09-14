@@ -9,7 +9,7 @@ import { GlobalConfigService } from './globalconfig.service';
 import { AppLayer } from './layers.service';
 import { ObjectDocService } from './objectdoc.service';
 import { SirsDocService } from './sirsdoc.service';
-import { ObjectEditPosByBorneController } from './sliders/right/createobjects/editobjects/editobjects.component';
+import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
 import { UuidUtils as uuid } from './uuid-utils';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';

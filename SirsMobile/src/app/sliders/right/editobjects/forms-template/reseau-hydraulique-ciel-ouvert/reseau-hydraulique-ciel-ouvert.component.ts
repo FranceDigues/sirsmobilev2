@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EditDatabaseComponent } from '../../../../../../database-connection/edit-database/edit-database.component';
-import { EditObjectService } from '../../../../../../editobjects.service';
+import { EditDatabaseComponent } from '../../../../../database-connection/edit-database/edit-database.component';
+import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
   selector: 'form-reseau-hydraulique-ciel-ouvert',

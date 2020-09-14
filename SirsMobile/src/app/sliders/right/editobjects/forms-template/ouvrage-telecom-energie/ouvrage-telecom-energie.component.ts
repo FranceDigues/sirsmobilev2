@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EditObjectService } from '../../../../../../editobjects.service';
+import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
   selector: 'form-ouvrage-telecom-energie',

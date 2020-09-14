@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
-import { UuidUtils as uuid } from '../../../../../../uuid-utils';
+import { UuidUtils as uuid } from '../../../../../uuid-utils';
 
 
 @Component({

@@ -38,7 +38,7 @@ import { FilterPipe } from './sliders/right/createobjects/createobjects.componen
 import { EditObjectService } from './editobjects.service';
 import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
-import { ObjectEditPosByBorneController } from './sliders/right/createobjects/editobjects/editobjects.component';
+import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
 
 @NgModule({
   declarations: [AppComponent, NgInitDirective],
