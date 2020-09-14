@@ -1,0 +1,255 @@
+<!-- Form -->
+<div *ngIf="view === 'form' && EOS.objectDoc && EOS.refs" class="full-height edit-screen">
+  <div class="edit-object">
+    <ion-content [scrollEvents]="tab === 'fields'">
+      <div fxLayout="column" fxLayoutAlign="center">
+        <form class="sirs-card" #objectForm="ngForm">
+          <div class="sirs-card-content">
+            <h2 *ngIf="EOS.isNew" class="sirs-card-title">Nouveau/Nouvelle {{ displayName(EOS.type) }}</h2>
+            <h2 *ngIf="!EOS.isNew && EOS.isClosed" class="sirs-card-title">Détail d'un(e) {{ EOS.type }}</h2>
+            <!-- Tabs -->
+            <div class="sirs-nav-tabs" *ngIf="EOS.type !== 'BorneDigue' && EOS.type !== 'TronconDigue' && EOS.type !== 'Desordre' && EOS.type !== 'Berge' && !EOS.isDependance()">
+              <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'fields'}"
+                    (click)="setTab('fields')">Attributs</span>
+              <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}"
+                    (click)="setTab('medias')">Medias</span>
+            </div>
+            <!-- Fields Part -->
+            <div class="full-height full-width" *ngIf="tab === 'fields'">
+              <div class="common">
+                <div class="sirs-field">
+                  <label for="designation" class="active label-edit">Désignation</label>
+                  <input id="designation" type="text" class="validate"
+                    [(ngModel)]="EOS.designation" name="designation" placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."
+                  />
+                </div>
+
+
+                <div *ngIf="!EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
+                  <label class="label-edit">
+                      Objet ponctuel
+                      <input type="checkbox" id="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
+                        (ngModelChange)="EOS.changeObjectType()"/>
+                      <span class="lever"></span>
+                      Objet linéaire
+                  </label>
+                </div>
+
+                <div *ngIf="EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
+                    <select id="objectType" class="browser-default"
+                          [(ngModel)]="EOS.objDependanceType" name="objectType"
+                          (ngModelChange)="EOS.changeObjectTypeDependance()">
+                      <option [ngValue]="'point'" id="point"
+                              [(ngModel)]="EOS.objDependanceType" name="point"
+                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                              [selected]="EOS.objDependanceType === 'point'">
+                          Objet ponctuel
+                      </option>
+                      <option [ngValue]="'line'" id="line"
+                              [(ngModel)]="EOS.objDependanceType" name="line"
+                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                              [selected]="EOS.objDependanceType === 'line'">
+                          Objet linéaire
+                      </option>
+                      <option [ngValue]="'polygon'" name="polygon" id="polygon"
+                              [(ngModel)]="EOS.objDependanceType"
+                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                              [selected]="EOS.objDependanceType === 'polygon'">
+                          Objet polygonale
+                      </option>
+                    </select>
+                </div>
+
+
+                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()">
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position : </span>
+                  <span class="sirs-field-value" *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
+                      Position via la borne : {{ EOS.startPosBorneLabel | async }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="!EOS.isLinear && !EOS.isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.locateMe()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPos()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.selectPosBySR()"
+                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- TODO va falloir utiliser le systeme de startPoint et endPoint pour remplacer le systeme en 2 fois pour le faire en 1 fois pour les lignes -->
+                <!-- TODO faut enlever les deux blocks suivants => not need début/fin si on peut faire en un coup -->
+                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
+                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">Position de début : </span>
+                  <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                      Position de début via la borne : {{ EOS.startPosBorneLabel | async }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="EOS.isLinear && !EOS.isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; EOS.locateMe()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; EOS.selectPosBySR()"
+                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isNew && !EOS.isDependance()">
+                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">Position de fin : </span>
+                  <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId">{{ EOS.getEndPos() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                    Position de fin via la borne : {{ EOS.endPosBorneLabel | async }}
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="EOS.isLinear && !EOS.isNew && !EOS.isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.locateMe()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.selectPosBySR()"
+                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="EOS.isDependance() && !EOS.objectDoc.geometry">
+                  <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</span>
+                  <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'polygon'"></span>
+
+                  <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">Position : </span>
+                  <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'point'">{{ EOS.getStartPosDependance() | lonlat:'à définir' }}</span>
+
+                  <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">Position de début : </span>
+                  <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'line'">{{ EOS.getStartPosDependance() | lonlat:'à définir' }}</span>
+
+                  <div class="edit-position-buttons right">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.locateMe()"
+                            *ngIf="EOS.objDependanceType !== 'polygon'">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPos()"
+                            *ngIf="EOS.objDependanceType !== 'polygon'">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="drawPolygon()"
+                            *ngIf="EOS.objDependanceType === 'polygon'">
+                        <span><i class="material-icons">format_shapes</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="sirs-field-inline" *ngIf="EOS.isDependance() && EOS.objDependanceType === 'line' && EOS.objectDoc.geometry">
+                  <span class="sirs-field-title">Position de fin : </span>
+                  <span class="sirs-field-value">{{ EOS.getEndPosDependance() | lonlat:'à définir' }}</span>
+
+                  <div class="edit-position-buttons right">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.locateMeEnd()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPosEnd()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="!EOS.isDependance()">
+                <div class="sirs-field col col-100">
+                  <label for="trancon" class="active edit-label">La liste des Tronçons</label>
+                  <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId" name="trancon">
+                    <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon">{{ troncon.libelle }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="EOS.objectType === 'DesordreDependance'">
+                <div class="sirs-field col col-100">
+                  <label for="dependance" class="active edit-label">La liste des Dependances</label>
+                  <select id="dependance" name="dependance" class="browser-default" [(ngModel)]="EOS.objectDoc.dependanceId">
+                    <option *ngFor="let d of EOS.dependances" (change)="EOS.objectDoc.dependaceId = d.id" [selected]="EOS.objectDoc.dependanceId === d.id" [ngValue]="d">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation :d.id)}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="sirs-field col col-100">
+                  <label for="date_fin" class="active edit-label">La date de Fin</label>
+                  <input id="date_fin" type="date" [(ngModel)]="EOS.dateWrapper" name="date_fin" (change)="EOS.formatDate()" />
+                </div>
+              </div>
+
+              <forms-template class="full-height" [type]="EOS.type"></forms-template>
+
+              <div class="sirs-field">
+                <label for="commentaire" class="active edit-label">Commentaire</label>
+                <textarea id="commentaire" class="materialize-textarea" name="commentaire"
+                [(ngModel)]="EOS.objectDoc.commentaire"></textarea>
+              </div>
+
+            </div>
+            <!-- Medias Part -->
+            <div class="full-height full-width" *ngIf="tab === 'medias'">
+
+            </div>
+          </div>
+          <div class="sirs-card-action">
+            <a (click)="backToMain()" class="btn-flat waves-effect waves-teal">
+              <i class="material-icons left">arrow_back</i>Annuler
+            </a>
+            <button type="button" class="btn pink waves-effect waves-teal right"
+            [disabled]="!objectForm.valid" (click)="EOS.save()">
+              <i class="material-icons left">check</i>Terminer
+            </button>
+          </div>
+        </form>
+      </div>
+    </ion-content>
+  </div>
+</div>
+<!-- don't forget to see the last modification by Hilmi line 376 -->
+<div class="full-height" *ngIf="view === 'map'">
+
+</div>
+<div class="full-height" *ngIf="view === 'mapEnd'">
+
+</div>
+<div class="full-height" *ngIf="view === 'drawMap'">
+
+</div>
+<div class="full-height" *ngIf="view === 'note'">
+
+</div>
+<div class="full-height" *ngIf="view === 'media'">
+
+</div>

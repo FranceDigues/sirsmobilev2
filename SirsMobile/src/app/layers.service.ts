@@ -64,7 +64,7 @@ export class EditionLayer {
     }
 
     createEditionLayerInstance() {
-        let olLayer = new VectorLayer({
+        const olLayer = new VectorLayer({
             name: 'Edition',
             source: new VectorSource({ useSpatialIndex: false })
         });
@@ -74,13 +74,13 @@ export class EditionLayer {
     }
 
     setEditionLayerFeatures(olLayer) {
-        let olSource = olLayer.getSource();
+        const olSource = olLayer.getSource();
 
         return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
         .then(
             (results) => {
                 olSource.clear();
-                olSource.addFeatures(this.createEditionFeatureInstances(results))
+                olSource.addFeatures(this.createEditionFeatureInstances(results));
                 return;
             },
             (error) => {
@@ -91,7 +91,7 @@ export class EditionLayer {
     }
 
     createEditionFeatureInstances(featureDocs) {
-        let features = [];
+        const features = [];
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
                 || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
@@ -103,7 +103,7 @@ export class EditionLayer {
 
     createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
-        let SirsDoc = this.SirsDoc;
+        const SirsDoc = this.SirsDoc;
         let geometry = undefined;
         const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
@@ -311,7 +311,7 @@ export class BackLayer {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
-                db.context.backLayer.active = backLayer
+                db.context.backLayer.active = backLayer;
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
         );
@@ -368,8 +368,8 @@ export class AppLayer {
                 visible: layerModel.visible,
                 model: layerModel,
                 style: (feature, resolution) => {
-                    let features = feature.get('features');
-                    let styles = [];
+                    const features = feature.get('features');
+                    const styles = [];
 
                     if (Array.isArray(features) && features.length > 0) {
                         features.forEach((tmpFeature) => {

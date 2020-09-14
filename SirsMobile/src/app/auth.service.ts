@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  user;
+  user = null;
 
   constructor(private dbService: DatabaseService, private route: Router) { }
 
@@ -40,7 +40,7 @@ export class AuthService {
         this.dbService.updateCurrentDatabaseHardDisk(database);
         this.route.navigateByUrl('/');
       }
-    )
+    );
   }
 
   login(login, password) {
@@ -62,7 +62,7 @@ export class AuthService {
                   this.dbService.updateCurrentDatabaseHardDisk(database);
                   resolve();
                 }
-              )
+              );
               console.log('NOTE THE TYPE PLS', this.user);
             } else {
               console.log('error');

@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { AppLayersService } from '../../../applayers.service';
 import { AuthService } from '../../../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'right-slide-create-objects',
-  templateUrl: './createobjets.component.html',
-  styleUrls: ['./createobjets.component.scss'],
+  templateUrl: './createobjects.component.html',
+  styleUrls: ['./createobjects.component.scss'],
 })
-export class RightSlideCreateObjetsComponent implements OnInit {
+export class RightSlideCreateObjectsComponent implements OnInit {
 
-  constructor(public appLayersService: AppLayersService, private authService: AuthService) { }
+  constructor(public appLayersService: AppLayersService, private authService: AuthService,
+              private route: Router) { }
 
   allLayers = Object.assign([], this.appLayersService.getFavorites());
   selectedLayer = null;
@@ -23,7 +25,8 @@ export class RightSlideCreateObjetsComponent implements OnInit {
   }
 
   addObject() {
-    this.selectedLayer;
+    const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
+    this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
   }
 
   showAddButtons() {

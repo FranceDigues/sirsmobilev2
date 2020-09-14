@@ -37,7 +37,7 @@ export class BackLayerService {
         let i = this.backLayers.list.length;
 
         while (i--) {
-            let layer = this.backLayers.list[i];
+            const layer = this.backLayers.list[i];
             if (layer.name === name) {
                 return layer;
             }
@@ -52,17 +52,17 @@ export class BackLayerService {
 
     remove(layer) {
         this.backLayers.list.splice(this.backLayers.list.indexOf(layer.name), 1);
-        this.updateListInHardDisk()
+        this.updateListInHardDisk();
     }
 
     private updateListInHardDisk() {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
-                db.context.backLayer = this.backLayers
+                db.context.backLayer = this.backLayers;
                 this.dbService.updateCurrentDatabaseHardDisk(db);
             }
-        )
+        );
     }
 
 }

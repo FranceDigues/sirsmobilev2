@@ -48,7 +48,16 @@ npm install
 ionic capacitor run android
 ```
 
-***Error compiling first time with capacitor***
+***Errors compiling first time with capacitor***
+```
+cordova-android-plugins/cordova.variables.gradle' as it does not exist
+```
+***You should write the following instructions in terminal***
+```bash
+ionic capacitor update
+ionic capacitor sync
+```
+
 ```
 error: package android.support.v4.content does not exist
 import android.support.v4.content.FileProvider;
@@ -58,6 +67,7 @@ import android.support.v4.content.FileProvider;
 ```java
 androidx.core.content.FileProvider
 ```
+
 
 
 

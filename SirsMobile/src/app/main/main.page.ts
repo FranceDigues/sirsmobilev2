@@ -160,10 +160,12 @@ export class MainPage implements AfterViewInit {
     .then(
       (bool) => {
         if (bool) {
-          this.pathRightSlide = 'objectsCreation';
+          if (this.pathRightSlide !== 'objectsCreation') {
+            this.pathRightSlide = 'objectsCreation';
+          }
         } else {
-          this.menu.open('right-slider');
           this.pathRightSlide = 'objectsCreation';
+          this.menu.open('right-slider');
         }
       }
     );
@@ -176,8 +178,8 @@ export class MainPage implements AfterViewInit {
         if (bool) {
           this.pathRightSlide = 'shoreLine';
         } else {
-          this.menu.open('right-slider');
           this.pathRightSlide = 'shoreLine';
+          this.menu.open('right-slider');
         }
       }
     );

@@ -42,13 +42,7 @@ ion-item-sliding .layer-state .couches-metiers-icons {
 
 .has-fab-bottom {
     padding-bottom: 80px;
-}
-
-.modal-css {
-    height: 20%;
-    top: 80%;
-    position: absolute;
-    display: block;
+    height: calc(100% - 75px);
 }
 
 .square-container {

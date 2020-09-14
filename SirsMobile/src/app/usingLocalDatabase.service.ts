@@ -75,7 +75,7 @@ export class LocalDatabase {
             this.dbService.getLocalDB().post(doc)
             .then(
                 (result) => {
-                    doc._id = result._id;
+                    doc._id = result.id;
                     doc._rev = result.rev;
                     resolve(doc);
                 },

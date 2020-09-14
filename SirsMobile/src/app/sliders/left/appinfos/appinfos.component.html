@@ -6,7 +6,7 @@
     <ion-title>Versions Composants</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content class="scroll-all-content" [scrollEvents]="true" fullscreen>
+<ion-content class="scoll-contents" [scrollEvents]="true" fullscreen>
   <ion-list *ngFor="let item of versionsObject | keyvalue">
     <ion-item>{{ item.key }}: {{ item.value }}</ion-item>
   </ion-list>

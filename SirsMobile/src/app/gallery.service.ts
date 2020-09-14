@@ -67,7 +67,7 @@ export class GalleryService {
 
     visitDirectory(directory): Promise<Array<object>> {
         return new Promise((resolve, rejects) => {
-            let files = [];
+            const files = [];
             directory.createReader().readEntries(
                 (entries) => {
                     entries.forEach((entry) => {
@@ -83,9 +83,9 @@ export class GalleryService {
                 (err) => {
                     rejects(err);
                 }
-            )
-            resolve(files)
-        })
+            );
+            resolve(files);
+        });
     }
 
     getPhotoPath() {
@@ -151,7 +151,7 @@ export class GalleryService {
                 {
                     text: 'OK',
                     handler: () => {
-                        let promises = [];
+                        const promises = [];
                         this.availableFiles.forEach((file) => {
                             promises.push(file._entry.remove());
                         });
@@ -163,7 +163,7 @@ export class GalleryService {
                                 this.fileDoc = undefined;
                                 this.initDirectory();
                             }
-                        )
+                        );
                     }
                 }
             ]

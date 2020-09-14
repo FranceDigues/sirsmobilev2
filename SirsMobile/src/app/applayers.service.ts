@@ -60,8 +60,8 @@ export class AppLayersService {
             this.moduleDescriptions()
             .then(
                 (modules: any) => {
-                    let leaves = []
-                    for (let module in modules) {
+                    let leaves = [];
+                    for (const module in modules) {
                         if (modules[module].layers) {
                             leaves = leaves.concat(this.extraLeaves(modules[module].layers));
                         }
@@ -71,8 +71,8 @@ export class AppLayersService {
                 (error) => {
                     rejects(error);
                 }
-            )
-        })
+            );
+        });
     }
 
     getFavorites() {
@@ -99,7 +99,7 @@ export class AppLayersService {
     }
 
     removeFavorite(layer) {
-        let index = this.favorites.map((item) => {
+        const index = this.favorites.map((item) => {
             return item.title;
         }).indexOf(layer.title);
         this.favorites.splice(index, 1);

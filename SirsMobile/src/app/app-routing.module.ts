@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.component';
 import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
+import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'cache/:id',
     component: LeftSlideCacheComponent
+  },
+  {
+    path: 'object/:type/:id',
+    component: RightSlideEditObjectsComponent
   }
 ];
 

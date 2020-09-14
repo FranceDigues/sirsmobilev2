@@ -10,31 +10,14 @@ import { MainPage } from './main.page';
 import { OLService } from '@lib-map/ol.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GeolocService } from '../geoloc.service';
-import { MapService } from '../map.service';
 import { RealPositionStyle } from '../style.service';
 import { EditionModeService } from '../editionmode.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LeftSlideComponent } from '../sliders/left/left.component';
-import { RightSlideComponent } from '../sliders/right/right.component';
-import { LeftSlideMenuComponent } from '../sliders/left/menu/menu.component';
-import { AppinfosLeftSlideComponent } from '../sliders/left/appinfos/appinfos.component';
-import { AppsettingsLeftSlideComponent } from '../sliders/left/appsettings/appsettings.component';
-import { DatabaseService } from '../database.service';
-import { LeftSlideSynchronisationComponent } from '../sliders/left/synchronisation/synchronisation.component';
 import { SirsDocService } from '../sirsdoc.service';
-import { LeftSlideGalleryComponent } from '../sliders/left/gallery/gallery.component';
-import { GalleryDocumentComponent } from '../sliders/left/gallery/document/document.component';
-import { GalleryMediasComponent } from '../sliders/left/gallery/medias/medias.component';
-import { LeftSlideBackmapComponent } from '../sliders/left/backmap/backmap.component';
-import { LeftSlideAddBackLayerComponent } from '../sliders/left/backmap/addbacklayer/addbacklayer.component';
-import { LeftSlideCacheComponent } from '../sliders/left/backmap/cache/cache.component';
-import { ArraySortPipe, LeftSlideTronconComponent } from '../sliders/left/troncon/troncon.component';
-import { LeftSlideCraftlayersComponent } from '../sliders/left/craftlayers/craftlayers.component';
-import { ModalComponent } from '../sliders/left/craftlayers/modal/modal.component';
-import { LeftSlideDisponibleLayersComponent } from '../sliders/left/craftlayers/disponible/disponible.component';
-import { FilterPipe, RightSlideCreateObjetsComponent } from '../sliders/right/createobjets/createobjets.component';
+import { LeftSlideModule } from '../sliders/left/left-slide.module';
+import { RightSlideModule } from '../sliders/right/right-slide.module';
 
 @NgModule({
   imports: [
@@ -45,6 +28,7 @@ import { FilterPipe, RightSlideCreateObjetsComponent } from '../sliders/right/cr
     NgbCollapseModule,
     MatIconModule,
     FlexLayoutModule,
+    LeftSlideModule, RightSlideModule
   ],
   providers: [
     OLService,
@@ -52,13 +36,8 @@ import { FilterPipe, RightSlideCreateObjetsComponent } from '../sliders/right/cr
     GeolocService,
     RealPositionStyle,
     EditionModeService,
-    SirsDocService,
+    SirsDocService
   ],
-  declarations: [MainPage, LeftSlideComponent, RightSlideComponent, LeftSlideMenuComponent,
-    AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
-    LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
-    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
-    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent,
-    LeftSlideDisponibleLayersComponent, RightSlideCreateObjetsComponent, FilterPipe]
+  declarations: [MainPage]
 })
 export class MainPageModule {}

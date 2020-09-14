@@ -5,6 +5,7 @@ import { DatabaseModel } from 'src/app/models/database.model';
 import { AlertController } from '@ionic/angular';
 import { DatabaseService } from '../../database.service';
 import { BackLayerService } from 'src/app/backlayer.service';
+import { AuthService } from '../../auth.service';
 @Component({
   selector: 'app-database-choice',
   templateUrl: './database-choice.component.html',
@@ -18,7 +19,8 @@ export class DatabaseChoiceComponent implements OnInit {
   databaseIndex = 0;
 
   constructor(private router: Router,
-              private alertCtrl: AlertController, private dbService: DatabaseService) {}
+              private alertCtrl: AlertController, private dbService: DatabaseService,
+              private authService: AuthService) {}
 
   ngOnInit() {
     this.dbService.getDatabasesHardDisk()
@@ -101,6 +103,7 @@ export class DatabaseChoiceComponent implements OnInit {
     } else if (this.selectedDatabase.replicated && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
       this.status = 4;
     } else {
+      this.authService.user = this.dbService.activeDB.context.authUser;
       this.router.navigateByUrl('/main');
     }
   }

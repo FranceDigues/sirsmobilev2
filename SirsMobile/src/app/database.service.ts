@@ -67,7 +67,7 @@ export class DatabaseService {
             if (database.name === this.activeDB.name) {
               resolve(database);
             }
-          })
+          });
           resolve();
         }
       );
@@ -83,9 +83,9 @@ export class DatabaseService {
             databases[i] = updatedDatabase;
             this.updateDatabasesHardDisk(databases);
           }
-        })
+        });
       }
-    )
+    );
   }
 
   changeDatabase() {

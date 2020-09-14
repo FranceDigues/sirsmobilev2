@@ -1,0 +1,37 @@
+import { Component, OnInit } from '@angular/core';
+import { EditDatabaseComponent } from '../../../../../database-connection/edit-database/edit-database.component';
+import { EditObjectService } from '../../../../../editobjects.service';
+
+@Component({
+  selector: 'form-reseau-hydraulique-ciel-ouvert',
+  templateUrl: './reseau-hydraulique-ciel-ouvert.component.html',
+  styleUrls: ['./reseau-hydraulique-ciel-ouvert.component.scss'],
+})
+export class ReseauHydrauliqueCielOuvertComponent implements OnInit {
+
+  constructor(public EOS: EditObjectService) { }
+
+  ngOnInit() {
+    this.initTypeReseauHydroCielOuvert();
+    this.initReseauHydrauliqueFerme();
+    this.initPosition();
+    this.initCote();
+  }
+
+  initTypeReseauHydroCielOuvert() {
+    this.EOS.setupRef('typeReseauHydroCielOuvertId', this.EOS.refs.RefReseauHydroCielOuvert[0]);
+  }
+
+  initReseauHydrauliqueFerme() {
+    this.EOS.setupRef('reseauHydrauliqueFermeIds', this.EOS.refs.ReseauHydrauliqueFerme[0], true);
+  }
+
+  initPosition() {
+    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
+  }
+
+  initCote() {
+    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
+  }
+
+}

@@ -1,0 +1,269 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="width" class="active">Largeur</label>
+      <input id="width" type="number" name="width" [(ngModel)]="EOS.objectDoc.largeur"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="orientation" class="active">Orientation de l'ouvrage</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="orientation" class="browser-default"
+                name="orientation" [(ngModel)]="EOS.objectDoc.orientationOuvrageId">
+                <option *ngFor="let r of EOS.refs.RefOrientationOuvrage | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.orientationOuvrageId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="orientation" class="browser-default" name="orientation" [(ngModel)]="EOS.objectDoc.orientationOuvrageId">
+            <option *ngFor="let r of EOS.refs.RefOrientationOuvrage | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.orientationOuvrageId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="orientation" class="browser-default" name="orientation" [(ngModel)]="EOS.objectDoc.orientationOuvrageId">
+          <option *ngFor="let r of EOS.refs.RefOrientationOuvrage | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.orientationOuvrageId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="use" class="active">Usage</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="use" class="browser-default"
+                name="use" [(ngModel)]="EOS.objectDoc.usageId">
+                <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.usageId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="use" class="browser-default" name="use" [(ngModel)]="EOS.objectDoc.usageId">
+            <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.usageId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="use" class="browser-default" name="use" [(ngModel)]="EOS.objectDoc.usageId">
+          <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.usageId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="topCoating" class="active">Revêtement Haut</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="topCoating" class="browser-default"
+                name="topCoating" [(ngModel)]="EOS.objectDoc.revetementHautId">
+                <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.revetementHautId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="topCoating" class="browser-default" name="topCoating" [(ngModel)]="EOS.objectDoc.revetementHautId">
+            <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.revetementHautId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="topCoating" class="browser-default" name="topCoating" [(ngModel)]="EOS.objectDoc.revetementHautId">
+          <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.revetementHautId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="lowCoating" class="active">Revêtement Bas</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="lowCoating" class="browser-default"
+                name="lowCoating" [(ngModel)]="EOS.objectDoc.revetementBasId">
+                <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.revetementBasId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="lowCoating" class="browser-default" name="lowCoating" [(ngModel)]="EOS.objectDoc.revetementBasId">
+            <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.revetementBasId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="lowCoating" class="browser-default" name="lowCoating" [(ngModel)]="EOS.objectDoc.revetementBasId">
+          <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.revetementBasId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="workType" class="active">Type d'ouvrage</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="workType" class="browser-default"
+                name="workType" [(ngModel)]="EOS.objectDoc.typeOuvrageFranchissementId">
+                <option *ngFor="let r of EOS.refs.RefOuvrageFranchissement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.typeOuvrageFranchissementId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="workType" class="browser-default" name="workType" [(ngModel)]="EOS.objectDoc.typeOuvrageFranchissementId">
+            <option *ngFor="let r of EOS.refs.RefOuvrageFranchissement | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.typeOuvrageFranchissementId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="workType" class="browser-default" name="workType" [(ngModel)]="EOS.objectDoc.typeOuvrageFranchissementId">
+          <option *ngFor="let r of EOS.refs.RefOuvrageFranchissement | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.typeOuvrageFranchissementId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="topPosition" class="active">Position haut</label>
+      <div *ngIf="EOS.showText('fullName')">
+          <select id="topPosition" class="browser-default"
+                  name="topPosition" [(ngModel)]="EOS.objectDoc.positionHautId">
+                  <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.positionHautId === r.id">
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                  </option>
+          </select>
+      </div>
+      <div *ngIf="EOS.showText('abstract')">
+          <select id="topPosition" class="browser-default" name="topPosition" [(ngModel)]="EOS.objectDoc.positionHautId">
+              <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
+                      [ngValue]="r.id"
+                      [selected]="EOS.objectDoc.positionHautId === r.id">
+                  {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+              </option>
+          </select>
+      </div>
+      <div *ngIf="EOS.showText('both')">
+        <select id="topPosition" class="browser-default" name="topPosition" [(ngModel)]="EOS.objectDoc.positionHautId">
+            <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.positionHautId === r.id">
+                    {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+            </option>
+        </select>
+      </div>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="lowPosition" class="active">Position bas</label>
+      <div *ngIf="EOS.showText('fullName')">
+          <select id="lowPosition" class="browser-default"
+                  name="lowPosition" [(ngModel)]="EOS.objectDoc.positionBasId">
+                  <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')" [value]="r.id"
+                    [selected]="EOS.objectDoc.positionBasId === r.id">
+                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                  </option>
+          </select>
+      </div>
+      <div *ngIf="EOS.showText('abstract')">
+          <select id="lowPosition" class="browser-default"
+            name="lowPosition" [(ngModel)]="EOS.objectDoc.positionBasId">
+              <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
+                      [ngValue]="r.id"
+                      [selected]="EOS.objectDoc.positionBasId === r.id">
+                  {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+              </option>
+          </select>
+      </div>
+      <div *ngIf="EOS.showText('both')">
+        <select id="lowPosition" class="browser-default"
+        name="lowPosition" [(ngModel)]="EOS.objectDoc.positionBasId">
+          <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName')"
+            [ngValue]="r.id"
+            [selected]="EOS.objectDoc.positionBasId === r.id">
+                {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+        </select>
+      </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="damSide" class="active">Côté de la digue</label>
+    <div *ngIf="EOS.showText('fullName')">
+        <select id="damSide" class="browser-default"
+                name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
+                <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.coteId === r.id">
+                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('abstract')">
+        <select id="damSide" class="browser-default" name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
+            <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc.coteId === r.id">
+                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </option>
+        </select>
+    </div>
+    <div *ngIf="EOS.showText('both')">
+      <select id="damSide" class="browser-default" name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
+          <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.coteId === r.id">
+                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+    </div>
+  </div>
+</div>

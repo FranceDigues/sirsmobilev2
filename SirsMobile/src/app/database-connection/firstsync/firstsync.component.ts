@@ -23,7 +23,7 @@ export class FirstsyncComponent implements OnInit {
         }, 1300);
       },
       (error) => {
-        console.log(error)
+        console.log(error);
       }
     );
   }
