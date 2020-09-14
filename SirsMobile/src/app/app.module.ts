@@ -39,6 +39,7 @@ import { EditObjectService } from './editobjects.service';
 import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
 import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
+import { Toast } from '@ionic-native/toast/ngx';
 
 @NgModule({
   declarations: [AppComponent, NgInitDirective],
@@ -78,6 +79,7 @@ import { ObjectEditPosByBorneController } from './sliders/right/editobjects/edit
     FilterPipe,
     EditObjectService,
     ObjectEditPosByBorneController,
+    Toast,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
