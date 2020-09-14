@@ -40,13 +40,25 @@ export class RightSlideEditObjectsComponent implements OnInit {
                 this.EOS.init(type, id);
   }
 
-  ngOnInit() {
-    console.log('test actoveroute', this.activeRoute.snapshot.paramMap.get('type'));
-  }
+  ngOnInit() {}
 
   backToMain() {
     console.log('EOS ObjectDoc', this.EOS.objectDoc);
     this.route.navigateByUrl('/main');
+  }
+
+  displayName(str: string) {
+    for(let i = 1; i < str.length; i++) {
+      let char = str.charAt(i);
+      if (char !== `'` && i > 0) {
+          if (char === char.toUpperCase()) {
+            str = str.slice(0, i) + ' ' + str.slice(i);
+            i++;
+            continue;
+          }
+      }
+    }
+    return str;
   }
 
   setTab(tab) {
