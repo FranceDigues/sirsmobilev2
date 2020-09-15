@@ -39,6 +39,7 @@ import { EditObjectService } from './editobjects.service';
 import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
 import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
+import { OLService } from '@lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
 
 @NgModule({
@@ -48,6 +49,7 @@ import { Toast } from '@ionic-native/toast/ngx';
   , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule],
   providers: [
     StatusBar,
+    OLService,
     SplashScreen,
     NativeStorage,
     MapService,

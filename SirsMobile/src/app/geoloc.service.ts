@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
+import { Coordinates, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
 

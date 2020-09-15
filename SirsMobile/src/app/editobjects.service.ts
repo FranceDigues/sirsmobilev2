@@ -163,7 +163,7 @@ export class EditObjectService {
         }
     }
 
-      watchDocPositionFin() { // ! call this instead changing value alone
+    watchDocPositionFin() { // ! call this instead changing value alone
         const newValue = this.objectDoc.positionFin;
         if (typeof newValue !== 'undefined') {
           this.troncons = this.calculateDistanceObjectTroncon(

@@ -86,9 +86,56 @@
                   </div>
                 </div>
 
+                <!-- TODO Complete the second nav-link (modal) -->
+                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
+                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
+                    Position de début : {{ EOS.getStartPos() | lonlat:'à définir' }} <br>
+                    Position de fin : {{ EOS.getEndPos() | lonlat:'à définir' }}
+                  </span>
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                      Position de début via la borne : {{ EOS.startPosBorneLabel | async }} <br>
+                      Position de fin via la borne : {{ EOS.endPosBorneLabel | async }}
+                  </span>
+                  <div class="edit-position-buttons right">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; EOS.selectPosBySR()"
+                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isNew && !EOS.isDependance()">
+                  <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId"></span>
+                  <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                  </span>
+                  <div class="edit-position-buttons right" *ngIf="EOS.isLinear && !EOS.isNew && !EOS.isDependance()">
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.locateMe()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">gps_fixed</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                            *ngIf="EOS.activatedGPSPositionButton()">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.selectPosBySR()"
+                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                        <span><i class="material-icons">line_style</i></span>
+                    </a>
+                  </div>
+                </div> -->
+
                 <!-- TODO va falloir utiliser le systeme de startPoint et endPoint pour remplacer le systeme en 2 fois pour le faire en 1 fois pour les lignes -->
                 <!-- TODO faut enlever les deux blocks suivants => not need début/fin si on peut faire en un coup -->
-                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
+                <!-- <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
                   <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">Position de début : </span>
                   <span class="sirs-field-value" *ngIf="!EOS.objectDoc.systemeRepId">{{ EOS.getStartPos() | lonlat:'à définir' }}</span>
                   <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
@@ -136,7 +183,7 @@
                         <span><i class="material-icons">line_style</i></span>
                     </a>
                   </div>
-                </div>
+                </div> -->
 
                 <div class="sirs-field-inline" *ngIf="EOS.isDependance() && !EOS.objectDoc.geometry">
                   <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</span>
@@ -177,7 +224,7 @@
                         <span><i class="material-icons">gps_fixed</i></span>
                     </a>
                     <a class="nav-item nav-link"
-                            (click)="selectPosEnd()">
+                            (click)="selectPosLine()"> <!-- TODO -->
                         <span><i class="material-icons">edit</i></span>
                     </a>
                   </div>
@@ -220,7 +267,7 @@
             </div>
             <!-- Medias Part -->
             <div class="full-height full-width" *ngIf="tab === 'medias'">
-
+              Complete me !
             </div>
           </div>
           <div class="sirs-card-action">
@@ -239,13 +286,13 @@
 </div>
 <!-- don't forget to see the last modification by Hilmi line 376 -->
 <div class="full-height" *ngIf="view === 'map'">
-
+  <map-point class="full-height" (slidePathChange)="changeSlidePath($event)"></map-point>
 </div>
-<div class="full-height" *ngIf="view === 'mapEnd'">
-
+<div class="full-height" *ngIf="view === 'drawLine'">
+  <map-line class="full-height" (slidePathChange)="changeSlidePath($event)"></map-line>
 </div>
-<div class="full-height" *ngIf="view === 'drawMap'">
-
+<div class="full-height" *ngIf="view === 'drawPolygon'">
+  <map-polygon class="full-height"></map-polygon>
 </div>
 <div class="full-height" *ngIf="view === 'note'">
 

@@ -47,6 +47,11 @@ export class RightSlideEditObjectsComponent implements OnInit {
     this.route.navigateByUrl('/main');
   }
 
+  changeSlidePath(path: string) {
+    this.view = path;
+    console.log('view : ', this.view);
+  }
+
   displayName(str: string) {
     for(let i = 1; i < str.length; i++) {
       let char = str.charAt(i);
@@ -97,7 +102,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
     );
   }
 
-  selectPosEnd() {
+  selectPosLine() {
       this.alertCtrl.create({
         header: 'Localisation manuelle',
         message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
@@ -110,7 +115,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
           {
             text: 'Ok',
             handler: () => {
-              this.setView('mapEnd');
+              this.setView('drawLine');
             }
           }
         ]
@@ -134,7 +139,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
           {
             text: 'Ok',
             handler: () => {
-              this.setView('drawMap');
+              this.setView('drawPolygon');
             }
           }
         ]
