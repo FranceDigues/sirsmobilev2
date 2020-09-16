@@ -43,8 +43,8 @@ export class EditObjectService {
     dateWrapper = null;
     objectType = null;
     dataProjection = this.sirsDoc.get().epsgCode;
-    startPosBorneLabel: Promise<string>|null = null;
-    endPosBorneLabel: Promise<string>|null = null;
+    startPosBorneLabel: Promise<string>|string|null = null;
+    endPosBorneLabel: Promise<string>|string|null = null;
     isClosed;
 
     constructor(private activeRoute: ActivatedRoute, private objectDocService: ObjectDocService,
