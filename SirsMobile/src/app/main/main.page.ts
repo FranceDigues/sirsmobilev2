@@ -96,6 +96,10 @@ export class MainPage implements AfterViewInit {
         this.ol.addLayer(this.appLayer.appLayer);
         this.ol.addLayer(this.editionLayer.editionLayer);
         this.ol.addLayer(this.geolocLayer.geolocLayer);
+        const test1 = transform([2.276, 48.517], 'EPSG:4326', 'EPSG:3857');
+        const test2 = transform(test1, 'EPSG:3857', 'EPSG:4326');
+        console.log('test1', test1);
+        console.log('test2', test2);
         setTimeout(() => { loading.dismiss(); }, 1000);
       }
     );

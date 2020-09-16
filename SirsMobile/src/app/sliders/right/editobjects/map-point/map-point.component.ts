@@ -64,6 +64,14 @@ export class MapPointComponent implements OnInit {
   }
 
   goBack() {
+    const coords = this.source.getFeatures()[0].getGeometry().getCoordinates();
+    console.log('coordss', coords);
+    const finalRes = transform(coords, 'EPSG:3857', 'EPSG:4326');
+    console.log('coordAfterrr', finalRes);
+    console.log(finalRes);
+    this.EOS.startPosBorneLabel = new Promise((resolve) => {
+      resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
+    });
     let arrayLayer = this.olService.getLayers();
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
