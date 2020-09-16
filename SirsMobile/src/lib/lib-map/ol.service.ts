@@ -16,6 +16,7 @@ export class OLService extends ClassMapService {
 
     createMap(name: string): Map {
         this.map = new Map({
+            layers: [],
             view: new View({
                 zoom: 0,
                 center: [0, 0]

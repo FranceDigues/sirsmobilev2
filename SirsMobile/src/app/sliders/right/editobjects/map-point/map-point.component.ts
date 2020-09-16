@@ -19,6 +19,7 @@ export class MapPointComponent implements OnInit {
   defaultVisibleValueArrayLayer = [];
   @Output() readonly slidePathChange = new EventEmitter<string>();
   draw = null;
+  pan = null;
   source = null;
   vector = null;
 
@@ -36,36 +37,20 @@ export class MapPointComponent implements OnInit {
     arrayLayer[1].setVisible(false);
     arrayLayer[2].setVisible(false);
     arrayLayer[3].setVisible(false);
-    this.source = new VectorSource({ wrapX: true });
+    this.source = new VectorSource();
     this.vector = new VectorLayer({
       source: this.source,
     });
     this.olService.addLayer(this.vector)
     this.addInteraction();
-    console.log('map', this.olService.map);
-    console.log('map properties', this.olService.map.getProperties())
-    this.source.on('addfeature', (evt) => {
+    this.draw.on('drawstart', (event) => {
       this.source.clear();
-      const feature = evt.feature;
-      const coords = feature.getGeometry().getCoordinates();
-      console.log(coords);
-    })
-    // this.draw.on('drawstart', (event) => {
-    //   this.source.clear();
-    // });
-    // this.draw.on('drawend', async (event) => {
-    //   await setTimeout(() => {}, 300);
-    //   console.log(event.coordinate);
-    //   console.log('end event', event);
-    // })
+    });
   }
 
   goBack() {
     const coords = this.source.getFeatures()[0].getGeometry().getCoordinates();
-    console.log('coordss', coords);
     const finalRes = transform(coords, 'EPSG:3857', 'EPSG:4326');
-    console.log('coordAfterrr', finalRes);
-    console.log(finalRes);
     this.EOS.startPosBorneLabel = new Promise((resolve) => {
       resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
     });
@@ -76,8 +61,13 @@ export class MapPointComponent implements OnInit {
     arrayLayer[3].setVisible(this.defaultVisibleValueArrayLayer[2]);
     this.olService.removeLayer(this.vector);
     this.olService.map.removeInteraction(this.draw);
+    this.olService.map.removeInteraction(this.pan);
     this.olService.map.setTarget('map');
     this.slidePathChange.emit('form');
+  }
+
+  validate() {
+    this.goBack();
   }
 
   addInteraction() {
@@ -85,7 +75,8 @@ export class MapPointComponent implements OnInit {
       source: this.source,
       type: 'Point'
     });
-    this.olService.map.addInteraction(new DragPan());
+    this.pan = new DragPan();
+    this.olService.map.addInteraction(this.pan);
     this.olService.map.addInteraction(this.draw);
   }
 
