@@ -34,4 +34,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     this.slidePathChange.emit('form');
   }
 
+  addInteraction() {
+    
+  }
+
 }
