@@ -10,6 +10,7 @@ import DragPan from 'ol/interaction/DragPan';
 import GeoJSON from 'ol/format/GeoJSON';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
+import { Style } from 'ol/style';
 
 @Component({
   selector: 'map-point',
@@ -25,14 +26,10 @@ export class MapPointComponent implements OnInit {
   source = null;
   vector = null;
 
-  constructor(public olService: OLService, private sirsDocSrvc: SirsDocService,
+  constructor(public olService: OLService,
               private EOS: EditObjectService, private sirsDoc: SirsDocService) { }
 
   ngOnInit() {
-  }
-
-  ngAfterViewInit(): void {
-    this.olService.map.setTarget('mapPoint');
     let arrayLayer = this.olService.getLayers();
     this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
     arrayLayer[0].setVisible(true);
@@ -57,21 +54,17 @@ export class MapPointComponent implements OnInit {
     this.initListener();
   }
 
+  ngAfterViewInit(): void {
+    this.olService.map.setTarget('mapPoint');
+  }
+
   initListener() {
-    this.draw.on('drawstart', (event) => {
+    this.draw.on('drawstart', () => {
       this.source.clear();
     });
   }
 
   goBack() {
-    const coords = this.source.getFeatures()[0].getGeometry().getCoordinates();
-    console.log('coordss', coords);
-    const finalRes = transform(coords, 'EPSG:3857', 'EPSG:4326');
-    console.log('coordAfterrr', finalRes);
-    console.log(finalRes);
-    this.EOS.startPosBorneLabel = new Promise((resolve) => {
-      resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
-    });
     let arrayLayer = this.olService.getLayers();
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
@@ -87,7 +80,9 @@ export class MapPointComponent implements OnInit {
   validate() {
     if (!this.source || this.source.getFeatures().length <= 0) {
       this.goBack();
+      return;
     }
+    console.log(this.source);
     const coords = this.source.getFeatures()[0].getGeometry().getCoordinates();
     const finalRes = transform(coords, 'EPSG:3857', 'EPSG:4326');
     const args = {
@@ -100,13 +95,18 @@ export class MapPointComponent implements OnInit {
     } else {
       this.EOS.handlePos(args);
     }
+    this.EOS.startPosBorneLabel = new Promise((resolve) => {
+      resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
+    });
     this.goBack();
+    return;
   }
 
   addInteraction() {
     this.draw = new Draw({
       source: this.source,
-      type: 'Point'
+      type: 'Point',
+      style: new Style()
     });
     this.pan = new DragPan();
     this.olService.map.addInteraction(this.pan);

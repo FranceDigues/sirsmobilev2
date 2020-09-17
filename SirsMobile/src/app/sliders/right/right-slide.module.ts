@@ -34,13 +34,15 @@ import { VoieDigueComponent } from './editobjects/forms-template/voie-digue/voie
 import { MapLineComponent } from './editobjects/map-line/map-line.component';
 import { MapPointComponent } from './editobjects/map-point/map-point.component';
 import { MapPolygonComponent } from './editobjects/map-polygon/map-polygon.component';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatButtonModule
   ],
   providers: [
   ],
