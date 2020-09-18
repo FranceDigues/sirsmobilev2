@@ -54,7 +54,7 @@ export class RightSlideEditObjectsComponent implements OnInit {
 
   displayName(str: string) {
     for(let i = 1; i < str.length; i++) {
-      let char = str.charAt(i);
+      const char = str.charAt(i);
       if (char !== `'` && i > 0) {
           if (char === char.toUpperCase()) {
             str = str.slice(0, i) + ' ' + str.slice(i);

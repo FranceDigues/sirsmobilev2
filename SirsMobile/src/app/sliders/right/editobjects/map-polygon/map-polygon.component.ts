@@ -41,7 +41,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
               private toast: Toast) { }
 
   ngOnInit() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
     arrayLayer[0].setVisible(true); // BackLayer
     arrayLayer[1].setVisible(false);
@@ -89,7 +89,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
         }
 			}
     });
-    this.olService.addLayer(this.vector)
+    this.olService.addLayer(this.vector);
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       this.source.addFeatures(
@@ -98,17 +98,6 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
         })]
       );
     }
-    // if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
-    //   let coordsStart = this.getCoords(this.EOS.objectDoc.positionDebut);
-    //   let coordsEnd = this.getCoords(this.EOS.objectDoc.positionFin);
-    //   coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857')
-    //   coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857')
-    //   this.source.addFeatures(
-    //     [new Feature({
-    //       geometry: new LineString([coordsStart, coordsEnd])
-    //     })]
-    //   );
-    // }
     this.initListener();
   }
 
@@ -134,18 +123,18 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   }
 
   closePolygon() {
-    let array = [];
-    let features = this.source.getFeatures();
+    const array = [];
+    const features = this.source.getFeatures();
 
     if (features.length < 3) {
       this.toast.showLongTop('Vous devez placer au moins 3 points').subscribe();
       return;
     }
     for (let i = 0; i < features.length; i++) {
-      array.push(features[i].getGeometry().getCoordinates())
+      array.push(features[i].getGeometry().getCoordinates());
     }
     this.source.clear();
-    console.log(array)
+    console.log(array);
     this.source.addFeatures(
       [
         new Feature({
@@ -159,7 +148,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
     arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
@@ -168,7 +157,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.olService.map.removeInteraction(this.draw);
     this.olService.map.removeInteraction(this.pan);
     this.olService.map.setTarget('map');
-    this.olService.map.un('singleclick', this.callbackSingleClick)
+    this.olService.map.un('singleclick', this.callbackSingleClick);
     this.slidePathChange.emit('form');
   }
 
@@ -182,27 +171,9 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       return;
     }
     console.log(this.source);
-    let wktFormat = new WKT();
+    const wktFormat = new WKT();
     const geometry = this.source.getFeatures()[0].getGeometry();
     this.EOS.objectDoc.geometry = wktFormat.writeGeometry(geometry);
-    // const coordsStart = transform(arrayOfArrayCoords[0], 'EPSG:3857', 'EPSG:4326');
-    // const coordsEnd = transform(arrayOfArrayCoords[1], 'EPSG:3857', 'EPSG:4326');
-    // const argsStart = {
-    //   longitude: coordsStart[0],
-    //   latitude: coordsStart[1],
-    //   accuracy: -1
-    // };
-    // const argsEnd = {
-    //   longitude: coordsEnd[0],
-    //   latitude: coordsEnd[1],
-    //   accuracy: -1
-    // };
-    // if (this.EOS.isDependance()) {
-    //   this.EOS.handlePosDependance(argsStart)
-    //   this.EOS.handlePosDependanceEnd(argsEnd);
-    // } else {
-    //   this.EOS.handlePos(argsStart, argsEnd);
-    // }
     this.goBack();
     return;
   }
@@ -230,7 +201,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       () => {
         this.zoomToMe();
       }
-    )
+    );
   }
 
   zoomToMe() {

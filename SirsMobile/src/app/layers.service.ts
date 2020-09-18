@@ -412,16 +412,16 @@ export class AppLayer {
                 },
                 source: new Cluster({
                     distance: 24,
-                    source: new VectorSource({useSpatialIndex: true})
+                    source: new VectorSource({ useSpatialIndex: true })
                 })
             });
 
         } else {
             olLayer = new VectorLayer({
-                name: 'test-amigo',
+                name: layerModel.title,
                 visible: layerModel.visible,
                 model: layerModel,
-                source: new VectorSource({useSpatialIndex: false})
+                source: new VectorSource({ useSpatialIndex: false })
             });
         }
 
@@ -444,104 +444,101 @@ export class AppLayer {
         }
 
         // Try to get the promise of a previous query.
-        let promise = this.featureCache.get(layerModel.title);
+        let promise = null;
+        if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
+        layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
+            // Get all the favorites tronçons ids
+            const favorites = await this.storageService.getItem('AppTronconsFavorities');
+            const keys = [];
+            if (favorites !== null && favorites.length !== 0) {
+                favorites.forEach((key) => {
+                    keys.push([layerModel.filterValue, key.id]);
+                });
 
-        if (typeof promise === 'undefined') {
-
-            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
-            layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                // Get all the favorites tronçons ids
-                const favorites = await this.storageService.getItem('AppTronconsFavorities');
-                const keys = [];
-                if (favorites !== null && favorites.length !== 0) {
-                    favorites.forEach((key) => {
-                        keys.push([layerModel.filterValue, key.id]);
-                    });
-
-                    promise = this.localDB.query('ElementSpecial3', {
-                        keys
-                    }).then(
-                        (results) => {
-                            return results.map(this.createAppFeatureModel);
-                        },
-                        (error) => {
-                            console.error(error);
-                        });
-                } else {
-                    if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
-                        promise = this.localDB.query('Element/byClassAndLinear', {
-                            startkey: [layerModel.filterValue],
-                            endkey: [layerModel.filterValue, {}],
-                            include_docs: true
-                        }).then((results) => {
-                                return results.filter((item) => {
-                                    return !item.doc.editMode;
-                                }).map(this.createAppFeatureModel);
-                            },
-                            (error) => {
-                                console.error(error);
-                            });
-                    } else {
-                        noop();
-                        // let deferred = $q.defer();
-                        // promise = deferred.promise
-                        //     .then(function () {
-                        //         return [];
-                        //     });
-                        // deferred.resolve();
-                    }
-                }
-            } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                const tmp = await this.storageService.getItem('AppTronconsFavorities');
-                promise = this.localDB.query('TronconDigue/streamLight', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
+                promise = this.localDB.query('ElementSpecial3', {
+                    keys
                 }).then(
                     (results) => {
                         return results.map(this.createAppFeatureModel);
                     },
                     (error) => {
-                        console.log(error);
-                    });
+                        console.error(error);
+                    }
+                );
             } else {
-                const tmp = await this.storageService.getItem('AppTronconsFavorities');
-                promise = this.localDB.query('getBornesFromTronconID', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
-                }).then(
-                    (results) => {
-                        return this.localDB.query('getBornesIdsHB', {
-                            keys: results.map((obj) => {
-                                return obj.value;
-                            })
-                        }).then(
-                            function (results2) {
-                                return results2.map(this.createAppFeatureModel());
-                            });
-                    },
-                    (error) => {
-                        console.log(error);
-                    });
+                if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
+                    promise = this.localDB.query('Element/byClassAndLinear', {
+                        startkey: [layerModel.filterValue],
+                        endkey: [layerModel.filterValue, {}],
+                        include_docs: true
+                    }).then(
+                        (results) => {
+                            return results.filter((item) => {
+                                return !item.doc.editMode;
+                            }).map(this.createAppFeatureModel);
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    );
+                } else {
+                    promise = new Promise((resolve) => {
+                        resolve([]);
+                    }).then(
+                        () => {
+                            return [];
+                        }
+                    );
+                }
             }
-
-
-            // Set and store the promise.
-            this.featureCache.put(layerModel.title, promise);
+        } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
+            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            promise = this.localDB.query('TronconDigue/streamLight', {
+                keys: tmp === null ? [] : tmp.map((item) => {
+                        return item.id;
+                    })
+            }).then(
+                (results) => {
+                    return results.map(this.createAppFeatureModel);
+                },
+                (error) => {
+                    console.log(error);
+                });
+        } else {
+            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            promise = this.localDB.query('getBornesFromTronconID', {
+                keys: tmp === null ? [] : tmp.map((item) => {
+                        return item.id;
+                    })
+            }).then(
+                (results) => {
+                    return this.localDB.query('getBornesIdsHB', {
+                        keys: results.map((obj) => {
+                            return obj.value;
+                        })}
+                    ).then(
+                        (results2) => {
+                            return results2.map(this.createAppFeatureModel);
+                        }
+                    );
+                },
+                (error) => {
+                    console.log(error);
+                });
         }
-
+        console.log('end of setAppLayerFeatures', promise);
         // Wait for promise resolution or rejection.
         promise.then(
             (featureModels) => {
                 // @hb get the featureModels from the promise
-
+                console.log('here ????');
                 olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
                 // $rootScope.loadingflag = false; // TODO remplace ?
             },
             (error) => {
                 // TODO → handle error
-            });
+            }
+        );
 
 
     }
@@ -609,6 +606,7 @@ export class AppLayer {
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
             if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                console.log('je vais là ??', featureModels, featureModel, layerModel);
                 if (this.mapService.archiveObjectsFlag) {
                     // Show all the objects
                     const feature = new Feature();
@@ -725,7 +723,9 @@ export class AppLayer {
 
     addLabelFeatureLayer(layerModel) {
         const olLayer = this.getAppLayerInstance(layerModel);
+        console.log(olLayer.get('model'));
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
+        console.log(olLayer.get('model'));
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }

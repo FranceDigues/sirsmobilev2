@@ -32,7 +32,7 @@ export class MapPointComponent implements OnInit {
               private EOS: EditObjectService, private sirsDoc: SirsDocService) { }
 
   ngOnInit() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(false);
@@ -55,11 +55,11 @@ export class MapPointComponent implements OnInit {
         zIndex: Infinity
       })
     });
-    this.olService.addLayer(this.vector)
+    this.olService.addLayer(this.vector);
     this.addInteraction();
     if (this.EOS.objectDoc.positionDebut) { // If point already exists
       let coords = this.getCoords(this.EOS.objectDoc.positionDebut);
-      coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857')
+      coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(
         [new Feature({
           geometry: new Point(coords)
@@ -80,7 +80,7 @@ export class MapPointComponent implements OnInit {
   }
 
   goBack() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
     arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
@@ -106,7 +106,7 @@ export class MapPointComponent implements OnInit {
       accuracy: -1
     };
     if (this.EOS.isDependance()) {
-      this.EOS.handlePosDependance(args)
+      this.EOS.handlePosDependance(args);
     } else {
       this.EOS.handlePos(args);
     }

@@ -225,11 +225,11 @@ export class EditObjectService {
     createMeasure() {
         var defaultRef = this.refs.RefReferenceHauteur[0];
         return {
-            '_id': uuid.generateUuid(),
+            _id: uuid.generateUuid(),
             '@class': 'fr.sirs.core.model.MesureMonteeEaux',
-            'date': new Date().toISOString(),
-            'referenceHauteurId': defaultRef ? defaultRef.id : undefined,
-            'hauteur': 0
+            date: new Date().toISOString(),
+            referenceHauteurId: defaultRef ? defaultRef.id : undefined,
+            hauteur: 0
         };
     }
 
@@ -377,7 +377,7 @@ export class EditObjectService {
 
         this.objectDoc.editedGeoCoordinate = true;
 
-        let coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
+        const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
         let coordinateEnd = null;
         if (posEnd) {
             coordinateEnd = transform([posEnd.longitude, posEnd.latitude], 'EPSG:4326', this.dataProjection);

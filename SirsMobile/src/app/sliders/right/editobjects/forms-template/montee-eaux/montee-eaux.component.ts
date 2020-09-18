@@ -23,16 +23,16 @@ export class MonteeEauxComponent implements OnInit {
     const defaultRef = this.EOS.refs.RefReferenceHauteur[0];
 
     return {
-        '_id': uuid.generateUuid(),
+        _id: uuid.generateUuid(),
         '@class': 'fr.sirs.core.model.MesureMonteeEaux',
-        'date': new Date().toISOString(),
-        'referenceHauteurId': defaultRef ? defaultRef.id : undefined,
-        'hauteur': 0
+        date: new Date().toISOString(),
+        referenceHauteurId: defaultRef ? defaultRef.id : undefined,
+        hauteur: 0
     };
   }
 
   initEchelleLimnimetrique() {
-    this.EOS.setupRef('echelleLimnimetriqueId', this.EOS.refs.EchelleLimnimetrique[0])
+    this.EOS.setupRef('echelleLimnimetriqueId', this.EOS.refs.EchelleLimnimetrique[0]);
   }
 
   initDamPosition() {

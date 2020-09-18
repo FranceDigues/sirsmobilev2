@@ -22,7 +22,7 @@ export class LaisseCrueComponent implements OnInit {
   }
 
   initHeight() {
-    this.EOS.objectDoc.hauteur = this.EOS.objectDoc.hauteur || 0
+    this.EOS.objectDoc.hauteur = this.EOS.objectDoc.hauteur || 0;
   }
 
   initDamPosition() {

@@ -51,10 +51,10 @@ export class EditionModeService {
         console.log(this.authService);
         const objectDoc: any = {
             '@class': 'fr.sirs.core.model.' + type,
-            'author': this.authService.user._id,
-            'valid': false,
-            'linearId': null,
-            'editMode': true
+            author: this.authService.user._id,
+            valid: false,
+            linearId: null,
+            editMode: true
         };
         if (type !== 'Désordre') {
             objectDoc.photos = [];

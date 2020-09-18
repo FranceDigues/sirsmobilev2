@@ -65,7 +65,7 @@ export class AppLayersService {
                         if (modules[module].layers) {
                             leaves = leaves.concat(this.extraLeaves(modules[module].layers));
                         }
-                    };
+                    }
                     resolve(leaves);
                 },
                 (error) => {

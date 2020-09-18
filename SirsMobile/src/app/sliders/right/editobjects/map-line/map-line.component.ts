@@ -37,7 +37,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
               private geoloc: GeolocService, private geolocLayer: GeolocLayer) { }
 
   ngOnInit() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
     arrayLayer[0].setVisible(true); // BackLayer
     arrayLayer[1].setVisible(false);
@@ -64,16 +64,16 @@ export class MapLineComponent implements OnInit, AfterViewInit {
             }),
 						geometry: new MultiPoint([f.getGeometry().getFirstCoordinate(), f.getGeometry().getLastCoordinate()])
 					})
-				]
+				];
 			}
     });
-    this.olService.addLayer(this.vector)
+    this.olService.addLayer(this.vector);
     this.addInteraction();
     if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
       let coordsStart = this.getCoords(this.EOS.objectDoc.positionDebut);
       let coordsEnd = this.getCoords(this.EOS.objectDoc.positionFin);
-      coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857')
-      coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857')
+      coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857');
+      coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(
         [new Feature({
           geometry: new LineString([coordsStart, coordsEnd])
@@ -94,7 +94,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    let arrayLayer = this.olService.getLayers();
+    const arrayLayer = this.olService.getLayers();
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
     arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
@@ -112,7 +112,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       return;
     }
     console.log(this.source);
-    const arrayOfArrayCoords = this.source.getFeatures()[0].getGeometry().getCoordinates()
+    const arrayOfArrayCoords = this.source.getFeatures()[0].getGeometry().getCoordinates();
     const coordsStart = transform(arrayOfArrayCoords[0], 'EPSG:3857', 'EPSG:4326');
     const coordsEnd = transform(arrayOfArrayCoords[1], 'EPSG:3857', 'EPSG:4326');
     const argsStart = {
@@ -126,7 +126,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       accuracy: -1
     };
     if (this.EOS.isDependance()) {
-      this.EOS.handlePosDependance(argsStart)
+      this.EOS.handlePosDependance(argsStart);
       this.EOS.handlePosDependanceEnd(argsEnd);
     } else {
       this.EOS.handlePos(argsStart, argsEnd);
@@ -161,7 +161,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       () => {
         this.zoomToMe();
       }
-    )
+    );
   }
 
   zoomToMe() {

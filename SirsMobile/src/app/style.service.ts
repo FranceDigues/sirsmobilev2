@@ -255,6 +255,7 @@ export class GetStyle {
                     fill: new Fill({ color: 'black' }),
                     stroke: new Stroke({ color: 'white', width: 0.5 })
                 });
+                console.log('text', text);
                 return new Style({ stroke, zIndex, text });
             }
         }

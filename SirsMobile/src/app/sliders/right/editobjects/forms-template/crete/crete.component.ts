@@ -31,6 +31,6 @@ export class CreteComponent implements OnInit {
   }
 
   initWidth() {
-    this.EOS.objectDoc.epaisseur = this.EOS.objectDoc.epaisseur || 0
+    this.EOS.objectDoc.epaisseur = this.EOS.objectDoc.epaisseur || 0;
   }
 }
