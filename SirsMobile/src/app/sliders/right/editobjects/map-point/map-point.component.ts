@@ -10,7 +10,9 @@ import DragPan from 'ol/interaction/DragPan';
 import GeoJSON from 'ol/format/GeoJSON';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
-import { Style } from 'ol/style';
+import { Style, RegularShape, Fill, Circle} from 'ol/style';
+import Stroke from 'ol/style/Stroke';
+import MultiPoint from 'ol/geom/MultiPoint';
 
 @Component({
   selector: 'map-point',
@@ -39,6 +41,19 @@ export class MapPointComponent implements OnInit {
     this.source = new VectorSource();
     this.vector = new VectorLayer({
       source: this.source,
+      style: new Style({
+        image: new Circle({
+          radius: 6,
+          fill: new Fill({
+            color: [255, 255, 255, 0.4]
+          }),
+          stroke: new Stroke({
+            color: [255, 0, 0, 0.7],
+            width: 1.25
+          })
+        }),
+        zIndex: Infinity
+      })
     });
     this.olService.addLayer(this.vector)
     this.addInteraction();
@@ -69,7 +84,7 @@ export class MapPointComponent implements OnInit {
     arrayLayer[0].setVisible(true);
     arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
     arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
-    arrayLayer[3].setVisible(this.defaultVisibleValueArrayLayer[2]);
+    arrayLayer[3].setVisible(this.defaultVisibleValueArrayLayer[3]);
     this.olService.removeLayer(this.vector);
     this.olService.map.removeInteraction(this.draw);
     this.olService.map.removeInteraction(this.pan);

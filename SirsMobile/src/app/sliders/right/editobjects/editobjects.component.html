@@ -89,7 +89,8 @@
                 <!-- TODO Complete the second nav-link (modal) -->
                 <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
                   <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
-                    Position de début : {{ EOS.getStartPos() | lonlat:'à définir' }} <br>
+                    Position de début : {{ EOS.getStartPos() | lonlat:'à définir' }}
+                    <br>
                     Position de fin : {{ EOS.getEndPos() | lonlat:'à définir' }}
                   </span>
                   <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">

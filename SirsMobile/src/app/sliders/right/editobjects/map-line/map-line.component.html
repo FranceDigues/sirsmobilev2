@@ -3,7 +3,11 @@
     <ion-buttons slot=start>
       <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
     </ion-buttons>
-    <ion-title>Définir une position</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="locateMe()">Me localiser</ion-button>
+      <ion-button (click)="validate()">Valider</ion-button>
+    </ion-buttons>
+    <ion-title>Définir deux positions</ion-title>
   </ion-toolbar>
 </ion-header>
 <div id="mapLine" #mapLine></div>
