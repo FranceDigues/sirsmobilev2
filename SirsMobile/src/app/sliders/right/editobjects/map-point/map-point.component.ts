@@ -110,9 +110,9 @@ export class MapPointComponent implements OnInit {
     } else {
       this.EOS.handlePos(args);
     }
-    this.EOS.startPosBorneLabel = new Promise((resolve) => {
-      resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
-    });
+    // this.EOS.startPosBorneLabel = new Promise((resolve) => {
+    //   resolve(finalRes[0].toFixed(3).toString() + ', ' + finalRes[1].toFixed(3).toString());
+    // });
     this.goBack();
     return;
   }

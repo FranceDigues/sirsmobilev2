@@ -513,8 +513,9 @@ export class EditObjectService {
                 // Calculate the approximate position
                 this.objectDoc.approximatePositionFin = data.approximatePosition;
             }
-
         }
+        this.getStartPosBorne(); // Update startPosBorneLabel
+        this.getEndPosBorne(); // Update endPosBorneLabel
     }
 
     changeObjectType() { // ! take care -> check if it's correct

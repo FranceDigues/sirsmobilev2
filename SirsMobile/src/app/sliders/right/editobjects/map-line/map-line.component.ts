@@ -37,10 +37,10 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     let arrayLayer = this.olService.getLayers();
     this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
-    arrayLayer[0].setVisible(true);
+    arrayLayer[0].setVisible(true); // BackLayer
     arrayLayer[1].setVisible(false);
     arrayLayer[2].setVisible(false);
-    arrayLayer[3].setVisible(true);
+    arrayLayer[3].setVisible(true); // GeolocLayer
     this.source = new VectorSource();
     this.vector = new VectorLayer({
       source: this.source,
@@ -129,12 +129,12 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     } else {
       this.EOS.handlePos(argsStart, argsEnd);
     }
-    this.EOS.startPosBorneLabel = new Promise((resolve) => {
-      resolve(coordsStart[0].toFixed(3).toString() + ', ' + coordsStart[1].toFixed(3).toString());
-    });
-    this.EOS.endPosBorneLabel = new Promise((resolve) => {
-      resolve(coordsEnd[0].toFixed(3).toString() + ', ' + coordsEnd[1].toFixed(3).toString());
-    });
+    // this.EOS.startPosBorneLabel = new Promise((resolve) => {
+    //   resolve(coordsStart[0].toFixed(3).toString() + ', ' + coordsStart[1].toFixed(3).toString());
+    // });
+    // this.EOS.endPosBorneLabel = new Promise((resolve) => {
+    //   resolve(coordsEnd[0].toFixed(3).toString() + ', ' + coordsEnd[1].toFixed(3).toString());
+    // });
     this.goBack();
     return;
   }
