@@ -15,6 +15,7 @@ import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
 import { GeolocService } from '../../../../geoloc.service';
 import { GeolocLayer } from '../../../../layers.service';
+import { Toast } from '@ionic-native/toast/ngx';
 
 @Component({
   selector: 'map-line',
@@ -34,7 +35,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
-              private geoloc: GeolocService, private geolocLayer: GeolocLayer) { }
+              private geoloc: GeolocService, private geolocLayer: GeolocLayer,
+              private toast: Toast) { }
 
   ngOnInit() {
     const arrayLayer = this.olService.getLayers();
@@ -108,7 +110,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 
   validate() {
     if (!this.source || this.source.getFeatures().length <= 0) {
-      this.goBack();
+      this.toast.showLongTop('Vous devez placer 2 points').subscribe();
       return;
     }
     console.log(this.source);

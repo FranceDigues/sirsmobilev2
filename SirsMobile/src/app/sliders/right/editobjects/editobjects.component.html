@@ -180,15 +180,17 @@
                   </div>
                 </div> -->
 
-                <div class="sirs-field-inline" *ngIf="EOS.isDependance() && !EOS.objectDoc.geometry">
+                <div class="sirs-field-inline" *ngIf="EOS.isDependance()">
                   <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</span>
                   <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'polygon'"></span>
 
                   <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">Position : </span>
                   <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'point'">{{ EOS.getStartPosDependance() | lonlat:'à définir' }}</span>
 
-                  <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">Position de début : </span>
-                  <span class="sirs-field-value" *ngIf="EOS.objDependanceType === 'line'">{{ EOS.getStartPosDependance() | lonlat:'à définir' }}</span>
+                  <span class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">
+                    Position de début : {{ EOS.getStartPosDependance() | lonlat:'à définir' }} <br>
+                    Position de fin : {{ EOS.getEndPosDependance() | lonlat:'à définir' }}
+                  </span>
 
                   <div class="edit-position-buttons right">
                     <a class="nav-item nav-link"

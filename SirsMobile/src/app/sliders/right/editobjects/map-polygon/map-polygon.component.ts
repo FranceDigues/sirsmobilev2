@@ -92,10 +92,16 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.olService.addLayer(this.vector);
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
+      const array = this.getPolygonCoords(this.EOS.objectDoc.geometry);
       this.source.addFeatures(
-        [new Feature({
-          geometry: this.EOS.objectDoc.geometry
-        })]
+        [
+          new Feature({
+            geometry: new Polygon([array])
+          }),
+          new Feature({
+            geometry: new MultiPoint(array)
+          })
+        ]
       );
     }
     this.initListener();
@@ -113,7 +119,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   }
 
   initListener() {
-    this.olService.map.on('singleclick', this.callbackSingleClick());
+    this.olService.map.on('singleclick', this.callbackSingleClick);
     this.draw.on('drawstart', (evt) => {
       if (this.source.getFeatures().length > 0 &&
       this.source.getFeatures()[0].getGeometry().getType() === 'Polygon') {
@@ -189,10 +195,19 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.olService.map.addInteraction(this.draw);
   }
 
-  getCoords(position) {
-    const tmp = position.slice(6, position.length - 1);
-    const array = tmp.split(' ');
-    return [parseFloat(array[0]), parseFloat(array[1])];
+  getPolygonCoords(position) {
+    let array = [];
+    position = position.substring(9, position.length - 2);
+    let tmp = position.split(',');
+    for (let i = 0; i < tmp.length; i++) {
+        array.push(tmp[i].split(' '));
+    }
+    for (let i = 0; i < array.length; i++) {
+        for (let y = 0; y < array[i].length; y++) {
+            array[i][y] = parseFloat(array[i][y]);
+        }
+    }
+    return array;
   }
 
   locateMe() {
