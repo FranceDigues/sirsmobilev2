@@ -51,24 +51,42 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.vector = new VectorLayer({
       source: this.source,
       style: (f) => {
-        return [
-					new Style({
-						stroke: new Stroke({ color: '#ffcc33', width: 3 }),
-					}),
-					new Style({
-						image: new Circle({
+        console.log('f', f);
+        console.log(f.getGeometry().getCoordinates());
+        if (f.getGeometry().getType() !== 'Point') {
+          return [
+            new Style({
+              stroke: new Stroke({ color: '#ffcc33', width: 3 }),
+            }),
+            new Style({
+              image: new Circle({
+                radius: 6,
+                fill: new Fill({
+                  color: [255,255,255,0.4]
+                }),
+                stroke: new Stroke({
+                  color: [255, 0, 0, 0.7],
+                  width: 1.25
+                })
+              }),
+              geometry: new MultiPoint(f.getGeometry().getCoordinates())
+            })
+          ];
+        } else {
+          return new Style({
+            image: new Circle({
               radius: 6,
               fill: new Fill({
-                color: [255,255,255,0.4]
+                color: [255, 255, 255, 0.4]
               }),
               stroke: new Stroke({
                 color: [255, 0, 0, 0.7],
                 width: 1.25
               })
             }),
-						geometry: new MultiPoint([f.getGeometry().getFirstCoordinate(), f.getGeometry().getLastCoordinate()])
-					})
-				]
+            zIndex: Infinity
+          });
+        }
 			}
     });
     this.olService.addLayer(this.vector)
