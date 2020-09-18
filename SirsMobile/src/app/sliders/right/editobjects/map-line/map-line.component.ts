@@ -25,10 +25,12 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 
   defaultVisibleValueArrayLayer = [];
   @Output() readonly slidePathChange = new EventEmitter<string>();
+  vector = null;
+  source = null;
   draw = null;
   pan = null;
-  source = null;
-  vector = null;
+  modify = null;
+  snap = null;
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
@@ -129,12 +131,6 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     } else {
       this.EOS.handlePos(argsStart, argsEnd);
     }
-    // this.EOS.startPosBorneLabel = new Promise((resolve) => {
-    //   resolve(coordsStart[0].toFixed(3).toString() + ', ' + coordsStart[1].toFixed(3).toString());
-    // });
-    // this.EOS.endPosBorneLabel = new Promise((resolve) => {
-    //   resolve(coordsEnd[0].toFixed(3).toString() + ', ' + coordsEnd[1].toFixed(3).toString());
-    // });
     this.goBack();
     return;
   }

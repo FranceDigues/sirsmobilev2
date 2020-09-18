@@ -38,22 +38,16 @@
                 <div *ngIf="EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
                     <select id="objectType" class="browser-default"
                           [(ngModel)]="EOS.objDependanceType" name="objectType"
-                          (ngModelChange)="EOS.changeObjectTypeDependance()">
-                      <option [ngValue]="'point'" id="point"
-                              [(ngModel)]="EOS.objDependanceType" name="point"
-                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                          (change)="EOS.changeObjectTypeDependance()">
+                      <option [value]="'point'"
                               [selected]="EOS.objDependanceType === 'point'">
                           Objet ponctuel
                       </option>
-                      <option [ngValue]="'line'" id="line"
-                              [(ngModel)]="EOS.objDependanceType" name="line"
-                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                      <option [value]="'line'"
                               [selected]="EOS.objDependanceType === 'line'">
                           Objet linéaire
                       </option>
-                      <option [ngValue]="'polygon'" name="polygon" id="polygon"
-                              [(ngModel)]="EOS.objDependanceType"
-                              (ngModelChange)="EOS.changeObjectTypeDependance()"
+                      <option [value]="'polygon'"
                               [selected]="EOS.objDependanceType === 'polygon'">
                           Objet polygonale
                       </option>
@@ -199,12 +193,17 @@
                   <div class="edit-position-buttons right">
                     <a class="nav-item nav-link"
                             (click)="EOS.locateMe()"
-                            *ngIf="EOS.objDependanceType !== 'polygon'">
+                            *ngIf="EOS.objDependanceType === 'point'">
                         <span><i class="material-icons">gps_fixed</i></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPos()"
-                            *ngIf="EOS.objDependanceType !== 'polygon'">
+                            *ngIf="EOS.objDependanceType === 'point'">
+                        <span><i class="material-icons">edit</i></span>
+                    </a>
+                    <a class="nav-item nav-link"
+                            (click)="selectPosLine()"
+                            *ngIf="EOS.objDependanceType === 'line'">
                         <span><i class="material-icons">edit</i></span>
                     </a>
                     <a class="nav-item nav-link"
@@ -215,7 +214,7 @@
                   </div>
                 </div>
 
-                <div class="sirs-field-inline" *ngIf="EOS.isDependance() && EOS.objDependanceType === 'line' && EOS.objectDoc.geometry">
+                <!-- <div class="sirs-field-inline" *ngIf="EOS.isDependance() && EOS.objDependanceType === 'line' && EOS.objectDoc.geometry">
                   <span class="sirs-field-title">Position de fin : </span>
                   <span class="sirs-field-value">{{ EOS.getEndPosDependance() | lonlat:'à définir' }}</span>
 
@@ -225,11 +224,11 @@
                         <span><i class="material-icons">gps_fixed</i></span>
                     </a>
                     <a class="nav-item nav-link"
-                            (click)="selectPosLine()"> <!-- TODO -->
+                            (click)="selectPosLine()">
                         <span><i class="material-icons">edit</i></span>
                     </a>
                   </div>
-                </div>
+                </div> -->
               </div>
 
               <div class="row" *ngIf="!EOS.isDependance()">
@@ -293,7 +292,7 @@
   <map-line class="full-height" (slidePathChange)="changeSlidePath($event)"></map-line>
 </div>
 <div class="full-height" *ngIf="view === 'drawPolygon'">
-  <map-polygon class="full-height"></map-polygon>
+  <map-polygon class="full-height" (slidePathChange)="changeSlidePath($event)"></map-polygon>
 </div>
 <div class="full-height" *ngIf="view === 'note'">
 
