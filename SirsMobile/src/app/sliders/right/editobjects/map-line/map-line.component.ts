@@ -16,6 +16,7 @@ import LineString from 'ol/geom/LineString';
 import { GeolocService } from '../../../../geoloc.service';
 import { GeolocLayer } from '../../../../layers.service';
 import { Toast } from '@ionic-native/toast/ngx';
+import WKT from 'ol/format/WKT';
 
 @Component({
   selector: 'map-line',
@@ -32,6 +33,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   pan = null;
   modify = null;
   snap = null;
+  wktFormat = new WKT();
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
@@ -49,37 +51,72 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     this.vector = new VectorLayer({
       source: this.source,
       style: (f) => {
-        return [
-					new Style({
-						stroke: new Stroke({ color: '#ffcc33', width: 3 }),
-					}),
-					new Style({
-						image: new Circle({
+        if (f.getGeometry().getType() !== 'Point') {
+          return [
+            new Style({
+              stroke: new Stroke({ color: '#ffcc33', width: 3 }),
+            }),
+            new Style({
+              image: new Circle({
+                radius: 6,
+                fill: new Fill({
+                  color: [255,255,255,0.4]
+                }),
+                stroke: new Stroke({
+                  color: [255, 0, 0, 0.7],
+                  width: 1.25
+                })
+              }),
+              geometry: new MultiPoint(f.getGeometry().getCoordinates())
+            })
+          ];
+        } else {
+          return new Style({
+            image: new Circle({
               radius: 6,
               fill: new Fill({
-                color: [255,255,255,0.4]
+                color: [255, 255, 255, 0.4]
               }),
               stroke: new Stroke({
                 color: [255, 0, 0, 0.7],
                 width: 1.25
               })
             }),
-						geometry: new MultiPoint([f.getGeometry().getFirstCoordinate(), f.getGeometry().getLastCoordinate()])
-					})
-				];
+            zIndex: Infinity
+          });
+        }
 			}
     });
     this.olService.addLayer(this.vector);
     this.addInteraction();
-    if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
+    if (this.EOS.isDependance() && this.EOS.objectDoc.geometry) { // If line already exists (Dependance)
+      const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
+      let coordsStart = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      let coordsEnd = transform(geometry.getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      this.source.addFeatures(
+        [
+          new Feature({
+            geometry: new LineString([coordsStart, coordsEnd])
+          }),
+          new Feature({
+            geometry: new MultiPoint([coordsStart, coordsEnd])
+          })
+        ]
+      );
+    } else if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
       let coordsStart = this.getCoords(this.EOS.objectDoc.positionDebut);
       let coordsEnd = this.getCoords(this.EOS.objectDoc.positionFin);
       coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(
-        [new Feature({
-          geometry: new LineString([coordsStart, coordsEnd])
-        })]
+        [
+          new Feature({
+            geometry: new LineString([coordsStart, coordsEnd])
+          }),
+          new Feature({
+            geometry: new MultiPoint([coordsStart, coordsEnd])
+          })
+        ]
       );
     }
     this.initListener();
@@ -91,8 +128,37 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 
   initListener() {
     this.draw.on('drawstart', () => {
+      if (this.source.getFeatures().length > 0 &&
+      this.source.getFeatures()[0].getGeometry().getType() === 'LineString') { // Clear source to redraw
         this.source.clear();
+      }
     });
+    this.draw.on('drawend', async () => {
+      await setTimeout(() => {}, 300);
+      if (this.source.getFeatures().length === 2 && this.source.getFeatures()[0].getGeometry().getType() === 'Point' && // Create LineString if there is 2 Points
+      this.source.getFeatures()[1].getGeometry().getType() === 'Point') {
+        this.setLineString();
+      }
+    });
+  }
+
+  setLineString() {
+    const array = [];
+    const features = this.source.getFeatures();
+    for (let i = 0; i < features.length; i++) {
+      array.push(features[i].getGeometry().getCoordinates());
+    }
+    this.source.clear();
+    this.source.addFeatures(
+      [
+        new Feature({
+          geometry: new LineString(array)
+        }),
+        new Feature({
+          geometry: new MultiPoint(array)
+        })
+      ]
+    );
   }
 
   goBack() {
@@ -140,11 +206,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   addInteraction() {
     this.draw = new Draw({
       source: this.source,
-      type: 'LineString',
-      style: new Style({
-        stroke: new Stroke({ color: '#ffcc33', width: 3 })
-      }),
-      maxPoints: 2
+      type: 'Point',
+      style: new Style()
     });
     this.pan = new DragPan();
     this.olService.map.addInteraction(this.pan);

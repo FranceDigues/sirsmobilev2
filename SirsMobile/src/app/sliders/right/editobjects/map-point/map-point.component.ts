@@ -13,6 +13,7 @@ import Feature from 'ol/Feature';
 import { Style, RegularShape, Fill, Circle} from 'ol/style';
 import Stroke from 'ol/style/Stroke';
 import MultiPoint from 'ol/geom/MultiPoint';
+import WKT from 'ol/format/WKT';
 
 @Component({
   selector: 'map-point',
@@ -27,6 +28,7 @@ export class MapPointComponent implements OnInit {
   pan = null;
   source = null;
   vector = null;
+  wktFormat = new WKT();
 
   constructor(public olService: OLService,
               private EOS: EditObjectService, private sirsDoc: SirsDocService) { }
@@ -57,7 +59,15 @@ export class MapPointComponent implements OnInit {
     });
     this.olService.addLayer(this.vector);
     this.addInteraction();
-    if (this.EOS.objectDoc.positionDebut) { // If point already exists
+    if (this.EOS.objectDoc.geometry) {
+      const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
+      let coords = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      this.source.addFeatures(
+        [new Feature({
+          geometry: new Point(coords)
+        })]
+      );
+    } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
       let coords = this.getCoords(this.EOS.objectDoc.positionDebut);
       coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(

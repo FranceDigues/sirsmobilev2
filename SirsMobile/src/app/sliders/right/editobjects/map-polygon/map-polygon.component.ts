@@ -51,8 +51,6 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.vector = new VectorLayer({
       source: this.source,
       style: (f) => {
-        console.log('f', f);
-        console.log(f.getGeometry().getCoordinates());
         if (f.getGeometry().getType() !== 'Point') {
           return [
             new Style({
@@ -111,18 +109,10 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.olService.map.setTarget('mapPolygon');
   }
 
-  callbackSingleClick() {
-    if (this.source.getFeatures().length > 0 &&
-    this.source.getFeatures()[0].getGeometry().getType() === 'Polygon') {
-      this.source.clear();
-    }
-  }
-
   initListener() {
-    this.olService.map.on('singleclick', this.callbackSingleClick);
     this.draw.on('drawstart', (evt) => {
       if (this.source.getFeatures().length > 0 &&
-      this.source.getFeatures()[0].getGeometry().getType() === 'Polygon') {
+      this.source.getFeatures()[0].getGeometry().getType() === 'Polygon') { // Clear source to redraw
         this.source.clear();
       }
     });
@@ -163,7 +153,6 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.olService.map.removeInteraction(this.draw);
     this.olService.map.removeInteraction(this.pan);
     this.olService.map.setTarget('map');
-    this.olService.map.un('singleclick', this.callbackSingleClick);
     this.slidePathChange.emit('form');
   }
 
@@ -173,7 +162,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       return;
     }
     if (!this.source || this.source.getFeatures().length <= 0) {
-      this.goBack();
+      this.toast.showLongTop('Vous devez définir un polygon');
       return;
     }
     console.log(this.source);
