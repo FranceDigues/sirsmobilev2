@@ -33,17 +33,15 @@ import { BackLayerService } from './backlayer.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
 import { MapService } from './map.service';
 import { ObjectDocService } from './objectdoc.service';
-import { NgInitDirective } from './ng-init.directive';
 import { FilterPipe } from './sliders/right/createobjects/createobjects.component';
 import { EditObjectService } from './editobjects.service';
 import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
-import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
 import { OLService } from '@lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
 
 @NgModule({
-  declarations: [AppComponent, NgInitDirective],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
   , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule],
@@ -80,7 +78,6 @@ import { Toast } from '@ionic-native/toast/ngx';
     ObjectDocService,
     FilterPipe,
     EditObjectService,
-    ObjectEditPosByBorneController,
     Toast,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

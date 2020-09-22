@@ -3,7 +3,7 @@ import { AppLayersService } from 'src/app/applayers.service';
 import { AppLayer } from 'src/app/layers.service';
 import { colorFactory } from 'src/app/color-factory';
 import { ModalController, NavController } from '@ionic/angular';
-import { ModalComponent } from './modal/modal.component';
+import { ColorModalComponent } from './color-modal/color-modal.component';
 import { DatabaseService } from '../../../database.service';
 import { DatabaseModel } from '../../../models/database.model';
 
@@ -104,7 +104,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
 
     async openModal(layer) {
         const modal = await this.modalCtrl.create({
-            component: ModalComponent,
+            component: ColorModalComponent,
             animated: true,
             cssClass: 'modal-css',
             componentProps: { layer }

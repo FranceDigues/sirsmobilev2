@@ -12,7 +12,7 @@ export class SystemeEndiguement {
     prelod = true;
 
     constructor(private dbService: DatabaseService, private loadingCtrl: LoadingController) {
-        this.loadingCtrl.create({message: 'Chargement'})
+        this.loadingCtrl.create({ message: 'Chargement' })
         .then(
           (loading: HTMLIonLoadingElement) => {
             loading.present();
@@ -59,8 +59,7 @@ export class DigueController {
             const key = SEID === 'withoutSystem' ? null : SEID;
             this.dbService.getLocalDB().query('bySEIdHB', {
                 key
-            })
-            .then(
+            }).then(
                 (results) => {
                     this.digues = results.rows;
                     if (SEID === 'withoutSystem') {
@@ -102,8 +101,7 @@ export class TronconController {
                         startkey: ['fr.sirs.core.model.TronconDigue'],
                         endkey: ['fr.sirs.core.model.TronconDigue', {}],
                         include_docs: true
-                    })
-                    .then(
+                    }).then(
                         (results) => {
                             setTimeout(() => {
                                 this.troncons = results.rows.filter((item) => {
@@ -120,8 +118,7 @@ export class TronconController {
                 } else {
                     this.dbService.getLocalDB().query('byDigueId', {
                         key: DID
-                    })
-                    .then(
+                    }).then(
                         (results) => {
                             setTimeout(() => {
                                 this.troncons = results.rows;

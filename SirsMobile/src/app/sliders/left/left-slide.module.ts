@@ -16,7 +16,7 @@ import { LeftSlideAddBackLayerComponent } from './backmap/addbacklayer/addbackla
 import { LeftSlideCacheComponent } from './backmap/cache/cache.component';
 import { LeftSlideCraftlayersComponent } from './craftlayers/craftlayers.component';
 import { LeftSlideDisponibleLayersComponent } from './craftlayers/disponible/disponible.component';
-import { ModalComponent } from './craftlayers/modal/modal.component';
+import { ColorModalComponent } from './craftlayers/color-modal/color-modal.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.comp
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent, LeftSlideSynchronisationComponent,
     LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
-    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ModalComponent,
+    ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ColorModalComponent,
     LeftSlideDisponibleLayersComponent],
   exports: [LeftSlideComponent]
 })

@@ -5,10 +5,10 @@ import { colorFactory } from 'src/app/color-factory';
 
 @Component({
   selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss'],
+  templateUrl: './color-modal.component.html',
+  styleUrls: ['./color-modal.component.scss'],
 })
-export class ModalComponent implements OnInit {
+export class ColorModalComponent implements OnInit {
 
   colors = colorFactory.colors;
 

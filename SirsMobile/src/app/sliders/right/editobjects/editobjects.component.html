@@ -73,7 +73,7 @@
                         <span><i class="material-icons">edit</i></span>
                     </a>
                     <a class="nav-item nav-link"
-                            (click)="EOS.selectPosBySR()"
+                            (click)="selectPosBySR()"
                             *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
                         <span><i class="material-icons">line_style</i></span>
                     </a>
@@ -98,7 +98,7 @@
                         <span><i class="material-icons">edit</i></span>
                     </a>
                     <a class="nav-item nav-link"
-                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; EOS.selectPosBySR()"
+                            (click)="selectPosBySR()"
                             *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
                         <span><i class="material-icons">line_style</i></span>
                     </a>

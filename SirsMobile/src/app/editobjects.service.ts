@@ -9,7 +9,6 @@ import { GlobalConfigService } from './globalconfig.service';
 import { AppLayer } from './layers.service';
 import { ObjectDocService } from './objectdoc.service';
 import { SirsDocService } from './sirsdoc.service';
-import { ObjectEditPosByBorneController } from './sliders/right/editobjects/editobjects.component';
 import { UuidUtils as uuid } from './uuid-utils';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
@@ -53,7 +52,7 @@ export class EditObjectService {
         private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
         private route: Router, private appLayer: AppLayer, private toastCtrl: ToastController,
         private geolocService: GeolocService, private alertCtrl: AlertController,
-        private editPosByBornCtrl: ObjectEditPosByBorneController, private storageService: StorageService) { }
+        private storageService: StorageService) { }
 
     init(type, id) {
         this.resetValues();
@@ -482,40 +481,34 @@ export class EditObjectService {
         // Point case
         if (!this.isLinear) {
             this.objectDoc.systemeRepId = data.systemeRepId;
-            this.objectDoc.borne_debut_aval = data.borne_aval === 'true';
-            this.objectDoc.borne_debut_distance = data.borne_distance;
-            this.objectDoc.borneDebutId = data.borneId;
-            this.objectDoc.borne_fin_aval = data.borne_aval === 'true';
-            this.objectDoc.borne_fin_distance = data.borne_distance;
-            this.objectDoc.borneFinId = data.borneId;
-            this.objectDoc.borneDebutLibelle = data.borneLibelle;
-            this.objectDoc.borneFinLibelle = data.borneLibelle;
-            // Calculate the approximate position
-            this.objectDoc.approximatePositionDebut = data.approximatePosition;
-            this.objectDoc.approximatePositionFin = data.approximatePosition;
+            this.objectDoc.borne_debut_aval = data.borne_debut_aval === 'true';
+            this.objectDoc.borne_debut_distance = data.borne_debut_distance;
+            this.objectDoc.borneDebutId = data.borneDebutId;
+            this.objectDoc.approximatePositionDebut = data.approximatePositionDebut;
+            this.objectDoc.borneDebutLibelle = data.borneDebutLibelle;
+            this.objectDoc.borne_fin_aval = data.borne_debut_aval === 'true';
+            this.objectDoc.borne_fin_distance = data.borne_debut_distance;
+            this.objectDoc.borneFinId = data.borneDebutId;
+            this.objectDoc.borneFinLibelle = data.borneDebutLibelle;
+            this.objectDoc.approximatePositionFin = data.approximatePositionDebut;
+            this.getStartPosBorne(); // Update startPosBorneLabel
         } else {
-            if (this.linearPosEditionHandler.startPoint || this.isNew) {
-                this.objectDoc.systemeRepId = data.systemeRepId;
-                this.objectDoc.borne_debut_aval = data.borne_aval === 'true';
-                this.objectDoc.borne_debut_distance = data.borne_distance;
-                this.objectDoc.borneDebutId = data.borneId;
-                this.linearPosEditionHandler.startPoint = false;
-                this.objectDoc.borneDebutLibelle = data.borneLibelle;
-                // Calculate the approximate position
-                this.objectDoc.approximatePositionDebut = data.approximatePosition;
-            }
-            if (this.linearPosEditionHandler.endPoint) {
-                this.objectDoc.borne_fin_aval = data.borne_aval === 'true';
-                this.objectDoc.borne_fin_distance = data.borne_distance;
-                this.objectDoc.borneFinId = data.borneId;
-                this.linearPosEditionHandler.endPoint = false;
-                this.objectDoc.borneFinLibelle = data.borneLibelle;
-                // Calculate the approximate position
-                this.objectDoc.approximatePositionFin = data.approximatePosition;
-            }
+            this.objectDoc.systemeRepId = data.systemeRepId;
+            this.objectDoc.borne_debut_aval = data.borne_debut_aval === 'true';
+            this.objectDoc.borne_fin_aval = data.borne_fin_aval === 'true';
+            this.objectDoc.borne_debut_distance = data.borne_debut_distance;
+            this.objectDoc.borne_fin_distance = data.borne_fin_distance;
+            this.objectDoc.borneDebutId = data.borneDebutId;
+            this.objectDoc.borneFinId = data.borneFinId;
+            this.linearPosEditionHandler.startPoint = false;
+            this.linearPosEditionHandler.endPoint = false;
+            this.objectDoc.borneDebutLibelle = data.borneDebutLibelle;
+            this.objectDoc.borneFinLibelle = data.borneFinLibelle;
+            this.objectDoc.approximatePositionDebut = data.approximatePositionDebut;
+            this.objectDoc.approximatePositionFin = data.approximatePositionFin;
+            this.getStartPosBorne(); // Update startPosBorneLabel
+            this.getEndPosBorne(); // Update endPosBorneLabel
         }
-        this.getStartPosBorne(); // Update startPosBorneLabel
-        this.getEndPosBorne(); // Update endPosBorneLabel
     }
 
     changeObjectType() { // ! take care -> check if it's correct
@@ -593,6 +586,10 @@ export class EditObjectService {
         return this.objectDoc.geometry ? this.parsePosEnd(this.objectDoc.geometry) : undefined;
     }
 
+    getEndPointSR() {
+        return this.objectDoc.systemeRepId || null;
+    };
+
     parsePos(position) {
         const geometry = this.wktFormat.readGeometry(position);
         return transform(geometry.getFirstCoordinate(), this.dataProjection, 'EPSG:4326');
@@ -603,7 +600,7 @@ export class EditObjectService {
         return transform(geometry.getLastCoordinate(), this.dataProjection, 'EPSG:4326');
     }
 
-        // * Location
+    // * Location
 
     locateMe() {
         this.geolocService.getCurrentLocation()
@@ -637,70 +634,6 @@ export class EditObjectService {
 
     handleDrawPolygon(geometry) {
         this.objectDoc.geometry = geometry;
-    }
-
-    selectPosBySR() { // TODO
-        // TODO give all variables from here to borneService (prbly ?)
-        // BorneService.context = self;
-
-        // TODO show modal
-        // this.positionBySRModal.show();
-
-        // Create borne position
-        if (!this.objectDoc.systemeRepId) {
-          const data = {
-            systemeRepId: '',
-            borne_aval: '',
-            borne_distance: 0,
-            borneId: '',
-            borneLibelle: ''
-          };
-          this.editPosByBornCtrl.borneModalData(data);
-            // $rootScope.$broadcast("borneModalData", {
-            //     systemeRepId: '',
-            //     borne_aval: '',
-            //     borne_distance: 0,
-            //     borneId: '',
-            //     borneLibelle: ''
-            // });
-        }
-
-        // Edit Debut
-        if (this.objectDoc.systemeRepId && !this.linearPosEditionHandler.endPoint) {
-          const data = {
-            systemeRepId: this.objectDoc.systemeRepId,
-            borne_aval: this.objectDoc.borne_debut_aval ? 'true' : 'false',
-            borne_distance: this.objectDoc.borne_debut_distance,
-            borneId: this.objectDoc.borneDebutId,
-            borneLibelle: this.objectDoc.borneDebutLibelle || ''
-          };
-          this.editPosByBornCtrl.borneModalData(data);
-          // $rootScope.$broadcast("borneModalData", {
-          //       systemeRepId: this.objectDoc.systemeRepId,
-          //       borne_aval: this.objectDoc.borne_debut_aval ? 'true' : 'false',
-          //       borne_distance: this.objectDoc.borne_debut_distance,
-          //       borneId: this.objectDoc.borneDebutId,
-          //       borneLibelle: this.objectDoc.borneDebutLibelle || ''
-          //   });
-        }
-        // Edit fin
-        if (this.objectDoc.systemeRepId && this.linearPosEditionHandler.endPoint) {
-          const data = {
-            systemeRepId: this.objectDoc.systemeRepId,
-            borne_aval: this.objectDoc.borne_fin_aval ? 'true' : 'false',
-            borne_distance: this.objectDoc.borne_fin_distance,
-            borneId: this.objectDoc.borneFinId,
-            borneLibelle: this.objectDoc.borneFinLibelle || ''
-          };
-          this.editPosByBornCtrl.borneModalData(data);
-          // $rootScope.$broadcast("borneModalData", {
-          //       systemeRepId: this.objectDoc.systemeRepId,
-          //       borne_aval: this.objectDoc.borne_fin_aval ? 'true' : 'false',
-          //       borne_distance: this.objectDoc.borne_fin_distance,
-          //       borneId: this.objectDoc.borneFinId,
-          //       borneLibelle: this.objectDoc.borneFinLibelle || ''
-          //   });
-        }
     }
 
     compareRef(obj1, obj2) {

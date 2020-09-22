@@ -60,7 +60,7 @@ export class AuthService {
                 (database: DatabaseModel) => {
                   database.context.authUser = this.user;
                   this.dbService.updateCurrentDatabaseHardDisk(database);
-                  resolve();
+                  resolve(database);
                 }
               );
               console.log('NOTE THE TYPE PLS', this.user);
