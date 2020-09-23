@@ -322,7 +322,7 @@ export class EditObjectService {
           return;
         }
 
-        if ((!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId) || (this.isDependance() && !this.objectDoc.geometry)) {
+        if ((!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId && !this.isDependance()) || (this.isDependance() && !this.objectDoc.geometry)) {
           this.toastCtrl.create({
             message: 'Veuillez choisir une position pour cet objet, avant de continuer',
             duration: 2000
@@ -356,7 +356,6 @@ export class EditObjectService {
 
         this.editionModeService.saveObject(this.objectDoc).then(
           () => {
-            this.appLayer.syncAllAppLayer();
             this.route.navigateByUrl('/main');
         });
     }
