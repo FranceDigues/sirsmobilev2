@@ -36,6 +36,7 @@ import { MapPointComponent } from './editobjects/map-point/map-point.component';
 import { MapPolygonComponent } from './editobjects/map-polygon/map-polygon.component';
 import {MatButtonModule} from '@angular/material/button';
 import { PositionByBorneModalComponent } from './editobjects/positionbyborne-modal/positionbyborne-modal.component';
+import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
 
 @NgModule({
   imports: [
@@ -59,7 +60,7 @@ import { PositionByBorneModalComponent } from './editobjects/positionbyborne-mod
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, MapLineComponent, MapPointComponent, MapPolygonComponent,
-    PositionByBorneModalComponent],
+    PositionByBorneModalComponent, SelectedObjectsComponent],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}

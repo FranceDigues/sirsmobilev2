@@ -34,7 +34,7 @@ import { RightSlideModule } from '../sliders/right/right-slide.module';
     GeolocService,
     RealPositionStyle,
     EditionModeService,
-    SirsDocService
+    SirsDocService,
   ],
   declarations: [MainPage]
 })

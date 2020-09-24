@@ -39,6 +39,7 @@ import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
 import { OLService } from '@lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
+import { SelectedObjectsService } from './selectedobjects.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -79,6 +80,7 @@ import { Toast } from '@ionic-native/toast/ngx';
     FilterPipe,
     EditObjectService,
     Toast,
+    SelectedObjectsService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

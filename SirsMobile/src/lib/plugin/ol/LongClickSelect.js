@@ -9,7 +9,6 @@ import ImageSource from "ol/source/Image";
 import { transform } from 'ol/proj';
 import { Pixel } from 'ol/pixel';
 
-
 /**
  * @classdesc
  * Base class that calls user-defined functions on a long click
@@ -102,11 +101,14 @@ let LongClick = /*@__PURE__*/ (function (Interaction) {
     if (mapBrowserEvent) {
       switch (mapBrowserEvent.type) {
         case "pointerdown":
-          return this.handlePointerDownEvent_(mapBrowserEvent);
+          this.handlePointerDownEvent_(mapBrowserEvent);
+          return true;
         case "pointerup":
-          return this.handlePointerUpEvent_(mapBrowserEvent);
+          this.handlePointerUpEvent_(mapBrowserEvent);
+          return true;
         case "pointerdrag":
-          return this.handlePointerDragEvent_(mapBrowserEvent);
+          this.handlePointerDragEvent_(mapBrowserEvent);
+          return true;
         default:
           return true;
       }
@@ -143,6 +145,8 @@ let LongClick = /*@__PURE__*/ (function (Interaction) {
    */
   LongClick.prototype.handlePointerDragEvent_ = function (mapBrowserEvent) {
     if (this.handlingLongClick_) {
+      this.stopLongClick_();
+      this.abortLongClick_();
       return this.handleDragEvent(mapBrowserEvent);
     } else if (Array.isArray(mapBrowserEvent)) {
       let deltaX = mapBrowserEvent.pixel[0] - this.trackedPixel_[0];
@@ -163,9 +167,11 @@ let LongClick = /*@__PURE__*/ (function (Interaction) {
    */
   LongClick.prototype.handlePointerUpEvent_ = function (mapBrowserEvent) {
     if (typeof this.timeoutId_ === "number") {
+      this.stopLongClick_();
       this.abortLongClick_();
     } else if (this.handlingLongClick_) {
       this.stopLongClick_();
+      this.abortLongClick_();
     }
     return true;
   };
@@ -221,7 +227,7 @@ let LongClick = /*@__PURE__*/ (function (Interaction) {
  * @extends {LongClick} LongClick.
  * @api
  */
-let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
+export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
   function LongClickSelect(opt_options) {
     LongClick.call(this, {
       handleStartEvent: LongClickSelect.handleStartEvent,
@@ -320,6 +326,19 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
      * @type {function(Layer): boolean}
      */
     this.layerFilter_ = layerFilter;
+
+    /**
+     * @private
+     * @type {function(Layer): boolean}
+     */
+    this.endClickAction = options.endClick ? options.endClick :
+    /**
+      * @return {boolean} Include.
+      * @param {any} argument Any king of argument.
+      */
+    endClickAction = function (argument) {
+      return true;
+    }
   }
 
   if (LongClick) LongClickSelect.__proto__ = LongClick;
@@ -411,10 +430,10 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
     this.radiusTimeoutId_ = window.setTimeout(() => {
       this.increaseRadius_(mapBrowserEvent);
     }, 20);
+    return true;
   };
 
   /**
-   * Init and/or Set circle's layer to map. Begin to increasing radius.
    * @param {MapBrowserEvent} mapBrowserEvent Map browser event
    * @this {LongClickSelect}
    * @private
@@ -460,8 +479,8 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
       let features = [];
 
       // Identifies features which have at least one point in the circle.
-      this.forEachVectorSources_(mapBrowserEvent.map.getLayers(), function (source) {
-        source.forEachFeatureIntersectingExtent(circleExtent, function (feature) {
+      this.forEachVectorSources_(mapBrowserEvent.map.getLayers(), (source) => {
+        source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
           let closestPixel = mapBrowserEvent.map.getPixelFromCoordinate(
             feature.getGeometry().getClosestPoint(centerCoord)
           );
@@ -475,10 +494,14 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
         });
       }, this.layerFilter_);
       this.features = features;
-    }
 
+      // Do action endClick
+      this.endClickAction(this.features);
+    }
     // Always remove the circle.
     this.removeCircle_();
+
+    return true;
   };
 
   /**
@@ -516,7 +539,7 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
    * @private
    */
   LongClickSelect.prototype.increaseRadius_ = function (mapBrowserEvent) {
-    this.endPixel_[0] += 2;
+    this.endPixel_[0] += 8;
     if (typeof this.maxRadius_ === 'number') {
       this.endPixel_[0] = Math.min(this.endPixel_[0], this.startPixel_[0] + this.maxRadius_);
     }
@@ -542,14 +565,3 @@ let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
 
   return LongClickSelect;
 })(LongClick);
-
-/*getFeaturesFromLongClickSelectInteraction() {
-  let map = this.ol.getMap();
-  let arrayInteractions = map.getInteractions().getArray();
-
-  for (let interaction of arrayInteractions) {
-    if (interaction instanceof LongClickSelect) {
-      return interaction.features;
-    }
-  }
-}*/

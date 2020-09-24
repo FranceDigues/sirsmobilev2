@@ -28,8 +28,9 @@ import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { DatabaseService } from '../database.service';
 import { DatabaseModel } from '../models/database.model';
+import { LongClickSelect } from '../../lib/plugin/ol/LongClickSelect.js';
 import DragPan from 'ol/interaction/DragPan';
-import Draw from 'ol/interaction/Draw';
+import { SelectedObjectsService } from '../selectedobjects.service';
 
 
 
@@ -48,7 +49,8 @@ export class MainPage implements AfterViewInit {
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
               private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
               private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
-              private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService) {
+              private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
+              private selectedObjectsService: SelectedObjectsService) {
                 this.appVersionsService.init();
                 this.backLayer.init();
                 this.appLayer.init();
@@ -96,7 +98,23 @@ export class MainPage implements AfterViewInit {
         this.ol.addLayer(this.appLayer.appLayer);
         this.ol.addLayer(this.editionLayer.editionLayer);
         this.ol.addLayer(this.geolocLayer.geolocLayer);
-        // this.ol.getMap().addInteraction(LongClickSelect);
+        this.ol.getMap().addInteraction(new LongClickSelect({
+          circleStyle: new Style({
+            fill: new Fill({ color: [255, 255, 255, 0.5] })
+          }),
+          layers: (olLayer) => {
+            return true;
+          },
+          endClick: (features) => {
+            console.log('I enter here', features);
+            if (features.length > 0) { // If there is at least one object selected
+              this.selectedObjectsService.featuresEvent.next(features);
+              this.pathRightSlide = 'objectsSelected';
+              this.menu.open('right-slider');
+            }
+            return true;
+          }
+        }));
         const test1 = transform([2.276, 48.517], 'EPSG:4326', 'EPSG:3857');
         const test2 = transform(test1, 'EPSG:3857', 'EPSG:4326');
         console.log('test1', test1);
