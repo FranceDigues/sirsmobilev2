@@ -10,6 +10,12 @@ Here is a [shortcut for source code](SirsMobile/src/app)
 
 You can find the tests results in the [Coverage folder](SirsMobile/coverage/)
 
+## Project images
+
+![](img/database-choice.jpg)
+![](img/main.jpg)
+![](img/edit-object.jpg)
+
 ## Project architecture
 
 ```mermaid
@@ -46,9 +52,5 @@ graph TB
     MenuLEFT --> TMP1(Contains 8 options)
 
     MenuRight --> TMP2(Contains 4 main options)
-    
-
-
-
 end
 ```
