@@ -2,14 +2,10 @@
 
 Reboot of the first hybrid mobile project with newer versions.
 
-# Root of Project
+## Source code
 
-    in progess
+Here is a [shortcut for source code](SirsMobile/src/app)
 
-# Source code
+## Coverage
 
-    in progress
-
-# Coverage
-
-    ![Coverage Summary](SirsMobile/coverage/README.asciidoc)
+You can find the tests results in the [Coverage folder](SirsMobile/coverage/)
