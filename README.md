@@ -12,9 +12,11 @@ You can find the tests results in the [Coverage folder](SirsMobile/coverage/)
 
 ## Project images
 
-![](img/database-choice.jpg)
-![](img/main.jpg)
-![](img/edit-object.jpg)
+<p align="center">
+    <img width="32%" src="img/database-choice.jpg"></img>
+    <img width="32%" src="img/main.jpg"></img>
+    <img width="32%" src="img/edit-object.jpg"></img>
+</p>
 
 ## Project architecture
 
