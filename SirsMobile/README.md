@@ -68,13 +68,6 @@ import android.support.v4.content.FileProvider;
 androidx.core.content.FileProvider
 ```
 
-
-
-
-
-
-
-
 ***Error fetch Android Ionic Project***
 
 ***if you find this error '(failed)net::ERR_CLEARTEXT_NOT_PERMITTED', ADD THIS***

@@ -19,7 +19,7 @@ export class DatabaseChoiceComponent implements OnInit {
   databaseIndex = 0;
 
   constructor(private router: Router,
-              private alertCtrl: AlertController, private dbService: DatabaseService,
+              public alertCtrl: AlertController, private dbService: DatabaseService,
               private authService: AuthService) {}
 
   ngOnInit() {
