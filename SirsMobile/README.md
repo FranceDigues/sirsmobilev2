@@ -44,6 +44,8 @@ npm install
 
 **With Capacitor**
 
+<!> Change first the ``` linuxAndroidStudioPath ``` value in the capacitor.config.json and replace it by the path of your ```studio.sh``` <!>
+
 ```bash
 ionic capacitor run android
 ```
