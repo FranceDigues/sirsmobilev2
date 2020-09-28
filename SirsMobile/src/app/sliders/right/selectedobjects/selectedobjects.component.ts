@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SelectedObjectsService } from 'src/app/selectedobjects.service';
-import { features } from 'process';
+import { LocalDatabase } from '../../../usingLocalDatabase.service';
+import { ObjectDetails } from '../../../objectdetails.service';
+import { Toast } from '@ionic-native/toast/ngx';
 
 @Component({
   selector: 'right-slide-selected-objects',
@@ -9,17 +11,19 @@ import { features } from 'process';
 })
 export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
+  status: 'general' | 'details' = 'general';
   features = [];
   featuresCollection = [];
   subscription = null;
 
-  constructor(private selectedObjectService: SelectedObjectsService, private cdr: ChangeDetectorRef) { }
+  constructor(private selectedObjectService: SelectedObjectsService, private cdr: ChangeDetectorRef,
+              private localDB: LocalDatabase, private toast: Toast,
+              private objectDetails: ObjectDetails) { }
 
   ngOnInit() {
     this.subscription = this.selectedObjectService.getFeatures()
     .subscribe({
       next: (features) => {
-      console.log('je suis appelé');
       this.features.length = 0;
       for (let feat of features) {
         this.features.push(feat);
@@ -50,7 +54,25 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
   }
 
   openDetails(feat) {
+    feat.set('visited', true);
+    this.localDB.get(feat.get('id'))
+    .then(
+      (doc) => {
+        this.openDocumentSuccess(doc);
+      },
+      (err) => {
+        this.toast.showLongTop('Une erreur s\'est produite.').subscribe();
+      }
+    )
+  }
 
+  changeStatus(path: 'general' | 'details') {
+    this.status = path;
+  }
+
+  openDocumentSuccess(doc) {
+    this.objectDetails.selectedObject = doc;
+    this.status = 'details';
   }
 
 }

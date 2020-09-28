@@ -18,6 +18,7 @@ import { GeolocLayer } from '../../../../layers.service';
 import WKT from 'ol/format/WKT';
 import Polygon from 'ol/geom/Polygon';
 import { Toast } from '@ionic-native/toast/ngx';
+import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
 
 @Component({
   selector: 'map-polygon',
@@ -39,6 +40,19 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
               private geoloc: GeolocService, private geolocLayer: GeolocLayer,
               private toast: Toast) { }
+
+  removeLongClickSelect() {
+    let map = this.olService.getMap();
+
+    let interactions = map.getInteractions().getArray();
+
+    for (let interact of interactions) {
+      if (interact instanceof LongClickSelect) {
+        map.removeInteraction(interact);
+        return;
+      }
+    }
+  }
 
   ngOnInit() {
     const arrayLayer = this.olService.getLayers();
@@ -88,6 +102,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
 			}
     });
     this.olService.addLayer(this.vector);
+    this.removeLongClickSelect();
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       const array = this.getPolygonCoords(this.EOS.objectDoc.geometry);

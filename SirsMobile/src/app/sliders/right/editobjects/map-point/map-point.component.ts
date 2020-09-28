@@ -14,6 +14,7 @@ import { Style, RegularShape, Fill, Circle} from 'ol/style';
 import Stroke from 'ol/style/Stroke';
 import MultiPoint from 'ol/geom/MultiPoint';
 import WKT from 'ol/format/WKT';
+import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
 
 @Component({
   selector: 'map-point',
@@ -32,6 +33,19 @@ export class MapPointComponent implements OnInit {
 
   constructor(public olService: OLService,
               private EOS: EditObjectService, private sirsDoc: SirsDocService) { }
+
+  removeLongClickSelect() {
+    let map = this.olService.getMap();
+
+    let interactions = map.getInteractions().getArray();
+
+    for (let interact of interactions) {
+      if (interact instanceof LongClickSelect) {
+        map.removeInteraction(interact);
+        return;
+      }
+    }
+  }
 
   ngOnInit() {
     const arrayLayer = this.olService.getLayers();
@@ -58,6 +72,7 @@ export class MapPointComponent implements OnInit {
       })
     });
     this.olService.addLayer(this.vector);
+    this.removeLongClickSelect();
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);

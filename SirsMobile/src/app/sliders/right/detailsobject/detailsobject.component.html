@@ -1,0 +1,45 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide" color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Détail de l'object</ion-title>
+  </ion-toolbar>
+</ion-header>
+<div class="tabs-striped tabs-top">
+  <div class="tabs tabs-sirs">
+    <a class="tab-item" [ngClass]="{'active': activeTab === 'description'}"
+    (click)="setActiveTab('description')">
+      Description
+    </a>
+    <a class="tab-item" [ngClass]="{'active': activeTab === 'observations'}"
+    *ngIf="canShowObservationsTab()" (click)="setActiveTab('observations')">
+      Observations
+    </a>
+    <a class="tab-item" [ngClass]="{'active': activeTab === 'prestations'}"
+    *ngIf="canShowPrestationsTab()" (click)="setActiveTab('prestations')">
+      Prestations
+    </a>
+    <a class="tab-item" [ngClass]="{'active': activeTab === 'desordres'}"
+    *ngIf="canShowDesordresTab()" (click)="setActiveTab('desordres')">
+      Désordres
+    </a>
+  </div>
+</div>
+
+<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+  
+</ion-content>
+
+<div *ngIf="canShowEditionButtons() && activeTab === 'description'">
+  <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="start" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="editObject()">
+        <ion-icon name="create-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab *ngIf="!document.valid" class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
+      <ion-fab-button color="danger" (click)="removeObject()">
+          <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+  </ion-fab>
+</div>

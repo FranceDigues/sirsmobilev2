@@ -17,6 +17,7 @@ import { GeolocService } from '../../../../geoloc.service';
 import { GeolocLayer } from '../../../../layers.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
+import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
 
 @Component({
   selector: 'map-line',
@@ -39,6 +40,19 @@ export class MapLineComponent implements OnInit, AfterViewInit {
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
               private geoloc: GeolocService, private geolocLayer: GeolocLayer,
               private toast: Toast) { }
+
+  removeLongClickSelect() {
+    let map = this.olService.getMap();
+
+    let interactions = map.getInteractions().getArray();
+
+    for (let interact of interactions) {
+      if (interact instanceof LongClickSelect) {
+        map.removeInteraction(interact);
+        return;
+      }
+    }
+  }
 
   ngOnInit() {
     const arrayLayer = this.olService.getLayers();
@@ -88,6 +102,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 			}
     });
     this.olService.addLayer(this.vector);
+    this.removeLongClickSelect();
     this.addInteraction();
     if (this.EOS.isDependance() && this.EOS.objectDoc.geometry) { // If line already exists (Dependance)
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);

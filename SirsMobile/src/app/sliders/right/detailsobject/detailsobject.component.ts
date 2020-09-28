@@ -1,0 +1,158 @@
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
+import { AuthService } from '../../../auth.service';
+import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { LocalDatabase } from '../../../usingLocalDatabase.service';
+import { EditionLayer } from '../../../layers.service';
+
+@Component({
+  selector: 'right-slide-details-objects',
+  templateUrl: './detailsobject.component.html',
+  styleUrls: ['./detailsobject.component.scss'],
+})
+export class DetailsObjectComponent implements OnInit {
+
+  @Output() readonly statusChange = new EventEmitter<string>();
+
+  activeTab = 'description';
+  document = null;
+  objectType = null;
+  abstract = {};
+
+  constructor(private objectDetails: ObjectDetails, private authService: AuthService,
+              private route: Router, private alertCtrl: AlertController,
+              private localDB: LocalDatabase, private editionLayer: EditionLayer) {
+    this.document = this.objectDetails.selectedObject;
+    this.objectType = this.document['@class'].substring(
+      this.document['@class'].lastIndexOf('.') + 1
+    );
+    this.init();
+  }
+
+  init() {
+     // TODO
+  }
+
+  ngOnInit() {}
+
+  goBack() {
+    this.statusChange.emit('general');
+  }
+
+  setActiveTab(string) {
+    this.activeTab = string;
+  }
+
+  canShowObservationsTab() {
+    return this.objectType === 'Desordre'
+        || this.objectType === 'StationPompage'
+        || this.objectType === 'ReseauHydrauliqueFerme'
+        || this.objectType === 'OuvrageHydrauliqueAssocie'
+        || this.objectType === 'ReseauHydrauliqueCielOuvert'
+        || this.objectType === 'VoieAcces'
+        || this.objectType === 'OuvrageFranchissement'
+        || this.objectType === 'OuvertureBatardable'
+        || this.objectType === 'VoieDigue'
+        || this.objectType === 'OuvrageVoirie'
+        || this.objectType === 'ReseauTelecomEnergie'
+        || this.objectType === 'OuvrageTelecomEnergie'
+        || this.objectType === 'OuvrageParticulier'
+        || this.objectType === 'Prestation'
+        || this.objectType === 'EchelleLimnimetrique'
+        || this.objectType === 'DesordreDependance';
+  }
+
+  canShowPrestationsTab() {
+    return this.objectType === 'StationPompage'
+        || this.objectType === 'ReseauHydrauliqueFerme'
+        || this.objectType === 'OuvrageHydrauliqueAssocie'
+        || this.objectType === 'ReseauHydrauliqueCielOuvert'
+        || this.objectType === 'VoieAcces'
+        || this.objectType === 'OuvrageFranchissement'
+        || this.objectType === 'OuvertureBatardable'
+        || this.objectType === 'VoieDigue'
+        || this.objectType === 'OuvrageVoirie'
+        || this.objectType === 'ReseauTelecomEnergie'
+        || this.objectType === 'OuvrageTelecomEnergie'
+        || this.objectType === 'OuvrageParticulier'
+        || this.objectType === 'EchelleLimnimetrique'
+        || this.objectType === 'Desordre';
+  }
+
+  canShowDesordresTab() {
+    return this.objectType === 'StationPompage'
+        || this.objectType === 'ReseauHydrauliqueFerme'
+        || this.objectType === 'OuvrageHydrauliqueAssocie'
+        || this.objectType === 'ReseauHydrauliqueCielOuvert'
+        || this.objectType === 'VoieAcces'
+        || this.objectType === 'OuvrageFranchissement'
+        || this.objectType === 'OuvertureBatardable'
+        || this.objectType === 'VoieDigue'
+        || this.objectType === 'OuvrageVoirie'
+        || this.objectType === 'ReseauTelecomEnergie'
+        || this.objectType === 'OuvrageTelecomEnergie'
+        || this.objectType === 'OuvrageParticulier'
+        || this.objectType === 'Prestation'
+        || this.objectType === 'EchelleLimnimetrique';
+  }
+
+  canShowEditionButtons() {
+    if (self.document['@class'] === "fr.sirs.core.model.BorneDigue"
+    || self.document['@class'] === "fr.sirs.core.model.TronconDigue") {
+      return false;
+    }
+    if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
+      return true;
+    }
+    if (this.authService.getValue().role === 'GUEST') {
+      return false;
+    }
+    if (this.authService.getValue().role === 'EXTERN') {
+      return this.document.author && this.authService.getValue()._id === this.document.author;
+    }
+  }
+
+  editObject() {
+    this.route.navigateByUrl('/object/' + this.objectType + '/' + this.document._id);
+  }
+
+  removeObject() {
+    this.alertCtrl.create({
+      header: 'Suppression d\'un object',
+      message: 'Voulez-vous vraiment supprimer cet object ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            this.localDB.remove(this.document)
+            .then(
+              () => {
+                let i = this.objectDetails.selectedFeatures.length;
+                while (i--) {
+                  if (this.objectDetails.selectedFeatures[i].get('id') === this.document._id) {
+                    this.objectDetails.selectedFeatures.splice(i, 1);
+                    break;
+                  }
+                }
+                this.goBack();
+                this.editionLayer.redrawEditionLayerAfterSynchronization();
+              }
+            )
+          }
+        }
+      ]
+    })
+    .then(
+      (alert) => {
+        alert.present();
+      }
+    );
+  }
+
+
+}
