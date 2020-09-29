@@ -6,6 +6,8 @@ import { AlertController } from '@ionic/angular';
 import { LocalDatabase } from '../../../usingLocalDatabase.service';
 import { EditionLayer } from '../../../layers.service';
 
+declare var M: any;
+
 @Component({
   selector: 'right-slide-details-objects',
   templateUrl: './detailsobject.component.html',
@@ -34,7 +36,11 @@ export class DetailsObjectComponent implements OnInit {
      // TODO
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const elem = document.querySelector('.tabs');
+    const options = {};
+    M.Tabs.init(elem, options); // initialize materialize tabs to show indicator
+  }
 
   goBack() {
     this.statusChange.emit('general');

@@ -6,29 +6,31 @@
     <ion-title>Détail de l'object</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <div class="tabs-striped tabs-top">
-  <div class="tabs tabs-sirs">
-    <a class="tab-item" [ngClass]="{'active': activeTab === 'description'}"
+  <ul class="tabs tabs-sirs">
+    <li class="tab"><a [ngClass]="{active: activeTab === 'description'}"
     (click)="setActiveTab('description')">
       Description
-    </a>
-    <a class="tab-item" [ngClass]="{'active': activeTab === 'observations'}"
+    </a></li>
+    <li class="tab"><a [ngClass]="{active: activeTab === 'observations'}"
     *ngIf="canShowObservationsTab()" (click)="setActiveTab('observations')">
       Observations
-    </a>
-    <a class="tab-item" [ngClass]="{'active': activeTab === 'prestations'}"
+    </a></li>
+    <li class="tab"><a [ngClass]="{active: activeTab === 'prestations'}"
     *ngIf="canShowPrestationsTab()" (click)="setActiveTab('prestations')">
       Prestations
-    </a>
-    <a class="tab-item" [ngClass]="{'active': activeTab === 'desordres'}"
+    </a></li>
+    <li class="tab"><a [ngClass]="{active: activeTab === 'desordres'}"
     *ngIf="canShowDesordresTab()" (click)="setActiveTab('desordres')">
       Désordres
-    </a>
-  </div>
+    </a></li>
+  </ul>
 </div>
 
-<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
-  
+<ion-content [scrollEvents]="true" class="scroll-all-content">
+  test
+  <!-- TODO faut voir si on met abstract/allPrestationList/prestationMap/tempPrestation/allDesordreMap/desordreMap/tempDesordre dans un service, pour pouvoir faire la    -->
 </ion-content>
 
 <div *ngIf="canShowEditionButtons() && activeTab === 'description'">

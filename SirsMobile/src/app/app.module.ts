@@ -40,12 +40,13 @@ import { RightSlideModule } from './sliders/right/right-slide.module';
 import { OLService } from '@lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import { SelectedObjectsService } from './selectedobjects.service';
+import { ObjectDetails } from './objectdetails.service';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
-  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule],
+  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule ],
   providers: [
     StatusBar,
     OLService,
@@ -81,6 +82,7 @@ import { SelectedObjectsService } from './selectedobjects.service';
     EditObjectService,
     Toast,
     SelectedObjectsService,
+    ObjectDetails,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

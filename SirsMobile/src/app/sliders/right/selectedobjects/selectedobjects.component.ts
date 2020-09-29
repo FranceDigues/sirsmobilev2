@@ -68,11 +68,13 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
   changeStatus(path: 'general' | 'details') {
     this.status = path;
+    this.cdr.detectChanges();
   }
 
   openDocumentSuccess(doc) {
     this.objectDetails.selectedObject = doc;
     this.status = 'details';
+    this.cdr.detectChanges();
   }
 
 }

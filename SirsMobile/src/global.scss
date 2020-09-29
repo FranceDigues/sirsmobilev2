@@ -28,6 +28,10 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~font-awesome/css/font-awesome.css';
 
+.tabs .indicator {
+    background-color: #0098A6 !important;
+}
+
 .full-height {
     height: 100%;
 }

@@ -45,7 +45,7 @@ import { DetailsObjectComponent } from './detailsobject/detailsobject.component'
     FormsModule,
     IonicModule,
     MatCheckboxModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   providers: [
   ],
