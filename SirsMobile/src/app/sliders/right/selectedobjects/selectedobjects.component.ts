@@ -22,15 +22,15 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.selectedObjectService.getFeatures()
-    .subscribe({
-      next: (features) => {
+    .subscribe((features) => {
+      this.status = 'general';
       this.features.length = 0;
       for (let feat of features) {
         this.features.push(feat);
       }
       this.featuresCollection = this.getAllFeaturesFromCluster(features);
       this.cdr.detectChanges();
-    }});
+    });
   }
 
   ngOnDestroy(): void {

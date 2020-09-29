@@ -1,8 +1,7 @@
 import Feature from "ol/Feature";
 import { Style } from "ol/style";
-import { Circle } from "ol/geom";
+import { Circle, LineString } from "ol/geom";
 import { Interaction } from "ol/interaction";
-import { circular } from 'ol/geom/Polygon';
 import { Vector as VectorSource } from "ol/source";
 import { Vector as VectorLayer, Group } from "ol/layer";
 import ImageSource from "ol/source/Image";
@@ -31,7 +30,7 @@ let LongClick = /*@__PURE__*/ (function (Interaction) {
      * @type {number}
      * @private
      */
-    this.delay_ = typeof options.delay === "number" ? options.delay : 200;
+    this.delay_ = typeof options.delay === "number" ? options.delay : 400;
 
     /**
      * @type {number|null}
@@ -346,17 +345,6 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
   LongClickSelect.prototype.constructor = LongClickSelect;
 
   /**
-   * Convert degrees to radians.
-   * @param {number} degrees Degrees.
-   * @return {number} Radian.
-   * @this {LongClickSelect}
-   * @private
-   */
-  LongClickSelect.prototype.toRadians = function (degrees) {
-    return degrees * Math.PI / 180;
-  }
-
-  /**
    * Calcule distance between 2 points.
    * @param {Coordinate} c1 Coordinate 1.
    * @param {Coordinate} c2 Coordinate 2.
@@ -365,12 +353,8 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
    * @private
    */
   LongClickSelect.prototype.cosineDistance = function (c1, c2) {
-    var lat1 = this.toRadians(c1[1]);
-    var lat2 = this.toRadians(c2[1]);
-    var deltaLon = this.toRadians(c2[0] - c1[0]);
-    return this.minRadius_ * Math.acos(
-        Math.sin(lat1) * Math.sin(lat2) +
-        Math.cos(lat1) * Math.cos(lat2) * Math.cos(deltaLon));
+    const line = new LineString([c1, c2]);
+    return Math.round(line.getLength() * 100) / 100;
   };
 
   /**
@@ -539,7 +523,7 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
    * @private
    */
   LongClickSelect.prototype.increaseRadius_ = function (mapBrowserEvent) {
-    this.endPixel_[0] += 8;
+    this.endPixel_[0] += 4;
     if (typeof this.maxRadius_ === 'number') {
       this.endPixel_[0] = Math.min(this.endPixel_[0], this.startPixel_[0] + this.maxRadius_);
     }

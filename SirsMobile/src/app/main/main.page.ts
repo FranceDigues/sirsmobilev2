@@ -108,8 +108,8 @@ export class MainPage implements AfterViewInit {
           endClick: (features) => {
             console.log('I enter here', features);
             if (features.length > 0) { // If there is at least one object selected
-              this.selectedObjectsService.featuresEvent.next(features);
               this.pathRightSlide = 'objectsSelected';
+              this.selectedObjectsService.updateFeatures(features);
               this.menu.open('right-slider');
             }
             return true;
