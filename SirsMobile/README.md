@@ -56,8 +56,9 @@ cordova-android-plugins/cordova.variables.gradle' as it does not exist
 ```
 ***You should write the following instructions in terminal***
 ```bash
-ionic capacitor update
+npx jetifier
 ionic capacitor sync
+ionic capacitor update
 ```
 
 ```
