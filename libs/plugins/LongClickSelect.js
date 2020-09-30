@@ -542,7 +542,9 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
   LongClickSelect.prototype.removeCircle_ = function () {
     this.startPixel_ = null;
     this.endPixel_ = null;
-    this.layer.getSource().clear();
+    if (this.layer) {
+      this.layer.getSource().clear();
+    }
     window.clearTimeout(this.radiusTimeoutId_);
     this.radiusTimeoutId_ = null;
   }
