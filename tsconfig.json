@@ -17,22 +17,22 @@
     ],
     "paths": {
       "@lib-map": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-map"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-map"
       ],
       "@lib-map/*": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-map/*"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-map/*"
       ],
       "@lib-storage": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-storage"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-storage"
       ],
       "@lib-storage/*": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-storage/*"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-storage/*"
       ],
       "@lib-camera": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-camera"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-camera"
       ],
       "@lib-camera/*": [
-        "src/lib/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-camera/*"
+        "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-camera/*"
       ],
     },
   },
