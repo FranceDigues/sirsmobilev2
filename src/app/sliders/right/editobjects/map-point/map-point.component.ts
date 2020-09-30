@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, enableProdMode } from '@angular/core';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';

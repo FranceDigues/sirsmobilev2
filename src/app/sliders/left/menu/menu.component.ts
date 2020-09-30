@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { GeolocService } from 'src/app/geoloc.service';
 import { AppLayer, EditionLayer } from 'src/app/layers.service';
 import { MapService } from 'src/app/map.service';

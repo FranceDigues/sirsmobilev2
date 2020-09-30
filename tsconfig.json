@@ -16,23 +16,11 @@
       "dom"
     ],
     "paths": {
-      "@lib-map": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-map"
+      "@ionic-lib": [
+        "libs/geomatys-ionic-libraries-framework/libs"
       ],
-      "@lib-map/*": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-map/*"
-      ],
-      "@lib-storage": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-storage"
-      ],
-      "@lib-storage/*": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-storage/*"
-      ],
-      "@lib-camera": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-camera"
-      ],
-      "@lib-camera/*": [
-        "libs/geomatys-ionic-libraries-framework/libs/lib-camera/*"
+      "@ionic-lib/*": [
+        "libs/geomatys-ionic-libraries-framework/libs/*"
       ],
       "@plugins": [
         "libs/plugins"

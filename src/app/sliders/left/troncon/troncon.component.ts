@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { StorageService } from '@lib-storage/storage.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from 'src/app/troncon.service';
 import { Pipe, PipeTransform } from '@angular/core';
 

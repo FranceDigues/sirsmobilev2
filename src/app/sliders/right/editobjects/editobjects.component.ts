@@ -16,7 +16,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLayer } from 'src/app/layers.service';
 import { ToastController } from '@ionic/angular';
 import { GeolocService } from '../../../geoloc.service';
-import { StorageService } from '@lib-storage/storage.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { EditObjectService } from 'src/app/editobjects.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 

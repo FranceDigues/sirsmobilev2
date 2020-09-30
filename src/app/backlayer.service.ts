@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { DatabaseService } from './database.service';
 import { BackLayerModel, DatabaseModel } from './models/database.model';
 

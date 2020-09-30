@@ -30,12 +30,12 @@ import OSM from 'ol/source/OSM';
 import Cluster from 'ol/source/Cluster';
 import { FeatureCache } from './cache.service';
 import { noop } from 'rxjs';
-import { StorageService } from '@lib-storage/storage.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { AppLayersService } from './applayers.service';
 import { DatabaseModel, ListBackLayer } from './models/database.model';
 import TileWMS from 'ol/source/TileWMS';
 import { BackLayerService } from './backlayer.service';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { DatabaseService } from './database.service';
 
 @Injectable({

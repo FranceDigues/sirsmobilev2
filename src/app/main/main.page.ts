@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, NavController } from '@ionic/angular';
 import { GeolocService } from '../geoloc.service';
 

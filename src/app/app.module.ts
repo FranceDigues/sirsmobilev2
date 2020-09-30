@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
-import { LibCameraModule } from '@lib-camera/camera.module';
+import { LibCameraModule } from '@ionic-lib/lib-camera/camera.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EditionModeService } from './editionmode.service';
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
@@ -37,7 +37,7 @@ import { FilterPipe } from './sliders/right/createobjects/createobjects.componen
 import { EditObjectService } from './editobjects.service';
 import { LeftSlideModule } from './sliders/left/left-slide.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
-import { OLService } from '@lib-map/ol.service';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import { SelectedObjectsService } from './selectedobjects.service';
 import { ObjectDetails } from './objectdetails.service';

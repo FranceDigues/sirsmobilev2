@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { StorageService } from '@lib-storage/storage.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { DatabaseService } from './database.service';
 import { EditionModeService } from './editionmode.service';
 import { GeolocService } from './geoloc.service';
