@@ -448,9 +448,9 @@ export class AppLayer {
         if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
         layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
             // Get all the favorites tronçons ids
-            const favorites: any = await this.storageService.getItem('AppTronconsFavorities');
+            const favorites = await this.storageService.getItem('AppTronconsFavorities');
             const keys = [];
-            if (favorites !== null && favorites.length !== 0) {
+            if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
                 favorites.forEach((key) => {
                     keys.push([layerModel.filterValue, key.id]);
                 });
@@ -492,39 +492,47 @@ export class AppLayer {
                 }
             }
         } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-            const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
-            promise = this.localDB.query('TronconDigue/streamLight', {
-                keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-            }).then(
-                (results) => {
-                    return results.map(this.createAppFeatureModel);
-                },
-                (error) => {
-                    console.log(error);
-                });
+            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            if (Array.isArray(tmp)) {
+                promise = this.localDB.query('TronconDigue/streamLight', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                }).then(
+                    (results) => {
+                        return results.map(this.createAppFeatureModel);
+                    },
+                    (error) => {
+                        console.log(error);
+                    });
+            } else {
+                console.error('Error type')
+            }
         } else {
-            const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
-            promise = this.localDB.query('getBornesFromTronconID', {
-                keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-            }).then(
-                (results) => {
-                    return this.localDB.query('getBornesIdsHB', {
-                        keys: results.map((obj) => {
-                            return obj.value;
-                        })}
-                    ).then(
-                        (results2) => {
-                            return results2.map(this.createAppFeatureModel);
-                        }
-                    );
-                },
-                (error) => {
-                    console.log(error);
-                });
+            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            if (Array.isArray(tmp)) {
+                promise = this.localDB.query('getBornesFromTronconID', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                }).then(
+                    (results) => {
+                        return this.localDB.query('getBornesIdsHB', {
+                            keys: results.map((obj) => {
+                                return obj.value;
+                            })}
+                        ).then(
+                            (results2) => {
+                                return results2.map(this.createAppFeatureModel);
+                            }
+                        );
+                    },
+                    (error) => {
+                        console.log(error);
+                    });
+            } else {
+                console.error('Error type');
+            }
         }
         console.log('end of setAppLayerFeatures', promise);
         // Wait for promise resolution or rejection.

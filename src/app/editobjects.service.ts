@@ -239,10 +239,14 @@ export class EditObjectService {
     initTronconList() {
         this.storageService.getItem('AppTronconsFavorities')
         .then(
-          (value: any) => {
-            this.troncons = value;
-            this.allTroncons = value;
-            console.log('tronconnns', value);
+          (value) => {
+            if (Array.isArray(value)) {
+                this.troncons = value;
+                this.allTroncons = value;
+                console.log('tronconnns', value);
+            } else {
+                console.error('Not good type');
+            }
           }
         );
     }
