@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit } from '@angular/core';
 import { ObjectDetails } from 'src/app/objectdetails.service';
 import { AuthService } from '../../../auth.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ declare var M: any;
   templateUrl: './detailsobject.component.html',
   styleUrls: ['./detailsobject.component.scss'],
 })
-export class DetailsObjectComponent implements OnInit {
+export class DetailsObjectComponent implements OnInit, AfterViewInit {
 
   @Output() readonly statusChange = new EventEmitter<string>();
 
@@ -39,10 +39,14 @@ export class DetailsObjectComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     const elem = document.querySelector('.tabs');
     const options = {};
     M.Tabs.init(elem, options); // initialize materialize tabs to show indicator
   }
+
 
   goBack() {
     this.statusChange.emit('general');
@@ -106,8 +110,8 @@ export class DetailsObjectComponent implements OnInit {
   }
 
   canShowEditionButtons() {
-    if (self.document['@class'] === "fr.sirs.core.model.BorneDigue"
-    || self.document['@class'] === "fr.sirs.core.model.TronconDigue") {
+    if (this.document['@class'] === "fr.sirs.core.model.BorneDigue"
+    || this.document['@class'] === "fr.sirs.core.model.TronconDigue") {
       return false;
     }
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
@@ -119,6 +123,10 @@ export class DetailsObjectComponent implements OnInit {
     if (this.authService.getValue().role === 'EXTERN') {
       return this.document.author && this.authService.getValue()._id === this.document.author;
     }
+  }
+
+  canAddObservation() {
+    return this.activeTab === 'observations' && this.authService.getValue().role !== 'GUEST';
   }
 
   editObject() {
@@ -170,6 +178,10 @@ export class DetailsObjectComponent implements OnInit {
         alert.present();
       }
     );
+  }
+
+  addObservation() {
+    this.route.navigateByUrl('/observation/' + this.document._id.toString());
   }
 
 

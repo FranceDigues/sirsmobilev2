@@ -45,3 +45,11 @@
       </ion-fab-button>
   </ion-fab>
 </div>
+
+<div *ngIf="canAddObservation()">
+  <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="addObservation()">
+        <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</div>
