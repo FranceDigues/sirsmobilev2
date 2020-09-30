@@ -170,7 +170,7 @@ export class AppTronconsService {
     constructor(private storageService: StorageService) {
         this.storageService.getItem('AppTronconsFavorities')
         .then(
-            (res) => {
+            (res: Array<any>) => {
                 if (res !== null) {
                     this.favorites = res;
                 }

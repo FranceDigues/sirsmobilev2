@@ -448,7 +448,7 @@ export class AppLayer {
         if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
         layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
             // Get all the favorites tronçons ids
-            const favorites = await this.storageService.getItem('AppTronconsFavorities');
+            const favorites: any = await this.storageService.getItem('AppTronconsFavorities');
             const keys = [];
             if (favorites !== null && favorites.length !== 0) {
                 favorites.forEach((key) => {
@@ -492,7 +492,7 @@ export class AppLayer {
                 }
             }
         } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
             promise = this.localDB.query('TronconDigue/streamLight', {
                 keys: tmp === null ? [] : tmp.map((item) => {
                         return item.id;
@@ -505,7 +505,7 @@ export class AppLayer {
                     console.log(error);
                 });
         } else {
-            const tmp = await this.storageService.getItem('AppTronconsFavorities');
+            const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
             promise = this.localDB.query('getBornesFromTronconID', {
                 keys: tmp === null ? [] : tmp.map((item) => {
                         return item.id;
