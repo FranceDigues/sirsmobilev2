@@ -103,6 +103,7 @@ export class MainPage implements AfterViewInit {
             fill: new Fill({ color: [255, 255, 255, 0.5] })
           }),
           layers: (olLayer) => {
+            // TODO
             return true;
           },
           endClick: (features) => {
@@ -119,7 +120,7 @@ export class MainPage implements AfterViewInit {
         const test2 = transform(test1, 'EPSG:3857', 'EPSG:4326');
         console.log('test1', test1);
         console.log('test2', test2);
-        setTimeout(() => { loading.dismiss(); }, 1000);
+        setTimeout(() => { loading.dismiss(); }, 1600);
       }
     );
   }
