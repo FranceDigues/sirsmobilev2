@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { LocalDatabase } from '../../../usingLocalDatabase.service';
 import { EditionLayer } from '../../../layers.service';
+import { SelectedObjectsService } from 'src/app/selectedobjects.service';
 
 declare var M: any;
 
@@ -24,7 +25,8 @@ export class DetailsObjectComponent implements OnInit {
 
   constructor(private objectDetails: ObjectDetails, private authService: AuthService,
               private route: Router, private alertCtrl: AlertController,
-              private localDB: LocalDatabase, private editionLayer: EditionLayer) {
+              private localDB: LocalDatabase, private editionLayer: EditionLayer,
+              private selectedObjectsService: SelectedObjectsService) {
     this.document = this.objectDetails.selectedObject;
     this.objectType = this.document['@class'].substring(
       this.document['@class'].lastIndexOf('.') + 1
@@ -142,6 +144,16 @@ export class DetailsObjectComponent implements OnInit {
                 while (i--) {
                   if (this.objectDetails.selectedFeatures[i].get('id') === this.document._id) {
                     this.objectDetails.selectedFeatures.splice(i, 1);
+                    break;
+                  }
+                }
+                // Remove the selected features
+                let features = this.selectedObjectsService.features;
+                i = features.length;
+                while (i--) {
+                  if (features[i].get('id') === this.document._id) {
+                    features.splice(i, 1);
+                    this.selectedObjectsService.updateFeatures(features);
                     break;
                   }
                 }

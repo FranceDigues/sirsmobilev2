@@ -16,18 +16,19 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
   featuresCollection = [];
   subscription = null;
 
-  constructor(private selectedObjectService: SelectedObjectsService, private cdr: ChangeDetectorRef,
+  constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
               private localDB: LocalDatabase, private toast: Toast,
               private objectDetails: ObjectDetails) { }
 
   ngOnInit() {
-    this.subscription = this.selectedObjectService.getFeatures()
+    this.subscription = this.selectedObjectsService.getFeatures()
     .subscribe((features) => {
       this.status = 'general';
       this.features.length = 0;
       for (let feat of features) {
         this.features.push(feat);
       }
+      this.selectedObjectsService.features = this.features;
       this.featuresCollection = this.getAllFeaturesFromCluster(features);
       this.cdr.detectChanges();
     });

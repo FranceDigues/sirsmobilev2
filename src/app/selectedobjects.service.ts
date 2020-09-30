@@ -8,6 +8,8 @@ export class SelectedObjectsService {
 
     constructor() { }
 
+    features = [];
+
     featuresEvent = new BehaviorSubject([]);
 
     getFeatures() {
