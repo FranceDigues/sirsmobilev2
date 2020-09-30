@@ -35,6 +35,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   pan = null;
   modify = null;
   snap = null;
+  arrayPoints = [];
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
@@ -131,31 +132,31 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
         this.source.clear();
       }
     });
+    this.draw.on('drawend', async (evt) => {
+      await setTimeout(() => {}, 300) // Draw event time is close to 250ms
+      this.arrayPoints.push(Object.assign([], evt.feature.getGeometry().getCoordinates()));
+    })
   }
 
   closePolygon() {
     const array = [];
-    const features = this.source.getFeatures();
 
-    if (features.length < 3) {
+    if (this.arrayPoints.length < 3) {
       this.toast.showLongTop('Vous devez placer au moins 3 points').subscribe();
       return;
     }
-    for (let i = 0; i < features.length; i++) {
-      array.push(features[i].getGeometry().getCoordinates());
-    }
     this.source.clear();
-    console.log(array);
     this.source.addFeatures(
       [
         new Feature({
-          geometry: new Polygon([array])
+          geometry: new Polygon([this.arrayPoints])
         }),
         new Feature({
-          geometry: new MultiPoint(array)
+          geometry: new MultiPoint(this.arrayPoints)
         })
       ]
     );
+    this.arrayPoints = [];
   }
 
   goBack() {
