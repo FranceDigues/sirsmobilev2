@@ -28,7 +28,7 @@ import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { DatabaseService } from '../database.service';
 import { DatabaseModel } from '../models/database.model';
-import { LongClickSelect } from '../../lib/plugin/ol/LongClickSelect.js';
+import { LongClickSelect } from '@plugins/LongClickSelect.js';
 import DragPan from 'ol/interaction/DragPan';
 import { SelectedObjectsService } from '../selectedobjects.service';
 

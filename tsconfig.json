@@ -34,6 +34,12 @@
       "@lib-camera/*": [
         "libs/geomatys-ionic-libraries-framework/geomatys-ionic-libraries/src/lib/lib-camera/*"
       ],
+      "@plugins": [
+        "libs/plugins"
+      ],
+      "@plugins/*": [
+        "libs/plugins/*"
+      ],
     },
   },
   "angularCompilerOptions": {

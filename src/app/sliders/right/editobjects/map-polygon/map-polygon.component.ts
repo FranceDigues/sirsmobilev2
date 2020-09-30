@@ -18,7 +18,7 @@ import { GeolocLayer } from '../../../../layers.service';
 import WKT from 'ol/format/WKT';
 import Polygon from 'ol/geom/Polygon';
 import { Toast } from '@ionic-native/toast/ngx';
-import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
+import { LongClickSelect } from '@plugins/LongClickSelect.js';
 
 @Component({
   selector: 'map-polygon',

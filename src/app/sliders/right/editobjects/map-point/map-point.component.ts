@@ -14,7 +14,7 @@ import { Style, RegularShape, Fill, Circle} from 'ol/style';
 import Stroke from 'ol/style/Stroke';
 import MultiPoint from 'ol/geom/MultiPoint';
 import WKT from 'ol/format/WKT';
-import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
+import { LongClickSelect } from '@plugins/LongClickSelect.js';
 
 @Component({
   selector: 'map-point',

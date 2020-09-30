@@ -17,7 +17,7 @@ import { GeolocService } from '../../../../geoloc.service';
 import { GeolocLayer } from '../../../../layers.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
-import { LongClickSelect } from '../../../../../lib/plugin/ol/LongClickSelect.js';
+import { LongClickSelect } from '@plugins/LongClickSelect.js';
 
 @Component({
   selector: 'map-line',
