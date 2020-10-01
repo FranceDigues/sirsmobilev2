@@ -51,7 +51,6 @@ build builder:
     - npm config set cache $CI_PROJECT_DIR/.npm --global
   only:
     refs:
-      - feat/ci
       - master
       - merge_requests
 
@@ -87,5 +86,4 @@ sonarqube:
     - sonar-scanner $SONAR_ADDITIONNAL_ARGS
   only:
     refs:
-      - feat/ci
       - master # our licence only allows us to use a single branch (so it is master)
