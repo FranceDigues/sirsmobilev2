@@ -1,5 +1,0 @@
-= Coverage Summary
-
-++++
-include::index.html[]
-++++
