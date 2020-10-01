@@ -4,14 +4,13 @@
 
 Install **Android SDK** : http://developer.android.com/sdk/installing/index.html
 
-Define **ANDROID_HOME** env variable :
+Define **ANDROID_HOME** env variable in your ~/.bashrc:
 ```bash
-export ANDROID_HOME=<Path_To_Sdk_Folder>
+export ANDROID_HOME=<path>/Android/Sdk
+export PATH=${PATH}:$ANDROID_HOME/platform-tools
+export PATH=${PATH}:$ANDROID_HOME/tools
 ```
-Update the **PATH** :
-```bash
-export PATH=${PATH}:<Path_To_Sdk_Folder>/platform-tools:<Path_To_Sdk_Folder>/tools
-```
+
 Install **Gradle 6.5.1** :
 ```bash
 curl -s "https://get.sdkman.io" | bash
@@ -36,23 +35,10 @@ npm install
 
 ## Launch App on device (using Capacitor)
 
-### First launch:
-
-<!> Under linux: replace ``` linuxAndroidStudioPath ``` value in  
- `capacitor.config.json` by the path of your ```studio.sh``` <!>
-
-Setup cordova:
-
-```bash
-npx jetifier
-ionic capacitor sync
-ionic capacitor update
-```
-
 ### Launch:
 
 ```bash
-ionic capacitor run android
+ionic cordova run android
 ```
 
 ### Troubleshooting:
