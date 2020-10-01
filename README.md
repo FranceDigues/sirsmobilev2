@@ -2,6 +2,11 @@
 
 ## Prerequisites
 
+Clone this repository **with submodules**:
+```
+git clone https://gitlab.geomatys.com/geopatys-group/sirsmobilev2.git --recurse-submodules
+```
+
 Install **Android SDK** : http://developer.android.com/sdk/installing/index.html
 
 Define **ANDROID_HOME** env variable :
