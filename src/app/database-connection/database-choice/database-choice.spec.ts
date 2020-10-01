@@ -6,6 +6,8 @@ import { AlertController, IonicModule } from '@ionic/angular';
 import { DatabaseService } from '../../database.service';
 import { AuthService } from '../../auth.service';
 import { AppModule } from '../../app.module';
+import { Platform } from '@ionic/angular';
+import { exception } from 'console';
 
 export class MockAlert {
     public visible: boolean;
@@ -58,6 +60,7 @@ describe('Testing DatabaseConnectionPage', () => {
     let fixture: ComponentFixture<DatabaseChoiceComponent>;
     let dbService: DatabaseService = null;
     let route: Router;
+    let platform: Platform;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -78,6 +81,7 @@ describe('Testing DatabaseConnectionPage', () => {
         fixture.detectChanges();
         dbService = TestBed.inject(DatabaseService);
         route = TestBed.inject(Router);
+        platform = TestBed.inject(Platform);
     });
 
     afterEach(() => {
@@ -98,12 +102,17 @@ describe('Testing DatabaseConnectionPage', () => {
                 password: 'test',
             }
         ];
+        spyOn(platform, 'ready').and
+        .returnValue(new Promise((resolve) => {
+            resolve('');
+        }));
         spyOn(dbService, 'getDatabasesHardDisk').and
         .returnValue(new Promise((resolve) => {
             resolve(res);
         }));
-        component.ngOnInit();
+        component.init();
         setTimeout(() => {
+            expect(platform.ready).toHaveBeenCalled();
             expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
             expect(component.databases).toEqual(res);
             done();
