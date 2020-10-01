@@ -1,7 +1,6 @@
 {
   "name": "SirsMobile",
   "integrations": {
-    "capacitor": {},
     "cordova": {}
   },
   "type": "angular"
