@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseModel } from 'src/app/models/database.model';
@@ -6,6 +7,9 @@ import { AlertController } from '@ionic/angular';
 import { DatabaseService } from '../../database.service';
 import { BackLayerService } from 'src/app/backlayer.service';
 import { AuthService } from '../../auth.service';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+
 @Component({
   selector: 'app-database-choice',
   templateUrl: './database-choice.component.html',
@@ -18,18 +22,35 @@ export class DatabaseChoiceComponent implements OnInit {
   status = 0;
   databaseIndex = 0;
 
-  constructor(private router: Router,
+  constructor(private router: Router, private platform: Platform,
               public alertCtrl: AlertController, private dbService: DatabaseService,
-              private authService: AuthService) {}
+              private authService: AuthService, private splashScreen: SplashScreen,
+              private statusBar: StatusBar) {
+                this.init();
+              }
 
   ngOnInit() {
-    this.dbService.getDatabasesHardDisk()
+  }
+
+  init() {
+    this.platform.ready()
     .then(
-      (databases) => {
-        this.databases = databases;
-      },
-      (error) => {
-        console.log('no \'databases\' in HardDisk ' + error);
+      () => {
+        this.dbService.getDatabasesHardDisk()
+        .then(
+          (databases) => {
+            this.databases = databases;
+            setTimeout(() => {
+              this.statusBar.styleDefault();
+              this.splashScreen.hide();
+            }, 200);
+          },
+          (error) => {
+            this.statusBar.styleDefault();
+            this.splashScreen.hide();
+            console.log('no \'databases\' in HardDisk ' + error);
+          }
+        );
       }
     );
   }
