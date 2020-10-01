@@ -33,7 +33,7 @@ Run :
 npm install
 ```
 
-## Launch App on device (using Capacitor)
+## Launch App on device
 
 ### Launch:
 
