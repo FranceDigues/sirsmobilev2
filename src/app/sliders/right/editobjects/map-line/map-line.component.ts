@@ -44,8 +44,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     this.addInteraction();
     if (this.EOS.isDependance() && this.EOS.objectDoc.geometry) { // If line already exists (Dependance)
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
-      let coordsStart = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
-      let coordsEnd = transform(geometry.getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      const coordsStart = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      const coordsEnd = transform(geometry.getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
       this.source.addFeatures(
         [
           new Feature({

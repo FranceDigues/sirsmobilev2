@@ -25,7 +25,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     .subscribe((features) => {
       this.status = 'general';
       this.features.length = 0;
-      for (let feat of features) {
+      for (const feat of features) {
         this.features.push(feat);
       }
       this.selectedObjectsService.features = this.features;
@@ -42,15 +42,15 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
   }
 
   getAllFeaturesFromCluster(features) {
-    let res = [];
+    const res = [];
 
     features.forEach((feat) => {
       if (Array.isArray(feat.get('features'))) {
         feat.get('features').forEach((f) => {
           res.push(f);
-        })
+        });
       }
-    })
+    });
     return res;
   }
 
@@ -64,7 +64,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
       (err) => {
         this.toast.showLongTop('Une erreur s\'est produite.').subscribe();
       }
-    )
+    );
   }
 
   changeStatus(path: 'general' | 'details') {

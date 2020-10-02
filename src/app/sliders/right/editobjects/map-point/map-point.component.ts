@@ -40,7 +40,7 @@ export class MapPointComponent implements OnInit {
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
-      let coords = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      const coords = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
       this.source.addFeatures(
         [new Feature({
           geometry: new Point(coords)

@@ -49,7 +49,7 @@ describe('Testing EditDatabaseComponent', () => {
         const databases = [
             db1,
             db1
-        ]
+        ];
         component.databaseIndex = 0;
 
         spyOn(nativeStorage, 'getItem').and.returnValue(new Promise(resolve => resolve(databases)));

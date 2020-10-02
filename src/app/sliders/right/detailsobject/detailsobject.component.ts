@@ -110,8 +110,8 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   canShowEditionButtons() {
-    if (this.document['@class'] === "fr.sirs.core.model.BorneDigue"
-    || this.document['@class'] === "fr.sirs.core.model.TronconDigue") {
+    if (this.document['@class'] === 'fr.sirs.core.model.BorneDigue'
+    || this.document['@class'] === 'fr.sirs.core.model.TronconDigue') {
       return false;
     }
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
@@ -156,7 +156,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
                   }
                 }
                 // Remove the selected features
-                let features = this.selectedObjectsService.features;
+                const features = this.selectedObjectsService.features;
                 i = features.length;
                 while (i--) {
                   if (features[i].get('id') === this.document._id) {
@@ -168,7 +168,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
                 this.goBack();
                 this.editionLayer.redrawEditionLayerAfterSynchronization();
               }
-            )
+            );
           }
         }
       ]

@@ -87,7 +87,7 @@ describe('Testing DatabaseConnectionPage', () => {
     afterEach(() => {
         fixture.destroy();
         component = null;
-    })
+    });
 
     it('should be created', () => {
         expect(component).toBeTruthy();
@@ -129,7 +129,7 @@ describe('Testing DatabaseConnectionPage', () => {
             expect(console.log);
             done();
         }, 10);
-    })
+    });
 
     it('changeStatus method should change status value and update databases value', (done) => {
         const res = [
@@ -192,7 +192,7 @@ describe('Testing DatabaseConnectionPage', () => {
         expect(component.selectedDatabase).toEqual(example2);
         expect(dbService.setActiveDB).toHaveBeenCalled();
         expect(component.databaseIndex).toEqual(1);
-    })
+    });
 
     it('addDatabase method should set status variable equal to 1', () => {
         component.addDatabase();
@@ -258,7 +258,7 @@ describe('Testing DatabaseConnectionPage', () => {
             replicated: false
         };
 
-        component.validateDatabase()
+        component.validateDatabase();
 
         expect(component.status).toBe(3);
     });
@@ -273,7 +273,7 @@ describe('Testing DatabaseConnectionPage', () => {
             context: {}
         };
 
-        component.validateDatabase()
+        component.validateDatabase();
 
         expect(component.status).toBe(4);
     });
@@ -296,7 +296,7 @@ describe('Testing DatabaseConnectionPage', () => {
         dbService.activeDB = goodDB;
 
         console.log(component.selectedDatabase);
-        component.validateDatabase()
+        component.validateDatabase();
 
         expect(route.navigateByUrl).toHaveBeenCalledWith('/main');
     });

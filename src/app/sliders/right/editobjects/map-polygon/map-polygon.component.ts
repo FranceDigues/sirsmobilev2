@@ -78,7 +78,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.draw.on('drawend', async (evt) => {
       await this.mapEditObject.timeout(300); // Draw event time is close to 250ms
       this.arrayPoints.push(Object.assign([], evt.feature.getGeometry().getCoordinates()));
-    })
+    });
   }
 
   closePolygon() {
@@ -138,9 +138,9 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   }
 
   getPolygonCoords(position) {
-    let array = [];
+    const array = [];
     position = position.substring(9, position.length - 2);
-    let tmp = position.split(',');
+    const tmp = position.split(',');
     for (let i = 0; i < tmp.length; i++) {
         array.push(tmp[i].split(' '));
     }
