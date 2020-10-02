@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AppVersionsService } from 'src/app/appversions.service';
 

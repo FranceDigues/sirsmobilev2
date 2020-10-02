@@ -1,14 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { DatabaseModel } from 'src/app/models/database.model';
-import { AlertController } from '@ionic/angular';
-import { DatabaseService } from '../../database.service';
-import { BackLayerService } from 'src/app/backlayer.service';
-import { AuthService } from '../../auth.service';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AlertController, Platform } from '@ionic/angular';
+import { DatabaseModel } from 'src/app/models/database.model';
+import { AuthService } from '../../auth.service';
+import { DatabaseService } from '../../database.service';
 
 @Component({
   selector: 'app-database-choice',

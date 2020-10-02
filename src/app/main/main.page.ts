@@ -1,38 +1,21 @@
-import { AfterViewInit, Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { LoadingController, NavController } from '@ionic/angular';
-import { GeolocService } from '../geoloc.service';
-
-import Map from 'ol/Map';
-import View from 'ol/View';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Point from 'ol/geom/Point';
-import {Fill, RegularShape, Stroke, Style} from 'ol/style';
-// // import {getWidth, getTopLeft} from 'ol/extent';
-import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
-import { transform } from 'ol/proj';
-import { MapService } from '../map.service';
-import Feature from 'ol/Feature';
-import Circle from 'ol/geom/Circle';
-import proj4 from 'proj4';
-import { register } from 'ol/proj/proj4';
-import { SirsDocService } from '../sirsdoc.service';
-import { AppLayer, EditionLayer, GeolocLayer, BackLayer } from '../layers.service';
-import { AuthService } from '../auth.service';
-import { MenuController } from '@ionic/angular';
-import { BackLayerService } from '../backlayer.service';
-import { AppVersionsService } from '../appversions.service';
-import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { DatabaseService } from '../database.service';
-import { DatabaseModel } from '../models/database.model';
+import { LoadingController, MenuController, Platform } from '@ionic/angular';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
-import DragPan from 'ol/interaction/DragPan';
+import { transform } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
+import { Fill, Style } from 'ol/style';
+import proj4 from 'proj4';
+import { AppVersionsService } from '../appversions.service';
+import { AuthService } from '../auth.service';
+import { BackLayerService } from '../backlayer.service';
+import { DatabaseService } from '../database.service';
+import { GeolocService } from '../geoloc.service';
+import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
+import { MapService } from '../map.service';
+import { DatabaseModel } from '../models/database.model';
 import { SelectedObjectsService } from '../selectedobjects.service';
-
-
+import { SirsDocService } from '../sirsdoc.service';
 
 @Component({
   selector: 'app-main',

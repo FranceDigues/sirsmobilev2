@@ -1,9 +1,9 @@
-import { Injectable, Injector } from '@angular/core';
-import { MapService } from './map.service';
+import { Injectable } from '@angular/core';
 import MultiPoint from 'ol/geom/MultiPoint';
-import { Stroke, Text, Fill, Style } from 'ol/style';
+import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { features } from 'process';
+import { MapService } from './map.service';
 
 @Injectable({
     providedIn: 'root'

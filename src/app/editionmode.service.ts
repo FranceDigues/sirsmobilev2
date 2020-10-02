@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { EditionLayer } from './layers.service';
-import { MapService } from './map.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
 
 @Injectable({
