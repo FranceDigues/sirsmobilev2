@@ -64,8 +64,8 @@ export class SyncService {
     return new Promise((resolve, rejects) => {
       subject.subscribe({
         next: (i) => { this.syncProgress(i); },
-        complete: async () => { await this.syncComplete(); resolve(); },
-        error: async (error) => { await this.syncError(); rejects(error); }
+        complete: async () => { this.syncComplete(); resolve(''); },
+        error: async (error) => { this.syncError(); rejects(error); }
       });
     });
   }
@@ -84,8 +84,8 @@ export class SyncService {
     setTimeout(() => {
       this.status = 0;
     }, 3000);
-    // this.appLayer.clearAll();
-    // this.editionLayer.redrawEditionLayerAfterSynchronization();
+    this.appLayer.clearAll();
+    this.editionLayer.redrawEditionLayerAfterSynchronization();
   }
 
   syncError() {

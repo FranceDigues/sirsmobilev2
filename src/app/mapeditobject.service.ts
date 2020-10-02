@@ -115,4 +115,8 @@ export class MapEditObjectService {
         const array = tmp.split(' ');
         return [parseFloat(array[0]), parseFloat(array[1])];
     }
+
+    timeout(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

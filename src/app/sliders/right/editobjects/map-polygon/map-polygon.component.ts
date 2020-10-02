@@ -76,7 +76,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       }
     });
     this.draw.on('drawend', async (evt) => {
-      await setTimeout(() => {}, 300) // Draw event time is close to 250ms
+      await this.mapEditObject.timeout(300); // Draw event time is close to 250ms
       this.arrayPoints.push(Object.assign([], evt.feature.getGeometry().getCoordinates()));
     })
   }
