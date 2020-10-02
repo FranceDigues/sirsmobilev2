@@ -29,7 +29,7 @@ fs.readFile('package.json', (err, data) =>  {
 });
 
 function handleIOS(object) {
-    for (tmp in object) {
+    for (let tmp in object) {
         if (tmp.includes('android')) {
             delete object[tmp];
         }
@@ -49,7 +49,7 @@ function includesKeyWords(word) {
 
 function selectDependencies(dependencies) {
     let res = { };
-    for (tmp in dependencies) {
+    for (let tmp in dependencies) {
         if (includesKeyWords(tmp)) {
             let version = dependencies[tmp].replace('^', '');
             res[tmp] = version;
