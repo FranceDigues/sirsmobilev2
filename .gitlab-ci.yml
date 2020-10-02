@@ -60,11 +60,11 @@ build:
   stage: build
   script:
     - npm ci
-    - npx ionic capacitor copy android
+    - npx ionic cordova build android
 
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/android
+      - $CI_PROJECT_DIR/platforms/android
       - $CI_PROJECT_DIR/build
 
 #---------------------------------------<  Test  >--------------------------------------------------
