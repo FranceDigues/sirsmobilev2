@@ -87,7 +87,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       }
     });
     this.draw.on('drawend', async () => {
-      await setTimeout(() => {}, 300);
+      await this.mapEditObject.timeout(300); // Draw event time is close to 250ms
       if (this.source.getFeatures().length === 2 && this.source.getFeatures()[0].getGeometry().getType() === 'Point' && // Create LineString if there is 2 Points
       this.source.getFeatures()[1].getGeometry().getType() === 'Point') {
         this.setLineString();
