@@ -506,7 +506,7 @@ export class AppLayer {
                         console.log(error);
                     });
             } else {
-                console.error('Error type')
+                console.error('Error type');
             }
         } else {
             const tmp = await this.storageService.getItem('AppTronconsFavorities');

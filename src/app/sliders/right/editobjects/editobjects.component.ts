@@ -196,9 +196,9 @@ export class RightSlideEditObjectsComponent implements OnInit {
       animated: true,
       cssClass: 'modal-css',
       componentProps: {
-        'data': data
+        data: data
       }
-    })
+    });
     return await modal.present();
   }
 

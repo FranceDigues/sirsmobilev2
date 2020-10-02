@@ -66,6 +66,10 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
     'Prestation',
     'EchelleLimnimetrique'
   ];
+  static editableDocumentClasses = [
+    "fr.sirs.core.model.BorneDigue",
+    "fr.sirs.core.model.TronconDigue"
+  ];
 
   @Output() readonly statusChange = new EventEmitter<string>();
 
@@ -133,11 +137,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   canShowEditionButtons() {
-    const editableDocumentClasses = [
-      "fr.sirs.core.model.BorneDigue",
-      "fr.sirs.core.model.TronconDigue"
-    ];
-    if (editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
+    if (DetailsObjectComponent.editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
       return false;
     }
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
@@ -186,7 +186,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
                 this.goBack();
                 this.editionLayer.redrawEditionLayerAfterSynchronization();
               }
-            )
+            );
           }
         }
       ]

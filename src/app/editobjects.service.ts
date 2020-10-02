@@ -591,7 +591,7 @@ export class EditObjectService {
 
     getEndPointSR() {
         return this.objectDoc.systemeRepId || null;
-    };
+    }
 
     parsePos(position) {
         const geometry = this.wktFormat.readGeometry(position);

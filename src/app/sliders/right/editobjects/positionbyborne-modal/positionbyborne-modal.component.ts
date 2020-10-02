@@ -65,31 +65,31 @@ export class PositionByBorneModalComponent implements OnInit {
     if (!this.EOS.isLinear) {
       this.data.borneDebutId = this.borneDebutId;
 
-      let index = this.systemeReperage.value.systemeReperageBornes.findIndex(
+      const index = this.systemeReperage.value.systemeReperageBornes.findIndex(
         (item) => {
           return item.borneId === this.data.borneDebutId;
       });
 
-      let srb = this.systemeReperage.value.systemeReperageBornes[index];
+      const srb = this.systemeReperage.value.systemeReperageBornes[index];
 
       this.data.borneDebutLibelle = srb.libelle;
     } else {
       if (this.borneDebutId) {
         this.data.borneDebutId = this.borneDebutId;
-        let indexDebut = this.systemeReperage.value.systemeReperageBornes.findIndex(
+        const indexDebut = this.systemeReperage.value.systemeReperageBornes.findIndex(
           (item) => {
             return item.borneId === this.data.borneDebutId;
         });
-        let srbDebut = this.systemeReperage.value.systemeReperageBornes[indexDebut];
+        const srbDebut = this.systemeReperage.value.systemeReperageBornes[indexDebut];
         this.data.borneDebutLibelle = srbDebut.libelle;
       }
       if (this.borneFinId) {
         this.data.borneFinId = this.borneFinId;
-        let indexFin = this.systemeReperage.value.systemeReperageBornes.findIndex(
+        const indexFin = this.systemeReperage.value.systemeReperageBornes.findIndex(
           (item) => {
             return item.borneId === this.data.borneFinId;
         });
-        let srbFin = this.systemeReperage.value.systemeReperageBornes[indexFin];
+        const srbFin = this.systemeReperage.value.systemeReperageBornes[indexFin];
         this.data.borneFinLibelle = srbFin.libelle;
       }
     }
@@ -113,17 +113,17 @@ export class PositionByBorneModalComponent implements OnInit {
   }
 
   private calculateApproximatePosition(borneId, borne_aval, borne_distance) {
-    let index = this.systemeReperage.value.systemeReperageBornes.findIndex((item) => {
+    const index = this.systemeReperage.value.systemeReperageBornes.findIndex((item) => {
       return item.borneId === borneId;
     });
 
-    let srb = this.systemeReperage.value.systemeReperageBornes[index];
+    const srb = this.systemeReperage.value.systemeReperageBornes[index];
 
     // Calculate approximate position
-    let x = this.wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+    const x = this.wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
     let y;
 
-    if (borne_aval === "true") {
+    if (borne_aval === 'true') {
         y = (index === this.systemeReperage.value.systemeReperageBornes.length - 1)
             ? this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
             : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
@@ -133,13 +133,13 @@ export class PositionByBorneModalComponent implements OnInit {
             : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
     }
 
-    let v = glMatrix.vec2.sub([], y, x);
+    const v = glMatrix.vec2.sub([], y, x);
 
-    let vn = glMatrix.vec2.normalize(v, v);
+    const vn = glMatrix.vec2.normalize(v, v);
 
-    let vs = glMatrix.vec2.scale(vn, vn, borne_distance);
+    const vs = glMatrix.vec2.scale(vn, vn, borne_distance);
 
-    let o = glMatrix.vec2.add([], x, vs);
+    const o = glMatrix.vec2.add([], x, vs);
 
     return 'POINT(' + o[0] + ' ' + o[1] + ')';
   }
@@ -172,7 +172,7 @@ export class PositionByBorneModalComponent implements OnInit {
         (alert) => {
           alert.present();
         }
-      )
+      );
     }
   }
 
@@ -222,11 +222,11 @@ export class PositionByBorneModalComponent implements OnInit {
                         item1.libelle = item2.value.libelle;
                         item1.borneGeometry = item2.value.geometry;
                       }
-                    })
+                    });
                   });
                   loading.dismiss();
                 }
-              )
+              );
             }
             if (!this.data.systemeRepId) {
               this.systemeReperageId = null;
@@ -234,9 +234,9 @@ export class PositionByBorneModalComponent implements OnInit {
               loading.dismiss();
             }
           }
-        )
+        );
       }
-    )
+    );
   }
 
 }

@@ -38,10 +38,10 @@ export class MapEditObjectService {
     }
 
     removeLongClickSelect() {
-        let map = this.olService.getMap();
-        let interactions = map.getInteractions().getArray();
+        const map = this.olService.getMap();
+        const interactions = map.getInteractions().getArray();
 
-        for (let interact of interactions) {
+        for (const interact of interactions) {
             if (interact instanceof LongClickSelect) {
                 map.removeInteraction(interact);
                 return;
