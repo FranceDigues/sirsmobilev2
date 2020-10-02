@@ -222,7 +222,7 @@ export class EditObjectService {
     }
 
     createMeasure() {
-        var defaultRef = this.refs.RefReferenceHauteur[0];
+        let defaultRef = this.refs.RefReferenceHauteur[0];
         return {
             _id: uuid.generateUuid(),
             '@class': 'fr.sirs.core.model.MesureMonteeEaux',
@@ -425,14 +425,14 @@ export class EditObjectService {
         this.watchDocPositionDebut();
         delete this.objectDoc.positionFin;
 
-        var coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
+        let coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
         // Point case
         if (this.objDependanceType === 'point') {
             this.objectDoc.geometry = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
         } else {
             // Linear case
             if (this.objectDoc.geometry && this.objectDoc.geometry.toUpperCase().indexOf('LINESTRING') > -1) {
-                var geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
+                let geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
 
                 geometry.setCoordinates([coordinate, geometry.getLastCoordinate()]);
 
@@ -459,9 +459,9 @@ export class EditObjectService {
         this.watchDocPositionDebut();
         delete this.objectDoc.positionFin;
 
-        var coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
+        let coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
 
-        var geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
+        let geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
 
         geometry.setCoordinates([geometry.getFirstCoordinate(), coordinate]);
 
