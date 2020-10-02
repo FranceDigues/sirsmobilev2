@@ -1,20 +1,16 @@
-import { Component, EventEmitter, OnInit, Output, enableProdMode } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
 import { transform } from 'ol/proj';
 import { SirsDocService } from 'src/app/sirsdoc.service';
 import { EditObjectService } from '../../../../editobjects.service';
 import DragPan from 'ol/interaction/DragPan';
-import GeoJSON from 'ol/format/GeoJSON';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
-import { Style, RegularShape, Fill, Circle} from 'ol/style';
-import Stroke from 'ol/style/Stroke';
-import MultiPoint from 'ol/geom/MultiPoint';
+import { Style } from 'ol/style';
 import WKT from 'ol/format/WKT';
-import { LongClickSelect } from '@plugins/LongClickSelect.js';
+import { MapEditObjectService } from 'src/app/mapeditobject.service';
 
 @Component({
   selector: 'map-point',
@@ -32,47 +28,15 @@ export class MapPointComponent implements OnInit {
   wktFormat = new WKT();
 
   constructor(public olService: OLService,
-              private EOS: EditObjectService, private sirsDoc: SirsDocService) { }
-
-  removeLongClickSelect() {
-    let map = this.olService.getMap();
-
-    let interactions = map.getInteractions().getArray();
-
-    for (let interact of interactions) {
-      if (interact instanceof LongClickSelect) {
-        map.removeInteraction(interact);
-        return;
-      }
-    }
-  }
+              private EOS: EditObjectService, private sirsDoc: SirsDocService,
+              public mapEditObject: MapEditObjectService) { }
 
   ngOnInit() {
-    const arrayLayer = this.olService.getLayers();
-    this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
-    arrayLayer[0].setVisible(true);
-    arrayLayer[1].setVisible(false);
-    arrayLayer[2].setVisible(false);
-    arrayLayer[3].setVisible(false);
+    this.mapEditObject.initMap();
     this.source = new VectorSource();
-    this.vector = new VectorLayer({
-      source: this.source,
-      style: new Style({
-        image: new Circle({
-          radius: 6,
-          fill: new Fill({
-            color: [255, 255, 255, 0.4]
-          }),
-          stroke: new Stroke({
-            color: [255, 0, 0, 0.7],
-            width: 1.25
-          })
-        }),
-        zIndex: Infinity
-      })
-    });
+    this.vector = this.mapEditObject.createVectorStyle(this.source);
     this.olService.addLayer(this.vector);
-    this.removeLongClickSelect();
+    this.mapEditObject.removeLongClickSelect();
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
@@ -83,7 +47,7 @@ export class MapPointComponent implements OnInit {
         })]
       );
     } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
-      let coords = this.getCoords(this.EOS.objectDoc.positionDebut);
+      let coords = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
       coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(
         [new Feature({
@@ -105,11 +69,7 @@ export class MapPointComponent implements OnInit {
   }
 
   goBack() {
-    const arrayLayer = this.olService.getLayers();
-    arrayLayer[0].setVisible(true);
-    arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
-    arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
-    arrayLayer[3].setVisible(this.defaultVisibleValueArrayLayer[3]);
+    this.mapEditObject.setDefaultMap();
     this.olService.removeLayer(this.vector);
     this.olService.map.removeInteraction(this.draw);
     this.olService.map.removeInteraction(this.pan);
@@ -148,12 +108,6 @@ export class MapPointComponent implements OnInit {
     this.pan = new DragPan();
     this.olService.map.addInteraction(this.pan);
     this.olService.map.addInteraction(this.draw);
-  }
-
-  getCoords(position) {
-    const tmp = position.slice(6, position.length - 1);
-    const array = tmp.split(' ');
-    return [parseFloat(array[0]), parseFloat(array[1])];
   }
 
 }

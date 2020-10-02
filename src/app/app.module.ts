@@ -41,6 +41,7 @@ import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import { SelectedObjectsService } from './selectedobjects.service';
 import { ObjectDetails } from './objectdetails.service';
+import { MapEditObjectService } from './mapeditobject.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -83,6 +84,7 @@ import { ObjectDetails } from './objectdetails.service';
     Toast,
     SelectedObjectsService,
     ObjectDetails,
+    MapEditObjectService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
