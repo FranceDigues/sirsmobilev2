@@ -9,8 +9,8 @@ const keyWords = [
 
 const fs = require('fs');
 
-fs.readFile('package.json', (err, data) =>  {
-    if (err) {
+fs.readFile('package.json', (errorRead, data) =>  {
+    if (errorRead) {
         console.log("\x1b[31mError\nCan not find package.json.\n\x1b[0m");
         exit(84);
     } else {
@@ -19,11 +19,11 @@ fs.readFile('package.json', (err, data) =>  {
         const res = selectDependencies(jsonData.dependencies)
         let androidDataObject = JSON.stringify(res, null, 2);
         let iosDataObject = JSON.stringify(handleIOS(res), null, 2);
-        fs.writeFile('src/assets/android-versions.json', androidDataObject + '\n', (err) => {
-            if (err) return console.log("\x1b[31m" + err + "\x1b[0m");
+        fs.writeFile('src/assets/android-versions.json', androidDataObject + '\n', (errWrite) => {
+            if (errWrite) return console.log("\x1b[31m" + err + "\x1b[0m");
         });
-        fs.writeFile('src/assets/ios-versions.json', iosDataObject + '\n', (err) => {
-            if (err) return console.log("\x1b[31m" + err + "\x1b[0m");
+        fs.writeFile('src/assets/ios-versions.json', iosDataObject + '\n', (errWrite) => {
+            if (errWrite) return console.log("\x1b[31m" + err + "\x1b[0m");
         });
     }
 });
