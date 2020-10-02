@@ -9,8 +9,8 @@ MAINTAINER berenger.dalle-cort@geomatys.com
 
 # Define paths and versions
 ENV ANDROID_SDK_ROOT="/opt/android"
-ENV OPEN_JDK_VERSION="8"
-ENV NODEJS_VERSION="12"
+ENV ANDROID_VERSION="28"
+ENV ANDROID_COMMAND_LINE_TOOLS_URL="https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip"
 
 # Install system dependencies
 RUN apt update
@@ -31,7 +31,7 @@ RUN echo `node --version`
 RUN echo `npm --version`
 
 # Install android commandline and sdk (to build final APK)
-RUN curl https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip > file.zip
+RUN curl $ANDROID_COMMAND_LINE_TOOLS_URL > file.zip
 RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
 RUN unzip file.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools"
 RUN rm file.zip
@@ -40,4 +40,4 @@ ENV PATH="${ANDROID_SDK_ROOT}/platform-tools/bin:${PATH}"
 ENV PATH="${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${PATH}"
 RUN yes | sdkmanager --licenses
 RUN yes | sdkmanager "platform-tools"
-RUN yes | sdkmanager "platforms;android-28"
+RUN yes | sdkmanager "platforms;android-${ANDROID_VERSION}"
