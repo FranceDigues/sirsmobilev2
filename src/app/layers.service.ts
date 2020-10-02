@@ -1,42 +1,36 @@
 import { Injectable } from '@angular/core';
-import View from 'ol/View';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
+import Circle from 'ol/geom/Circle';
+import LineString from 'ol/geom/LineString';
+import Point from 'ol/geom/Point';
+import LayerGroup from 'ol/layer/Group';
+import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import Style from 'ol/style/Style';
+import { transform } from 'ol/proj';
+import Cluster from 'ol/source/Cluster';
+import OSM from 'ol/source/OSM';
+import TileWMS from 'ol/source/TileWMS';
+import VectorSource from 'ol/source/Vector';
+import XYZ from 'ol/source/XYZ';
 import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Stroke from 'ol/style/Stroke';
-import VectorSource from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
-
-import { transform } from 'ol/proj';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import Circle from 'ol/geom/Circle';
-
-import LineString from 'ol/geom/LineString';
-
-import ImageLayer from 'ol/layer/Image';
-import ImageSource from 'ol/source/Image';
-import { SirsDocService } from './sirsdoc.service';
-import { RealPositionStyle, DefaultStyle } from './style.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
-import { MapService } from './map.service';
-import LayerGroup from 'ol/layer/Group';
-import XYZ from 'ol/source/XYZ';
-import TileLayer from 'ol/layer/Tile';
-import Source from 'ol/source/Source';
-import OSM from 'ol/source/OSM';
-import Cluster from 'ol/source/Cluster';
-import { FeatureCache } from './cache.service';
-import { noop } from 'rxjs';
-import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import Style from 'ol/style/Style';
 import { AppLayersService } from './applayers.service';
-import { DatabaseModel, ListBackLayer } from './models/database.model';
-import TileWMS from 'ol/source/TileWMS';
 import { BackLayerService } from './backlayer.service';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { FeatureCache } from './cache.service';
 import { DatabaseService } from './database.service';
+import { MapService } from './map.service';
+import { DatabaseModel, ListBackLayer } from './models/database.model';
+import { SirsDocService } from './sirsdoc.service';
+import { DefaultStyle, RealPositionStyle } from './style.service';
+import { LocalDatabase } from './usingLocalDatabase.service';
+
+
+
 
 @Injectable({
     providedIn: 'root'

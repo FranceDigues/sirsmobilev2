@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController, NavParams } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { colorFactory } from 'src/app/color-factory';
 
 

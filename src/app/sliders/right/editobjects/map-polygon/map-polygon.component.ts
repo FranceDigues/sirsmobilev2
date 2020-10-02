@@ -1,25 +1,16 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { Toast } from '@ionic-native/toast/ngx';
+import Feature from 'ol/Feature';
+import WKT from 'ol/format/WKT';
+import MultiPoint from 'ol/geom/MultiPoint';
+import Polygon from 'ol/geom/Polygon';
+import DragPan from 'ol/interaction/DragPan';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
-import { transform } from 'ol/proj';
-import { SirsDocService } from 'src/app/sirsdoc.service';
-import { EditObjectService } from '../../../../editobjects.service';
-import DragPan from 'ol/interaction/DragPan';
-import GeoJSON from 'ol/format/GeoJSON';
-import Point from 'ol/geom/Point';
-import Feature from 'ol/Feature';
-import { Style, Stroke, Fill, Circle } from 'ol/style';
-import MultiPoint from 'ol/geom/MultiPoint';
-import LineString from 'ol/geom/LineString';
-import { GeolocService } from '../../../../geoloc.service';
-import { GeolocLayer } from '../../../../layers.service';
-import WKT from 'ol/format/WKT';
-import Polygon from 'ol/geom/Polygon';
-import { Toast } from '@ionic-native/toast/ngx';
-import { LongClickSelect } from '@plugins/LongClickSelect.js';
+import { Style } from 'ol/style';
 import { MapEditObjectService } from 'src/app/mapeditobject.service';
+import { EditObjectService } from '../../../../editobjects.service';
 
 @Component({
   selector: 'map-polygon',

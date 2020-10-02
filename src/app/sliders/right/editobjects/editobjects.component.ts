@@ -1,23 +1,8 @@
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ObjectDocService } from 'src/app/objectdoc.service';
-import { DatabaseService } from '../../../database.service';
-import { LoadingController, AlertController, ModalController } from '@ionic/angular';
-import { GlobalConfigService } from '../../../globalconfig.service';
-import { LocalDatabase } from '../../../usingLocalDatabase.service';
-import { DatabaseModel } from '../../../models/database.model';
-import { transform } from 'ol/proj';
-import WKT from 'ol/format/WKT';
-import { SirsDocService } from '../../../sirsdoc.service';
-import {getDistance} from 'ol/sphere';
-import { EditionModeService } from '../../../editionmode.service';
-import { UuidUtils as uuid } from '../../../uuid-utils';
-import { Pipe, PipeTransform } from '@angular/core';
-import { AppLayer } from 'src/app/layers.service';
-import { ToastController } from '@ionic/angular';
-import { GeolocService } from '../../../geoloc.service';
-import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import { AlertController, ModalController } from '@ionic/angular';
 import { EditObjectService } from 'src/app/editobjects.service';
+import { DatabaseService } from '../../../database.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 
 

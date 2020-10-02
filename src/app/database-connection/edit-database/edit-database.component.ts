@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { Validators, FormBuilder, FormGroup, FormsModule, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseService } from 'src/app/database.service';
 import { DatabaseModel } from 'src/app/models/database.model';

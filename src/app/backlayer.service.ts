@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { DatabaseService } from './database.service';
 import { BackLayerModel, DatabaseModel } from './models/database.model';
 
@@ -19,7 +18,7 @@ export class BackLayerService {
             .then(
                 (db: DatabaseModel) => {
                     this.backLayers = db.context.backLayer;
-                    resolve();
+                    resolve('');
                 }
             );
         });
