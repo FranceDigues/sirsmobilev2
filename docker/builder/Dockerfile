@@ -8,15 +8,15 @@ FROM ubuntu:20.04
 MAINTAINER berenger.dalle-cort@geomatys.com
 
 # Define paths and versions
-ENV ANDROID_HOME="/opt/android"
-ENV OPEN_JDK_VERSION="11"
+ENV ANDROID_SDK_ROOT="/opt/android"
+ENV OPEN_JDK_VERSION="8"
 ENV NODEJS_VERSION="12"
 
 # Install system dependencies
 RUN apt update
 RUN apt -y upgrade
 RUN apt update
-RUN apt -y install openjdk-${OPEN_JDK_VERSION}-jre unzip curl dirmngr apt-transport-https lsb-release ca-certificates
+RUN apt -y install openjdk-${OPEN_JDK_VERSION}-jdk unzip curl dirmngr apt-transport-https lsb-release ca-certificates
 
 # Install Chrome (for headless testing)
 RUN apt -y install fonts-liberation libappindicator3-1 libgbm1 wget xdg-utils
@@ -32,12 +32,12 @@ RUN echo `npm --version`
 
 # Install android commandline and sdk (to build final APK)
 RUN curl https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip > file.zip
-RUN mkdir -p "${ANDROID_HOME}/cmdline-tools"
-RUN unzip file.zip -d "${ANDROID_HOME}/cmdline-tools"
+RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
+RUN unzip file.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools"
 RUN rm file.zip
-RUN chmod 755 -R $ANDROID_HOME
-ENV PATH="${ANDROID_HOME}/platform-tools/bin:${PATH}"
-ENV PATH="${ANDROID_HOME}/cmdline-tools/tools/bin:${PATH}"
+RUN chmod 755 -R $ANDROID_SDK_ROOT
+ENV PATH="${ANDROID_SDK_ROOT}/platform-tools/bin:${PATH}"
+ENV PATH="${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${PATH}"
 RUN yes | sdkmanager --licenses
 RUN yes | sdkmanager "platform-tools"
 RUN yes | sdkmanager "platforms;android-28"
