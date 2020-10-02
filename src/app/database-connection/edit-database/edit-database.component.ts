@@ -23,8 +23,8 @@ export class EditDatabaseComponent implements OnInit {
   password: FormControl;
   databases: Array<DatabaseModel> = [];
 
-  constructor(private formBuilder: FormBuilder, private router: Router,
-              private nativeStorage: NativeStorage, private route: ActivatedRoute,
+  constructor(private formBuilder: FormBuilder,
+              private nativeStorage: NativeStorage,
               private dbService: DatabaseService) {}
 
   ngOnInit() {
