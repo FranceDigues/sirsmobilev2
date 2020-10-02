@@ -2,22 +2,17 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
 import { transform } from 'ol/proj';
 import { SirsDocService } from 'src/app/sirsdoc.service';
 import { EditObjectService } from '../../../../editobjects.service';
 import DragPan from 'ol/interaction/DragPan';
-import GeoJSON from 'ol/format/GeoJSON';
-import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
-import { Style, Stroke, Fill, Circle } from 'ol/style';
+import { Style } from 'ol/style';
 import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
-import { GeolocService } from '../../../../geoloc.service';
-import { GeolocLayer } from '../../../../layers.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
-import { LongClickSelect } from '@plugins/LongClickSelect.js';
+import { MapEditObjectService } from 'src/app/mapeditobject.service';
 
 @Component({
   selector: 'map-line',
@@ -38,71 +33,14 @@ export class MapLineComponent implements OnInit, AfterViewInit {
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
-              private geoloc: GeolocService, private geolocLayer: GeolocLayer,
-              private toast: Toast) { }
-
-  removeLongClickSelect() {
-    let map = this.olService.getMap();
-
-    let interactions = map.getInteractions().getArray();
-
-    for (let interact of interactions) {
-      if (interact instanceof LongClickSelect) {
-        map.removeInteraction(interact);
-        return;
-      }
-    }
-  }
+              private toast: Toast, public mapEditObject: MapEditObjectService) { }
 
   ngOnInit() {
-    const arrayLayer = this.olService.getLayers();
-    this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
-    arrayLayer[0].setVisible(true); // BackLayer
-    arrayLayer[1].setVisible(false);
-    arrayLayer[2].setVisible(false);
-    arrayLayer[3].setVisible(true); // GeolocLayer
+    this.mapEditObject.initMap();
     this.source = new VectorSource();
-    this.vector = new VectorLayer({
-      source: this.source,
-      style: (f) => {
-        if (f.getGeometry().getType() !== 'Point') {
-          return [
-            new Style({
-              stroke: new Stroke({ color: '#ffcc33', width: 3 }),
-            }),
-            new Style({
-              image: new Circle({
-                radius: 6,
-                fill: new Fill({
-                  color: [255,255,255,0.4]
-                }),
-                stroke: new Stroke({
-                  color: [255, 0, 0, 0.7],
-                  width: 1.25
-                })
-              }),
-              geometry: new MultiPoint(f.getGeometry().getCoordinates())
-            })
-          ];
-        } else {
-          return new Style({
-            image: new Circle({
-              radius: 6,
-              fill: new Fill({
-                color: [255, 255, 255, 0.4]
-              }),
-              stroke: new Stroke({
-                color: [255, 0, 0, 0.7],
-                width: 1.25
-              })
-            }),
-            zIndex: Infinity
-          });
-        }
-			}
-    });
+    this.vector = this.mapEditObject.createVectorStyle(this.source);
     this.olService.addLayer(this.vector);
-    this.removeLongClickSelect();
+    this.mapEditObject.removeLongClickSelect();
     this.addInteraction();
     if (this.EOS.isDependance() && this.EOS.objectDoc.geometry) { // If line already exists (Dependance)
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
@@ -119,8 +57,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
         ]
       );
     } else if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
-      let coordsStart = this.getCoords(this.EOS.objectDoc.positionDebut);
-      let coordsEnd = this.getCoords(this.EOS.objectDoc.positionFin);
+      let coordsStart = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
+      let coordsEnd = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionFin);
       coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       this.source.addFeatures(
@@ -177,11 +115,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    const arrayLayer = this.olService.getLayers();
-    arrayLayer[0].setVisible(true);
-    arrayLayer[1].setVisible(this.defaultVisibleValueArrayLayer[1]);
-    arrayLayer[2].setVisible(this.defaultVisibleValueArrayLayer[2]);
-    arrayLayer[3].setVisible(this.defaultVisibleValueArrayLayer[3]);
+    this.mapEditObject.setDefaultMap();
     this.olService.removeLayer(this.vector);
     this.olService.map.removeInteraction(this.draw);
     this.olService.map.removeInteraction(this.pan);
@@ -227,31 +161,6 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     this.pan = new DragPan();
     this.olService.map.addInteraction(this.pan);
     this.olService.map.addInteraction(this.draw);
-  }
-
-  getCoords(position) {
-    const tmp = position.slice(6, position.length - 1);
-    const array = tmp.split(' ');
-    return [parseFloat(array[0]), parseFloat(array[1])];
-  }
-
-  locateMe() {
-    this.geoloc.getCurrentLocation()
-    .then(
-      () => {
-        this.zoomToMe();
-      }
-    );
-  }
-
-  zoomToMe() {
-    const coords = this.geoloc.getCoords();
-    if (coords) {
-      const map = this.olService.getMap();
-      map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
-      map.getView().setZoom(18);
-      this.geolocLayer.redrawGeolocLayer(coords);
-    }
   }
 
 }
