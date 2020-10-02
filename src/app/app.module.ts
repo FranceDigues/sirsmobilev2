@@ -42,6 +42,7 @@ import { Toast } from '@ionic-native/toast/ngx';
 import { SelectedObjectsService } from './selectedobjects.service';
 import { ObjectDetails } from './objectdetails.service';
 import { MapEditObjectService } from './mapeditobject.service';
+import { FormsTemplateService } from './formstemplate.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -85,6 +86,7 @@ import { MapEditObjectService } from './mapeditobject.service';
     SelectedObjectsService,
     ObjectDetails,
     MapEditObjectService,
+    FormsTemplateService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

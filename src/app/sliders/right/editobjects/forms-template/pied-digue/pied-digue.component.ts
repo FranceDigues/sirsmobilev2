@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,29 +9,13 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class PiedDigueComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initMateriau();
-    this.initNature();
-    this.initFonction();
-    this.initCote();
-  }
-
-  initMateriau() {
-    this.EOS.setupRef('materiauId', this.EOS.refs.RefMateriau[0]);
-  }
-
-  initNature() {
-    this.EOS.setupRef('natureId', this.EOS.refs.RefNature[0]);
-  }
-
-  initFonction() {
-    this.EOS.setupRef('fonctionId', this.EOS.refs.RefFonction[0]);
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
+    this.FT.initMaterial();
+    this.FT.initNature();
+    this.FT.initFunction();
+    this.FT.initCote();
   }
 
 }

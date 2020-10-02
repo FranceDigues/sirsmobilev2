@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,49 +9,17 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class OuvrageRevancheComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initMateriauHaut();
-    this.initMateriauBas();
-    this.initNatureHaut();
-    this.initNatureBas();
-    this.initHeight();
-    this.initWidth();
-    this.initDamPosition();
-    this.initDamSide();
-  }
-
-  initMateriauHaut() {
-    this.EOS.setupRef('materiauHautId', this.EOS.refs.RefMateriau[0]);
-  }
-
-  initMateriauBas() {
-    this.EOS.setupRef('materiauBasId', this.EOS.refs.RefMateriau[0]);
-  }
-
-  initNatureHaut() {
-    this.EOS.setupRef('natureHautId', this.EOS.refs.RefNature[0]);
-  }
-
-  initNatureBas() {
-    this.EOS.setupRef('natureBasId', this.EOS.refs.RefNature[0]);
-  }
-
-  initHeight() {
-    this.EOS.objectDoc.hauteurMurette = this.EOS.objectDoc.hauteurMurette || 0;
-  }
-
-  initWidth() {
-    this.EOS.objectDoc.largeur = this.EOS.objectDoc.largeur || 0;
-  }
-
-  initDamPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initDamSide() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
+    this.FT.initMateriauHaut();
+    this.FT.initMateriauBas();
+    this.FT.initNatureHaut();
+    this.FT.initNatureBas();
+    this.FT.initHeight();
+    this.FT.initWidth();
+    this.FT.initDamPosition();
+    this.FT.initDamSide();
   }
 
 }

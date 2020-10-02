@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,14 +9,10 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class TronconDigueComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService,  private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initCote();
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
+    this.FT.initCote();
   }
 
 }

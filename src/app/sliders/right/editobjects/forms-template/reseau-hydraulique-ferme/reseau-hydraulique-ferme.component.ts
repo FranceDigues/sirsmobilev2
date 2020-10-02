@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class ReseauHydrauliqueFermeComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.initDiameter();
@@ -17,8 +18,8 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
     this.initImplantation();
     this.initNetworkType();
     this.initUtilisation();
-    this.initPosition();
-    this.initCote();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   initDiameter() {
@@ -43,14 +44,6 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
 
   initUtilisation() {
     this.EOS.setupRef('utilisationConduiteId', this.EOS.refs.RefUtilisationConduite[0]);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

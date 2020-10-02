@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,34 +9,14 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class VoieAccesComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initWidth();
-    this.initMaterial();
-    this.initUsage();
-    this.initPosition();
-    this.initCoteID();
-  }
-
-  initWidth() {
-    this.EOS.objectDoc.largeur = this.EOS.objectDoc.largeur || 0;
-  }
-
-  initMaterial() {
-    this.EOS.setupRef('materiauId', this.EOS.refs.RefMateriau[0]);
-  }
-
-  initUsage() {
-    this.EOS.setupRef('usageId', this.EOS.refs.RefUsageVoie[0]);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCoteID() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
+    this.FT.initWidth();
+    this.FT.initMaterial();
+    this.FT.initUsage();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
 }
