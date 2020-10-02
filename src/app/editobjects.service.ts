@@ -137,7 +137,6 @@ export class EditObjectService {
         this.dataProjection = this.sirsDoc.get().epsgCode;
         this.startPosBorneLabel = null;
         this.endPosBorneLabel = null;
-        this.isClosed;
     }
 
     showText(type) {
@@ -296,7 +295,7 @@ export class EditObjectService {
                       setTimeout(() => {
                           this.dependances = [];
                           results.map((item) => {
-                              item.rows.map((elt) => {
+                              item.rows.forEach((elt) => {
                                   this.dependances.push(elt);
                               });
                           });
