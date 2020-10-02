@@ -1,6 +1,11 @@
 # SIRS Mobile
 
-## Prerequisites
+## 1 - Prerequisites
+
+Clone this repository **with submodules**:
+```
+git clone https://gitlab.geomatys.com/geopatys-group/sirsmobilev2.git --recurse-submodules
+```
 
 Install **Android SDK** : http://developer.android.com/sdk/installing/index.html
 
@@ -25,7 +30,7 @@ npm install -g ionic@6.10.1
 npm install -g cordova@9.0.0
 ```
 
-## First installation
+## 2 - First installation
 
 Run :
 
@@ -33,7 +38,7 @@ Run :
 npm install
 ```
 
-## Launch App on device
+## 3 - Launch App on device
 
 ### Launch:
 
@@ -75,7 +80,7 @@ androidx.core.content.FileProvider
 android:usesCleartextTraffic="true"
 ```
 
-## Project images
+## 4 - Project images
 
 <p align="center">
     <img width="32%" src="img/database-choice.jpg"></img>
@@ -121,3 +126,21 @@ graph TB
     MenuRight --> TMP2(Contains 4 main options)
 end
 ```
+
+## 5 - Continuous integration
+
+The CI of this project is driven by `.gitlab-ci.yml` file.
+
+It consists in three stages:
+
+- build
+- test
+- sonarqube
+
+the two first (build and test) are triggered on each push on master or any merge request.
+The sonarqube stage is only triggered for push in master branch since we have only a single branch version of the software.
+
+A `builder build` job (withing build stage) is triggered only if a `builder-v<X>.<Y>.<Z>` tag is added.
+This will build a new "builder" docker image (cf. docker/builder/Dockerfile for more info) on `docker.geomatys.com`.
+
+In order to change the version of the builder, edit the `BUILDER_VERSION` entry in CI/CD variables.

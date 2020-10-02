@@ -8,6 +8,7 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test:ci": "ng test --browsers=ChromeHeadlessCI --code-coverage=true --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "postinstall": "node hooks/generate-infos-version.js"
