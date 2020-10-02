@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,15 +9,15 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class ReseauTelecomEnergieComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService,  private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.initNetworkType();
     this.initImplantation();
-    this.initHeight();
+    this.FT.initHeight();
     this.initOuvrageTelecomEnergie();
-    this.initPosition();
-    this.initCote();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   initNetworkType() {
@@ -27,20 +28,8 @@ export class ReseauTelecomEnergieComponent implements OnInit {
     this.EOS.setupRef('implantationId', this.EOS.refs.RefImplantation[0]);
   }
 
-  initHeight() {
-   this.EOS.objectDoc.hauteur =this.EOS.objectDoc.hauteur || 0;
-  }
-
   initOuvrageTelecomEnergie() {
     this.EOS.setupRef('ouvrageTelecomEnergieIds', this.EOS.refs.OuvrageTelecomEnergie[0], true);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

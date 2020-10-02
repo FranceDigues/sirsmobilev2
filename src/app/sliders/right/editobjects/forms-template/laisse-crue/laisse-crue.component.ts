@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 
 @Component({
   selector: 'form-laisse-crue',
@@ -8,29 +9,17 @@ import { EditObjectService } from 'src/app/editobjects.service';
 })
 export class LaisseCrueComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initHeightRef();
+    this.FT.initHeightRef();
     this.initHeight();
-    this.initDamPosition();
-    this.initDamSide();
-  }
-
-  initHeightRef() {
-    this.EOS.setupRef('referenceHauteurId', this.EOS.refs.RefReferenceHauteur[0]);
+    this.FT.initDamPosition();
+    this.FT.initDamSide();
   }
 
   initHeight() {
     this.EOS.objectDoc.hauteur = this.EOS.objectDoc.hauteur || 0;
-  }
-
-  initDamPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initDamSide() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

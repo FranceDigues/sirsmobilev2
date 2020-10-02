@@ -1,4 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 import { FilterPipe } from '../../../createobjects/createobjects.component';
 
@@ -9,33 +10,22 @@ import { FilterPipe } from '../../../createobjects/createobjects.component';
 })
 export class DesordreComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, public filterPipe: FilterPipe) { }
+  constructor(public EOS: EditObjectService, public filterPipe: FilterPipe,
+              private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initCategorie();
+    this.FT.initCategorie();
     this.initType();
-    this.initPosition();
-    this.initCoteID();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   changeCategorie() {
     this.EOS.objectDoc.typeDesordreId = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId })[0]._id;
   }
 
-  initCategorie() {
-    this.EOS.setupRef('categorieDesordreId', this.EOS.refs.RefCategorieDesordre[0]);
-  }
-
   initType() {
     this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || (this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId }))[0]._id;
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCoteID() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 }
 

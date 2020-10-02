@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 
 @Component({
   selector: 'form-crete',
@@ -8,29 +9,12 @@ import { EditObjectService } from 'src/app/editobjects.service';
 })
 export class CreteComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(private FT: FormsTemplateService, public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initMaterial();
-    this.initNatute();
-    this.initFunction();
-    this.initWidth();
-  }
-
-  initMaterial() {
-    this.EOS.setupRef('materiauId', this.EOS.refs.RefMateriau[0]);
-  }
-
-  initNatute() {
-    this.EOS.setupRef('natureId', this.EOS.refs.RefNature[0]);
-  }
-
-  initFunction() {
-    console.log('setup fonction Id');
-    this.EOS.setupRef('fonctionId', this.EOS.refs.RefFonction[0]);
-  }
-
-  initWidth() {
-    this.EOS.objectDoc.epaisseur = this.EOS.objectDoc.epaisseur || 0;
+    this.FT.initMaterial();
+    this.FT.initNature();
+    this.FT.initFunction();
+    this.FT.initWidth();
   }
 }

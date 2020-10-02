@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { UuidUtils as uuid } from '../../../../../uuid-utils';
 
 
@@ -10,13 +11,13 @@ import { UuidUtils as uuid } from '../../../../../uuid-utils';
 })
 export class MonteeEauxComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.EOS.objectDoc.mesures = [this.createMeasure()];
     this.initEchelleLimnimetrique();
-    this.initDamPosition();
-    this.initDamSide();
+    this.FT.initDamPosition();
+    this.FT.initDamSide();
   }
 
   createMeasure() {
@@ -33,14 +34,6 @@ export class MonteeEauxComponent implements OnInit {
 
   initEchelleLimnimetrique() {
     this.EOS.setupRef('echelleLimnimetriqueId', this.EOS.refs.EchelleLimnimetrique[0]);
-  }
-
-  initDamPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initDamSide() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

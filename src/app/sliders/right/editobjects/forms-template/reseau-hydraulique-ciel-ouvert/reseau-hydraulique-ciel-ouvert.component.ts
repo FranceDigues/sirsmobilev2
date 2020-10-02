@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditDatabaseComponent } from '../../../../../database-connection/edit-database/edit-database.component';
 import { EditObjectService } from '../../../../../editobjects.service';
 
@@ -9,13 +10,13 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class ReseauHydrauliqueCielOuvertComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.initTypeReseauHydroCielOuvert();
     this.initReseauHydrauliqueFerme();
-    this.initPosition();
-    this.initCote();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   initTypeReseauHydroCielOuvert() {
@@ -24,14 +25,6 @@ export class ReseauHydrauliqueCielOuvertComponent implements OnInit {
 
   initReseauHydrauliqueFerme() {
     this.EOS.setupRef('reseauHydrauliqueFermeIds', this.EOS.refs.ReseauHydrauliqueFerme[0], true);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
@@ -8,13 +9,13 @@ import { EditObjectService } from '../../../../../editobjects.service';
 })
 export class OuvrageTelecomEnergieComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.initTypeOuvrageTelecomEnergie();
     this.initReseauTelecomEnergie();
-    this.initPosition();
-    this.initCode();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   initTypeOuvrageTelecomEnergie() {
@@ -23,14 +24,6 @@ export class OuvrageTelecomEnergieComponent implements OnInit {
 
   initReseauTelecomEnergie() {
     this.EOS.setupRef('reseauTelecomEnergieIds', this.EOS.refs.ReseauTelecomEnergie[0], true);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCode() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }

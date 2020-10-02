@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/editobjects.service';
+import { FormsTemplateService } from 'src/app/formstemplate.service';
 
 @Component({
   selector: 'form-voie-digue',
@@ -8,19 +9,15 @@ import { EditObjectService } from 'src/app/editobjects.service';
 })
 export class VoieDigueComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.initWidth();
+    this.FT.initWidth();
     this.initType();
     this.initCoating();
-    this.initUsage();
-    this.initPosition();
-    this.initCote();
-  }
-
-  initWidth() {
-    this.EOS.objectDoc.largeur = this.EOS.objectDoc.largeur || 0;
+    this.FT.initUsage();
+    this.FT.initPosition();
+    this.FT.initCote();
   }
 
   initType() {
@@ -29,18 +26,6 @@ export class VoieDigueComponent implements OnInit {
 
   initCoating() {
     this.EOS.setupRef('revetementId', this.EOS.refs.RefRevetement[0]);
-  }
-
-  initUsage() {
-    this.EOS.setupRef('usageId', this.EOS.refs.RefUsageVoie[0]);
-  }
-
-  initPosition() {
-    this.EOS.setupRef('positionId', this.EOS.refs.RefPosition[0]);
-  }
-
-  initCote() {
-    this.EOS.setupRef('coteId', this.EOS.refs.RefCote[0]);
   }
 
 }
