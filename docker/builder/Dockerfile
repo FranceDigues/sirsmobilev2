@@ -10,10 +10,10 @@ MAINTAINER berenger.dalle-cort@geomatys.com
 # Define paths and versions
 ENV OPEN_JDK_VERSION="8"
 ENV NODEJS_VERSION="12"
-ENV GRADLE_VERSION="6.5.1"
 ENV ANDROID_SDK_ROOT="/opt/android"
 ENV ANDROID_VERSION="28"
 ENV ANDROID_COMMAND_LINE_TOOLS_URL="https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip"
+ENV GRADLE_HOME="/opt/gradle/gradle-6.5.1"
 
 # Install system dependencies
 RUN apt update
@@ -27,9 +27,10 @@ RUN dpkg -i chrome.deb
 RUN rm chrome.deb
 
 # Install Gradle
-RUN apt -y install zip
-RUN curl -s "https://get.sdkman.io" | bash
-RUN /bin/bash --login -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle ${GRADLE_VERSION}"
+RUN apt -y install unzip
+RUN wget https://services.gradle.org/distributions/gradle-6.5.1-bin.zip -P /tmp
+RUN unzip -d /opt/gradle /tmp/gradle-*.zip
+ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 
 # Install NodeJS 12 and NPM (to build application)
 RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x | bash -
