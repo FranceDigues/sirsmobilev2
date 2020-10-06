@@ -35,7 +35,7 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 
 # Install NodeJS 12 and NPM (to build application)
 RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x | bash -
-RUN apt-get install nodejs  -y
+RUN apt-get install nodejs -y
 RUN echo `node --version`
 RUN echo `npm --version`
 
@@ -50,3 +50,4 @@ ENV PATH="${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${PATH}"
 RUN yes | sdkmanager --licenses
 RUN yes | sdkmanager "platform-tools"
 RUN yes | sdkmanager "platforms;android-${ANDROID_VERSION}"
+RUN yes | sdkmanager "build-tools;28.0.3"
