@@ -13,6 +13,7 @@ ENV NODEJS_VERSION="12"
 ENV ANDROID_SDK_ROOT="/opt/android"
 ENV ANDROID_HOME="/opt/android"
 ENV ANDROID_VERSION="28"
+ENV ANDROID_BUILD_TOOLS_VERSION="28.0.3"
 ENV ANDROID_COMMAND_LINE_TOOLS_URL="https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip"
 ENV GRADLE_HOME="/opt/gradle/gradle-6.5.1"
 
@@ -50,4 +51,4 @@ ENV PATH="${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${PATH}"
 RUN yes | sdkmanager --licenses
 RUN yes | sdkmanager "platform-tools"
 RUN yes | sdkmanager "platforms;android-${ANDROID_VERSION}"
-RUN yes | sdkmanager "build-tools;28.0.3"
+RUN yes | sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}"
