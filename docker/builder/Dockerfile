@@ -15,7 +15,8 @@ ENV ANDROID_HOME="/opt/android"
 ENV ANDROID_VERSION="28"
 ENV ANDROID_BUILD_TOOLS_VERSION="28.0.3"
 ENV ANDROID_COMMAND_LINE_TOOLS_URL="https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip"
-ENV GRADLE_HOME="/opt/gradle/gradle-6.5.1"
+ENV GRADLE_VERSION="6.5.1"
+ENV GRADLE_HOME="/opt/gradle/gradle-${GRADLE_VERSION}"
 
 # Install system dependencies
 RUN apt update
@@ -30,8 +31,8 @@ RUN rm chrome.deb
 
 # Install Gradle
 RUN apt -y install unzip
-RUN wget https://services.gradle.org/distributions/gradle-6.5.1-bin.zip -P /tmp
-RUN unzip -d /opt/gradle /tmp/gradle-*.zip
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -P /tmp
+RUN unzip -d /opt/gradle /tmp/gradle-${GRADLE_VERSION}-bin.zip
 ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 
 # Install NodeJS 12 and NPM (to build application)
