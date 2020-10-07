@@ -295,9 +295,7 @@ export class EditObjectService {
                       setTimeout(() => {
                           this.dependances = [];
                           results.map((item) => {
-                              item.rows.map((elt) => {
-                                  this.dependances.push(elt);
-                              });
+                              this.dependances = item.rows.map(elt => elt);
                           });
                           loading.dismiss();
                       }, 100);
