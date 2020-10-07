@@ -46,31 +46,27 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
       const coordsStart = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
       const coordsEnd = transform(geometry.getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
-      this.source.addFeatures(
-        [
-          new Feature({
-            geometry: new LineString([coordsStart, coordsEnd])
-          }),
-          new Feature({
-            geometry: new MultiPoint([coordsStart, coordsEnd])
-          })
-        ]
-      );
+
+      const lineStringGeometry = new LineString([coordsStart, coordsEnd]);
+      const lineStringFeature = new Feature({ geometry: lineStringGeometry });
+
+      const multiPointGeometry = new MultiPoint([coordsStart, coordsEnd]);
+      const multiPointFeature = new Feature({ geometry: multiPointGeometry });
+
+      this.source.addFeatures(lineStringFeature, multiPointFeature);
     } else if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
       let coordsStart = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
       let coordsEnd = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionFin);
       coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857');
       coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857');
-      this.source.addFeatures(
-        [
-          new Feature({
-            geometry: new LineString([coordsStart, coordsEnd])
-          }),
-          new Feature({
-            geometry: new MultiPoint([coordsStart, coordsEnd])
-          })
-        ]
-      );
+
+      const lineStringGeometry = new LineString([coordsStart, coordsEnd]);
+      const lineStringFeature = new Feature({ geometry: lineStringGeometry });
+
+      const multiPointGeometry = new MultiPoint([coordsStart, coordsEnd]);
+      const multiPointFeature = new Feature({ geometry: multiPointGeometry });
+
+      this.source.addFeatures(lineStringFeature, multiPointFeature);
     }
     this.initListener();
   }
@@ -102,16 +98,14 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       array.push(features[i].getGeometry().getCoordinates());
     }
     this.source.clear();
-    this.source.addFeatures(
-      [
-        new Feature({
-          geometry: new LineString(array)
-        }),
-        new Feature({
-          geometry: new MultiPoint(array)
-        })
-      ]
-    );
+
+    const lineStringGeometry = new LineString(array);
+    const lineStringFeature = new Feature({ geometry: lineStringGeometry });
+
+    const multiPointGeometry = new MultiPoint(array);
+    const multiPointFeature = new Feature({ geometry: multiPointGeometry });
+
+    this.source.addFeatures(lineStringFeature, multiPointFeature);
   }
 
   goBack() {
