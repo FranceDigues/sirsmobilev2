@@ -41,16 +41,14 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.addInteraction();
     if (this.EOS.objectDoc.geometry) {
       const array = this.getPolygonCoords(this.EOS.objectDoc.geometry);
-      this.source.addFeatures(
-        [
-          new Feature({
-            geometry: new Polygon([array])
-          }),
-          new Feature({
-            geometry: new MultiPoint(array)
-          })
-        ]
-      );
+
+      const polygonGeometry = new Polygon([array]);
+      const polygonFeature = new Feature({ geometry: polygonGeometry });
+
+      const multiPointGeometry = new MultiPoint(array);
+      const multiPointFeature = new Feature({ geometry: multiPointGeometry });
+
+      this.source.addFeatures([polygonFeature, multiPointFeature]);
     }
     this.initListener();
   }
@@ -78,16 +76,14 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       return;
     }
     this.source.clear();
-    this.source.addFeatures(
-      [
-        new Feature({
-          geometry: new Polygon([this.arrayPoints])
-        }),
-        new Feature({
-          geometry: new MultiPoint(this.arrayPoints)
-        })
-      ]
-    );
+
+    const polygonGeometry = new Polygon([this.arrayPoints]);
+    const polygonFeature = new Feature({ geometry: polygonGeometry });
+
+    const multiPointGeometry = new MultiPoint(this.arrayPoints);
+    const multiPointFeature = new Feature({ geometry: multiPointGeometry });
+
+    this.source.addFeatures([polygonFeature, multiPointFeature]);
     this.arrayPoints = [];
   }
 
