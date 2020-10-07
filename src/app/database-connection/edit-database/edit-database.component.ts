@@ -32,13 +32,6 @@ export class EditDatabaseComponent implements OnInit {
       (data) => {
         console.log(data);
         this.databases = data;
-      },
-      (error) => {
-        console.log('There is no database in hard disk', error);
-        this.onBack();
-      }
-    ).then(
-      () => {
         this.name = this.formBuilder.control(this.databases[this.databaseIndex].name, Validators.required);
         this.url = this.formBuilder.control(this.databases[this.databaseIndex].url, Validators.required);
         this.userId = this.formBuilder.control(this.databases[this.databaseIndex].userId, Validators.required);
@@ -50,6 +43,10 @@ export class EditDatabaseComponent implements OnInit {
           password: this.password,
           replicated: false
         });
+      },
+      (error) => {
+        console.log('There is no database in hard disk', error);
+        this.onBack();
       }
     );
   }
