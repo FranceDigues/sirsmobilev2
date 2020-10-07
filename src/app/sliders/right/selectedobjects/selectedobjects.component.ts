@@ -24,11 +24,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     this.subscription = this.selectedObjectsService.getFeatures()
     .subscribe((features) => {
       this.status = 'general';
-      this.features.length = 0;
-      for (let feat of features) {
-        this.features.push(feat);
-      }
-      this.selectedObjectsService.features = this.features;
+      this.features = Object.assign([], features);
       this.featuresCollection = this.getAllFeaturesFromCluster(features);
       this.cdr.detectChanges();
     });

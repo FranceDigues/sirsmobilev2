@@ -18,7 +18,8 @@ export class SelectedObjectsService {
     }
 
     updateFeatures(features) {
-        this.featuresEvent.next(features);
+        this.features = Object.assign([], features);
+        this.featuresEvent.next(this.features);
     }
 
     deleteFeature(id) {
