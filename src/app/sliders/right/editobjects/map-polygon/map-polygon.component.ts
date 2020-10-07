@@ -35,7 +35,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   pan = null;
   modify = null;
   snap = null;
-  arrayPoints = [];
+  arrayPoints: Array<number> = [];
 
   constructor(public olService: OLService,
               public EOS: EditObjectService, private sirsDoc: SirsDocService,
