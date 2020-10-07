@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { IonicModule } from '@ionic/angular';
@@ -51,9 +51,14 @@ describe('Testing EditDatabaseComponent', () => {
             db1
         ];
         component.databaseIndex = 0;
+        component.name = null;
+        component.url = null;
+        component.userId = null;
+        component.password = null;
+        component.databaseForm = null;
 
         spyOn(nativeStorage, 'getItem').and.returnValue(new Promise(resolve => resolve(databases)));
-        spyOn(formBuilder, 'control');
+        spyOn(formBuilder, 'control').and.returnValue(new FormControl(''));
         spyOn(formBuilder, 'group');
 
         component.ngOnInit();
