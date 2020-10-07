@@ -11,7 +11,7 @@
               <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
               <span class="title">{{db.name}}</span>
               <p>{{db.url}}</p>
-              <span class="secondary-content" *ngIf="selectedDatabase === db"><i class="material-icons">check</i></span>
+              <span class="secondary-content db-checked" *ngIf="selectedDatabase === db"><ion-icon name="checkmark-outline"></ion-icon></span>
           </li>
       </ul>
     </div>
