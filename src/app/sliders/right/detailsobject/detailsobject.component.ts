@@ -57,61 +57,85 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   canShowObservationsTab() {
-    return this.objectType === 'Desordre'
-        || this.objectType === 'StationPompage'
-        || this.objectType === 'ReseauHydrauliqueFerme'
-        || this.objectType === 'OuvrageHydrauliqueAssocie'
-        || this.objectType === 'ReseauHydrauliqueCielOuvert'
-        || this.objectType === 'VoieAcces'
-        || this.objectType === 'OuvrageFranchissement'
-        || this.objectType === 'OuvertureBatardable'
-        || this.objectType === 'VoieDigue'
-        || this.objectType === 'OuvrageVoirie'
-        || this.objectType === 'ReseauTelecomEnergie'
-        || this.objectType === 'OuvrageTelecomEnergie'
-        || this.objectType === 'OuvrageParticulier'
-        || this.objectType === 'Prestation'
-        || this.objectType === 'EchelleLimnimetrique'
-        || this.objectType === 'DesordreDependance';
+    const observationsObjectType = [
+      'Desordre',
+      'StationPompage',
+      'ReseauHydrauliqueFerme',
+      'OuvrageHydrauliqueAssocie',
+      'ReseauHydrauliqueCielOuvert',
+      'VoieAcces',
+      'OuvrageFranchissement',
+      'OuvertureBatardable',
+      'VoieDigue',
+      'OuvrageVoirie',
+      'ReseauTelecomEnergie',
+      'OuvrageTelecomEnergie',
+      'OuvrageParticulier',
+      'Prestation',
+      'EchelleLimnimetrique',
+      'DesordreDependance'
+    ];
+    if (observationsObjectType.indexOf(this.objectType) !== -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   canShowPrestationsTab() {
-    return this.objectType === 'StationPompage'
-        || this.objectType === 'ReseauHydrauliqueFerme'
-        || this.objectType === 'OuvrageHydrauliqueAssocie'
-        || this.objectType === 'ReseauHydrauliqueCielOuvert'
-        || this.objectType === 'VoieAcces'
-        || this.objectType === 'OuvrageFranchissement'
-        || this.objectType === 'OuvertureBatardable'
-        || this.objectType === 'VoieDigue'
-        || this.objectType === 'OuvrageVoirie'
-        || this.objectType === 'ReseauTelecomEnergie'
-        || this.objectType === 'OuvrageTelecomEnergie'
-        || this.objectType === 'OuvrageParticulier'
-        || this.objectType === 'EchelleLimnimetrique'
-        || this.objectType === 'Desordre';
+    const prestationsObjectType = [
+      'StationPompage',
+      'ReseauHydrauliqueFerme',
+      'OuvrageHydrauliqueAssocie',
+      'ReseauHydrauliqueCielOuvert',
+      'VoieAcces',
+      'OuvrageFranchissement',
+      'OuvertureBatardable',
+      'VoieDigue',
+      'OuvrageVoirie',
+      'ReseauTelecomEnergie',
+      'OuvrageTelecomEnergie',
+      'OuvrageParticulier',
+      'EchelleLimnimetrique',
+      'Desordre'
+    ];
+    if (prestationsObjectType.indexOf(this.objectType) !== -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   canShowDesordresTab() {
-    return this.objectType === 'StationPompage'
-        || this.objectType === 'ReseauHydrauliqueFerme'
-        || this.objectType === 'OuvrageHydrauliqueAssocie'
-        || this.objectType === 'ReseauHydrauliqueCielOuvert'
-        || this.objectType === 'VoieAcces'
-        || this.objectType === 'OuvrageFranchissement'
-        || this.objectType === 'OuvertureBatardable'
-        || this.objectType === 'VoieDigue'
-        || this.objectType === 'OuvrageVoirie'
-        || this.objectType === 'ReseauTelecomEnergie'
-        || this.objectType === 'OuvrageTelecomEnergie'
-        || this.objectType === 'OuvrageParticulier'
-        || this.objectType === 'Prestation'
-        || this.objectType === 'EchelleLimnimetrique';
+    const desordreObjectType = [
+      'StationPompage',
+      'ReseauHydrauliqueFerme',
+      'OuvrageHydrauliqueAssocie',
+      'ReseauHydrauliqueCielOuvert',
+      'VoieAcces',
+      'OuvrageFranchissement',
+      'OuvertureBatardable',
+      'VoieDigue',
+      'OuvrageVoirie',
+      'ReseauTelecomEnergie',
+      'OuvrageTelecomEnergie',
+      'OuvrageParticulier',
+      'Prestation',
+      'EchelleLimnimetrique'
+    ];
+    if (desordreObjectType.indexOf(this.objectType) !== -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   canShowEditionButtons() {
-    if (this.document['@class'] === "fr.sirs.core.model.BorneDigue"
-    || this.document['@class'] === "fr.sirs.core.model.TronconDigue") {
+    const editableDocumentClasses = [
+      "fr.sirs.core.model.BorneDigue",
+      "fr.sirs.core.model.TronconDigue"
+    ];
+    if (editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
       return false;
     }
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
