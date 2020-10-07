@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { IonicModule } from '@ionic/angular';
 import { AppModule } from 'src/app/app.module';
-
-import { EditDatabaseComponent } from './edit-database.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseService } from '../../database.service';
+import { EditDatabaseComponent } from './edit-database.component';
+
 
 describe('Testing EditDatabaseComponent', () => {
     let component: EditDatabaseComponent ;

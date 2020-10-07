@@ -1,13 +1,11 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { DatabaseChoiceComponent } from './database-choice.component';
 import { Router } from '@angular/router';
-import { AlertController, IonicModule } from '@ionic/angular';
-import { DatabaseService } from '../../database.service';
-import { AuthService } from '../../auth.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AlertController, IonicModule, Platform } from '@ionic/angular';
 import { AppModule } from '../../app.module';
-import { Platform } from '@ionic/angular';
-import { exception } from 'console';
+import { AuthService } from '../../auth.service';
+import { DatabaseService } from '../../database.service';
+import { DatabaseChoiceComponent } from './database-choice.component';
 
 export class MockAlert {
     public visible: boolean;

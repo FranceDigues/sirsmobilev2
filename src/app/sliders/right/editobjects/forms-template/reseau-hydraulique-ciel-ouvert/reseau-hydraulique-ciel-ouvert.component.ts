@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsTemplateService } from 'src/app/formstemplate.service';
-import { EditDatabaseComponent } from '../../../../../database-connection/edit-database/edit-database.component';
 import { EditObjectService } from '../../../../../editobjects.service';
 
 @Component({
