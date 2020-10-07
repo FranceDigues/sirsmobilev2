@@ -21,4 +21,9 @@ export class SelectedObjectsService {
         this.featuresEvent.next(features);
     }
 
+    deleteFeature(id) {
+        const newFeatures = this.features.filter(feature => feature.get('id') !== id);
+        this.updateFeatures(newFeatures);
+    }
+
 }

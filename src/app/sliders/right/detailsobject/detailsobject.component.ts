@@ -156,15 +156,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
                   }
                 }
                 // Remove the selected features
-                let features = this.selectedObjectsService.features;
-                i = features.length;
-                while (i--) {
-                  if (features[i].get('id') === this.document._id) {
-                    features.splice(i, 1);
-                    this.selectedObjectsService.updateFeatures(features);
-                    break;
-                  }
-                }
+                this.selectedObjectsService.deleteFeature(this.document._id);
                 this.goBack();
                 this.editionLayer.redrawEditionLayerAfterSynchronization();
               }
