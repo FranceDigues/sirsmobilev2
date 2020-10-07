@@ -40,7 +40,7 @@ export class DatabaseChoiceComponent implements OnInit {
             setTimeout(() => {
               this.statusBar.styleDefault();
               this.splashScreen.hide();
-            }, 200);
+            }, 500);
           },
           (error) => {
             this.statusBar.styleDefault();
