@@ -3,6 +3,7 @@ import { SelectedObjectsService } from 'src/app/selectedobjects.service';
 import { LocalDatabase } from '../../../usingLocalDatabase.service';
 import { ObjectDetails } from '../../../objectdetails.service';
 import { Toast } from '@ionic-native/toast/ngx';
+import Feature from 'ol/Feature';
 
 @Component({
   selector: 'right-slide-selected-objects',
@@ -12,7 +13,6 @@ import { Toast } from '@ionic-native/toast/ngx';
 export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
   status: 'general' | 'details' = 'general';
-  features = [];
   featuresCollection = [];
   subscription = null;
 
@@ -20,11 +20,15 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
               private localDB: LocalDatabase, private toast: Toast,
               private objectDetails: ObjectDetails) { }
 
+
+  get features(): Array<Feature> {
+    return this.selectedObjectsService.features;
+  }
+
   ngOnInit() {
     this.subscription = this.selectedObjectsService.getFeatures()
     .subscribe((features) => {
       this.status = 'general';
-      this.features = Object.assign([], features);
       this.featuresCollection = this.getAllFeaturesFromCluster(features);
       this.cdr.detectChanges();
     });
@@ -32,7 +36,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe(() => {
-      this.features = null;
+      this.selectedObjectsService.features = null;
       this.featuresCollection = null;
     });
   }
