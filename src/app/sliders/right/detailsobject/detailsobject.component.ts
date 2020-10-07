@@ -16,6 +16,57 @@ declare var M: any;
 })
 export class DetailsObjectComponent implements OnInit, AfterViewInit {
 
+  static observationsObjectType = [
+    'Desordre',
+    'StationPompage',
+    'ReseauHydrauliqueFerme',
+    'OuvrageHydrauliqueAssocie',
+    'ReseauHydrauliqueCielOuvert',
+    'VoieAcces',
+    'OuvrageFranchissement',
+    'OuvertureBatardable',
+    'VoieDigue',
+    'OuvrageVoirie',
+    'ReseauTelecomEnergie',
+    'OuvrageTelecomEnergie',
+    'OuvrageParticulier',
+    'Prestation',
+    'EchelleLimnimetrique',
+    'DesordreDependance'
+  ];
+  static prestationsObjectType = [
+    'StationPompage',
+    'ReseauHydrauliqueFerme',
+    'OuvrageHydrauliqueAssocie',
+    'ReseauHydrauliqueCielOuvert',
+    'VoieAcces',
+    'OuvrageFranchissement',
+    'OuvertureBatardable',
+    'VoieDigue',
+    'OuvrageVoirie',
+    'ReseauTelecomEnergie',
+    'OuvrageTelecomEnergie',
+    'OuvrageParticulier',
+    'EchelleLimnimetrique',
+    'Desordre'
+  ];
+  static desordreObjectType = [
+    'StationPompage',
+    'ReseauHydrauliqueFerme',
+    'OuvrageHydrauliqueAssocie',
+    'ReseauHydrauliqueCielOuvert',
+    'VoieAcces',
+    'OuvrageFranchissement',
+    'OuvertureBatardable',
+    'VoieDigue',
+    'OuvrageVoirie',
+    'ReseauTelecomEnergie',
+    'OuvrageTelecomEnergie',
+    'OuvrageParticulier',
+    'Prestation',
+    'EchelleLimnimetrique'
+  ];
+
   @Output() readonly statusChange = new EventEmitter<string>();
 
   activeTab = 'description';
@@ -56,26 +107,9 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
     this.activeTab = string;
   }
 
+
   canShowObservationsTab() {
-    const observationsObjectType = [
-      'Desordre',
-      'StationPompage',
-      'ReseauHydrauliqueFerme',
-      'OuvrageHydrauliqueAssocie',
-      'ReseauHydrauliqueCielOuvert',
-      'VoieAcces',
-      'OuvrageFranchissement',
-      'OuvertureBatardable',
-      'VoieDigue',
-      'OuvrageVoirie',
-      'ReseauTelecomEnergie',
-      'OuvrageTelecomEnergie',
-      'OuvrageParticulier',
-      'Prestation',
-      'EchelleLimnimetrique',
-      'DesordreDependance'
-    ];
-    if (observationsObjectType.indexOf(this.objectType) !== -1) {
+    if (DetailsObjectComponent.observationsObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
@@ -83,23 +117,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   canShowPrestationsTab() {
-    const prestationsObjectType = [
-      'StationPompage',
-      'ReseauHydrauliqueFerme',
-      'OuvrageHydrauliqueAssocie',
-      'ReseauHydrauliqueCielOuvert',
-      'VoieAcces',
-      'OuvrageFranchissement',
-      'OuvertureBatardable',
-      'VoieDigue',
-      'OuvrageVoirie',
-      'ReseauTelecomEnergie',
-      'OuvrageTelecomEnergie',
-      'OuvrageParticulier',
-      'EchelleLimnimetrique',
-      'Desordre'
-    ];
-    if (prestationsObjectType.indexOf(this.objectType) !== -1) {
+    if (DetailsObjectComponent.prestationsObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
@@ -107,23 +125,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   canShowDesordresTab() {
-    const desordreObjectType = [
-      'StationPompage',
-      'ReseauHydrauliqueFerme',
-      'OuvrageHydrauliqueAssocie',
-      'ReseauHydrauliqueCielOuvert',
-      'VoieAcces',
-      'OuvrageFranchissement',
-      'OuvertureBatardable',
-      'VoieDigue',
-      'OuvrageVoirie',
-      'ReseauTelecomEnergie',
-      'OuvrageTelecomEnergie',
-      'OuvrageParticulier',
-      'Prestation',
-      'EchelleLimnimetrique'
-    ];
-    if (desordreObjectType.indexOf(this.objectType) !== -1) {
+    if (DetailsObjectComponent.desordreObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
