@@ -293,10 +293,10 @@ export class EditObjectService {
               Promise.all(promises)
               .then((results) => {
                       setTimeout(() => {
-                          this.dependances = [];
-                          results.map((item) => {
-                              this.dependances = item.rows.map(elt => elt);
-                          });
+                            this.dependances = [];
+                            results.forEach((item) => {
+                                this.dependances = item.rows.map(elt => elt);
+                            });
                           loading.dismiss();
                       }, 100);
               }).catch((err) => {
