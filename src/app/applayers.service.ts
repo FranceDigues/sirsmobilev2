@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
+import { Random } from './uuid-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -90,9 +91,9 @@ export class AppLayersService {
         layer.selectable = false;
         layer.visible = false;
         layer.color = [
-            Math.floor(Math.random() * 256),    // red
-            Math.floor(Math.random() * 256),    // green
-            Math.floor(Math.random() * 256),    // blue
+            Math.floor(Random() * 256),    // red
+            Math.floor(Random() * 256),    // green
+            Math.floor(Random() * 256),    // blue
             1                                   // alpha
         ];
         this.favorites.push(layer);
