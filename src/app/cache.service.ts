@@ -25,13 +25,16 @@ import { MapService } from 'src/app/map.service';
 })
 export class CacheMapManager {
 
-    targetLayer: TileLayer = null;
+    targetLayer: TileLayer;
 
-    previousAreaLayer: VectorLayer = null;
+    previousAreaLayer: VectorLayer;
 
-    currentAreaLayer: VectorLayer = null;
+    currentAreaLayer: VectorLayer;
 
     constructor(private mapService: MapService) {
+        this.targetLayer = null;
+        this.previousAreaLayer = null;
+        this.currentAreaLayer = null;
         const radius = 5;
         const width = 2;
 

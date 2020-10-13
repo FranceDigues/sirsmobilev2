@@ -19,15 +19,15 @@ import { CacheMapManager } from 'src/app/cache.service';
 })
 export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
 
-  id = null;
-  selectedCorner = null;
-  minZoom = null;
-  maxZoom = null;
-  tileCount = 0;
-  currentView: View = null;
-  layerModel: ListBackLayer = null;
-  lastZoom: number = 0;
-  knobValues: { lower: number, upper: number } = null;
+  id;
+  selectedCorner;
+  minZoom;
+  maxZoom;
+  tileCount;
+  currentView: View;
+  layerModel: ListBackLayer;
+  lastZoom: number;
+  knobValues: { lower: number, upper: number };
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
               private mapService: MapService, private cacheMapManager: CacheMapManager,
@@ -35,6 +35,16 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
               private alertCtrl: AlertController, private ol: OLService,
               private cdRef: ChangeDetectorRef) {
                 this.ol.map = null;
+
+                this.id = null;
+                this.selectedCorner = null;
+                this.minZoom = null;
+                this.maxZoom = null;
+                this.tileCount = 0;
+                this.currentView = null;
+                this.layerModel = null;
+                this.lastZoom = 0;
+                this.knobValues = null;
 
                 this.knobValues = { lower: 7, upper: 16 }
                 this.id = this.activeRoute.snapshot.paramMap.get('id');
@@ -96,11 +106,9 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   }
 
   ifSelectedCorner(status: string) {
-    if (this.selectedCorner && this.selectedCorner === status) {
-      return true;
-    } else {
-      return false;
-    }
+    const selectedCornerHasExpectedStatus = this.selectedCorner && this.selectedCorner === status;
+
+    return selectedCornerHasExpectedStatus;
   }
 
   editCorner(event, corner) {
