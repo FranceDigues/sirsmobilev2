@@ -9,28 +9,26 @@
   </ion-header>
   <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
     <ion-list>
-      <div *ngFor="let layer of backLayerService.getList()">
-        <ion-item-sliding side="end">
-          <ion-item (click)="backLayer.setActiveBackLayers(layer)">
-            {{ layer.name }}
-            <span *ngIf="layer.cache && layer.cache.active">(hors ligne)</span>
-            <i slot="end" class="material-icons" *ngIf="layer.name === backLayerService.getActive().name">check</i>
-          </ion-item>
-          <ion-item-options style="width: 150px">
-            <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
-              <ion-icon *ngIf="backLayerService.getActive() && (!layer.cache || !layer.cache.active)" name="cloud-download-outline"></ion-icon>
-              <ion-icon *ngIf="layer.name === backLayerService.getActive().name && layer.cache && layer.cache.active" name="cloud-offline-outline"></ion-icon>
-            </ion-item-option>
-            <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
-              <ion-icon name="create-outline"></ion-icon>
-            </ion-item-option>
-            <ion-item-option style="width: 50px" color="danger" (click)="removeLayer(layer)">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-        <ion-item lines="none"></ion-item>
-      </div>
+      <ion-item-sliding *ngFor="let layer of backLayerService.getList()" side="end">
+        <ion-item (click)="backLayer.setActiveBackLayers(layer)">
+          {{ layer.name }}
+          <span *ngIf="layer.cache && layer.cache.active"> (hors ligne)</span>
+          <i slot="end" class="material-icons" *ngIf="layer.name === backLayerService.getActive().name">check</i>
+        </ion-item>
+        <ion-item-options style="width: 150px">
+          <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
+            <ion-icon *ngIf="backLayerService.getActive() && (!layer.cache || !layer.cache.active)" name="cloud-download-outline"></ion-icon>
+            <ion-icon *ngIf="layer.name === backLayerService.getActive().name && layer.cache && layer.cache.active" name="cloud-offline-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option style="width: 50px" color="danger" (click)="removeLayer(layer)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <ion-item lines="none"></ion-item>
     </ion-list>
   </ion-content>
   <ion-fab class="position-absolute" style="top: 85%;" horizontal="center" vertical="end" slot="fixed">
