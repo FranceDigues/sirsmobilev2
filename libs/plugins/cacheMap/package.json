@@ -1,0 +1,20 @@
+{
+  "name": "com.rde.cachemap",
+  "version": "0.0.9",
+  "description": " Autonomous Cache Map Slave",
+  "cordova": {
+    "id": "com.rde.cachemap",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "cache",
+    "map",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "",
+  "license": ""
+}
