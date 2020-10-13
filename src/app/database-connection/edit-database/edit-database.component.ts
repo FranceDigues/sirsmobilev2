@@ -55,10 +55,52 @@ export class EditDatabaseComponent implements OnInit {
     this.statusChange.emit(0);
   }
 
+  private addDefaultProperties() {
+    this.databaseForm.value.favorites = [];
+    this.databaseForm.value.context = {
+      showText: 'fullName',
+      authUser: null,
+      currentView: null,
+      backLayer: {
+        active: {
+                  name: 'OpenStreetMap',
+                  source: {
+                      type: 'OSM',
+                      url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                  }
+                },
+        list:
+        [
+          {
+              name: 'OpenStreetMap',
+              source: {
+                  type: 'OSM',
+                  url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+              }
+          },
+          {
+              name: 'Landscape',
+              source: {
+                  type: 'OSM',
+                  url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+              }
+          }
+        ]
+      },
+      settings: {
+        geolocation: true,
+        edition: false,
+      },
+      lastLocation: null,
+      version: null
+    };
+  }
+
   editStorage() {
-        this.databases[this.databaseIndex] = this.databaseForm.value;
-        this.dbService.updateDatabasesHardDisk(this.databases);
-        this.onBack();
+      this.addDefaultProperties();
+      this.databases[this.databaseIndex] = this.databaseForm.value;
+      this.dbService.updateDatabasesHardDisk(this.databases);
+      this.onBack();
   }
 
 }
