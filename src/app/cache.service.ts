@@ -164,8 +164,8 @@ export class CacheMapManager {
             const projExtent = get('EPSG:3857').getExtent();
             const startResolution = getWidth(projExtent) / 256;
             const resolutions = new Array(22);
-            for (let i = 0, j = resolutions.length; i < j; ++i) {
-            resolutions[i] = startResolution / Math.pow(2, i);
+            for (let i = 0, size = resolutions.length; i < size; ++i) {
+                resolutions[i] = startResolution / Math.pow(2, i);
             }
             tileGrid = new TileGrid({
                 origin: [0, 0],
