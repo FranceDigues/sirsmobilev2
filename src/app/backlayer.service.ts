@@ -32,7 +32,7 @@ export class BackLayerService {
         return this.backLayers.active;
     }
 
-    getByName(name) {
+    getByName(name: string) {
         let i = this.backLayers.list.length;
 
         while (i--) {
@@ -42,6 +42,10 @@ export class BackLayerService {
             }
         }
         return null;
+    }
+
+    setActive(name: string) {
+        this.backLayers.active = this.getByName(name);
     }
 
     add(layer) {
@@ -54,7 +58,7 @@ export class BackLayerService {
         this.updateListInHardDisk();
     }
 
-    private updateListInHardDisk() {
+    updateListInHardDisk() {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
