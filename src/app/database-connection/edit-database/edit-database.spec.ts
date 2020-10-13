@@ -73,6 +73,44 @@ describe('Testing EditDatabaseComponent', () => {
     });
 
     it('editStorage method should update databases', () => {
+        const favorites = [];
+        const context = {
+            showText: 'fullName',
+            authUser: null,
+            currentView: null,
+            backLayer: {
+                active: {
+                        name: 'OpenStreetMap',
+                        source: {
+                            type: 'OSM',
+                            url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                        }
+                        },
+                list:
+                [
+                {
+                    name: 'OpenStreetMap',
+                    source: {
+                        type: 'OSM',
+                        url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    }
+                },
+                {
+                    name: 'Landscape',
+                    source: {
+                        type: 'OSM',
+                        url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+                    }
+                }
+                ]
+            },
+            settings: {
+                geolocation: true,
+                edition: false,
+            },
+            lastLocation: null,
+            version: null
+        };
         const db1 = {
             name: 'example1',
             url: 'geomatys.com',
@@ -84,7 +122,9 @@ describe('Testing EditDatabaseComponent', () => {
             url: 'geomatys.com',
             userId: 'test',
             password: 'test',
-            replicated: false
+            replicated: false,
+            context,
+            favorites
         };
 
         spyOn(dbService, 'updateDatabasesHardDisk');
