@@ -226,14 +226,15 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
         {
           text: 'OK',
           handler: () => {
+            const cache = this.layerModel.cache;
             CacheMapPlugin.clearOneCache({
                 name: this.layerModel.name,
                 layerSource: null,
                 typeSource: this.layerModel.source.type,
-                zMin: this.layerModel.cache.minZoom,
-                zMax: this.layerModel.cache.maxZoom,
+                zMin: cache.minZoom,
+                zMax: cache.maxZoom,
                 urlSource: this.layerModel.source.url,
-                bbox: this.layerModel.cache.extent
+                bbox: cache.extent
             });
 
             delete this.layerModel.cache;
