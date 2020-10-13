@@ -145,7 +145,7 @@ export class CacheMapManager {
         }
     }
 
-    getCurrentArea() {
+    getCurrentArea(): Array<number> {
         const feature = this.currentAreaLayer.getSource().getFeatures()[0];
         if (feature instanceof Feature) {
             return feature.getGeometry().getExtent();
