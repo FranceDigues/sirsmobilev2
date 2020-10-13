@@ -320,8 +320,8 @@ export class BackLayer {
     }
 
     syncBackLayer() {
-        const olLayer = this.backLayer.createBackLayerInstance(this.backLayerService.getActive());
-        this.backLayer.backLayer.getLayers().setAt(0, olLayer);
+        const olLayer = this.createBackLayerInstance(this.backLayerService.getActive());
+        this.backLayer.getLayers().setAt(0, olLayer);
     }
 }
 
