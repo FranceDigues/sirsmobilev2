@@ -18,9 +18,10 @@ export class DatabaseService {
   }
 
   async getRemoteDB() {
-    if (this.remoteDB == null) {
-      if (this.activeDB == null) {
+    if (this.remoteDB === null) {
+      if (this.activeDB === null) {
         console.log('ERROR');
+        return null;
       }
       console.log('On rentre dans la fonction getRemoteDB');
       this.remoteDB = new PouchDB(this.activeDB.url,
@@ -68,7 +69,7 @@ export class DatabaseService {
               resolve(database);
             }
           });
-          resolve();
+          resolve(null);
         }
       );
     });
