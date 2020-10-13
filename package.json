@@ -84,6 +84,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.12.52",
     "codelyzer": "^5.1.2",
+    "com.rde.cachemap": "file:libs/plugins/cacheMap",
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
@@ -126,7 +127,7 @@
       },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-nativestorage": {}
+      "com.rde.cachemap": {}
     },
     "platforms": [
       "android"
