@@ -25,55 +25,67 @@ import { MapService } from 'src/app/map.service';
 })
 export class CacheMapManager {
 
-    targetLayer = new TileLayer({
-        name: 'Target'
-    });
+    targetLayer: TileLayer = null;
 
-    previousAreaLayer = new VectorLayer({
-        name: 'Previous Area',
-        source: new VectorSource(),
-        style: [
-        new Style({
-            fill: new Fill({color: [255, 0, 0, 0.1]}),
-            stroke: new Stroke({color: [255, 0, 0, 1], width: 2})
-        }),
-        new Style({
+    previousAreaLayer: VectorLayer = null;
+
+    currentAreaLayer: VectorLayer = null;
+
+    constructor(private mapService: MapService) {
+        const radius = 5;
+        const width = 2;
+
+        const previousAreaLayerStyle1 = new Style({
+            fill: new Fill({ color: [255, 0, 0, 0.1] }),
+            stroke: new Stroke({ color: [255, 0, 0, 1], width: width })
+        });
+        const previousAreaLayerStyle2 = new Style({
             image: new CircleStyle({
-                radius: 5,
+                radius: radius,
                 fill: new Fill({color: [255, 0, 0, 1]})
             }),
             geometry: (feature) => {
-                // return the coordinates of the first ring of the polygon
-                const coordinates = feature.getGeometry().getCoordinates()[0];
-                return new MultiPoint(coordinates);
+                this.geometryFunctionStyle(feature);
             }
-        })
-        ]
-    });
+        });
 
-    currentAreaLayer = new VectorLayer({
-        name: 'Current Area',
-        source: new VectorSource(),
-        style: [
-            new Style({
-                fill: new Fill({color: [0, 0, 255, 0.1]}),
-                stroke: new Stroke({color: [0, 0, 255, 1], width: 2})
+        const currentAreaLayerStyle1 = new Style({
+            fill: new Fill({ color: [0, 0, 255, 0.1] }),
+            stroke: new Stroke({ color: [0, 0, 255, 1], width: width })
+        });
+        const currentAreaLayerStyle2 = new Style({
+            image: new CircleStyle({
+                radius: radius,
+                fill: new Fill({ color: [0, 0, 255, 1] })
             }),
-            new Style({
-                image: new CircleStyle({
-                    radius: 5,
-                    fill: new Fill({color: [0, 0, 255, 1]})
-                }),
-                geometry: (feature) => {
-                    // return the coordinates of the first ring of the polygon
-                    const coordinates = feature.getGeometry().getCoordinates()[0];
-                    return new MultiPoint(coordinates);
-                }
-            })
-        ]
-    });
+            geometry: (feature) => {
+                this.geometryFunctionStyle(feature);
+            }
+        });
 
-    constructor(private mapService: MapService) { }
+        this.targetLayer = new TileLayer({
+            name: 'Target'
+        });
+
+        this.previousAreaLayer = new VectorLayer({
+            name: 'Previous Area',
+            source: new VectorSource(),
+            style: [previousAreaLayerStyle1, previousAreaLayerStyle2]
+        });
+
+        this.currentAreaLayer = new VectorLayer({
+            name: 'Current Area',
+            source: new VectorSource(),
+            style: [currentAreaLayerStyle1, currentAreaLayerStyle2]
+        });
+    }
+
+    geometryFunctionStyle(feature) {
+        // return the coordinates of the first ring of the polygon
+
+        const coordinates = feature.getGeometry().getCoordinates()[0];
+        return new MultiPoint(coordinates);
+    }
 
     createFeatureInstance(extent) {
         return new Feature({ geometry: new fromExtent(extent) });
