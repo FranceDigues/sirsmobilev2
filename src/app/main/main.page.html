@@ -16,17 +16,17 @@
                       <span class="gps-text">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
                   </div>
           </div>
-          <a *ngIf="geoloc.enableGeoloc" class="nav-item nav-link" (click)="locateMe()">
-              <span><i class="material-icons">gps_fixed</i></span>
+          <a *ngIf="geoloc.enableGeoloc" class="nav-item nav-link header-icon" (click)="locateMe()">
+              <ion-icon name="navigate-outline"></ion-icon>
           </a>
-          <a class="nav-item nav-link" (click)="zoomToMe()">
-              <span><i class="material-icons">place</i></span>
+          <a class="nav-item nav-link header-icon" (click)="zoomToMe()">
+              <ion-icon name="pin-outline"></ion-icon>
           </a>
-          <a class="nav-item nav-link" (click)="refresh()">
-              <span><i class="material-icons">refresh</i></span>
+          <a class="nav-item nav-link header-icon" (click)="refresh()">
+              <ion-icon name="refresh-outline"></ion-icon>
           </a>
-          <a class="nav-item nav-link" (click)="logout()">
-              <span><i class="material-icons">power_settings_new</i></span>
+          <a class="nav-item nav-link header-icon" (click)="logout()">
+              <ion-icon name="power-outline"></ion-icon>
           </a>
       </nav>
   </header>
