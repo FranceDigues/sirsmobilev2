@@ -133,7 +133,7 @@ export class CacheMapManager {
         const source = this.handleTypesSource(layerModel);
         this.targetLayer.setSource(source);
 
-        if (typeof layerModel.cache === 'object') {
+        if (layerModel.cache instanceof Object) {
             this.previousAreaLayer.getSource().addFeatures([this.createFeatureInstance(layerModel.cache.extent)]);
         }
     }
