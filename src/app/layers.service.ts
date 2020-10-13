@@ -267,7 +267,7 @@ export class BackLayer {
         }
     }
 
-    getUrl(url) {
+    getUrl(url): string {
         return this.webview.convertFileSrc(url);
     }
 
