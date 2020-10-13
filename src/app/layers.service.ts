@@ -28,9 +28,7 @@ import { DatabaseModel, ListBackLayer } from './models/database.model';
 import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
-
-
-
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -232,8 +230,8 @@ export class BackLayer {
     backLayer: LayerGroup;
 
     constructor(private backLayerService: BackLayerService, private mapService: MapService,
-                private ol: OLService, private dbService: DatabaseService) {
-                }
+                private ol: OLService, private dbService: DatabaseService,
+                private webview: WebView) { }
 
     init() {
         this.backLayerService.init()
@@ -269,6 +267,10 @@ export class BackLayer {
         }
     }
 
+    getUrl(url) {
+        return this.webview.convertFileSrc(url);
+    }
+
     createBackLayerInstance(layerModel): TileLayer {
         let layer = null;
 
@@ -276,11 +278,12 @@ export class BackLayer {
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;
 
+            const url = this.getUrl(layerModel.cache.url);
             const source = new XYZ({
-                url: layerModel.cache.url
+                url
             });
             layer = new TileLayer({
-                name: layerModel.name,
+                name: 'nameTileLayer',
                 extent,
                 source
             });

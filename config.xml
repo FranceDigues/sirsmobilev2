@@ -5,6 +5,7 @@
     <author email="hi@ionicframework.com" href="https://geomatys.com/">Geomatys</author>
     <content src="index.html" />
     <access origin="*" />
+    <access origin="file://*" />
     <allow-navigation href="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

@@ -41,6 +41,7 @@ import { SyncService } from './sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
 import { CacheMapManager } from './cache.service';
 import { File } from '@ionic-native/file/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 @NgModule({
@@ -88,6 +89,7 @@ import { File } from '@ionic-native/file/ngx';
     FormsTemplateService,
     CacheMapManager,
     File,
+    WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
