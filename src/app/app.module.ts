@@ -39,6 +39,7 @@ import { FilterPipe } from './sliders/right/createobjects/createobjects.componen
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
 import { SyncService } from './sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
+import { CacheMapManager } from './cache.service';
 import { File } from '@ionic-native/file/ngx';
 
 
@@ -85,6 +86,7 @@ import { File } from '@ionic-native/file/ngx';
     ObjectDetails,
     MapEditObjectService,
     FormsTemplateService,
+    CacheMapManager,
     File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -1,3 +1,73 @@
-<p>
-  // TODO
-</p>
+<ion-header translucent>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot=start>
+      <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mise en cache</ion-title>
+  </ion-toolbar>
+</ion-header>
+<div class="full-height">
+  <div class="row full-height">
+    <div class="cache-left center">
+      <div class="sirs-field">
+        <span class="sirs-field-title">
+          Niveaux de zoom<br />
+          {{ minZoom }} / {{ maxZoom }}
+        </span>
+        <ion-range class="cacheSlider" min="0" max="18" pin dualKnobs="true" color="secondary"
+        [(ngModel)]="knobValues" (ionChange)="updateTileCount()">
+        </ion-range>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Niveau de zoom actuel</span>
+        <p class="text-right">{{ getCurrentZoom() }}</p>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Nombre de tuiles</span>
+        <p class="text-right">{{ tileCount | number }}</p>
+      </div>
+      <p *ngIf="tileCount > 20000">
+        <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque
+        occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau
+        de zoom maximum.
+      </p>
+      <ion-fab class="position-absolute" style="top: 75%; padding-left: 15px;" horizontal="start" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="validate()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-fab class="position-absolute" style="top: 75%;" horizontal="end" vertical="end" slot="fixed">
+        <ion-fab-button [disabled]="!layerModel.cache" color="danger" (click)="deleteCache()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+    <div class="cache-right">
+      <div id="mapCache" #mapCache></div>
+      <ion-icon *ngIf="selectedCorner" class="map-viewer" name="ellipse-outline"></ion-icon>
+    </div>
+  </div>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="secondary">
+      <ion-icon md="caret-up" ios="chevron-up-circle-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('br')" (click)="editCorner($event, 'br')" color="light">
+        <ion-icon name="logo-google"></ion-icon>
+        <img src="../../../../../assets/img/cache-bottomright.png" />
+      </ion-fab-button>
+      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('bl')" (click)="editCorner($event, 'bl')" color="light">
+        <ion-icon name="logo-vimeo"></ion-icon>
+        <img src="../../../../../assets/img/cache-bottomleft.png" />
+      </ion-fab-button>
+      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('tr')" (click)="editCorner($event, 'tr')" color="light">
+        <ion-icon name="logo-twitter"></ion-icon>
+        <img src="../../../../../assets/img/cache-topright.png" />
+      </ion-fab-button>
+      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('tl')" (click)="editCorner($event, 'tl')" color="light">
+        <img src="../../../../../assets/img/cache-topleft.png" />
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</div>
+

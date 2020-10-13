@@ -1,61 +1,77 @@
-import { Component, OnInit } from '@angular/core';
-
-import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Style from 'ol/style/Style';
-import Fill from 'ol/style/Fill';
-import Stroke from 'ol/style/Stroke';
-import CircleStyle from 'ol/style/Circle';
-import MultiPoint from 'ol/geom/MultiPoint';
-import Feature from 'ol/Feature';
-import Polygon from 'ol/geom/Polygon';
-import ScaleLine from 'ol/control/ScaleLine';
-import OSM from 'ol/source/OSM';
-import TileWMS from 'ol/source/TileWMS';
-import XYZ from 'ol/source/XYZ';
-import TileGrid from 'ol/tilegrid/TileGrid';
-import { get } from 'ol/proj';
-import { getWidth, getHeight } from 'ol/extent';
-import { defaults as defaultsInteraction } from 'ol/interaction';
-import { transformExtent } from 'ol/proj';
-
-import { MapService } from 'src/app/map.service';
-import { BackLayerService } from 'src/app/backlayer.service';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { File } from '@ionic-native/file/ngx';
+import { AlertController } from '@ionic/angular';
+import { getHeight, getWidth } from 'ol/extent';
+import { transformExtent } from 'ol/proj';
+import View from 'ol/View';
+import { BackLayerService } from 'src/app/backlayer.service';
 import { BackLayer } from 'src/app/layers.service';
+import { MapService } from 'src/app/map.service';
+import { ListBackLayer } from 'src/app/models/database.model';
+import { OLService } from '../../../../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-map/ol.service';
+import { CacheMapManager } from 'src/app/cache.service';
 
 @Component({
   selector: 'cache',
   templateUrl: './cache.component.html',
   styleUrls: ['./cache.component.scss'],
 })
-export class LeftSlideCacheComponent implements OnInit {
+export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
 
   id = null;
   selectedCorner = null;
   minZoom = null;
   maxZoom = null;
   tileCount = 0;
+  currentView: View = null;
+  layerModel: ListBackLayer = null;
+  lastZoom: number = 0;
+  knobValues: { lower: number, upper: number } = { lower: 7, upper: 16 };
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
               private mapService: MapService, private cacheMapManager: CacheMapManager,
-              private route: Router, private backLayer: BackLayer) {
+              private route: Router, private backLayer: BackLayer, private file: File,
+              private alertCtrl: AlertController, private ol: OLService,
+              private cdRef: ChangeDetectorRef) {
+                this.ol.map = null;
+
                 this.id = this.activeRoute.snapshot.paramMap.get('id');
+                this.currentView = this.mapService.currentView;
+                this.layerModel = this.backLayerService.getByName(this.id);
+                this.lastZoom = this.currentView.getZoom();
+                this.minZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.minZoom : 7;
+                this.maxZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.maxZoom : 16;
+                this.knobValues = {
+                  lower: this.minZoom,
+                  upper: this.maxZoom
+                };
+
+                this.cacheMapManager.setTargetLayer(this.layerModel);
+
+                this.currentView.on('change:center', (event) => this.onCenterChanged(event));
               }
 
-  currentView = this.mapService.currentView;
-  layerModel = this.backLayerService.getByName(this.id);
-  lastZoom = this.currentView.getZoom();
+  ngAfterViewInit() {
+    this.ol.map = this.cacheMapManager.buildConfig();
+    this.setDefaultArea(this.ol.map);
+    this.ol.map.updateSize();
+  }
 
-  ngOnInit() {
-    this.minZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.minZoom : 7;
-    this.maxZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.maxZoom : 16;
+  ngOnDestroy(): void {
+    this.cacheMapManager.clearTargetLayer();
+    this.currentView.un('change:center', this.onCenterChanged);
+  }
+
+  goBack() {
+    this.route.navigateByUrl('/main');
   }
 
   updateTileCount() {
-    // console.log('file, ', this.file.externalDataDirectory);
+    this.minZoom = this.knobValues.lower;
+    this.maxZoom = this.knobValues.upper;
     this.tileCount = this.cacheMapManager.countTiles(this.minZoom, this.maxZoom);
+    this.cdRef.detectChanges();
   }
 
   setDefaultArea(map) {
@@ -78,7 +94,16 @@ export class LeftSlideCacheComponent implements OnInit {
     this.updateTileCount();
   }
 
-  editCorner(corner) {
+  ifSelectedCorner(status: string) {
+    if (this.selectedCorner && this.selectedCorner === status) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  editCorner(event, corner) {
+    event.stopPropagation();
     if (corner === this.selectedCorner) {
         this.selectedCorner = null;
     } else {
@@ -136,218 +161,87 @@ export class LeftSlideCacheComponent implements OnInit {
               break;
       }
       this.cacheMapManager.setCurrentArea(extent);
-      setTimeout(this.updateTileCount);
+      this.updateTileCount();
     }
   }
 
-  validate() { // TODO
+  setNewCacheInGoodLayerInBackLayerList(cache) {
+    const name = this.backLayerService.getActive().name;
+
+    this.backLayerService.backLayers.list.forEach((backLayer) => {
+      if (backLayer.name === name) {
+        backLayer.cache = cache;
+      }
+    });
+  }
+
+  setNewCacheInActiveBackLayer(cache) {
+    this.backLayerService.backLayers.active.cache = cache;
+  }
+
+  validate() {
     let extent = this.cacheMapManager.getCurrentArea();
+    this.layerModel = this.backLayerService.backLayers.active;
 
     // Update layer model and force update.
-    this.layerModel.cache = {
-        active: true,
-        minZoom: this.minZoom,
-        maxZoom: this.maxZoom,
-        extent,
-        // url: cordova.file.externalDataDirectory + 'tiles/' + this.layerModel.name + '/{z}/{x}/{y}.png'
+    const cache = {
+      active: true,
+      minZoom: this.minZoom,
+      maxZoom: this.maxZoom,
+      extent,
+      url: this.file.externalDataDirectory + 'tiles/' + this.layerModel.name + '/{z}/{x}/{y}.png'
     };
+
+    this.setNewCacheInGoodLayerInBackLayerList(cache);
+    this.setNewCacheInActiveBackLayer(cache)
+    this.backLayerService.updateListInHardDisk();
     this.backLayer.syncBackLayer();
 
     // Run cache plugin task.
     extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
 
-    // CacheMapPlugin.updateCache([{
-    //     name: this.layerModel.name,
-    //     layerSource: null,
-    //     typeSource: this.layerModel.source.type,
-    //     zMin: this.minZoom,
-    //     zMax: this.maxZoom,
-    //     urlSource: this.layerModel.source.url,
-    //     bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
-    // }]);
+    CacheMapPlugin.updateCache([{
+      name: this.layerModel.name,
+      layerSource: null,
+      typeSource: this.layerModel.source.type,
+      zMin: this.minZoom,
+      zMax: this.maxZoom,
+      urlSource: this.layerModel.source.url,
+      bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
+    }]);
 
-    this.route.navigateByUrl('/main');
+    setTimeout(() => { this.route.navigateByUrl('/main') }, 300);
   }
 
-  deleteCache() { // TODO
-    // $ionicPopup.confirm({
-    //     title: 'Suppression de cache',
-    //     template: 'Voulez vous supprimer le cache de cette couche de données ?'
-    // }).then(function (confirmed) {
-    //     if (confirmed) {
-    //         CacheMapPlugin.clearOneCache({
-    //             name: this.layerModel.name,
-    //             layerSource: null,
-    //             typeSource: this.layerModel.source.type,
-    //             zMin: this.layerModel.cache.minZoom,
-    //             zMax: this.layerModel.cache.maxZoom,
-    //             urlSource: this.layerModel.source.url,
-    //             bbox: this.layerModel.cache.extent
-    //         });
+  async deleteCache() {
+    const alert = await this.alertCtrl.create({
+      header: 'Suppression de cache',
+      message: 'Voulez vous supprimer le cache de cette couche de données ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel'
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            CacheMapPlugin.clearOneCache({
+                name: this.layerModel.name,
+                layerSource: null,
+                typeSource: this.layerModel.source.type,
+                zMin: this.layerModel.cache.minZoom,
+                zMax: this.layerModel.cache.maxZoom,
+                urlSource: this.layerModel.source.url,
+                bbox: this.layerModel.cache.extent
+            });
 
-    //         delete this.layerModel.cache;
-    //         this.backLayerService.setActive(this.layerModel.name);
-    //     }
-    //     return confirmed;
-    // });
-  }
-
-
-  // CacheMapManager.setTargetLayer(self.layerModel);
-
-  // currentView.on('change:center', onCenterChanged);
-
-  // currentView.on('change:resolution', onResolutionChanged);
-
-  // $scope.$on('$destroy', function () {
-  //     CacheMapManager.clearTargetLayer();
-  //     currentView.un('change:center', onCenterChanged);
-  //     currentView.un('change:resolution', onResolutionChanged);
-  // });
-
-}
-
-export class CacheMapManager {
-
-  targetLayer = new TileLayer({
-    name: 'Target'
-  });
-
-  previousAreaLayer = new VectorLayer({
-    name: 'Previous Area',
-    source: new VectorSource(),
-    style: [
-      new Style({
-          fill: new Fill({color: [255, 0, 0, 0.1]}),
-          stroke: new Stroke({color: [255, 0, 0, 1], width: 2})
-      }),
-      new Style({
-          image: new CircleStyle({
-              radius: 5,
-              fill: new Fill({color: [255, 0, 0, 1]})
-          }),
-          geometry: (feature) => {
-              // return the coordinates of the first ring of the polygon
-              const coordinates = feature.getGeometry().getCoordinates()[0];
-              return new MultiPoint(coordinates);
+            delete this.layerModel.cache;
+            this.backLayerService.setActive(this.layerModel.name);
           }
-      })
-    ]
-  });
-
-  currentAreaLayer = new VectorLayer({
-    name: 'Current Area',
-    source: new VectorSource(),
-    style: [
-        new Style({
-            fill: new Fill({color: [0, 0, 255, 0.1]}),
-            stroke: new Stroke({color: [0, 0, 255, 1], width: 2})
-        }),
-        new Style({
-            image: new CircleStyle({
-                radius: 5,
-                fill: new Fill({color: [0, 0, 255, 1]})
-            }),
-            geometry: (feature) => {
-                // return the coordinates of the first ring of the polygon
-                const coordinates = feature.getGeometry().getCoordinates()[0];
-                return new MultiPoint(coordinates);
-            }
-        })
-    ]
-  });
-
-  constructor(private mapService: MapService) { }
-
-  createFeatureInstance(extent) {
-    return new Feature({geometry: new Polygon(extent)});
-  }
-
-  buildConfig() {
-    return {
-        view: this.mapService.currentView,
-        layers: [this.targetLayer, this.previousAreaLayer, this.currentAreaLayer],
-        controls: [
-            new ScaleLine({
-                minWidth: 100
-            })
-        ],
-        interactions: defaultsInteraction.extent({
-          altShiftDragRotate: false,
-          shiftDragZoom: false
-        })
-    };
-  }
-
-  handleTypesSource(layerModel) {
-    if (layerModel.source.type === 'OSM') {
-      return new OSM(layerModel.source);
-    } else if (layerModel.source.type === 'TileWMS') {
-        return new TileWMS(layerModel.source);
-    } else if (layerModel.source.type === 'XYZ') {
-        return new XYZ(layerModel.source);
-    } else {
-        return new OSM({
-            url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-        });
-    }
-  }
-
-  setTargetLayer(layerModel) {
-    this.targetLayer.setSource(this.handleTypesSource(layerModel));
-
-    if (typeof layerModel.cache === 'object') {
-        this.previousAreaLayer.getSource().addFeature(this.createFeatureInstance(layerModel.cache.extent));
-    }
-  }
-
-  clearTargetLayer() {
-    this.targetLayer.setSource(null);
-    this.previousAreaLayer.getSource().clear();
-    this.currentAreaLayer.getSource().clear();
-  }
-
-  setCurrentArea(extent) {
-    this.currentAreaLayer.getSource().clear();
-    if (Array.isArray(extent)) {
-        this.currentAreaLayer.getSource().addFeature(this.createFeatureInstance(extent));
-    }
-  }
-
-  getCurrentArea() {
-    const feature = this.currentAreaLayer.getSource().getFeatures()[0];
-    if (feature instanceof Feature) {
-        return feature.getGeometry().getExtent();
-    }
-    return null;
-  }
-
-  countTiles(minZoom, maxZoom) {
-
-    let tileGrid = this.targetLayer.getSource().getTileGrid();
-
-    const extent = this.getCurrentArea();
-    let tileCount = 0;
-
-    // In the case the tileGrid not exist use the default tileGrid
-    if (!tileGrid) {
-        const projExtent = get('EPSG:3857').getExtent();
-        const startResolution = getWidth(projExtent) / 256;
-        const resolutions = new Array(22);
-        for (let i = 0, j = resolutions.length; i < j; ++i) {
-          resolutions[i] = startResolution / Math.pow(2, i);
         }
-        tileGrid = new TileGrid({
-            origin: [0, 0],
-            resolutions
-        });
-    }
-    for (let i = minZoom; i <= maxZoom; i++) {
-        const tileRange = tileGrid.getTileRangeForExtentAndZ(extent, i);
-        tileCount += (tileRange.getWidth() * tileRange.getHeight());
-    }
-
-    return tileCount;
+      ]
+    });
+    await alert.present;
   }
 
 }

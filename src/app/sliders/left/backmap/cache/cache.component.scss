@@ -1,0 +1,53 @@
+#mapCache {
+    position: absolute;
+    margin-top: -64px;
+    height: 100%;
+    width: 100%;
+}
+
+/* Left */
+.cache-left {
+    position: relative;
+    height: 100%;
+    width: 35%;
+    padding: 15px;
+    border-right: 1px solid #CCCCCC;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+}
+
+.cache-left label {
+    font-size: 14px;
+}
+
+.cache-left .btn-floating {
+    position: absolute;
+}
+
+.cacheSlider{
+    padding-top: 10px;
+    width: 100%;
+}
+
+/* Right */
+.cache-right {
+    position: absolute;
+    padding: 0;
+    height: 100%;
+    width: calc(64% + 15px);
+    margin-left: 36%;
+}
+
+/* Fab Buttons */
+.fab-button-square {
+    --ion-color-base: transparent !important;
+    --box-shadow: transparent;
+    --border-radius: 0;
+}
+
+.map-viewer {
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 64px - 7px); // 64px for header and 7px for circle size
+    width: 100%;
+    color: red;
+}
