@@ -283,7 +283,7 @@ export class BackLayer {
                 url
             });
             layer = new TileLayer({
-                name: 'nameTileLayer',
+                name: layerModel.name,
                 extent,
                 source
             });
