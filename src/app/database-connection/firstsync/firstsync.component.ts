@@ -14,7 +14,9 @@ export class FirstsyncComponent implements OnInit {
               public dbService: DatabaseService) { }
 
   ngOnInit() {
-    this.syncService.sync()
+    const isFirstSync = true;
+
+    this.syncService.sync(isFirstSync)
     .then(
       () => {
         console.log('Le status est de ', this.syncService.status);

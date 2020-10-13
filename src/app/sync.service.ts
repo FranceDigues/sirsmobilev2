@@ -10,10 +10,11 @@ import { AppLayer, EditionLayer } from './layers.service';
 })
 export class SyncService {
 
-  status = 0;
-  percent;
-  completion;
+  status: number = 0;
+  percent: number = 0;
+  completion: string = '0/1';
   synch = null;
+  isFirstSync: boolean = false;
 
   constructor(private dbService: DatabaseService, private insomnia: Insomnia,
               private route: Router, private appLayer: AppLayer, private editionLayer: EditionLayer) { }
@@ -24,7 +25,8 @@ export class SyncService {
     this.route.navigateByUrl('/main');
   }
 
-  async sync() {
+  async sync(firstSync) {
+    this.isFirstSync = firstSync;
     this.percent = 0;
     this.completion = '0/1';
     this.status = 1;
@@ -84,8 +86,10 @@ export class SyncService {
     setTimeout(() => {
       this.status = 0;
     }, 3000);
-    this.appLayer.clearAll();
-    this.editionLayer.redrawEditionLayerAfterSynchronization();
+    if (!this.isFirstSync) {
+      this.appLayer.clearAll();
+      this.editionLayer.redrawEditionLayerAfterSynchronization();
+    }
   }
 
   syncError() {

@@ -17,7 +17,9 @@ export class LeftSlideSynchronisationComponent implements OnInit {
   ngOnInit() { }
 
   launch() {
-    this.syncService.sync();
+    const isFirstSync = false;
+
+    this.syncService.sync(isFirstSync);
   }
 
   cancelSync() {
