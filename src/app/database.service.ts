@@ -44,7 +44,8 @@ export class DatabaseService {
       this.localDB = new PouchDB(this.activeDB.name,
         {
           iosDatabaseLocation: 'Library',
-          androidDatabaseImplementation: 2
+          androidDatabaseImplementation: 2,
+          adapter: 'cordova-sqlite'
         });
       this.localDB.setMaxListeners(15); // Indicate there is not memory leak in the Fourth Step (10 listeners by default)
     }
