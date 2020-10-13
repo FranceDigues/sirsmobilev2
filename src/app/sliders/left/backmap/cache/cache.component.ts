@@ -27,7 +27,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   currentView: View = null;
   layerModel: ListBackLayer = null;
   lastZoom: number = 0;
-  knobValues: { lower: number, upper: number } = { lower: 7, upper: 16 };
+  knobValues: { lower: number, upper: number } = null;
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
               private mapService: MapService, private cacheMapManager: CacheMapManager,
@@ -36,6 +36,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
               private cdRef: ChangeDetectorRef) {
                 this.ol.map = null;
 
+                this.knobValues = { lower: 7, upper: 16 }
                 this.id = this.activeRoute.snapshot.paramMap.get('id');
                 this.currentView = this.mapService.currentView;
                 this.layerModel = this.backLayerService.getByName(this.id);
