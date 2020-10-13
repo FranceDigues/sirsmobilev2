@@ -109,17 +109,18 @@ export class CacheMapManager {
     }
 
     handleTypesSource(layerModel) {
-        if (layerModel.source.type === 'OSM') {
-        return new OSM(layerModel.source);
-        } else if (layerModel.source.type === 'TileWMS') {
-            return new TileWMS(layerModel.source);
-        } else if (layerModel.source.type === 'XYZ') {
-            return new XYZ(layerModel.source);
-        } else {
-            return new OSM({
-                url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-            });
-        }
+        switch(layerModel.source.type) {
+            case 'OSM':
+                return new OSM(layerModel.source);
+            case 'TileWMS':
+                return new TileWMS(layerModel.source);
+            case 'XYZ':
+                return new XYZ(layerModel.source);
+            default:
+                return new OSM({
+                    url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                });
+        };
     }
 
     clearTargetLayer() {
