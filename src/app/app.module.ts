@@ -39,7 +39,7 @@ import { FilterPipe } from './sliders/right/createobjects/createobjects.componen
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
 import { SyncService } from './sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
-
+import { File } from '@ionic-native/file/ngx';
 
 
 @NgModule({
@@ -85,6 +85,7 @@ import { AppTronconsService, DigueController, SystemeEndiguement, TronconControl
     ObjectDetails,
     MapEditObjectService,
     FormsTemplateService,
+    File,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
