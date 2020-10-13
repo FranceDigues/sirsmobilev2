@@ -17,8 +17,8 @@
         </ion-item>
         <ion-item-options style="width: 150px">
           <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
-            <ion-icon *ngIf="backLayerService.getActive() && (!layer.cache || !layer.cache.active)" name="cloud-download-outline"></ion-icon>
-            <ion-icon *ngIf="layer.name === backLayerService.getActive().name && layer.cache && layer.cache.active" name="cloud-offline-outline"></ion-icon>
+            <ion-icon *ngIf="showingDownloadCloudIcon(layer)" name="cloud-download-outline"></ion-icon>
+            <ion-icon *ngIf="showingOfflineCloudIcon(layer)" name="cloud-offline-outline"></ion-icon>
           </ion-item-option>
           <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
             <ion-icon name="create-outline"></ion-icon>

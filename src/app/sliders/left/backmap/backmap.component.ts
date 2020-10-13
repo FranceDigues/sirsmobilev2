@@ -67,4 +67,14 @@ export class LeftSlideBackmapComponent implements OnInit {
     this.path = 'addBackLayer';
   }
 
+  showingDownloadCloudIcon(layer) {
+    return this.backLayerService.getActive()
+        && (!layer.cache || !layer.cache.active);
+  }
+
+  showingOfflineCloudIcon(layer) {
+    return layer.name === this.backLayerService.getActive().name
+        && layer.cache && layer.cache.active;
+  }
+
 }
