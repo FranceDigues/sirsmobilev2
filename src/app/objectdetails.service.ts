@@ -113,6 +113,10 @@ export class ObjectDetails {
         this.detailsType = 'observationDetails';
     }
 
+    backToObjectDetails() {
+        this.detailsType = 'objectDetails';
+    }
+
     openDesordreLink(id) {
         this.route.navigateByUrl('/object/Desordre/' + id);
     }
