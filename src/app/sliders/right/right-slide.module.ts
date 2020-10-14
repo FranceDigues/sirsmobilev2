@@ -38,7 +38,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { PositionByBorneModalComponent } from './editobjects/positionbyborne-modal/positionbyborne-modal.component';
 import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
 import { DetailsObjectComponent } from './detailsobject/detailsobject.component';
-import { DetailsContentComponent } from './detailsobject/detailscontent/detailscontent.component';
+import { DetailsContentModule } from './detailsobject/detailscontent/details-content.module';
 
 @NgModule({
   imports: [
@@ -47,6 +47,7 @@ import { DetailsContentComponent } from './detailsobject/detailscontent/detailsc
     IonicModule,
     MatCheckboxModule,
     MatButtonModule,
+    DetailsContentModule
   ],
   providers: [
   ],
@@ -62,8 +63,8 @@ import { DetailsContentComponent } from './detailsobject/detailscontent/detailsc
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, MapLineComponent, MapPointComponent, MapPolygonComponent,
-    PositionByBorneModalComponent, SelectedObjectsComponent, DetailsObjectComponent,
-    DetailsContentComponent],
+    PositionByBorneModalComponent, SelectedObjectsComponent, DetailsObjectComponent
+  ],
   exports: [RightSlideComponent]
 })
 export class RightSlideModule {}
