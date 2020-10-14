@@ -73,7 +73,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
 
   @Output() readonly statusChange = new EventEmitter<string>();
 
-  activeTab = 'description';
+  activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
   document;
   objectType;
 
@@ -81,6 +81,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
               private route: Router, private alertCtrl: AlertController,
               private localDB: LocalDatabase, private editionLayer: EditionLayer,
               private selectedObjectsService: SelectedObjectsService) {
+                this.activeTab = 'description';
                 this.objectDetails.detailsType = 'objectDetails';
                 this.document = this.objectDetails.selectedObject;
                 this.objectType = this.document['@class'].substring(
