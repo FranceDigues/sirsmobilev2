@@ -74,24 +74,20 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   @Output() readonly statusChange = new EventEmitter<string>();
 
   activeTab = 'description';
-  document = null;
-  objectType = null;
-  abstract = {};
+  document;
+  objectType;
 
-  constructor(private objectDetails: ObjectDetails, private authService: AuthService,
+  constructor(public objectDetails: ObjectDetails, private authService: AuthService,
               private route: Router, private alertCtrl: AlertController,
               private localDB: LocalDatabase, private editionLayer: EditionLayer,
               private selectedObjectsService: SelectedObjectsService) {
-    this.document = this.objectDetails.selectedObject;
-    this.objectType = this.document['@class'].substring(
-      this.document['@class'].lastIndexOf('.') + 1
-    );
-    this.init();
-  }
-
-  init() {
-     // TODO
-  }
+                this.objectDetails.detailsType = 'objectDetails';
+                this.document = this.objectDetails.selectedObject;
+                this.objectType = this.document['@class'].substring(
+                  this.document['@class'].lastIndexOf('.') + 1
+                );
+                this.objectDetails.init();
+              }
 
   ngOnInit() {
   }
@@ -110,7 +106,6 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   setActiveTab(string) {
     this.activeTab = string;
   }
-
 
   canShowObservationsTab() {
     if (DetailsObjectComponent.observationsObjectType.indexOf(this.objectType) !== -1) {

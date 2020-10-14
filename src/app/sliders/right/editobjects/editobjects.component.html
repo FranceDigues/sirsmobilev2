@@ -80,7 +80,6 @@
                   </div>
                 </div>
 
-                <!-- TODO Complete the second nav-link (modal) -->
                 <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
                   <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
                     Position de début : {{ EOS.getStartPos() | lonlat:'à définir' }}
@@ -207,8 +206,8 @@
   <map-polygon class="full-height" (slidePathChange)="changeSlidePath($event)"></map-polygon>
 </div>
 <div class="full-height" *ngIf="view === 'note'">
-
+  <!-- TODO -->
 </div>
 <div class="full-height" *ngIf="view === 'media'">
-
+  <!-- TODO -->
 </div>
