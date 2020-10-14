@@ -1,0 +1,34 @@
+/* panel */
+.sirs-panel {
+    padding: 16px;
+    margin-bottom: 10px;
+    color: #FFFFFF;
+    background-color: #2DC7D8;
+}
+.sirs-panel *:last-child {
+    margin-bottom: 0;
+}
+
+/* section */
+.sirs-section {
+    padding: 0 16px;
+    margin-bottom: 10px;
+}
+
+/* field */
+.sirs-field,
+.sirs-field-inline {
+    margin-bottom: 10px;
+}
+.sirs-field:last-child,
+.sirs-field-inline:last-child {
+    margin-bottom: 0;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field-inline > span.sirs-field-title {
+    font-weight: bold;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field > span.sirs-field-value {
+    display: block;
+}
