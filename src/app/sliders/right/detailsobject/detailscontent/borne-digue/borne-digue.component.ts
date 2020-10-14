@@ -4,7 +4,7 @@ import { ObjectDetails } from 'src/app/objectdetails.service';
 @Component({
   selector: 'object-details-content-borne-digue',
   templateUrl: './borne-digue.component.html',
-  styleUrls: ['./borne-digue.component.scss'],
+  styleUrls: ['./borne-digue.component.scss', '../detailscontent.component.scss'],
 })
 export class BorneDigueComponent {
 

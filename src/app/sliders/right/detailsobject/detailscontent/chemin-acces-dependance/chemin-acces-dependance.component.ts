@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-chemin-acces-dependance',
   templateUrl: './chemin-acces-dependance.component.html',
-  styleUrls: ['./chemin-acces-dependance.component.scss'],
+  styleUrls: ['./chemin-acces-dependance.component.scss', '../detailscontent.component.scss'],
 })
-export class CheminAccesDependanceComponent implements OnInit {
+export class CheminAccesDependanceComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

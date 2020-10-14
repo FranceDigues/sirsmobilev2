@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AireStockageDependanceComponent } from './aire-stockage-dependance/aire-stockage-dependance.component';
 import { AutreDependanceComponent } from './autre-dependance/autre-dependance.component';
 import { BorneDigueComponent } from './borne-digue/borne-digue.component';
+import { CheminAccesDependanceComponent } from './chemin-acces-dependance/chemin-acces-dependance.component';
 import { DetailsContentComponent } from './detailscontent.component';
 
 
@@ -22,7 +23,7 @@ import { DetailsContentComponent } from './detailscontent.component';
   ],
   declarations: [
     DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
-    BorneDigueComponent,
+    BorneDigueComponent, CheminAccesDependanceComponent
   ],
   exports: [DetailsContentComponent]
 })
