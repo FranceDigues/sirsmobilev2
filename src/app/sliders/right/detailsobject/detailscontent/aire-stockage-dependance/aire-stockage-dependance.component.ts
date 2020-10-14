@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-aire-stockage-dependance',
   templateUrl: './aire-stockage-dependance.component.html',
-  styleUrls: ['./aire-stockage-dependance.component.scss'],
+  styleUrls: ['./aire-stockage-dependance.component.scss', '../detailscontent.component.scss'],
 })
-export class AireStockageDependanceComponent implements OnInit {
+export class AireStockageDependanceComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
