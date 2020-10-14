@@ -8,6 +8,7 @@ import { AireStockageDependanceComponent } from './aire-stockage-dependance/aire
 import { AutreDependanceComponent } from './autre-dependance/autre-dependance.component';
 import { BorneDigueComponent } from './borne-digue/borne-digue.component';
 import { CheminAccesDependanceComponent } from './chemin-acces-dependance/chemin-acces-dependance.component';
+import { CreteComponent } from './crete/crete.component';
 import { DetailsContentComponent } from './detailscontent.component';
 
 
@@ -23,7 +24,7 @@ import { DetailsContentComponent } from './detailscontent.component';
   ],
   declarations: [
     DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
-    BorneDigueComponent, CheminAccesDependanceComponent
+    BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent
   ],
   exports: [DetailsContentComponent]
 })
