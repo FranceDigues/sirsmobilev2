@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-desordre',
   templateUrl: './desordre.component.html',
-  styleUrls: ['./desordre.component.scss'],
+  styleUrls: ['./desordre.component.scss', '../detailscontent.component.scss'],
 })
-export class DesordreComponent implements OnInit {
+export class DesordreComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

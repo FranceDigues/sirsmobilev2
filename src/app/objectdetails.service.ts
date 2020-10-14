@@ -22,7 +22,7 @@ export class ObjectDetails {
 
     // Prestations
     prestationMap: Object;
-    tempPrestation: Object;
+    tempPrestation;
     allPrestationList: Array<any>;
     prestationList: Array<any>;
 
