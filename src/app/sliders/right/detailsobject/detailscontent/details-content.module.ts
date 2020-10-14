@@ -6,6 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IonicModule } from '@ionic/angular';
 import { AireStockageDependanceComponent } from './aire-stockage-dependance/aire-stockage-dependance.component';
 import { AutreDependanceComponent } from './autre-dependance/autre-dependance.component';
+import { BorneDigueComponent } from './borne-digue/borne-digue.component';
 import { DetailsContentComponent } from './detailscontent.component';
 
 
@@ -20,7 +21,8 @@ import { DetailsContentComponent } from './detailscontent.component';
   providers: [
   ],
   declarations: [
-    DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent
+    DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
+    BorneDigueComponent,
   ],
   exports: [DetailsContentComponent]
 })
