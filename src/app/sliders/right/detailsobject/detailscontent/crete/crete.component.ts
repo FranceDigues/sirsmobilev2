@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-crete',
   templateUrl: './crete.component.html',
-  styleUrls: ['./crete.component.scss'],
+  styleUrls: ['./crete.component.scss', '../detailscontent.component.scss'],
 })
-export class CreteComponent implements OnInit {
+export class CreteComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

@@ -17,7 +17,7 @@ export class ObjectDetails {
     selectedObject;
     selectedObservation;
 
-    abstract: Object;
+    abstract;
     detailsType: 'objectDetails' | 'observationDetails';
 
     // Prestations
