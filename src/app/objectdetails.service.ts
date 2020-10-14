@@ -108,8 +108,45 @@ export class ObjectDetails {
         );
     }
 
-    selectedFeatures = [];
-    selectedObject = null;
-    selectedObservation = null;
+    openObservationDetails(observation) {
+        this.selectedObservation = observation;
+        this.detailsType = 'observationDetails';
+    }
+
+    openDesordreLink(id) {
+        this.route.navigateByUrl('/object/Desordre/' + id);
+    }
+
+    addDesordre(v) { // TODO
+
+    }
+
+    removeDesordre(index) { // TODO
+
+    }
+
+    filterDesordreList() {
+        this.desordreList = this.allDesordreList.filter((item) => {
+            return !this.selectedObject.desordreIds || this.selectedObject.desordreIds.indexOf(item.id) === -1;
+        });
+    }
+
+    openPrestationLink(id) {
+        this.route.navigateByUrl('/object/Prestation/' + id);
+    }
+
+    addPrestation(v) { // TODO
+        
+    }
+
+    removePrestation(index) { // TODO
+
+    }
+
+    filterPrestationList() {
+        this.prestationList = this.allPrestationList.filter((item) => {
+            return !this.selectedObject.prestationIds || this.selectedObject.prestationIds.indexOf(item.id) === -1;
+        });
+    }
 
 }
