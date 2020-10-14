@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'object-details-content-autre-dependance',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./autre-dependance.component.scss'],
 })
 export class AutreDependanceComponent implements OnInit {
+
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
   constructor() { }
 

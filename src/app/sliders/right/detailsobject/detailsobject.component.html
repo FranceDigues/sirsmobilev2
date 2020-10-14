@@ -30,7 +30,7 @@
   </div>
 
   <ion-content [scrollEvents]="true" class="scroll-all-content">
-    <details-content class="full-height" [objectType]="objectType"></details-content>
+    <details-content class="full-height" [objectType]="objectType" [activeTab]="activeTab"></details-content>
   </ion-content>
 
   <div *ngIf="canShowEditionButtons() && activeTab === 'description'">
