@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-borne-digue',
+  selector: 'object-details-content-borne-digue',
   templateUrl: './borne-digue.component.html',
   styleUrls: ['./borne-digue.component.scss'],
 })

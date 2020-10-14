@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-montee-eaux',
+  selector: 'object-details-content-montee-eaux',
   templateUrl: './montee-eaux.component.html',
   styleUrls: ['./montee-eaux.component.scss'],
 })

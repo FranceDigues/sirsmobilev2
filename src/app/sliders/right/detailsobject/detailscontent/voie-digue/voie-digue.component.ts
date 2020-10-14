@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-voie-digue',
+  selector: 'object-details-content-voie-digue',
   templateUrl: './voie-digue.component.html',
   styleUrls: ['./voie-digue.component.scss'],
 })

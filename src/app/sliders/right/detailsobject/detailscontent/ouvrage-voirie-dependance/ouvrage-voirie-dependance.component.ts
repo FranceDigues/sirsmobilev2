@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ouvrage-voirie-dependance',
+  selector: 'object-details-content-ouvrage-voirie-dependance',
   templateUrl: './ouvrage-voirie-dependance.component.html',
   styleUrls: ['./ouvrage-voirie-dependance.component.scss'],
 })

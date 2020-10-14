@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-talus-digue',
+  selector: 'object-details-content-talus-digue',
   templateUrl: './talus-digue.component.html',
   styleUrls: ['./talus-digue.component.scss'],
 })

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-voie-acces',
+  selector: 'object-details-content-voie-acces',
   templateUrl: './voie-acces.component.html',
   styleUrls: ['./voie-acces.component.scss'],
 })

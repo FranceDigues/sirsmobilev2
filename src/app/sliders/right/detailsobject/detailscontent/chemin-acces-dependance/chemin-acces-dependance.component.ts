@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-chemin-acces-dependance',
+  selector: 'object-details-content-chemin-acces-dependance',
   templateUrl: './chemin-acces-dependance.component.html',
   styleUrls: ['./chemin-acces-dependance.component.scss'],
 })

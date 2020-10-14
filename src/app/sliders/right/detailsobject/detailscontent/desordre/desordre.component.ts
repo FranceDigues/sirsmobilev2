@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-desordre',
+  selector: 'object-details-content-desordre',
   templateUrl: './desordre.component.html',
   styleUrls: ['./desordre.component.scss'],
 })

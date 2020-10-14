@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-crete',
+  selector: 'object-details-content-crete',
   templateUrl: './crete.component.html',
   styleUrls: ['./crete.component.scss'],
 })

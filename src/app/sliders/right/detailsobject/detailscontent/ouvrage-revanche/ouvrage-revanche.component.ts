@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ouvrage-revanche',
+  selector: 'object-details-content-ouvrage-revanche',
   templateUrl: './ouvrage-revanche.component.html',
   styleUrls: ['./ouvrage-revanche.component.scss'],
 })

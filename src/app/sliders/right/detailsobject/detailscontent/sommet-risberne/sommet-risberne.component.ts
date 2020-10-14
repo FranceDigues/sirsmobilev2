@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-sommet-risberne',
+  selector: 'object-details-content-sommet-risberne',
   templateUrl: './sommet-risberne.component.html',
   styleUrls: ['./sommet-risberne.component.scss'],
 })

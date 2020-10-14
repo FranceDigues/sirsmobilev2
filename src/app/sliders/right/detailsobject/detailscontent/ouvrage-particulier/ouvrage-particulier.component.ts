@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ouvrage-particulier',
+  selector: 'object-details-content-ouvrage-particulier',
   templateUrl: './ouvrage-particulier.component.html',
   styleUrls: ['./ouvrage-particulier.component.scss'],
 })

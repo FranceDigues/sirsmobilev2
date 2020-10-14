@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-autre-dependance',
+  selector: 'object-details-content-autre-dependance',
   templateUrl: './autre-dependance.component.html',
   styleUrls: ['./autre-dependance.component.scss'],
 })

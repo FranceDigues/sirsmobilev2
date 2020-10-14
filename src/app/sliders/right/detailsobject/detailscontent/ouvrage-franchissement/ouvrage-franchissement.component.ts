@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ouvrage-franchissement',
+  selector: 'object-details-content-ouvrage-franchissement',
   templateUrl: './ouvrage-franchissement.component.html',
   styleUrls: ['./ouvrage-franchissement.component.scss'],
 })

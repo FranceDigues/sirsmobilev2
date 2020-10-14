@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-talus-risberme',
+  selector: 'object-details-content-talus-risberme',
   templateUrl: './talus-risberme.component.html',
   styleUrls: ['./talus-risberme.component.scss'],
 })
