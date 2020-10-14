@@ -108,6 +108,13 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
     this.activeTab = string;
   }
 
+  canShowTab() {
+    const isTabCanBeShown = !this.canShowObservationsTab()
+                        && !this.canShowPrestationsTab()
+                        && !this.canShowDesordresTab();
+    return isTabCanBeShown;
+  }
+
   canShowObservationsTab() {
     if (DetailsObjectComponent.observationsObjectType.indexOf(this.objectType) !== -1) {
       return true;
