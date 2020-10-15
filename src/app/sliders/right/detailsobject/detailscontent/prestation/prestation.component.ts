@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-prestation',
   templateUrl: './prestation.component.html',
-  styleUrls: ['./prestation.component.scss'],
+  styleUrls: ['./prestation.component.scss', '../detailscontent.component.scss'],
 })
-export class PrestationComponent implements OnInit {
+export class PrestationComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

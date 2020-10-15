@@ -29,6 +29,7 @@ import { OuvrageTelecomEnergieComponent } from './ouvrage-telecom-energie/ouvrag
 import { OuvrageVoirieComponent } from './ouvrage-voirie/ouvrage-voirie.component';
 import { OuvrageVoirieDependanceComponent } from './ouvrage-voirie-dependance/ouvrage-voirie-dependance.component';
 import { PiedDigueComponent } from './pied-digue/pied-digue.component';
+import { PrestationComponent } from './prestation/prestation.component';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { PiedDigueComponent } from './pied-digue/pied-digue.component';
     OuvrageFranchissementComponent, OuvrageHydrauliqueAssocieComponent, OuvrageHydroAssocieComponent,
     OuvrageParticulierComponent, OuvrageRevancheComponent, OuvrageTelecomEnergieComponent,
     OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, PiedDigueComponent,
-    
+    PrestationComponent, 
   ],
   exports: [DetailsContentComponent]
 })
