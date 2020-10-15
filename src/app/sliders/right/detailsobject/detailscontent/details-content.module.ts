@@ -20,6 +20,7 @@ import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
 import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
 import { OuvertureBatardableComponent } from './ouverture-batardable/ouverture-batardable.component';
+import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage-franchissement.component';
 
 
 @NgModule({
@@ -38,7 +39,7 @@ import { OuvertureBatardableComponent } from './ouverture-batardable/ouverture-b
     BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent,
     DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent,
     LaisseCrueComponent, LargeurFrancBordComponent, MonteeEauxComponent, OuvertureBatardableComponent,
-    
+    OuvrageFranchissementComponent,
   ],
   exports: [DetailsContentComponent]
 })
