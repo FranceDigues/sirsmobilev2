@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-ouverture-batardable',
   templateUrl: './ouverture-batardable.component.html',
-  styleUrls: ['./ouverture-batardable.component.scss'],
+  styleUrls: ['./ouverture-batardable.component.scss', '../detailscontent.component.scss'],
 })
-export class OuvertureBatardableComponent implements OnInit {
+export class OuvertureBatardableComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
