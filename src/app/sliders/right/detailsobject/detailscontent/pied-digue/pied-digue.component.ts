@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-pied-digue',
   templateUrl: './pied-digue.component.html',
-  styleUrls: ['./pied-digue.component.scss'],
+  styleUrls: ['./pied-digue.component.scss', '../detailscontent.component.scss'],
 })
-export class PiedDigueComponent implements OnInit {
+export class PiedDigueComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
