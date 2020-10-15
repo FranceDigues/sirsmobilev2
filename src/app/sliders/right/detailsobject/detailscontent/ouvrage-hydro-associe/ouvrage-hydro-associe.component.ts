@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-ouvrage-hydro-associe',
   templateUrl: './ouvrage-hydro-associe.component.html',
-  styleUrls: ['./ouvrage-hydro-associe.component.scss'],
+  styleUrls: ['./ouvrage-hydro-associe.component.scss', '../detailscontent.component.scss'],
 })
-export class OuvrageHydroAssocieComponent implements OnInit {
+export class OuvrageHydroAssocieComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
