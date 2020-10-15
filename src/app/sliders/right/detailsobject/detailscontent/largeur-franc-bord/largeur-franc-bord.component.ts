@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-largeur-franc-bord',
   templateUrl: './largeur-franc-bord.component.html',
-  styleUrls: ['./largeur-franc-bord.component.scss'],
+  styleUrls: ['./largeur-franc-bord.component.scss', '../detailscontent.component.scss'],
 })
-export class LargeurFrancBordComponent implements OnInit {
+export class LargeurFrancBordComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
