@@ -18,6 +18,7 @@ import { ObservationsGenericComponent } from './observations/observations.compon
 import { PrestationsGenericComponent } from './prestations/prestations.component';
 import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
+import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
 
 
 @NgModule({
@@ -35,7 +36,7 @@ import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bo
     DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
     BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent,
     DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent,
-    LaisseCrueComponent, LargeurFrancBordComponent
+    LaisseCrueComponent, LargeurFrancBordComponent, MonteeEauxComponent
   ],
   exports: [DetailsContentComponent]
 })
