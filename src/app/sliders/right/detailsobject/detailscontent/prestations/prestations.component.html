@@ -1,0 +1,35 @@
+<label for="prestationList" class="active">Ajouter une prestation</label>
+<div style="display: flex;">
+    <input type="text" name="prestationList" list="prestationList" [(ngModel)]="detailsObject.tempPrestation.v"/>
+    <datalist id="prestationList">
+        <select id="prestationList" class="browser-default">
+            <option *ngFor="let p of detailsObject.prestationList"
+                    [value]="detailsObject.prestationMap[p.id]"
+                    [selected]="detailsObject.tempPrestation.v === p.id">
+                {{p.id}}
+            </option>
+        </select>
+    </datalist>
+    <div class="sirs-ion-fab-button">
+      <ion-fab slot="fixed">
+          <ion-fab-button color="danger"
+              (click)="detailsObject.addPrestation(detailsObject.tempPrestation.v)">
+            <ion-icon name="add-outline"></ion-icon>
+          </ion-fab-button>
+      </ion-fab>
+    </div>
+</div>
+<label>La liste des prestations associées</label>
+<ion-list>
+    <ion-item *ngFor="let prestationId of detailsObject.selectedObject.prestationIds; let index = index"
+              style="display:flex;"
+              (click)="detailsObject.openPrestationLink(prestationId)">
+        <span>{{ !detailsObject.prestationList ? prestationId : detailsObject.prestationMap[prestationId] }}</span>
+        <ion-fab horizontal="end">
+          <ion-fab-button class="sirs-button-item" color="dark"
+              (click)="detailsObject.removePrestation(index);$event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+    </ion-item>
+</ion-list>
