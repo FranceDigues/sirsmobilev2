@@ -37,6 +37,7 @@ import { SommetRisberneComponent } from './sommet-risberne/sommet-risberne.compo
 import { StationPompageComponent } from './station-pompage/station-pompage.component';
 import { TalusDigueComponent } from './talus-digue/talus-digue.component';
 import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.component';
+import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
 
 
 @NgModule({
@@ -60,7 +61,7 @@ import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.componen
     OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, PiedDigueComponent,
     PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisberneComponent, StationPompageComponent,
-    TalusDigueComponent, TalusRisbermeComponent, 
+    TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, 
   ],
   exports: [DetailsContentComponent]
 })
