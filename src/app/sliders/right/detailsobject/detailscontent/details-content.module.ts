@@ -38,6 +38,7 @@ import { StationPompageComponent } from './station-pompage/station-pompage.compo
 import { TalusDigueComponent } from './talus-digue/talus-digue.component';
 import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.component';
 import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
+import { VoieAccesComponent } from './voie-acces/voie-acces.component';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
     OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, PiedDigueComponent,
     PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisberneComponent, StationPompageComponent,
-    TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, 
+    TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
+    
   ],
   exports: [DetailsContentComponent]
 })
