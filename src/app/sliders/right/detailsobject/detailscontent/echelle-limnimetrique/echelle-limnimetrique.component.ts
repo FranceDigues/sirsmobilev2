@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-echelle-limnimetrique',
   templateUrl: './echelle-limnimetrique.component.html',
-  styleUrls: ['./echelle-limnimetrique.component.scss'],
+  styleUrls: ['./echelle-limnimetrique.component.scss', '../detailscontent.component.scss'],
 })
-export class EchelleLimnimetriqueComponent implements OnInit {
+export class EchelleLimnimetriqueComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
