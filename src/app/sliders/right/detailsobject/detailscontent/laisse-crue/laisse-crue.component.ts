@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-laisse-crue',
   templateUrl: './laisse-crue.component.html',
-  styleUrls: ['./laisse-crue.component.scss'],
+  styleUrls: ['./laisse-crue.component.scss', '../detailscontent.component.scss'],
 })
-export class LaisseCrueComponent implements OnInit {
+export class LaisseCrueComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

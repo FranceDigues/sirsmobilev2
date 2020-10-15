@@ -16,6 +16,7 @@ import { EchelleLimnimetriqueComponent } from './echelle-limnimetrique/echelle-l
 import { DesordresGenericComponent } from './desordres/desordres.component';
 import { ObservationsGenericComponent } from './observations/observations.component';
 import { PrestationsGenericComponent } from './prestations/prestations.component';
+import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { PrestationsGenericComponent } from './prestations/prestations.component
     DesordresGenericComponent, ObservationsGenericComponent, PrestationsGenericComponent,
     DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
     BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent,
-    DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent
+    DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent,
+    LaisseCrueComponent
   ],
   exports: [DetailsContentComponent]
 })
