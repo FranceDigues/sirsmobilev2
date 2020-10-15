@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-voie-acces',
   templateUrl: './voie-acces.component.html',
-  styleUrls: ['./voie-acces.component.scss'],
+  styleUrls: ['./voie-acces.component.scss', '../detailscontent.component.scss'],
 })
-export class VoieAccesComponent implements OnInit {
+export class VoieAccesComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
