@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LocalDatabase } from './usingLocalDatabase.service';
 import { Router } from '@angular/router';
+import { EditionModeService } from './editionmode.service';
+import { AppLayer } from './layers.service';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -28,12 +31,14 @@ export class ObjectDetails {
 
     // Desordres
     desordreMap: Object;
-    tempDesordre: Object;
+    tempDesordre;
     allDesordreList: Array<any>;
     desordreList: Array<any>;
 
 
-    constructor(private localDB: LocalDatabase, private route: Router) {
+    constructor(private localDB: LocalDatabase, private route: Router,
+                private editionService: EditionModeService, private appLayer: AppLayer,
+                private alertCtrl: AlertController) {
         // Paths
         this.photoDir = null;
         this.notesDir = null;
@@ -121,12 +126,71 @@ export class ObjectDetails {
         this.route.navigateByUrl('/object/Desordre/' + id);
     }
 
-    addDesordre(v) { // TODO
+    addDesordre(v) {
+        if (!v) {
+            return;
+        }
 
+        let did = Object.keys(this.desordreMap).filter((key) => {
+            return this.desordreMap[key] === v;
+        })[0];
+
+        if (!this.selectedObject.desordreIds) {
+            this.selectedObject.desordreIds = [];
+        }
+        this.selectedObject.desordreIds.push(did);
+        this.filterDesordreList();
+
+        this.selectedObject.valid = false;
+
+        this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
+
+        this.selectedObject.editMode = true;
+
+        this.editionService.saveObject(this.selectedObject)
+        .then(() => {
+            this.tempDesordre.v = null;
+            this.appLayer.syncAllAppLayer();
+            this.appLayer.clearAll();
+        });
     }
 
-    removeDesordre(index) { // TODO
+    async removeDesordre(index) {
+        const alert = await this.alertCtrl.create({
+            backdropDismiss: false,
+            header: 'Suppression de l\'association',
+            message: 'Voulez vous vraiment supprimer cette association ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        this.selectedObject.desordreIds.splice(index, 1);
+                        if (this.selectedObject.desordreIds.length === 0) {
+                            delete this.selectedObject.desordreIds;
+                        }
 
+                        this.selectedObject.valid = false;
+
+                        this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.selectedObject.editMode = true;
+
+                        this.filterDesordreList();
+
+                        this.editionService.saveObject(this.selectedObject)
+                        .then(() => {
+                            this.appLayer.syncAllAppLayer();
+                            this.appLayer.clearAll();
+                        });
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
     filterDesordreList() {
@@ -139,12 +203,72 @@ export class ObjectDetails {
         this.route.navigateByUrl('/object/Prestation/' + id);
     }
 
-    addPrestation(v) { // TODO
-        
+    addPrestation(v) {
+        if (!v) {
+            return;
+        }
+
+        let pid = Object.keys(this.prestationMap).filter((key) => {
+            return this.prestationMap[key] === v;
+        })[0];
+
+        if (!this.selectedObject.prestationIds) {
+            this.selectedObject.prestationIds = [];
+        }
+        this.selectedObject.prestationIds.push(pid);
+        this.filterPrestationList();
+
+        this.selectedObject.valid = false;
+
+        this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
+
+        this.selectedObject.editMode = true;
+
+        this.tempPrestation.v = null;
+
+        this.editionService.saveObject(this.selectedObject)
+        .then(() => {
+            this.appLayer.syncAllAppLayer();
+            this.appLayer.clearAll();
+        });
     }
 
-    removePrestation(index) { // TODO
+    async removePrestation(index) {
+        const alert = await this.alertCtrl.create({
+            backdropDismiss: false,
+            header: 'Suppression de l\'association',
+            message: 'Voulez vous vraiment supprimer cette association ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        this.selectedObject.prestationIds.splice(index, 1);
+                        if (this.selectedObject.prestationIds.length === 0) {
+                            delete this.selectedObject.prestationIds;
+                        }
 
+                        this.selectedObject.valid = false;
+
+                        this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.selectedObject.editMode = true;
+
+                        this.filterPrestationList();
+
+                        this.editionService.saveObject(this.selectedObject)
+                        .then(() => {
+                            this.appLayer.syncAllAppLayer();
+                            this.appLayer.clearAll();
+                        });
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
     filterPrestationList() {
