@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-montee-eaux',
   templateUrl: './montee-eaux.component.html',
-  styleUrls: ['./montee-eaux.component.scss'],
+  styleUrls: ['./montee-eaux.component.scss', '../detailscontent.component.scss'],
 })
-export class MonteeEauxComponent implements OnInit {
+export class MonteeEauxComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
