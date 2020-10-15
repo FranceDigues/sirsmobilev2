@@ -12,6 +12,10 @@ import { CreteComponent } from './crete/crete.component';
 import { DesordreDependanceComponent } from './desordre-dependance/desordre-dependance.component';
 import { DesordreComponent } from './desordre/desordre.component';
 import { DetailsContentComponent } from './detailscontent.component';
+import { EchelleLimnimetriqueComponent } from './echelle-limnimetrique/echelle-limnimetrique.component';
+import { DesordresGenericComponent } from './desordres/desordres.component';
+import { ObservationsGenericComponent } from './observations/observations.component';
+import { PrestationsGenericComponent } from './prestations/prestations.component';
 
 
 @NgModule({
@@ -25,9 +29,10 @@ import { DetailsContentComponent } from './detailscontent.component';
   providers: [
   ],
   declarations: [
+    DesordresGenericComponent, ObservationsGenericComponent, PrestationsGenericComponent,
     DetailsContentComponent, AutreDependanceComponent, AireStockageDependanceComponent,
     BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent,
-    DesordreComponent, DesordreDependanceComponent
+    DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent
   ],
   exports: [DetailsContentComponent]
 })
