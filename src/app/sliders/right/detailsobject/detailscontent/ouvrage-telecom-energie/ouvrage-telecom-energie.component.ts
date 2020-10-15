@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-ouvrage-telecom-energie',
   templateUrl: './ouvrage-telecom-energie.component.html',
-  styleUrls: ['./ouvrage-telecom-energie.component.scss'],
+  styleUrls: ['./ouvrage-telecom-energie.component.scss', '../detailscontent.component.scss'],
 })
-export class OuvrageTelecomEnergieComponent implements OnInit {
+export class OuvrageTelecomEnergieComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
