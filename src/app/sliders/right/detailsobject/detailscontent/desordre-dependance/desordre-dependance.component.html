@@ -1,3 +1,47 @@
-<p>
-  desordre-dependance works!
-</p>
+<div [ngSwitch]="activeTab">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+      <div class="sirs-panel">
+          <div class="sirs-field-inline">
+              <span class="sirs-field-title">Numéro de désignation : </span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+          </div>
+      </div>
+      <div class="sirs-section">
+          <div class="sirs-field">
+              <span class="sirs-field-title">Type</span>
+              <span class="sirs-field-value">Desordre dépendance</span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Dépendance</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependanceId"></span>
+          </div>
+          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut === detailsObject.selectedObject.positionFin">
+              <span class="sirs-field-title">Position</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+          </div>
+          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+              <span class="sirs-field-title">Position de début</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+          </div>
+          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+              <span class="sirs-field-title">Position de fin</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionFin"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Commentaire</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+          </div>
+      </div>
+  </div>
+  <!-- Content / Observations -->
+  <div *ngSwitchCase="'observations'">
+      <ion-list>
+          <ion-item (click)="detailsObject.openObservationDetails(obs)" *ngFor="let obs of detailsObject.selectedObject.observations">
+              <span *ngIf="obs.date">{{ obs.date|date:'dd/MM/yyyy' }}</span>
+              <span *ngIf="!obs.date && obs.designation">{{ obs.designation }}</span>
+              <span *ngIf="!obs.date && !obs.designation && obs.id">{{ obs.id }}</span>
+          </ion-item>
+      </ion-list>
+  </div>
+</div>
