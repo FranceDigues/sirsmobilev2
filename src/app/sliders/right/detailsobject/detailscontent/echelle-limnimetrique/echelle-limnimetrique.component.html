@@ -1,3 +1,147 @@
-<p>
-  echelle-limnimetrique works!
-</p>
+<div [ngSwitch]="activeTab">
+  <div *ngSwitchCase="'description'">
+      <div class="sirs-panel">
+          <div class="sirs-field-inline">
+              <span class="sirs-field-title">Numéro de désignation : </span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation || 'Non définie'"></span>
+          </div>
+      </div>
+      <div class="sirs-section">
+          <div class="sirs-field">
+              <span class="sirs-field-title">Libelle</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de début</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de fin</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Position Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Source Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.sourceId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Tronçon Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.linearId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Type de Prestation Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.typePrestationId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Commentaire</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Coût Globale</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutGlobal || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Coût Metre</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutMetre || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Réalisation Interne</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.realisationInterne || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Réalisation Interne</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.realisationInterne || 'Non définie'"></span>
+          </div>
+      </div>
+  </div>
+  <div *ngSwitchCase="'observations'">
+    <observations-generic></observations-generic>
+      <!-- <ion-list>
+          <ion-item (click)="detailsObject.openObservationDetails(obs)" *ngFor="let obs of detailsObject.selectedObject.observations">
+              <span *ngIf="obs.date">{{ obs.date|date:'dd/MM/yyyy' }}</span>
+              <span *ngIf="!obs.date && obs.designation">{{ obs.designation }}</span>
+              <span *ngIf="!obs.date && !obs.designation && obs.id">{{ obs.id }}</span>
+          </ion-item>
+      </ion-list> -->
+  </div>
+  <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+    <prestations-generic></prestations-generic>
+      <!-- <label for="prestationList" class="active">Ajouter une prestation</label>
+      <div style="display: flex;">
+          <input type="text" name="prestationList" list="prestationList" [(ngModel)]="detailsObject.tempPrestation.v"/>
+          <datalist id="prestationList">
+              <select id="prestationList" class="browser-default">
+                  <option *ngFor="let p of detailsObject.prestationList"
+                          [value]="detailsObject.prestationMap[p.id]"
+                          [selected]="detailsObject.tempPrestation.v === p.id">
+                      {{p.id}}
+                  </option>
+              </select>
+          </datalist>
+          <div class="sirs-ion-fab-button">
+            <ion-fab slot="fixed">
+                <ion-fab-button color="danger"
+                    (click)="detailsObject.addPrestation(detailsObject.tempPrestation.v)">
+                  <i class="large material-icons">add</i>
+                  <ion-icon name="add-outline"></ion-icon>
+                </ion-fab-button>
+            </ion-fab>
+          </div>
+      </div>
+      <label>La liste des prestations associées</label>
+      <ion-list>
+          <ion-item *ngFor="let prestationId of detailsObject.selectedObject.prestationIds; let index = index"
+                    style="display:flex;"
+                    (click)="detailsObject.openPrestationLink(prestationId)">
+              <span>{{ !detailsObject.prestationList ? prestationId : detailsObject.prestationMap[prestationId] }}</span>
+              <ion-fab horizontal="end">
+                <ion-fab-button class="sirs-button-item" color="dark"
+                    (click)="detailsObject.removePrestation(index);$event.stopPropagation()">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+          </ion-item>
+      </ion-list> -->
+  </div>
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+    <desordres-generic></desordres-generic>
+      <!-- <label for="desordreList" class="active">Ajouter un desordre</label>
+      <div style="display: flex;">
+          <input type="text" name="desordreList" list="desordreList" [(ngModel)]="detailsObject.tempDesordre.v"/>
+          <datalist id="desordreList">
+              <select id="desordreList" class="browser-default">
+                  <option *ngFor="let d of detailsObject.desordreList"
+                          [value]="detailsObject.desordreMap[d.id]"
+                          [selected]="detailsObject.tempDesordre.v === d.id">
+                      {{ d.id }}
+                  </option>
+              </select>
+          </datalist>
+          <div class="sirs-ion-fab-button">
+            <ion-fab slot="fixed">
+              <ion-fab-button color="danger"
+                  (click)="detailsObject.addDesordre(detailsObject.tempDesordre.v)">
+                  <ion-icon name="add-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </div>
+      </div>
+      <label>La liste des desordres associés</label>
+      <ion-list>
+          <ion-item *ngFor="let desordreId of detailsObject.selectedObject.desordreIds; let index = index"
+                    (click)="detailsObject.openDesordreLink(desordreId)"
+                    style="display:flex;">
+              <span>{{ !detailsObject.desordreList ? desordreId : detailsObject.desordreMap[desordreId] }}</span>
+              <ion-fab horizontal="end">
+                <ion-fab-button class="sirs-button-item" color="dark"
+                    (click)="detailsObject.removeDesordre(index);$event.stopPropagation()">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+          </ion-item>
+      </ion-list> -->
+  </div>
+</div>
