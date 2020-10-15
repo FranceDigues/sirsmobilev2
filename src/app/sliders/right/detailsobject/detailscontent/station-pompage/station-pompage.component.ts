@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-station-pompage',
   templateUrl: './station-pompage.component.html',
-  styleUrls: ['./station-pompage.component.scss'],
+  styleUrls: ['./station-pompage.component.scss', '../detailscontent.component.scss'],
 })
-export class StationPompageComponent implements OnInit {
+export class StationPompageComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
