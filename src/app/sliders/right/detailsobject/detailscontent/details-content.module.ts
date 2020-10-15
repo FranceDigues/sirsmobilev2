@@ -21,6 +21,7 @@ import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bo
 import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
 import { OuvertureBatardableComponent } from './ouverture-batardable/ouverture-batardable.component';
 import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage-franchissement.component';
+import { OuvrageHydrauliqueAssocieComponent } from './ouvrage-hydraulique-associe/ouvrage-hydraulique-associe.component';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage
     BorneDigueComponent, CheminAccesDependanceComponent, CreteComponent,
     DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent,
     LaisseCrueComponent, LargeurFrancBordComponent, MonteeEauxComponent, OuvertureBatardableComponent,
-    OuvrageFranchissementComponent,
+    OuvrageFranchissementComponent, OuvrageHydrauliqueAssocieComponent
   ],
   exports: [DetailsContentComponent]
 })
