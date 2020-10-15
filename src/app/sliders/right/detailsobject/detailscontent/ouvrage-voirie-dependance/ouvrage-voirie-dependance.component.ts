@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-ouvrage-voirie-dependance',
   templateUrl: './ouvrage-voirie-dependance.component.html',
-  styleUrls: ['./ouvrage-voirie-dependance.component.scss'],
+  styleUrls: ['./ouvrage-voirie-dependance.component.scss', '../detailscontent.component.scss'],
 })
-export class OuvrageVoirieDependanceComponent implements OnInit {
+export class OuvrageVoirieDependanceComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }

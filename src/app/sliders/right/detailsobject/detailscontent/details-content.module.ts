@@ -27,6 +27,7 @@ import { OuvrageParticulierComponent } from './ouvrage-particulier/ouvrage-parti
 import { OuvrageRevancheComponent } from './ouvrage-revanche/ouvrage-revanche.component';
 import { OuvrageTelecomEnergieComponent } from './ouvrage-telecom-energie/ouvrage-telecom-energie.component';
 import { OuvrageVoirieComponent } from './ouvrage-voirie/ouvrage-voirie.component';
+import { OuvrageVoirieDependanceComponent } from './ouvrage-voirie-dependance/ouvrage-voirie-dependance.component';
 
 
 @NgModule({
@@ -47,7 +48,7 @@ import { OuvrageVoirieComponent } from './ouvrage-voirie/ouvrage-voirie.componen
     LaisseCrueComponent, LargeurFrancBordComponent, MonteeEauxComponent, OuvertureBatardableComponent,
     OuvrageFranchissementComponent, OuvrageHydrauliqueAssocieComponent, OuvrageHydroAssocieComponent,
     OuvrageParticulierComponent, OuvrageRevancheComponent, OuvrageTelecomEnergieComponent,
-    OuvrageVoirieComponent,
+    OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, 
   ],
   exports: [DetailsContentComponent]
 })
