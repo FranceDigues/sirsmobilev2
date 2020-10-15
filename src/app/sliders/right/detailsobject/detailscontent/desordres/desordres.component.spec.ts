@@ -1,19 +1,54 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage';
+import { AppModule } from '../../../../../app.module';
+import { DatabaseService } from '../../../../../database.service';
+import { ObjectDetails } from '../../../../../objectdetails.service';
+import { DesordresGenericComponent } from './desordres.component';
 
-import { DesordresComponent } from './desordres.component';
 
-describe('DesordresComponent', () => {
-  let component: DesordresComponent;
-  let fixture: ComponentFixture<DesordresComponent>;
+describe('DesordresGenericComponent', () => {
+  let component: DesordresGenericComponent;
+  let fixture: ComponentFixture<DesordresGenericComponent>;
+  let dbService: DatabaseService;
+  let detailsObject: ObjectDetails;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DesordresComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [ DesordresGenericComponent ],
+      imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), AppModule, RouterTestingModule],
+      providers: []
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DesordresComponent);
+    dbService = TestBed.inject(DatabaseService);
+    dbService.activeDB = {
+      name: 'test',
+      url: 'geomatys.com',
+      userId: 'test',
+      password: '',
+      context: {
+        authUser: '',
+        showText: '',
+        settings: {
+            geolocation: false,
+            edition: false,
+        },
+        currentView: {
+            zoom: '',
+            coords: '',
+        }
+      }
+    };
+
+    detailsObject = TestBed.inject(ObjectDetails);
+    detailsObject.selectedObject = {
+      desordreList: [],
+      desordreIds: []
+    };
+    detailsObject.tempDesordre = { v: '' };
+
+    fixture = TestBed.createComponent(DesordresGenericComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
