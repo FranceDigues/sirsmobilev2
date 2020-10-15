@@ -39,6 +39,7 @@ import { TalusDigueComponent } from './talus-digue/talus-digue.component';
 import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.component';
 import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
 import { VoieAccesComponent } from './voie-acces/voie-acces.component';
+import { VoieDigueComponent } from './voie-digue/voie-digue.component';
 
 
 @NgModule({
@@ -63,7 +64,7 @@ import { VoieAccesComponent } from './voie-acces/voie-acces.component';
     PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisberneComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
-    
+    VoieDigueComponent
   ],
   exports: [DetailsContentComponent]
 })
