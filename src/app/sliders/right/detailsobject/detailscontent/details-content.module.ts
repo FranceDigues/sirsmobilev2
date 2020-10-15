@@ -24,6 +24,7 @@ import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage
 import { OuvrageHydrauliqueAssocieComponent } from './ouvrage-hydraulique-associe/ouvrage-hydraulique-associe.component';
 import { OuvrageHydroAssocieComponent } from './ouvrage-hydro-associe/ouvrage-hydro-associe.component';
 import { OuvrageParticulierComponent } from './ouvrage-particulier/ouvrage-particulier.component';
+import { OuvrageRevancheComponent } from './ouvrage-revanche/ouvrage-revanche.component';
 
 
 @NgModule({
@@ -43,7 +44,7 @@ import { OuvrageParticulierComponent } from './ouvrage-particulier/ouvrage-parti
     DesordreComponent, DesordreDependanceComponent, EchelleLimnimetriqueComponent,
     LaisseCrueComponent, LargeurFrancBordComponent, MonteeEauxComponent, OuvertureBatardableComponent,
     OuvrageFranchissementComponent, OuvrageHydrauliqueAssocieComponent, OuvrageHydroAssocieComponent,
-    OuvrageParticulierComponent
+    OuvrageParticulierComponent, OuvrageRevancheComponent
   ],
   exports: [DetailsContentComponent]
 })
