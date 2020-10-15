@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-reseau-hydraulique-ciel-ouvert',
   templateUrl: './reseau-hydraulique-ciel-ouvert.component.html',
-  styleUrls: ['./reseau-hydraulique-ciel-ouvert.component.scss'],
+  styleUrls: ['./reseau-hydraulique-ciel-ouvert.component.scss', '../detailscontent.component.scss'],
 })
-export class ReseauHydrauliqueCielOuvertComponent implements OnInit {
+export class ReseauHydrauliqueCielOuvertComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
