@@ -4,7 +4,7 @@ import { ObjectDetails } from 'src/app/objectdetails.service';
 @Component({
   selector: 'object-details-content-talus-digue',
   templateUrl: './talus-digue.component.html',
-  styleUrls: ['./talus-digue.component.scss'],
+  styleUrls: ['./talus-digue.component.scss', '../detailscontent.component.scss'],
 })
 export class TalusDigueComponent {
 
