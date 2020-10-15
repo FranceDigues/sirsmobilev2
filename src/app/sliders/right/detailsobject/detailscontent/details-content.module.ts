@@ -33,6 +33,7 @@ import { PrestationComponent } from './prestation/prestation.component';
 import { ReseauHydrauliqueCielOuvertComponent } from './reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
 import { ReseauHydrauliqueFermeComponent } from './reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
 import { ReseauTelecomEnergieComponent } from './reseau-telecom-energie/reseau-telecom-energie.component';
+import { SommetRisberneComponent } from './sommet-risberne/sommet-risberne.component';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { ReseauTelecomEnergieComponent } from './reseau-telecom-energie/reseau-t
     OuvrageParticulierComponent, OuvrageRevancheComponent, OuvrageTelecomEnergieComponent,
     OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, PiedDigueComponent,
     PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
-    ReseauTelecomEnergieComponent, 
+    ReseauTelecomEnergieComponent, SommetRisberneComponent, 
   ],
   exports: [DetailsContentComponent]
 })

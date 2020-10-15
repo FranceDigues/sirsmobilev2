@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-sommet-risberne',
   templateUrl: './sommet-risberne.component.html',
-  styleUrls: ['./sommet-risberne.component.scss'],
+  styleUrls: ['./sommet-risberne.component.scss', '../detailscontent.component.scss'],
 })
-export class SommetRisberneComponent implements OnInit {
+export class SommetRisberneComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
