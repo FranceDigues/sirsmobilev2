@@ -1,3 +1,28 @@
-<p>
-  pied-digue works!
-</p>
+<div class="sirs-panel">
+  <div class="sirs-field-inline">
+      <span class="sirs-field-title">Numéro de désignation : </span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+  </div>
+</div>
+<div class="sirs-section">
+  <div class="sirs-field">
+      <span class="sirs-field-title">Matériau</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiau"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Nature</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.nature"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Fonction</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonction"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Côté</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Commentaire</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+  </div>
+</div>
