@@ -3,7 +3,7 @@
   <div *ngSwitchCase="'description'">
       <div class="sirs-panel">
           <div class="sirs-field-inline">
-              <span class="sirs-field-title">Numéro de désignation :</span>
+              <span class="sirs-field-title">Numéro de désignation : </span>
               <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
           </div>
       </div>
@@ -39,7 +39,7 @@
   <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
       <label for="prestationList" class="active">Ajouter une prestation</label>
       <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
-              <input type="text" name="prestationList" list="prestationList" [ngModel]="detailsObject.tempPrestation.v"/>
+              <input type="text" name="prestationList" list="prestationList" [(ngModel)]="detailsObject.tempPrestation.v"/>
               <datalist id="prestationList">
                       <select id="prestationList" class="browser-default">
                           <option *ngFor="let p of detailsObject.prestationList"
