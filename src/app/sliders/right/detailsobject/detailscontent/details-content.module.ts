@@ -31,6 +31,7 @@ import { OuvrageVoirieDependanceComponent } from './ouvrage-voirie-dependance/ou
 import { PiedDigueComponent } from './pied-digue/pied-digue.component';
 import { PrestationComponent } from './prestation/prestation.component';
 import { ReseauHydrauliqueCielOuvertComponent } from './reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
+import { ReseauHydrauliqueFermeComponent } from './reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { ReseauHydrauliqueCielOuvertComponent } from './reseau-hydraulique-ciel-
     OuvrageFranchissementComponent, OuvrageHydrauliqueAssocieComponent, OuvrageHydroAssocieComponent,
     OuvrageParticulierComponent, OuvrageRevancheComponent, OuvrageTelecomEnergieComponent,
     OuvrageVoirieComponent, OuvrageVoirieDependanceComponent, PiedDigueComponent,
-    PrestationComponent, ReseauHydrauliqueCielOuvertComponent, 
+    PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
+    
   ],
   exports: [DetailsContentComponent]
 })
