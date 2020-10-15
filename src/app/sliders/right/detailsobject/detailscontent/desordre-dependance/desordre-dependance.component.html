@@ -36,12 +36,6 @@
   </div>
   <!-- Content / Observations -->
   <div *ngSwitchCase="'observations'">
-      <ion-list>
-          <ion-item (click)="detailsObject.openObservationDetails(obs)" *ngFor="let obs of detailsObject.selectedObject.observations">
-              <span *ngIf="obs.date">{{ obs.date|date:'dd/MM/yyyy' }}</span>
-              <span *ngIf="!obs.date && obs.designation">{{ obs.designation }}</span>
-              <span *ngIf="!obs.date && !obs.designation && obs.id">{{ obs.id }}</span>
-          </ion-item>
-      </ion-list>
+      <observations-generic></observations-generic>
   </div>
 </div>

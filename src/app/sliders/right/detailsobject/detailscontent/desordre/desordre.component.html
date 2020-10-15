@@ -28,47 +28,9 @@
   </div>
   <!-- Content / Observations -->
   <div *ngSwitchCase="'observations'">
-      <ion-list>
-          <ion-item *ngFor="let obs of detailsObject.selectedObject.observations" (click)="detailsObject.openObservationDetails(obs)">
-              <span *ngIf="obs.date">{{ obs.date|date:'dd/MM/yyyy' }}</span>
-              <span *ngIf="!obs.date && obs.designation">{{ obs.designation}}</span>
-              <span *ngIf="!obs.date && !obs.designation && obs.id">{{ obs.id}}</span>
-          </ion-item>
-      </ion-list>
+      <observations-generic></observations-generic>
   </div>
   <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
-      <label for="prestationList" class="active">Ajouter une prestation</label>
-      <div style="display: flex;flex-direction: row;padding:5px;justify-content: center;align-items: center;">
-              <input type="text" name="prestationList" list="prestationList" [(ngModel)]="detailsObject.tempPrestation.v"/>
-              <datalist id="prestationList">
-                      <select id="prestationList" class="browser-default">
-                          <option *ngFor="let p of detailsObject.prestationList"
-                                  [value]="detailsObject.prestationMap[p.id]"
-                                  [selected]="detailsObject.tempPrestation.v === p.id">
-                              {{p.id}}
-                          </option>
-                      </select>
-              </datalist>
-          <div>
-              <button type="button"
-                      style="margin-left: 10px;"
-                      class="btn-floating btn-large waves-effect waves-light pink"
-                      (click)="detailsObject.addPrestation(detailsObject.tempPrestation.v)">
-                  <i class="large material-icons">add</i>
-              </button>
-          </div>
-      </div>
-      <label>La liste des prestations associées</label>
-      <ion-list>
-          <ion-item *ngFor="let prestationId of detailsObject.selectedObject.prestationIds; let index = index"
-                    style="display:flex;justify-content: space-between;align-items: center;"
-                    (click)="detailsObject.openPrestationLink(prestationId)">
-              <span>{{ !detailsObject.prestationList ? prestationId : detailsObject.prestationMap[prestationId] }}</span>
-              <button type="button" class="btn-floating btn-small waves-effect waves-light pink"
-                      (click)="detailsObject.removePrestation(index);$event.stopPropagation()">
-                  <i class="large material-icons">delete</i>
-              </button>
-          </ion-item>
-      </ion-list>
+    <prestations-generic></prestations-generic>
   </div>
 </div>
