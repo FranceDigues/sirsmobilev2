@@ -1,3 +1,16 @@
-<p>
-  troncon-digue works!
-</p>
+<div class="sirs-panel">
+  <div class="sirs-field-inline">
+      <span class="sirs-field-title">Numéro de désignation : </span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+  </div>
+</div>
+<div class="sirs-section">
+  <div class="sirs-field">
+      <span class="sirs-field-title">Digue</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.digue"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Type rive</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeRive"></span>
+  </div>
+</div>

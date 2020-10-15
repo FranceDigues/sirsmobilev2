@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ObjectDetails } from 'src/app/objectdetails.service';
 
 @Component({
   selector: 'object-details-content-troncon-digue',
   templateUrl: './troncon-digue.component.html',
-  styleUrls: ['./troncon-digue.component.scss'],
+  styleUrls: ['./troncon-digue.component.scss', '../detailscontent.component.scss'],
 })
-export class TronconDigueComponent implements OnInit {
+export class TronconDigueComponent {
 
-  constructor() { }
+  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  ngOnInit() {}
+  constructor(public detailsObject: ObjectDetails) { }
 
 }
