@@ -12,6 +12,7 @@ import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
 import { MateriauIdGenericComponent } from './materiau-id/materiau-id.component';
 import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
+import { NatureIdGenericComponent } from './nature-id/nature-id.component';
 import { OuvertureBatardableComponent } from './ouverture-batardable/ouverture-batardable.component';
 import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage-franchissement.component';
 import { OuvrageHydrauliqueComponent } from './ouvrage-hydraulique/ouvrage-hydraulique.component';
@@ -54,7 +55,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent,
-    CoteDigueGenericComponent, UsageIdGenericComponent
+    CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
