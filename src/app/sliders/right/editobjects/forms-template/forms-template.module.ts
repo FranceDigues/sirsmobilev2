@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CoteDigueGenericComponent } from './cote-digue/cote-digue.component';
 import { CreteComponent } from './crete/crete.component';
 import { DesordreComponent, RefSortPipe } from './desordre/desordre.component';
+import { FonctionIdGenericComponent } from './fonction-id/fonction-id.component';
 import { FormsTemplateComponent } from './forms-template.component';
 import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
@@ -55,7 +56,8 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent,
-    CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent
+    CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent,
+    FonctionIdGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
