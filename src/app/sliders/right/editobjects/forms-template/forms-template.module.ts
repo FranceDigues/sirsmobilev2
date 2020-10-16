@@ -19,6 +19,7 @@ import { OuvrageRevancheComponent } from './ouvrage-revanche/ouvrage-revanche.co
 import { OuvrageTelecomEnergieComponent } from './ouvrage-telecom-energie/ouvrage-telecom-energie.component';
 import { OuvrageVoirieComponent } from './ouvrage-voirie/ouvrage-voirie.component';
 import { PiedDigueComponent } from './pied-digue/pied-digue.component';
+import { PositionDigueGenericComponent } from './position-digue/position-digue.component';
 import { ReseauHydrauliqueCielOuvertComponent } from './reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
 import { ReseauHydrauliqueFermeComponent } from './reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
 import { ReseauTelecomEnergieComponent } from './reseau-telecom-energie/reseau-telecom-energie.component';
@@ -50,7 +51,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
-    VoieDigueComponent, MateriauIdGenericComponent
+    VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
