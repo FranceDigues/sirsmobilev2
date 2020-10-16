@@ -12,6 +12,7 @@ import { FonctionIdGenericComponent } from './fonction-id/fonction-id.component'
 import { FormsTemplateComponent } from './forms-template.component';
 import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
+import { MateriauHautBasIdGenericComponent } from './materiau-haut-bas-id/materiau-haut-bas-id.component';
 import { MateriauIdGenericComponent } from './materiau-id/materiau-id.component';
 import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
 import { NatureHautBasIdGenericComponent } from './nature-haut-bas-id/nature-haut-bas-id.component';
@@ -60,7 +61,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent,
     CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent,
     FonctionIdGenericComponent, FonctionHautBasIdGenericComponent,
-    NatureHautBasIdGenericComponent
+    NatureHautBasIdGenericComponent, MateriauHautBasIdGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
