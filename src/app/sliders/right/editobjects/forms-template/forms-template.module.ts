@@ -29,6 +29,7 @@ import { StationPompageComponent } from './station-pompage/station-pompage.compo
 import { TalusDigueComponent } from './talus-digue/talus-digue.component';
 import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.component';
 import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
+import { UsageIdGenericComponent } from './usage-id/usage-id.component';
 import { VoieAccesComponent } from './voie-acces/voie-acces.component';
 import { VoieDigueComponent } from './voie-digue/voie-digue.component';
 
@@ -53,7 +54,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent,
-    CoteDigueGenericComponent
+    CoteDigueGenericComponent, UsageIdGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
