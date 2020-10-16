@@ -9,6 +9,7 @@ import { DesordreComponent, RefSortPipe } from './desordre/desordre.component';
 import { FormsTemplateComponent } from './forms-template.component';
 import { LaisseCrueComponent } from './laisse-crue/laisse-crue.component';
 import { LargeurFrancBordComponent } from './largeur-franc-bord/largeur-franc-bord.component';
+import { MateriauIdGenericComponent } from './materiau-id/materiau-id.component';
 import { MonteeEauxComponent } from './montee-eaux/montee-eaux.component';
 import { OuvertureBatardableComponent } from './ouverture-batardable/ouverture-batardable.component';
 import { OuvrageFranchissementComponent } from './ouvrage-franchissement/ouvrage-franchissement.component';
@@ -49,7 +50,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisbermeComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
-    VoieDigueComponent
+    VoieDigueComponent, MateriauIdGenericComponent
   ],
   exports: [FormsTemplateComponent]
 })
