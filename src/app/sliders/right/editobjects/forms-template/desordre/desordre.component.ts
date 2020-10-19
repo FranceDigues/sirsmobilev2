@@ -21,11 +21,17 @@ export class DesordreComponent implements OnInit {
   }
 
   changeCategorie() {
-    this.EOS.objectDoc.typeDesordreId = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId })[0]._id;
+    const condition = { categorieId: this.EOS.objectDoc.categorieDesordreId };
+    const sortedArray = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, condition);
+
+    this.EOS.objectDoc.typeDesordreId = sortedArray[0]._id;
   }
 
   initType() {
-    this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || (this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, { categorieId: this.EOS.objectDoc.categorieDesordreId }))[0]._id;
+    const condition = { categorieId: this.EOS.objectDoc.categorieDesordreId };
+    const sortedArray = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, condition);
+
+    this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || sortedArray[0]._id;
   }
 }
 
