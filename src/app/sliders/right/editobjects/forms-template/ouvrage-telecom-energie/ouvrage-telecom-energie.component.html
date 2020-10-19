@@ -73,11 +73,11 @@
     <div class="col col-25">
       <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.reseauTelecomEnergieIds.length === 1"
               (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index, 1)">
-          <i class="material-icons center">remove</i>
+          <ion-icon name="remove-outline"></ion-icon>
       </button>
       <button class="btn pink waves-effect waves-teal"
               (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index + 1, 0, EOS.refs.ReseauTelecomEnergie[0].id)">
-          <i class="material-icons center">add</i>
+          <ion-icon name="add-outline"></ion-icon>
       </button>
     </div>
   </div>

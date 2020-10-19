@@ -65,17 +65,17 @@
                     <a class="nav-item nav-link"
                             (click)="EOS.locateMe()"
                             *ngIf="EOS.activatedGPSPositionButton()">
-                        <span><i class="material-icons">gps_fixed</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="navigate-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPos()"
                             *ngIf="EOS.activatedGPSPositionButton()">
-                        <span><i class="material-icons">edit</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPosBySR()"
                             *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
-                        <span><i class="material-icons">line_style</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="options-outline"></ion-icon></span>
                     </a>
                   </div>
                 </div>
@@ -94,12 +94,12 @@
                     <a class="nav-item nav-link"
                             (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
                             *ngIf="EOS.activatedGPSPositionButton()">
-                        <span><i class="material-icons">edit</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPosBySR()"
                             *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
-                        <span><i class="material-icons">line_style</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="options-outline"></ion-icon></span>
                     </a>
                   </div>
                 </div>
@@ -120,22 +120,22 @@
                     <a class="nav-item nav-link"
                             (click)="EOS.locateMe()"
                             *ngIf="EOS.objDependanceType === 'point'">
-                        <span><i class="material-icons">gps_fixed</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="navigate-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPos()"
                             *ngIf="EOS.objDependanceType === 'point'">
-                        <span><i class="material-icons">edit</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="selectPosLine()"
                             *ngIf="EOS.objDependanceType === 'line'">
-                        <span><i class="material-icons">edit</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon></span>
                     </a>
                     <a class="nav-item nav-link"
                             (click)="drawPolygon()"
                             *ngIf="EOS.objDependanceType === 'polygon'">
-                        <span><i class="material-icons">format_shapes</i></span>
+                        <span><ion-icon class="option-button-edit-object" name="triangle-outline"></ion-icon></span>
                     </a>
                   </div>
                 </div>
@@ -183,11 +183,11 @@
           </div>
           <div class="sirs-card-action">
             <a (click)="backToMain()" class="btn-flat waves-effect waves-teal">
-              <i class="material-icons left">arrow_back</i>Annuler
+              <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
             </a>
             <button type="button" class="btn pink waves-effect waves-teal right"
             [disabled]="!objectForm.valid" (click)="EOS.save()">
-              <i class="material-icons left">check</i>Terminer
+            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
             </button>
           </div>
         </form>
