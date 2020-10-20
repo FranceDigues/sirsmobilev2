@@ -7,6 +7,7 @@ import { GalleryModule } from './sliders/left/gallery/gallery.module';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 import { SynchronisationModule } from './sliders/left/synchronisation/synchronisation.module';
 import { ObservationEditComponent } from './sliders/right/detailsobject/observation-edit/observation-edit.component';
+import { ObservationEditModule } from './sliders/right/detailsobject/observation-edit/observation-edit.module';
 import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
 import { EditObjectsModule } from './sliders/right/editobjects/editobjects.module';
 
@@ -52,7 +53,8 @@ const routes: Routes = [
     SynchronisationModule,
     GalleryModule,
     CacheModule,
-    EditObjectsModule
+    EditObjectsModule,
+    ObservationEditModule
   ],
   exports: [RouterModule]
 })

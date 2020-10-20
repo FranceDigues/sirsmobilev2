@@ -9,7 +9,6 @@ import { DetailsContentModule } from './detailsobject/detailscontent/details-con
 import { DetailsObjectComponent } from './detailsobject/detailsobject.component';
 import { ObservationEditComponent } from './detailsobject/observation-edit/observation-edit.component';
 import { LonLatPipe } from './editobjects/editobjects.component';
-import { FormsTemplateModule } from './editobjects/forms-template/forms-template.module';
 import { PositionByBorneModalComponent } from './editobjects/positionbyborne-modal/positionbyborne-modal.component';
 import { RightSlideComponent } from './right.component';
 import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
@@ -21,7 +20,6 @@ import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.comp
     IonicModule,
     MatCheckboxModule,
     MatButtonModule,
-    FormsTemplateModule,
     DetailsContentModule
   ],
   providers: [
