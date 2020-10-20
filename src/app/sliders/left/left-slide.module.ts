@@ -6,7 +6,6 @@ import { AppinfosLeftSlideComponent } from './appinfos/appinfos.component';
 import { AppsettingsLeftSlideComponent } from './appsettings/appsettings.component';
 import { LeftSlideAddBackLayerComponent } from './backmap/addbacklayer/addbacklayer.component';
 import { LeftSlideBackmapComponent } from './backmap/backmap.component';
-import { LeftSlideCacheComponent } from './backmap/cache/cache.component';
 import { ColorModalComponent } from './craftlayers/color-modal/color-modal.component';
 import { LeftSlideCraftlayersComponent } from './craftlayers/craftlayers.component';
 import { LeftSlideDisponibleLayersComponent } from './craftlayers/disponible/disponible.component';
@@ -27,7 +26,7 @@ import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.comp
   declarations: [LeftSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent,
     GalleryDocumentComponent, GalleryMediasComponent,
-    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
+    LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent,
     ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ColorModalComponent,
     LeftSlideDisponibleLayersComponent],
   exports: [LeftSlideComponent]
