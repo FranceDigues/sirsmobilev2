@@ -15,6 +15,7 @@ import { GalleryMediasComponent } from './medias/medias.component';
   providers: [
   ],
   declarations: [
+    LeftSlideGalleryComponent,
     GalleryDocumentComponent,
     GalleryMediasComponent
   ],

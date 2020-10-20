@@ -11,7 +11,7 @@ import { LeftSlideSynchronisationComponent } from './synchronisation.component';
     IonicModule,
   ],
   providers: [],
-  declarations: [],
+  declarations: [LeftSlideSynchronisationComponent],
   exports: [LeftSlideSynchronisationComponent]
 })
 export class SynchronisationModule {}
