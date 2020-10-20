@@ -4,6 +4,7 @@ import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.comp
 import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
+import { ObservationEditComponent } from './sliders/right/detailsobject/observation-edit/observation-edit.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
   {
     path: 'object/:type/:id',
     component: RightSlideEditObjectsComponent
+  },
+  {
+    path: 'observation/:objectId/:obsId',
+    component: ObservationEditComponent
   }
 ];
 
