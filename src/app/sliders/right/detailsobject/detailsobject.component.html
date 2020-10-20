@@ -9,7 +9,7 @@
   </ion-header>
 
   <div class="tabs-striped tabs-top" *ngIf="canShowTab()">
-    <ul class="tabs tabs-sirs">
+    <ul #tabs class="tabs tabs-sirs">
       <li class="tab"><a [ngClass]="{active: activeTab === 'description'}"
       (click)="setActiveTab('description')">
         Description

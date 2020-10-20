@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ObjectDetails } from 'src/app/objectdetails.service';
 import { AuthService } from '../../../auth.service';
 import { Router } from '@angular/router';
@@ -72,6 +72,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   ];
 
   @Output() readonly statusChange = new EventEmitter<string>();
+  @ViewChild('tabs') tabsMaterialize: ElementRef;
 
   activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
   document;
@@ -94,9 +95,9 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const elem = document.querySelector('.tabs');
+    const elem = this.tabsMaterialize.nativeElement;
     const options = {};
-    M.Tabs.init(elem, options); // initialize materialize tabs to show indicator
+    new M.Tabs(elem, options);
   }
 
 
