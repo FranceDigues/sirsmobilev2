@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { FilterPipe, RightSlideCreateObjectsComponent } from './createobjects/createobjects.component';
 import { DetailsContentModule } from './detailsobject/detailscontent/details-content.module';
 import { DetailsObjectComponent } from './detailsobject/detailsobject.component';
+import { ObservationEditComponent } from './detailsobject/observation-edit/observation-edit.component';
 import { LonLatPipe, RightSlideEditObjectsComponent } from './editobjects/editobjects.component';
 import { FormsTemplateModule } from './editobjects/forms-template/forms-template.module';
 import { MapLineComponent } from './editobjects/map-line/map-line.component';
@@ -33,7 +34,7 @@ import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.comp
     RightSlideEditObjectsComponent, LonLatPipe,
     MapLineComponent, MapPointComponent, MapPolygonComponent,
     FilterPipe, DetailsObjectComponent, SelectedObjectsComponent,
-    PositionByBorneModalComponent
+    PositionByBorneModalComponent, ObservationEditComponent
   ],
   exports: [RightSlideComponent]
 })
