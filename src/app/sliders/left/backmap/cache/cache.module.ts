@@ -12,7 +12,7 @@ import { LeftSlideCacheComponent } from './cache.component';
   ],
   providers: [
   ],
-  declarations: [],
+  declarations: [LeftSlideCacheComponent],
   exports: [LeftSlideCacheComponent]
 })
 export class CacheModule {}

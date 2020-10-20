@@ -19,6 +19,7 @@ import { PositionByBorneModalComponent } from './positionbyborne-modal/positionb
   providers: [
   ],
   declarations: [
+    RightSlideEditObjectsComponent,
     MapLineComponent, MapPointComponent,
     MapPolygonComponent, PositionByBorneModalComponent,
     LonLatPipe
