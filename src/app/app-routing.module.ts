@@ -8,6 +8,7 @@ import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisatio
 import { SynchronisationModule } from './sliders/left/synchronisation/synchronisation.module';
 import { ObservationEditComponent } from './sliders/right/detailsobject/observation-edit/observation-edit.component';
 import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
+import { EditObjectsModule } from './sliders/right/editobjects/editobjects.module';
 
 const routes: Routes = [
   {
@@ -51,6 +52,7 @@ const routes: Routes = [
     SynchronisationModule,
     GalleryModule,
     CacheModule,
+    EditObjectsModule
   ],
   exports: [RouterModule]
 })
