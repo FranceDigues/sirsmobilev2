@@ -202,7 +202,7 @@ export class DetailsObjectComponent implements OnInit, AfterViewInit {
   }
 
   addObservation() {
-    this.route.navigateByUrl('/observation/' + this.document._id.toString());
+    this.route.navigateByUrl('/observation/' + this.document._id.toString() + '/');
   }
 
 
