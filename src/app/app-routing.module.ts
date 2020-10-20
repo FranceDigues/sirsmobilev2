@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.component';
 import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
+import { GalleryModule } from './sliders/left/gallery/gallery.module';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 import { SynchronisationModule } from './sliders/left/synchronisation/synchronisation.module';
 import { ObservationEditComponent } from './sliders/right/detailsobject/observation-edit/observation-edit.component';
@@ -47,6 +48,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
     SynchronisationModule,
+    GalleryModule
   ],
   exports: [RouterModule]
 })
