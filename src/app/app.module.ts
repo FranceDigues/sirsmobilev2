@@ -42,54 +42,30 @@ import { AppTronconsService, DigueController, SystemeEndiguement, TronconControl
 import { CacheMapManager } from './cache.service';
 import { File } from '@ionic-native/file/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, MatIconModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule, BrowserAnimationsModule
-  , HttpClientModule, DatabaseConnectionPageModule, LibCameraModule, NgbCollapseModule, FlexLayoutModule ],
+  imports: [
+    BrowserModule, CommonModule, MatIconModule,
+    IonicModule.forRoot(), IonicStorageModule.forRoot(),
+    AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
+    DatabaseConnectionPageModule, LibCameraModule,
+    NgbCollapseModule, FlexLayoutModule
+  ],
   providers: [
-    StatusBar,
-    OLService,
-    SplashScreen,
-    NativeStorage,
-    MapService,
-    Insomnia,
-    Geolocation,
-    EditionModeService,
-    RealPositionStyle,
-    GetStyle,
-    HandlingStyle,
-    DefaultStyle,
-    AppLayer,
-    GeolocLayer,
-    EditionLayer,
-    BackLayer,
-    SyncService,
-    DatabaseService,
-    AuthService,
-    GlobalConfigService,
-    AppVersionsService,
-    SirsDocService,
-    GalleryService,
-    BackLayerService,
-    BackLayer,
-    SystemeEndiguement,
-    AppTronconsService,
-    DigueController,
-    TronconController,
-    ObjectDocService,
-    FilterPipe,
-    EditObjectService,
-    Toast,
-    SelectedObjectsService,
-    ObjectDetails,
-    MapEditObjectService,
-    FormsTemplateService,
-    CacheMapManager,
-    File,
-    WebView,
+    StatusBar,OLService,SplashScreen,NativeStorage,
+    MapService,Insomnia,Geolocation,EditionModeService,
+    RealPositionStyle,GetStyle,HandlingStyle,DefaultStyle,
+    AppLayer,GeolocLayer,EditionLayer,BackLayer,
+    SyncService,DatabaseService,AuthService,GlobalConfigService,
+    AppVersionsService,SirsDocService,GalleryService,BackLayerService,
+    BackLayer,SystemeEndiguement,AppTronconsService,DigueController,
+    TronconController,ObjectDocService,FilterPipe,EditObjectService,
+    Toast,SelectedObjectsService,ObjectDetails,MapEditObjectService,
+    FormsTemplateService,CacheMapManager,File,WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
