@@ -1,0 +1,60 @@
+<div class="sirs-field col col-50">
+  <label for="topNature" class="active">Nature haut</label>
+  <div *ngIf="EOS.showText('fullName')">
+      <select id="topNature" class="browser-default"
+              name="topNature" [(ngModel)]="EOS.objectDoc.natureHautId">
+              <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+              [value]="r.id" [selected]="EOS.objectDoc.natureHautId === r.id">
+                {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+              </option>
+      </select>
+  </div>
+  <div *ngIf="EOS.showText('abstract')">
+      <select id="topNature" class="browser-default" name="topNature" [(ngModel)]="EOS.objectDoc.natureHautId">
+          <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.natureHautId === r.id">
+              {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+          </option>
+      </select>
+  </div>
+  <div *ngIf="EOS.showText('both')">
+      <select id="topNature" class="browser-default" name="topNature" [(ngModel)]="EOS.objectDoc.natureHautId">
+          <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.natureHautId === r.id">
+              {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="sirs-field col col-50">
+  <label for="lowNature" class="active">Nature bas</label>
+  <div *ngIf="EOS.showText('fullName')">
+      <select id="lowNature" class="browser-default"
+              name="lowNature" [(ngModel)]="EOS.objectDoc.natureBasId">
+              <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+              [value]="r.id" [selected]="EOS.objectDoc.natureBasId === r.id">
+                {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+              </option>
+      </select>
+  </div>
+  <div *ngIf="EOS.showText('abstract')">
+      <select id="lowNature" class="browser-default" name="lowNature" [(ngModel)]="EOS.objectDoc.natureBasId">
+          <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.natureBasId === r.id">
+              {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+          </option>
+      </select>
+  </div>
+  <div *ngIf="EOS.showText('both')">
+      <select id="lowNature" class="browser-default" name="lowNature" [(ngModel)]="EOS.objectDoc.natureBasId">
+          <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName')"
+                  [ngValue]="r.id"
+                  [selected]="EOS.objectDoc.natureBasId === r.id">
+              {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+          </option>
+      </select>
+  </div>
+</div>

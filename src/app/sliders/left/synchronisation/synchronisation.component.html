@@ -35,28 +35,28 @@
                 <div class="sirs-card-action">
                     <div *ngIf="syncService.status === 0">
                         <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-                            <i class="material-icons left">arrow_back</i>Retour
+                            <ion-icon name="arrow-back-outline"></ion-icon>Retour
                         </a>
                         <button type="button" class="btn pink waves-effect waves-teal right" (click)="launch()">
-                            <i class="material-icons left">launch</i>Lancer la synchronisation
+                            <ion-icon name="sync-outline"></ion-icon>Lancer la synchronisation
                         </button>
                     </div>
                     <div *ngIf="syncService.status === 1" class="text-right">
                         <button type="button" class="btn pink waves-effect waves-teal right" (click)="cancelSync()">
-                            <i class="material-icons left">cancel</i>Annuler la synchronisation
+                            <ion-icon name="close-outline"></ion-icon>Annuler la synchronisation
                         </button>
                     </div>
                     <div *ngIf="syncService.status === 2" class="text-right">
                         <a (click)="goBack()" class="btn pink waves-effect waves-teal">
-                            <i class="material-icons left">check</i>Terminer
+                            <ion-icon name="checkmark-outline"></ion-icon>Terminer
                         </a>
                     </div>
                     <div *ngIf="syncService.status === 3" class="text-right">
                         <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-                            <i class="material-icons left">arrow_back</i>Abandonner
+                            <ion-icon name="arrow-back-outline"></ion-icon>Abandonner
                         </a>
                         <button type="button" class="btn pink waves-effect waves-teal right" (click)="launch()" >
-                            <i class="material-icons left">launch</i>Réessayer
+                            <ion-icon name="sync-outline"></ion-icon>Réessayer
                         </button>
                     </div>
                 </div>

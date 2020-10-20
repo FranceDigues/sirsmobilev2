@@ -1,11 +1,11 @@
 <div>
   <div class="sirs-card-action" style="background-color: #0097A7;padding:5px;">
     <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-      <i class="material-icons left">arrow_back</i>Annuler
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
     </a>
     <button type="button" class="btn pink waves-effect waves-teal right"
     (click)="gallery.deleteAllFiles()">
-    <i class="material-icons left">delete_forever</i>Supprimer Tous
+      <ion-icon slot="start" name="trash-outline"></ion-icon>
   </button>
   </div>
   <div class="row" style="padding-top: 0px;padding-left: 0px;">
@@ -24,10 +24,10 @@
     <div *ngIf="gallery.fileDoc" class="col col-50">
       <h5>{{ gallery.fileDoc.libelle }}</h5>
       <button type="button" class="btn waves-effect waves-light" (click)="gallery.open()">
-        <i class="material-icons">folder_open</i>&nbsp;Ouvrir
+        <ion-icon name="folder-open-outline"></ion-icon>&nbsp;Ouvrir
       </button>
       <button type="button" class="btn waves-effect waves-light" (click)="gallery.deleteFile()">
-        <i class="material-icons">delete_forever</i>&nbsp;Supprimer
+        <ion-icon name="trash-outline"></ion-icon>&nbsp;Supprimer
       </button>
       <img class="row col col-50" style="margin-top: 10px;"
       alt="Photo non disponible sur le mobile" [src]="gallery.getPhotoPath()"/>
