@@ -11,12 +11,10 @@ import { ColorModalComponent } from './craftlayers/color-modal/color-modal.compo
 import { LeftSlideCraftlayersComponent } from './craftlayers/craftlayers.component';
 import { LeftSlideDisponibleLayersComponent } from './craftlayers/disponible/disponible.component';
 import { GalleryDocumentComponent } from './gallery/document/document.component';
-import { LeftSlideGalleryComponent } from './gallery/gallery.component';
 import { GalleryMediasComponent } from './gallery/medias/medias.component';
 import { LeftSlideComponent } from './left.component';
 import { LeftSlideMenuComponent } from './menu/menu.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.component';
-
 
 @NgModule({
   imports: [
@@ -28,7 +26,7 @@ import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.comp
   ],
   declarations: [LeftSlideComponent, LeftSlideMenuComponent,
     AppinfosLeftSlideComponent, AppsettingsLeftSlideComponent,
-    LeftSlideGalleryComponent, GalleryDocumentComponent, GalleryMediasComponent,
+    GalleryDocumentComponent, GalleryMediasComponent,
     LeftSlideBackmapComponent, LeftSlideAddBackLayerComponent, LeftSlideCacheComponent,
     ArraySortPipe, LeftSlideTronconComponent, LeftSlideCraftlayersComponent, ColorModalComponent,
     LeftSlideDisponibleLayersComponent],
