@@ -1,7 +1,7 @@
 
 #------------------------------------------------< Builder >------------------------------------------------------------
 #
-# Note: This docker is build locally. The goal is to provide a ready to use docker to compile this project.
+# Note: This docker must be built by the CI. The goal is to provide a ready to use docker to compile this project.
 #
 #-----------------------------------------------------------------------------------------------------------------------
 FROM ubuntu:20.04
