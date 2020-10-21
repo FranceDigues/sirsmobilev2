@@ -1,3 +1,65 @@
-<p>
-  observation-edit works!
-</p>
+<div class="full-height observation-general" [ngSwitch]="view">
+  <div fxLayout="column" fxLayoutAlign="center">
+    <div class="observation-form" *ngSwitchCase="'form'">
+      <ion-content>
+          <form class="sirs-card" #observationForm="ngForm">
+            <div class="sirs-card-content" [ngSwitch]="tab">
+              <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
+              <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
+
+              <ul #tabs class="tabs">
+                  <li class="tab"><a [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</a></li>
+                  <li class="tab"><a [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</a></li>
+                  <li class="tab"><a [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</a></li>
+                  <li class="tab"><a [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</a></li>
+                  <li class="tab"><a [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</a></li>
+                  <li class="tab"><a [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</a></li>
+              </ul>
+
+              <div class="medias" *ngSwitchCase="'medias'">
+                <div class="pics row" *ngIf="OES.showContent">
+                  <div class="pic col col-25" *ngIf="OES.mediaPath">
+                    <div *ngFor="let photo of OES.photos" (ngInit)="OES.loadImage(photo)">
+                      <div class="progress" *ngIf="!OES.loaded[photo.id]">
+                        <div class="indeterminate"></div>
+                      </div>
+                      <div class="pic-quicklook" *ngIf="OES.loaded[photo.id]">
+                        <img alt="Photo non disponible" (click)="OES.open(photo)" [src]="OES.getPhotoPath(photo)" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="button" class="btn btn-large waves-effect waves-teal" 
+                  (click)="goToMedia()">
+                    <ion-icon name="images-outline"></ion-icon>
+                    Ajouter un media
+                  </button>
+                </div>
+              </div>
+              <div class="evolution" *ngSwitchCase="'evolution'">
+
+              </div>
+              <div class="urgence" *ngSwitchCase="'urgence'">
+
+              </div>
+              <div class="nombre" *ngSwitchCase="'nombre'">
+
+              </div>
+              <div class="suite" *ngSwitchCase="'suite'">
+
+              </div>
+              <div class="observateur" *ngSwitchCase="'observateur'">
+
+              </div>
+            </div>
+          </form>
+        </ion-content>
+      </div>
+    <div class="observation-form" *ngSwitchCase="'note'">
+
+    </div>
+    <div class="observation-form" *ngSwitchCase="'media'">
+    </div>
+  </div>
+</div>
