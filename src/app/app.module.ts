@@ -7,8 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouteReuseStrategy } from '@angular/router';
 import { LibCameraModule } from '@ionic-lib/lib-camera/camera.module';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { File } from '@ionic-native/file/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -21,6 +23,7 @@ import { AppComponent } from './app.component';
 import { AppVersionsService } from './appversions.service';
 import { AuthService } from './auth.service';
 import { BackLayerService } from './backlayer.service';
+import { CacheMapManager } from './cache.service';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
 import { DatabaseService } from './database.service';
 import { EditionModeService } from './editionmode.service';
@@ -39,17 +42,15 @@ import { FilterPipe } from './sliders/right/createobjects/createobjects.componen
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
 import { SyncService } from './sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
-import { CacheMapManager } from './cache.service';
-import { File } from '@ionic-native/file/ngx';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { CommonModule } from '@angular/common';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { ObservationEditService } from './observationedit.service';
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, CommonModule, MatIconModule,
+    BrowserModule, MatIconModule,
     IonicModule.forRoot(), IonicStorageModule.forRoot(),
     AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
     DatabaseConnectionPageModule, LibCameraModule,
@@ -65,7 +66,8 @@ import { CommonModule } from '@angular/common';
     BackLayer,SystemeEndiguement,AppTronconsService,DigueController,
     TronconController,ObjectDocService,FilterPipe,EditObjectService,
     Toast,SelectedObjectsService,ObjectDetails,MapEditObjectService,
-    FormsTemplateService,CacheMapManager,File,WebView,
+    FormsTemplateService,CacheMapManager,File,WebView,FileOpener,
+    ObservationEditService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
