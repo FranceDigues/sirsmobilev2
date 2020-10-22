@@ -1,6 +1,6 @@
 <ion-header translucent>
   <ion-toolbar>
-    <ion-title>Choisissez une couleur</ion-title>
+    <ion-title>Définir une position via une borne</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">Fermer</ion-button>
     </ion-buttons>
@@ -22,7 +22,7 @@
 
   <div *ngIf="systemeReperage && !EOS.isLinear">
     <label>Borne du système de repérage : </label>
-    <select id="bsr" class="browser-default" [(ngModel)]="borneDebutId"
+    <select id="bsr" class="browser-default" [(ngModel)]="data.borneDebutId"
     (change)="updateBorneLibelle()" name="bsr">
       <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
       [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
@@ -33,7 +33,7 @@
   </div>
   <div *ngIf="systemeReperage && EOS.isLinear">
     <label>Borne du système de repérage début: </label>
-    <select id="bsrDebut" class="browser-default" [(ngModel)]="borneDebutId"
+    <select id="bsrDebut" class="browser-default" [(ngModel)]="data.borneDebutId"
     (change)="updateBorneLibelle()" name="bsrDebut">
       <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
       [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
@@ -42,7 +42,7 @@
       </option>
     </select>
     <label>Borne du système de repérage fin: </label>
-    <select id="bsrFin" class="browser-default" [(ngModel)]="borneFinId"
+    <select id="bsrFin" class="browser-default" [(ngModel)]="data.borneFinId"
     (change)="updateBorneLibelle()" name="bsrFin">
       <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
       [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
