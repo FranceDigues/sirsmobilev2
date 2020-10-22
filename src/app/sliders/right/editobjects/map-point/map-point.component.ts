@@ -1,10 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import { transform } from 'ol/proj';
 import { SirsDocService } from 'src/app/sirsdoc.service';
-import { EditObjectService } from '../../../../editobjects.service';
+import { EditObjectService } from 'src/app/editobjects.service';
 import DragPan from 'ol/interaction/DragPan';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
@@ -21,6 +21,8 @@ export class MapPointComponent implements OnInit {
 
   defaultVisibleValueArrayLayer = [];
   @Output() readonly slidePathChange = new EventEmitter<string>();
+  @Output() readonly successData = new EventEmitter();
+  @Input() readonly notNeedEOS: "true" | undefined;
   draw = null;
   pan = null;
   source = null;
@@ -38,22 +40,24 @@ export class MapPointComponent implements OnInit {
     this.olService.addLayer(this.vector);
     this.mapEditObject.removeLongClickSelect();
     this.addInteraction();
-    if (this.EOS.objectDoc.geometry) {
-      const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
-      const coords = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
-      this.source.addFeatures(
-        [new Feature({
-          geometry: new Point(coords)
-        })]
-      );
-    } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
-      let coords = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
-      coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
-      this.source.addFeatures(
-        [new Feature({
-          geometry: new Point(coords)
-        })]
-      );
+    if (this.notNeedEOS === undefined) {
+      if (this.EOS.objectDoc.geometry) {
+        const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
+        const coords = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+        this.source.addFeatures(
+          [new Feature({
+            geometry: new Point(coords)
+          })]
+        );
+      } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
+        let coords = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
+        coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
+        this.source.addFeatures(
+          [new Feature({
+            geometry: new Point(coords)
+          })]
+        );
+      }
     }
     this.initListener();
   }
@@ -90,10 +94,14 @@ export class MapPointComponent implements OnInit {
       latitude: finalRes[1],
       accuracy: -1
     };
-    if (this.EOS.isDependance()) {
-      this.EOS.handlePosDependance(args);
+    if (this.notNeedEOS !== undefined && this.notNeedEOS === "true") {
+      this.successData.emit(args);
     } else {
-      this.EOS.handlePos(args);
+      if (this.EOS.isDependance()) {
+        this.EOS.handlePosDependance(args);
+      } else {
+        this.EOS.handlePos(args);
+      }
     }
     this.goBack();
     return;
