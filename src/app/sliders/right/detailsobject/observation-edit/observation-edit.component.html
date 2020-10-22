@@ -59,8 +59,8 @@
     <div class="observation-form" *ngSwitchCase="'note'">
 
     </div>
-    <div class="observation-form" *ngSwitchCase="'media'">
-      <observation-media></observation-media>
+    <div class="full-height full-width" *ngSwitchCase="'media'">
+      <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
     </div>
   </div>
 </div>
