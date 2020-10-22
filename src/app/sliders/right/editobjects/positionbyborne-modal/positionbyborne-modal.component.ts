@@ -63,7 +63,6 @@ export class PositionByBorneModalComponent implements OnInit {
 
   updateBorneLibelle() {
     if (!this.EOS.isLinear) {
-      this.data.borneDebutId = this.borneDebutId;
 
       const index = this.systemeReperage.value.systemeReperageBornes.findIndex(
         (item) => {
@@ -75,7 +74,6 @@ export class PositionByBorneModalComponent implements OnInit {
       this.data.borneDebutLibelle = srb.libelle;
     } else {
       if (this.borneDebutId) {
-        this.data.borneDebutId = this.borneDebutId;
         const indexDebut = this.systemeReperage.value.systemeReperageBornes.findIndex(
           (item) => {
             return item.borneId === this.data.borneDebutId;
@@ -84,7 +82,6 @@ export class PositionByBorneModalComponent implements OnInit {
         this.data.borneDebutLibelle = srbDebut.libelle;
       }
       if (this.borneFinId) {
-        this.data.borneFinId = this.borneFinId;
         const indexFin = this.systemeReperage.value.systemeReperageBornes.findIndex(
           (item) => {
             return item.borneId === this.data.borneFinId;
