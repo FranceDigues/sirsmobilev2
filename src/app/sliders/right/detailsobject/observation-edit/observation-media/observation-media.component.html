@@ -1,24 +1,74 @@
-<ion-content>
-  <div class="sirs-card">
-    <div class="sirs-card-content">
-      <h2 class="sirs-card-title">Ajouter un média</h2>
-      <div class="row">
-        <label>Prendre une photo ou une note</label>
-        <div class="center">
-          <ion-button color="secondary">
-            <ion-icon name="camera-outline"></ion-icon>
-            PRENDRE UNE PHOTO
-          </ion-button>
-          <ion-button color="secondary">
-            <ion-icon name="create-outline"></ion-icon>
-            EDITER UNE NOTE
-          </ion-button>
-          <ion-button color="secondary">
-            <ion-icon name="images-outline"></ion-icon>
-            IMPORTER UN MEDIA
-          </ion-button>
+<div class="full-height" *ngIf="view === 'media'">
+  <ion-content>
+    <div class="sirs-card">
+      <div class="sirs-card-content">
+        <h2 class="sirs-card-title">Ajouter un média</h2>
+        <div class="row">
+          <label>Prendre une photo ou une note</label>
+          <div class="center">
+            <ion-button size="small" color="secondary">
+              <ion-icon class="icon-firsts-button" name="camera-outline"></ion-icon>
+              PRENDRE UNE PHOTO
+            </ion-button>
+            <ion-button class="icon-firsts-button" size="small" color="secondary">
+              <ion-icon name="create-outline"></ion-icon>
+              EDITER UNE NOTE
+            </ion-button>
+            <ion-button class="icon-firsts-button" size="small" color="secondary">
+              <ion-icon name="images-outline"></ion-icon>
+              IMPORTER UN MEDIA
+            </ion-button>
+          </div>
+        </div>
+        <div class="pics row" *ngIf="OES.mediaOptions.id !=='' ">
+          <div class="pic col col-25">
+              <div class="pic-quicklook">
+                  <img alt="Photo non disponible sur le mobile"
+                      style="height: 50px;"
+                      [src]="OES.importPhotoData ? OES.importPhotoData : OES.getPhotoPath(OES.mediaOptions)"/>
+              </div>
+          </div>
+        </div>
+        <div class="row">
+          <label>Depuis un appareil externe</label>
+          <div class="center">
+            <input [(ngModel)]="OES.mediaOptions.designation" placeholder="Numéro de photo" />
+          </div>
+        </div>
+        <div class="row">
+          <label>Position</label>
+          <div class="edit-position-buttons right">
+            <a class="nav-item nav-link"
+                    (click)="locateMe()">
+                <span><ion-icon class="option-button-edit-object" name="navigate-outline"></ion-icon></span>
+            </a>
+            <a class="nav-item nav-link"
+                    (click)="setView('map')">
+                <span><ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon></span>
+            </a>
+            <a class="nav-item nav-link" *ngIf="OES.troncons.length > 0 &&  OES.objectType !== 'DesordreDependance'"
+                    (click)="selectPosBySR()">
+                <span><ion-icon class="option-button-edit-object" name="options-outline"></ion-icon></span>
+            </a>
+          </div>
+          <div *ngIf="OES.mediaOptions.positionDebut" class="sirs-field-inline">
+            <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+            <span class="sirs-field-value">{{ OES.mediaOptions.positionDebut }}</span>
+          </div>
+          <div *ngIf="OES.mediaOptions.borneDebutId" class="sirs-field-inline">
+              <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
+              <span class="sirs-field-value">{{ OES.mediaOptions.borneDebutId ? 'à ' + OES.mediaOptions.borne_debut_distance + ' m de la borne ' +
+                OES.mediaOptions.borneDebutLibelle + ' en ' + (OES.mediaOptions.borne_debut_aval ? 'amont' : 'aval') : 'à definir' }}</span>
+          </div>
+        </div>
+        <div class="row">
+          
         </div>
       </div>
     </div>
-  </div>
-</ion-content>
+  </ion-content>
+</div>
+<div class="full-height" *ngIf="view === 'map'">
+  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event)" notNeedEOS=true></map-point>
+</div>
+
