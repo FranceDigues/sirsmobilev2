@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { SirsDocService } from './sirsdoc.service';
 import { transform } from 'ol/proj';
 import { StorageService } from '../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +35,8 @@ export class ObservationEditService {
     constructor(private objectDetails: ObjectDetails,
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
                 private fileOpener: FileOpener, private authService: AuthService,
-                private sirsDoc: SirsDocService, private storageService: StorageService) {
+                private sirsDoc: SirsDocService, private storageService: StorageService,
+                private webview: WebView) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
                     this.showContent = true;
@@ -144,7 +146,8 @@ export class ObservationEditService {
 
     getPhotoPath(photo) {
         let path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-        let image_url = this.mediaPath + '/' + path;
+        path = this.mediaPath + '/' + path;
+        const image_url = this.webview.convertFileSrc(path);
         return image_url;
     }
 
