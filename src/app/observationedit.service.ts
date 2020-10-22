@@ -1,11 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObjectDetails } from './objectdetails.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
-import { File } from '@ionic-native/file/ngx';
+import { File, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
 import { formatDate } from '@angular/common';
+import { UuidUtils } from './uuid-utils';
+import { AuthService } from './auth.service';
+import { SirsDocService } from './sirsdoc.service';
+import { transform } from 'ol/proj';
+import { StorageService } from '../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,19 +26,45 @@ export class ObservationEditService {
     showContent: boolean;
     photos;
     loaded = {};
-
+    troncons = [];
+    mediaOptions;
+    importPhotoData;
+    dataProjection;
 
     constructor(private objectDetails: ObjectDetails,
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
-                private fileOpener: FileOpener) {
+                private fileOpener: FileOpener, private authService: AuthService,
+                private sirsDoc: SirsDocService, private storageService: StorageService) {
+                    this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
                     this.showContent = true;
                     this.loaded = {};
+                    this.mediaOptions = {
+                        id: '',
+                        chemin: '',
+                        designation: "",
+                        positionDebut: "",
+                        orientationPhoto: "",
+                        coteId: "",
+                        commentaire: "",
+                        author: this.authService.getValue()._id
+                    };
+                    this.importPhotoData = null;
                 }
 
     init(objectId: string, obsId: string) {
         this.setValuesToDefault();
 
+        this.storageService.getItem("AppTronconsFavorities")
+        .then(
+            (troncons) => {
+                if (Array.isArray(troncons)) {
+                    this.troncons = troncons;
+                } else {
+                    this.troncons = [];
+                }
+            }
+        )
         this.objectDoc = this.objectDetails.selectedObject;
         const lastIndexOfClass = this.objectDoc['@class'].lastIndexOf('.');
         this.objectType = this.objectDoc['@class']
@@ -49,12 +79,26 @@ export class ObservationEditService {
     }
 
     setValuesToDefault() {
-
+        this.dataProjection = this.sirsDoc.get().epsgCode;
+        this.mediaOptions = {
+            id: '',
+            chemin: '',
+            designation: "",
+            positionDebut: "",
+            orientationPhoto: "",
+            coteId: "",
+            commentaire: "",
+            author: this.authService.getValue()._id
+        };
+        this.importPhotoData = null;
+        this.mediaPath = this.file.externalDataDirectory + 'medias';
+        this.showContent = true;
+        this.loaded = {};
     }
 
     createNewObservation() {
         let newObj = {
-            'id': uuid4.generate(),
+            'id': UuidUtils.generateUuid(),
             'date': formatDate(Date.now(), 'yyyy-MM-dd', 'en-US'),
             'photos': [],
             'valid': false
@@ -186,5 +230,19 @@ export class ObservationEditService {
             }
         )
     }
+
+    handlePos(pos) {
+        const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
+        this.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+    }
+
+    handlePosByBorne(data) {
+        delete this.mediaOptions.positionDebut;
+        this.mediaOptions.systemeRepId = data.systemeRepId;
+        this.mediaOptions.borne_debut_aval = data.borne_aval === 'true';
+        this.mediaOptions.borne_debut_distance = data.borne_distance;
+        this.mediaOptions.borneDebutId = data.borneId;
+        this.mediaOptions.borneDebutLibelle = data.borneLibelle;
+    };
 
 }
