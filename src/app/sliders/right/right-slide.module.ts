@@ -9,6 +9,8 @@ import { DetailsContentModule } from './detailsobject/detailscontent/details-con
 import { DetailsObjectComponent } from './detailsobject/detailsobject.component';
 import { RightSlideComponent } from './right.component';
 import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
+import { ObservationEditModule } from './detailsobject/observation-edit/observation-edit.module';
+import { EditObjectsModule } from './editobjects/editobjects.module';
 
 @NgModule({
   imports: [
@@ -17,13 +19,15 @@ import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.comp
     IonicModule,
     MatCheckboxModule,
     MatButtonModule,
-    DetailsContentModule
+    DetailsContentModule,
+    ObservationEditModule,
+    EditObjectsModule
   ],
   providers: [
   ],
   declarations: [
     RightSlideComponent, RightSlideCreateObjectsComponent,
-    FilterPipe, DetailsObjectComponent, SelectedObjectsComponent
+    FilterPipe, DetailsObjectComponent, SelectedObjectsComponent,
   ],
   exports: [RightSlideComponent]
 })

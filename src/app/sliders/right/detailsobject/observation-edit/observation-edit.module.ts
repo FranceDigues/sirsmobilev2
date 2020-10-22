@@ -7,6 +7,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IonicModule } from '@ionic/angular';
 import { NgInitDirective, ObservationEditComponent } from './observation-edit.component';
 import { ObservationMediaComponent } from './observation-media/observation-media.component';
+import { PositionByBorneModal2Component } from './observation-media/positionbyborne-modal2/positionbyborne-modal2.component';
+import { EditObjectsModule } from '../../editobjects/editobjects.module';
+import { MapPointComponent } from '../../editobjects/map-point/map-point.component';
 
 @NgModule({
   imports: [
@@ -16,12 +19,13 @@ import { ObservationMediaComponent } from './observation-media/observation-media
     MatCheckboxModule,
     MatButtonModule,
     FlexLayoutModule,
+    EditObjectsModule
   ],
   providers: [
   ],
   declarations: [
       ObservationEditComponent, NgInitDirective,
-      ObservationMediaComponent
+      ObservationMediaComponent, PositionByBorneModal2Component,
   ],
   exports: [ObservationEditComponent]
 })

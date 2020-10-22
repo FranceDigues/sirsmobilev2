@@ -24,6 +24,6 @@ import { PositionByBorneModalComponent } from './positionbyborne-modal/positionb
     MapPolygonComponent, PositionByBorneModalComponent,
     LonLatPipe
   ],
-  exports: [RightSlideEditObjectsComponent]
+  exports: [RightSlideEditObjectsComponent, MapPointComponent]
 })
 export class EditObjectsModule {}

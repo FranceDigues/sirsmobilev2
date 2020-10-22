@@ -10,6 +10,7 @@ import { ObservationEditComponent } from './sliders/right/detailsobject/observat
 import { ObservationEditModule } from './sliders/right/detailsobject/observation-edit/observation-edit.module';
 import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
 import { EditObjectsModule } from './sliders/right/editobjects/editobjects.module';
+import { RightSlideModule } from './sliders/right/right-slide.module';
 
 const routes: Routes = [
   {
@@ -53,8 +54,7 @@ const routes: Routes = [
     SynchronisationModule,
     GalleryModule,
     CacheModule,
-    EditObjectsModule,
-    ObservationEditModule
+    RightSlideModule
   ],
   exports: [RouterModule]
 })
