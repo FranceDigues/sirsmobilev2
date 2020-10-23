@@ -87,6 +87,49 @@ export class ObservationMediaComponent implements OnInit {
     );
   }
 
+  takePhotoInGallery() {
+    const options: Options = {
+      quality: 50,
+      encodingType: this.camera.EncodingType.JPEG,
+      destinationType: this.camera.DestinationType.FILE_URI,
+    };
+    this.cameraService.getPictureInGallery(options)
+    .then(
+      (value: string) => {
+        const valueTmp = value.replace('data:image/jpeg;base64,', '') ;
+        console.log('galleryPhoto: ', value);
+        this.file.resolveLocalFilesystemUrl(valueTmp)
+        .then(
+          (file: Entry) => {
+            console.log('galleryPhoto file: ', file);
+            this.savePictureFromGallery(file);
+          }
+        );
+      }
+    );
+  }
+
+  savePictureFromGallery(file: Entry) {
+    file.getMetadata((metadata: Metadata) => {
+      if (metadata.size > 1048576) {
+        this.warningSizeMessage();
+        file.remove(() => console.log('File has been removed correctly'));
+        return;
+      } else {
+        const photoId = UuidUtils.generateUuid();
+        const fileName = photoId + '.jpg';
+
+        // Store the photo in the object document.
+        this.fillMediaOptions(photoId, fileName);
+
+        // Set Photo Path
+        this.OES.importPhotoData = this.webview.convertFileSrc(file.nativeURL);
+        // Force Image to change
+        this.cdr.detectChanges();
+      }
+    })
+  }
+
   takePhoto() {
     const options: Options = {
       quality: 50,
@@ -102,21 +145,16 @@ export class ObservationMediaComponent implements OnInit {
           (file: Entry) => {
             this.savePicture(file);
           }
-        )
+        );
       }
-    )
+    );
   }
 
   savePicture(file: Entry) {
     file.getMetadata((metadata: Metadata) => {
       if (metadata.size > 1048576) {
-        this.toastCtrl.create({
-          message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
-          duration: 3000
-        }).then(toast => toast.present());
-        file.remove(() => {
-          console.log('File has been removed correctly');
-        });
+        this.warningSizeMessage();
+        file.remove(() => console.log('File has been removed correctly'));
         return;
       } else {
         this.file.resolveDirectoryUrl(this.OES.mediaPath)
@@ -127,12 +165,7 @@ export class ObservationMediaComponent implements OnInit {
             // Copy image file in its final directory.
             file.copyTo(targetDir, fileName, () => {
               // Store the photo in the object document.
-              this.OES.mediaOptions['id'] = photoId;
-              this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.OES.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
-              this.OES.mediaOptions['date'] = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
-              this.OES.mediaOptions['chemin'] = '/' + fileName;
-              this.OES.mediaOptions['valid'] = false;
-
+              this.fillMediaOptions(photoId, fileName);
               // Set Photo Path
               this.OES.importPhotoData = this.OES.getPhotoPath(this.OES.mediaOptions);
               // Force Image to change
@@ -142,6 +175,22 @@ export class ObservationMediaComponent implements OnInit {
         )
       }
     });
+  }
+
+  warningSizeMessage() {
+    this.toastCtrl.create({
+      message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+      duration: 3000
+    }).then(toast => toast.present());
+  }
+
+  fillMediaOptions(photoId: string, fileName: string) {
+    // Store the photo in the object document.
+    this.OES.mediaOptions['id'] = photoId;
+    this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.OES.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
+    this.OES.mediaOptions['date'] = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
+    this.OES.mediaOptions['chemin'] = '/' + fileName;
+    this.OES.mediaOptions['valid'] = false;
   }
 
 }
