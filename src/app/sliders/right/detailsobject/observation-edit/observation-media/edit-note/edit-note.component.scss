@@ -1,0 +1,23 @@
+canvas {
+    border: 1px solid rgb(187, 178, 178);
+}
+
+.color-block {
+    height: 40px;
+}
+
+#bottom-toolbar {
+    --background: transparent !important;
+    position: absolute;
+    bottom: 0;
+}
+
+.canvas-container {
+    position: relative;
+}
+
+.canvas-trash-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

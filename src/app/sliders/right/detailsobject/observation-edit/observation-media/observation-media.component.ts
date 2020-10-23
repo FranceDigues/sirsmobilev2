@@ -20,7 +20,7 @@ export class ObservationMediaComponent implements OnInit {
 
   @Output() readonly viewChange = new EventEmitter<string>();
 
-  view: 'media' | 'map';
+  view: 'media' | 'map' | 'note';
 
   constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
               private geolocService: GeolocService, private cameraService: CameraService,
@@ -35,7 +35,7 @@ export class ObservationMediaComponent implements OnInit {
     this.viewChange.emit('form');
   }
 
-  setView(str: 'media' | 'map') {
+  setView(str: 'media' | 'map' | 'note') {
     this.view = str;
   }
 
@@ -76,6 +76,10 @@ export class ObservationMediaComponent implements OnInit {
       }
     });
     return await modal.present();
+  }
+
+  editNote() {
+    this.setView('note');
   }
 
   locateMe() {
@@ -128,6 +132,10 @@ export class ObservationMediaComponent implements OnInit {
         this.cdr.detectChanges();
       }
     })
+  }
+
+  saveNoteEdit(file) {
+    this.savePicture(file);
   }
 
   takePhoto() {

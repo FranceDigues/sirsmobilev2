@@ -10,7 +10,7 @@
               <ion-icon class="icon-firsts-button" name="camera-outline"></ion-icon>
               PRENDRE UNE PHOTO
             </ion-button>
-            <ion-button size="small" color="secondary">
+            <ion-button size="small" color="secondary" (click)="editNote()">
               <ion-icon class="icon-firsts-button" name="create-outline"></ion-icon>
               EDITER UNE NOTE
             </ion-button>
@@ -24,9 +24,6 @@
           <div class="pic col col-25">
               <div class="pic-quicklook">
                 <ion-img style="height: 100px; width: 100px;" [src]="OES.importPhotoData"></ion-img>
-                  <!-- <img alt="Photo non disponible sur le mobile"
-                      style="height: 50px;"
-                      [src]="OES.importPhotoData ? OES.importPhotoData : OES.getPhotoPath(OES.mediaOptions)"/> -->
               </div>
           </div>
         </div>
@@ -71,5 +68,8 @@
 </div>
 <div class="full-height" *ngIf="view === 'map'">
   <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event)" notNeedEOS=true></map-point>
+</div>
+<div class="full-height" *ngIf="view === 'note'">
+  <edit-note (slidePathChange)="setView('media')" (successData)="saveNoteEdit($event)"></edit-note>
 </div>
 

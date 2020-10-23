@@ -9,7 +9,8 @@ import { NgInitDirective, ObservationEditComponent } from './observation-edit.co
 import { ObservationMediaComponent } from './observation-media/observation-media.component';
 import { PositionByBorneModal2Component } from './observation-media/positionbyborne-modal2/positionbyborne-modal2.component';
 import { EditObjectsModule } from '../../editobjects/editobjects.module';
-import { MapPointComponent } from '../../editobjects/map-point/map-point.component';
+import { EditNoteComponent } from './observation-media/edit-note/edit-note.component';
+import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
 
 @NgModule({
   imports: [
@@ -22,10 +23,12 @@ import { MapPointComponent } from '../../editobjects/map-point/map-point.compone
     EditObjectsModule
   ],
   providers: [
+    Base64ToGallery
   ],
   declarations: [
       ObservationEditComponent, NgInitDirective,
       ObservationMediaComponent, PositionByBorneModal2Component,
+      EditNoteComponent
   ],
   exports: [ObservationEditComponent]
 })
