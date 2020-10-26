@@ -209,4 +209,6 @@ export class ObservationMediaComponent implements OnInit {
     this.OES.mediaOptions['valid'] = false;
   }
 
+  save() {
+  }
 }
