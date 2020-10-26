@@ -60,7 +60,127 @@
           </div>
         </div>
         <div class="row">
-          
+          <div *ngIf="showText('fullName')">
+            <select class="browser-default"
+                    [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                    <option *ngFor="let v of OES.orientations | async"
+                    [value]="v.id" [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                      {{ v.value.libelle ? v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                    </option>
+            </select>
+          </div>
+
+          <div *ngIf="showText('abstract')">
+              <select class="browser-default"
+                      [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                      <div *ngFor="let v of OES.orientations | async">
+                        <option  *ngIf="v.value.abrege" [value]="v.id"
+                        [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                          {{ v.value.abrege ? v.value.abrege : 'libelle undefined / id: ' + v.id }}
+                        </option>
+                      </div>
+              </select>
+
+              <select class="browser-default"
+                      [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                      <div *ngFor="let v of OES.orientations | async">
+                        <option *ngIf="!v.value.abrege" [value]="v.id"
+                        [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                          {{ v.value.designation ? v.value.designation : 'libelle undefined / id: ' + v.id }}
+                        </option>
+                      </div>
+              </select>
+          </div>
+
+          <div *ngIf="showText('both')">
+              <select class="browser-default"
+                      [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                      <div *ngFor="let v of OES.orientations | async">
+                        <option  *ngIf="v.value.abrege" [value]="v.id"
+                        [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                          {{ v.value.abrege ? v.value.abrege + ' : ' + v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                        </option>
+                      </div>
+              </select>
+
+              <select class="browser-default"
+                      [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                      <div *ngFor="let v of OES.orientations | async">
+                        <option *ngIf="!v.value.abrege" [value]="v.id"
+                        [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                          {{ v.value.designation ? v.value.designation : 'libelle undefined / id: ' + v.id }}
+                        </option>
+                      </div>
+              </select>
+          </div>
+
+        <br>
+
+        <div *ngIf="showText('fullName')">
+            <select class="browser-default"
+                    [(ngModel)]="OES.mediaOptions.coteId">
+                    <option *ngFor="let v of OES.cotes | async"
+                    [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                      {{ v.value.libelle ? v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                    </option>
+            </select>
+        </div>
+
+          <div *ngIf="showText('abstract')">
+            <select class="browser-default"
+                    [(ngModel)]="OES.mediaOptions.coteId">
+                    <div *ngFor="let v of OES.cotes | async">
+                      <option *ngIf="v.value.abrege" [value]="v.id"
+                      [selected]="OES.mediaOptions.coteId === v.id">
+                        {{ v.value.abrege ? v.value.abrege : 'libelle undefined / id: ' + v.id }}
+                      </option>
+                    </div>
+            </select>
+
+            <select class="browser-default"
+                    [(ngModel)]="OES.mediaOptions.coteId">
+                    <div *ngFor="let v of OES.cotes | async">
+                      <option *ngIf="!v.value.abrege" [value]="v.id"
+                      [selected]="OES.mediaOptions.coteId === v.id">
+                        {{ v.value.designation ? v.value.designation + ' : ' + v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                      </option>
+                    </div>
+            </select>
+          </div>
+
+          <div *ngIf="showText('both')">
+            <select class="browser-default"
+                    [(ngModel)]="OES.mediaOptions.coteId">
+                    <div *ngFor="let v of OES.cotes | async">
+                      <option *ngIf="v.value.abrege" [value]="v.id"
+                      [selected]="OES.mediaOptions.coteId === v.id">
+                        {{ v.value.abrege ? v.value.abrege + ' : ' + v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                      </option>
+                    </div>
+            </select>
+
+            <select class="browser-default"
+              [(ngModel)]="OES.mediaOptions.coteId">
+              <div *ngFor="let v of OES.cotes | async">
+                <option *ngIf="v.value.abrege" [value]="v.id"
+                [selected]="OES.mediaOptions.coteId === v.id">
+                  {{ v.value.designation ? v.value.designation + ' : ' + v.value.libelle : 'libelle undefined / id: ' + v.id }}
+                </option>
+              </div>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <input type="text" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
+        </div>
+        <div class="sirs-card-action">
+          <a (click)="cancel()" class="btn-flat waves-effect waves-teal">
+            <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
+          </a>
+          <button type="button" class="btn pink waves-effect waves-teal right"
+          (click)="save()">
+          <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
+          </button>
         </div>
       </div>
     </div>
