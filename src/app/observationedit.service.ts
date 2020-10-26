@@ -31,6 +31,8 @@ export class ObservationEditService {
     mediaOptions;
     importPhotoData;
     dataProjection;
+    orientations;
+    cotes;
 
     constructor(private objectDetails: ObjectDetails,
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
@@ -56,6 +58,16 @@ export class ObservationEditService {
 
     init(objectId: string, obsId: string) {
         this.setValuesToDefault();
+
+        this.orientations = this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
+            endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}]
+        });
+
+        this.cotes = this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefCote'],
+            endkey: ['fr.sirs.core.model.RefCote', {}]
+        });
 
         this.storageService.getItem("AppTronconsFavorities")
         .then(
