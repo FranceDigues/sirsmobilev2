@@ -176,7 +176,7 @@ export class ObservationMediaComponent implements OnInit {
               this.cdr.detectChanges();
             })
           }
-        )
+        );
       }
     });
   }
@@ -197,6 +197,52 @@ export class ObservationMediaComponent implements OnInit {
     this.OES.mediaOptions['valid'] = false;
   }
 
-  save() {
+  getImage(imageUrl: string): Observable<Blob> {
+    return this.http.get(imageUrl, { responseType: 'blob' });
   }
+
+  save() {
+      if (this.OES.mediaOptions.id && this.OES.mediaOptions.id !== '') {
+        if (typeof this.OES.photos === 'undefined') {
+          this.OES.photos = [];
+        }
+        const mediaOptions = Object.assign([], this.OES.mediaOptions);
+        this.OES.photos.push(mediaOptions);
+        if (this.OES.importPhotoData) {
+          if (typeof this.OES.objectDoc._attachments === 'undefined') {
+            this.OES.objectDoc._attachments = {};
+          }
+
+          // Convert url image to blob
+          this.getImage(this.OES.importPhotoData).subscribe(
+            (blob) => {
+              let reader = new FileReader();
+              reader.readAsDataURL(blob);
+              // Convert blob to base64
+              reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    let base64data = reader.result.replace('data:image/jpeg;base64,', '');
+                    // Save the photo like attachment to the object
+                    this.OES.objectDoc._attachments[this.OES.mediaOptions.id] = {
+                      content_type: 'image/jpeg',
+                      data: base64data
+                    }
+                    this.editionService.saveObject(this.OES.objectDoc)
+                    .then(() => {
+                        this.cancel();
+                        this.appLayer.syncAllAppLayer();
+                    });
+                }
+              }
+            }
+        );
+      }
+    } else {
+      this.toastCtrl.create({
+        message: 'Formulaire d\'ajout de média incomplet: Veuillez au moins ajouter une image/note',
+        duration: 7000
+      }).then(toast => toast.present());
+    }
+  }
+
 }
