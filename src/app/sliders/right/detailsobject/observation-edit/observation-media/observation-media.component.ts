@@ -10,6 +10,11 @@ import { File, Entry, Metadata, DirectoryEntry } from '@ionic-native/file/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { UuidUtils } from 'src/app/uuid-utils';
 import { formatDate } from '@angular/common';
+import { GlobalConfigService } from 'src/app/globalconfig.service';
+import { EditionModeService } from 'src/app/editionmode.service';
+import { AppLayer } from 'src/app/layers.service';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'observation-media',
@@ -26,10 +31,14 @@ export class ObservationMediaComponent implements OnInit {
   constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
               private geolocService: GeolocService, private cameraService: CameraService,
               private camera: Camera, private file: File, private webview: WebView,
+              private toastCtrl: ToastController,  private cdr: ChangeDetectorRef,
               private globalConfigService: GlobalConfigService,
-              private toastCtrl: ToastController,  private cdr: ChangeDetectorRef) {
+              private editionService: EditionModeService, private appLayer: AppLayer,
+              private http: HttpClient) {
                 this.view = 'media';
                 this.config = this.globalConfigService.context;
+                this.OES.importPhotoData = null;
+                this.OES.mediaOptions.id = '';
               }
 
   ngOnInit() {}
@@ -114,32 +123,11 @@ export class ObservationMediaComponent implements OnInit {
         .then(
           (file: Entry) => {
             console.log('galleryPhoto file: ', file);
-            this.savePictureFromGallery(file);
+            this.savePicture(file);
           }
         );
       }
     );
-  }
-
-  savePictureFromGallery(file: Entry) {
-    file.getMetadata((metadata: Metadata) => {
-      if (metadata.size > 1048576) {
-        this.warningSizeMessage();
-        file.remove(() => console.log('File has been removed correctly'));
-        return;
-      } else {
-        const photoId = UuidUtils.generateUuid();
-        const fileName = photoId + '.jpg';
-
-        // Store the photo in the object document.
-        this.fillMediaOptions(photoId, fileName);
-
-        // Set Photo Path
-        this.OES.importPhotoData = this.webview.convertFileSrc(file.nativeURL);
-        // Force Image to change
-        this.cdr.detectChanges();
-      }
-    })
   }
 
   saveNoteEdit(file) {
