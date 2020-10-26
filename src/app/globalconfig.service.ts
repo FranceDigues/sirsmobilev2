@@ -7,11 +7,11 @@ import { DatabaseModel } from './models/database.model';
 })
 export class GlobalConfigService {
 
-    context = 'fullName';
+    context: 'fullName' | 'abstract' | 'both' = 'fullName';
 
     constructor(private dbService: DatabaseService) { }
 
-    updateValue(value: string) {
+    updateValue(value: 'fullName' | 'abstract' | 'both') {
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (database: DatabaseModel) => {

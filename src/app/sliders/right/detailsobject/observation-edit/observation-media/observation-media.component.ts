@@ -21,12 +21,15 @@ export class ObservationMediaComponent implements OnInit {
   @Output() readonly viewChange = new EventEmitter<string>();
 
   view: 'media' | 'map' | 'note';
+  config: 'fullName' | 'abstract' | 'both';
 
   constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
               private geolocService: GeolocService, private cameraService: CameraService,
               private camera: Camera, private file: File, private webview: WebView,
+              private globalConfigService: GlobalConfigService,
               private toastCtrl: ToastController,  private cdr: ChangeDetectorRef) {
                 this.view = 'media';
+                this.config = this.globalConfigService.context;
               }
 
   ngOnInit() {}
@@ -37,6 +40,11 @@ export class ObservationMediaComponent implements OnInit {
 
   setView(str: 'media' | 'map' | 'note') {
     this.view = str;
+  }
+
+  showText(str: 'fullName' | 'abstract' | 'both') {
+    const isSameString = this.config === str;
+    return isSameString;
   }
 
   initData() {
