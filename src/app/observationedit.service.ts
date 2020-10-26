@@ -156,9 +156,12 @@ export class ObservationEditService {
         throw new Error('No observation "' + this.obsId + '" found in disorder document.');
     }
 
-    getPhotoPath(photo) {
+    getPhotoPath(photo, notConvertFile?) {
         let path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
         path = this.mediaPath + '/' + path;
+        if (notConvertFile && notConvertFile === true) {
+            return path;
+        }
         const image_url = this.webview.convertFileSrc(path);
         return image_url;
     }
@@ -204,14 +207,12 @@ export class ObservationEditService {
                                     }
                                     fileName = keyAttachment + ext;
                                 }
-                                this.showContent = false;
                                 this.file.resolveDirectoryUrl(this.mediaPath)
                                 .then((targetDir: DirectoryEntry) => {
                                     targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
                                         file.createWriter((fileWriter) => {
                                             fileWriter.write(blobImage);
                                             this.loaded[photo.id] = true;
-                                            this.showContent = true;
                                         }, () => {
                                             console.log('cannot write the data to the file');
                                             this.loaded[photo.id] = true;
@@ -233,9 +234,8 @@ export class ObservationEditService {
     }
 
     open(photo) {
-        const url = this.getPhotoPath(photo);
-
-        this.fileOpener.open(decodeURI(url), 'image/jpeg')
+        const url = this.getPhotoPath(photo, true);
+        this.fileOpener.open(url, 'image/jpeg')
         .then(
             () => {
                 console.log('File opened successfully');
