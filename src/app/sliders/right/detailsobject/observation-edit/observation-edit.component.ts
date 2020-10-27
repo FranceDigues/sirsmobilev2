@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ObservationEditService } from 'src/app/observationedit.service';
 import { GlobalConfigService } from '../../../../globalconfig.service';
@@ -102,5 +102,28 @@ export class NgInitDirective implements OnInit {
 
   ngOnInit() {
       this.ngInit.emit();
+  }
+}
+
+@Pipe({
+  name: 'sortByDocNom'
+})
+export class ArraySortPipe2  implements PipeTransform {
+
+  transform(value: any, exponent: any) {
+    const data = value.sort(this.sortOn());
+    return data;
+  }
+
+  sortOn() {
+    return (a, b) => {
+      if (a.doc.nom.toLowerCase() < b.doc.nom.toLowerCase()) {
+        return -1;
+      } else if (a.doc.nom.toLowerCase() > b.doc.nom.toLowerCase()){
+        return 1;
+      } else {
+          return 0;
+      }
+    };
   }
 }
