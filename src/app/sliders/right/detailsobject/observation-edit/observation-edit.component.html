@@ -45,7 +45,39 @@
                 </div>
               </div>
               <div class="urgence" *ngSwitchCase="'urgence'">
-
+                <div *ngIf="showText('fullName')">
+                  <select id="urgenceList" class="browser-default"
+                          [(ngModel)]="OES.urgence">
+                          <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                          [value]="urgence.id" (ngModelChange)="changeUrgence()"
+                          [selected]="urgence.id === OES.urgence">
+                            {{ urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id }}
+                          </option>
+                  </select>
+                </div>
+                <div *ngIf="showText('abstract')">
+                    <select id="urgenceList" class="browser-default"
+                    [(ngModel)]="OES.urgence">
+                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                                [value]="urgence.id"
+                                (ngModelChange)="changeUrgence()"
+                                [selected]="OES.urgence === urgence.id">
+                            {{ urgence.abrege ? urgence.abrege : urgence.designation + ' : ' +
+                            urgence.libelle }}
+                        </option>
+                    </select>
+                </div>
+                <div *ngIf="showText('both')">
+                    <select id="urgenceList" class="browser-default" [(ngModel)]="OES.urgence">
+                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                                [value]="urgence.id"
+                                (ngModelChange)="changeUrgence()"
+                                [selected]="OES.urgence === urgence.id">
+                            {{ urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) :
+                            (urgence.designation + ' : ' + urgence.libelle) }}
+                        </option>
+                    </select>
+                </div>
               </div>
               <div class="nombre" *ngSwitchCase="'nombre'">
 

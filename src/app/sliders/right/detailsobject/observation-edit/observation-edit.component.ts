@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ObservationEditService } from 'src/app/observationedit.service';
+import { GlobalConfigService } from '../../../../globalconfig.service';
 
 declare var M: any;
 
@@ -15,23 +16,23 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
   objectId: string;
   obsId: string;
-  view: 'form' | 'note' | 'media';
+  view: 'form' | 'media';
   tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur';
+  config: 'fullName' | 'abstract' | 'both';
 
-  troncons: Array<any>;
 
-  constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService) {
+  constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
+              private cdr: ChangeDetectorRef, private globalConfigService: GlobalConfigService) {
     this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
     this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
 
-    this.OES.init(this.objectId, this.obsId);
-
     this.view = 'form';
     this.tab = 'medias';
+    this.config = this.globalConfigService.context;
+
+    this.OES.init(this.objectId, this.obsId);
 
     // TODO CHECK inits -> doc.author + mb hidden inits
-
-    this.troncons = []; // Y'a un truc en plus à init pour troncons
 
   }
 
@@ -44,8 +45,9 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     new M.Tabs(elem, options); // initialize materialize tabs to show indicator
   }
 
-  setView(str: 'form' | 'note' | 'media') {
+  setView(str: 'form' | 'media') {
     this.view = str;
+    this.cdr.detectChanges();
   }
 
   setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur') {
@@ -54,6 +56,39 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
   goToMedia() {
     this.setView('media');
+  }
+
+  showText(str: 'fullName' | 'abstract' | 'both') {
+    const isSameString = this.config === str;
+    return isSameString;
+  }
+
+  changeUrgence() {
+    this.OES.doc.urgenceId = 'RefUrgence:' + this.OES.urgence;
+  }
+
+  changeContact() {
+      this.OES.doc.observateurId = this.OES.contact;
+  }
+
+  compareRef(obj1, obj2) {
+    let a, b, comparison;
+    comparison = 0;
+    if (this.showText('fullName')) {
+        a = obj1.libelle;
+        b = obj2.libelle;
+    } else {
+        a = obj1.abrege ? obj1.abrege : obj1.designation;
+        b = obj2.abrege ? obj2.abrege : obj2.designation;
+    }
+
+    if (a > b) {
+        comparison = 1;
+    } else if (a < b) {
+        comparison = -1;
+    }
+
+    return comparison;
   }
 
 }
