@@ -31,8 +31,13 @@ export class ObservationEditService {
     mediaOptions;
     importPhotoData;
     dataProjection;
+
     orientations;
     cotes;
+    contact;
+    contactList;
+    urgenceList;
+    urgence;
 
     constructor(private objectDetails: ObjectDetails,
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
@@ -69,6 +74,24 @@ export class ObservationEditService {
             endkey: ['fr.sirs.core.model.RefCote', {}]
         });
 
+        this.contactList = this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.Contact'],
+            endkey: ['fr.sirs.core.model.Contact', {}],
+            include_docs: true
+        });
+
+        this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefUrgence'],
+            endkey: ['fr.sirs.core.model.RefUrgence', {}]
+        }).then(
+            (urgenceList) => {
+                this.urgenceList = urgenceList.map(item => {
+                    item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
+                    return item.value;
+                });
+            }
+        );
+
         this.storageService.getItem("AppTronconsFavorities")
         .then(
             (troncons) => {
@@ -90,6 +113,11 @@ export class ObservationEditService {
 
         this.doc = this.isNewObject ? this.createNewObservation() : Object.assign({}, this.getTargetObservation());
         this.photos = this.doc.photos;
+        this.contact = this.doc.observateurId;
+
+        if (this.doc.urgenceId) {
+            this.urgence = parseInt(this.doc.urgenceId.substring(this.doc.urgenceId.lastIndexOf(":") + 1), 10);
+        }
     }
 
     setValuesToDefault() {
