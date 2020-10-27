@@ -11,6 +11,8 @@ import { SirsDocService } from './sirsdoc.service';
 import { transform } from 'ol/proj';
 import { StorageService } from '../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { DatabaseService } from './database.service';
+import WKT from 'ol/format/WKT';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +45,7 @@ export class ObservationEditService {
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
                 private fileOpener: FileOpener, private authService: AuthService,
                 private sirsDoc: SirsDocService, private storageService: StorageService,
-                private webview: WebView) {
+                private webview: WebView, private db: DatabaseService) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
                     this.showContent = true;
@@ -182,6 +184,73 @@ export class ObservationEditService {
             }
         }
         throw new Error('No observation "' + this.obsId + '" found in disorder document.');
+    }
+
+    getApproximatePosition(borneId, borneAval, borneDistance, flag) {
+        let wktFormat = new WKT();
+        return new Promise((resolve) => {
+            let troncon = this.troncons.find((item) => {
+                return item.id === this.objectDoc.linearId;
+            });
+
+            this.db.getLocalDB().query('byId', {
+                key: troncon.systemeRepDefautId
+            }).then((results) => {
+                let systemeReperage = results.rows.filter((item) => {
+                    return item.id === this.objectDoc.systemeRepId;
+                })[0];
+
+                this.db.getLocalDB().query('getBornesIdsHB', {
+                    keys: systemeReperage.value.systemeReperageBornes
+                        .map((item) => {
+                            return item.borneId;
+                        })
+                }).then((res) => {
+                    systemeReperage.value.systemeReperageBornes.forEach((item1) => {
+                        res.rows.forEach((item2) => {
+                            if (item1.borneId === item2.id) {
+                                item1.libelle = item2.value.libelle;
+                                item1.borneGeometry = item2.value.geometry;
+                            }
+                        });
+                    });
+
+                    let index = systemeReperage.value.systemeReperageBornes.findIndex((item) => {
+                        return item.borneId === borneId;
+                    });
+
+                    let srb = systemeReperage.value.systemeReperageBornes[index];
+
+                    // Calculate approximate position
+                    let x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                    let y;
+
+                    if (borneAval) {
+                        y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+                    } else {
+                        y = (index === 0)
+                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
+                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+                    }
+
+                    let v = glMatrix.vec2.sub([], y, x);
+
+                    let vn = glMatrix.vec2.normalize(v, v);
+
+                    let vs = glMatrix.vec2.scale(vn, vn, borneDistance);
+
+                    let o = glMatrix.vec2.add([], x, vs);
+
+                    this.objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
+                    resolve(this.objectDoc);
+
+                });
+
+            });
+        });
+
     }
 
     getPhotoPath(photo, notConvertFile?) {
