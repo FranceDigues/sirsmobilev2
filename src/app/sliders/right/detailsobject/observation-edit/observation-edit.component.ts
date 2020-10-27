@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ObservationEditService } from 'src/app/observationedit.service';
-import { GlobalConfigService } from '../../../../globalconfig.service';
+import { GlobalConfigService } from 'src/app/globalconfig.service';
+import { EditionModeService } from 'src/app/editionmode.service';
+import { AppLayer } from 'src/app/layers.service';
 
 declare var M: any;
 
@@ -22,7 +24,9 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
 
   constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
-              private cdr: ChangeDetectorRef, private globalConfigService: GlobalConfigService) {
+              private cdr: ChangeDetectorRef, private globalConfigService: GlobalConfigService,
+              private route: Router, private editionService: EditionModeService,
+              private appLayer: AppLayer) {
     this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
     this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
 
@@ -58,9 +62,64 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     this.setView('media');
   }
 
+  goMain() {
+    this.route.navigateByUrl('/main');
+  }
+
   showText(str: 'fullName' | 'abstract' | 'both') {
     const isSameString = this.config === str;
     return isSameString;
+  }
+
+  save() {
+    if (this.OES.isNewObject) {
+      if (this.OES.objectDoc.observations === undefined) {
+        this.OES.objectDoc.observations = [];
+      }
+
+      // Push the new observation.
+      const tmpDoc = Object.assign({}, this.OES.doc);
+      this.OES.objectDoc.observations.push(tmpDoc);
+    } else {
+      // Apply modifications on target observation.
+      const observation = this.OES.getTargetObservation();
+      Object.assign(observation, this.OES.doc);
+    }
+    this.OES.objectDoc.valid = false;
+    this.OES.objectDoc.editMode = true;
+    this.OES.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+    delete this.OES.objectDoc.prDebut;
+    delete this.OES.objectDoc.prFin;
+
+    if (this.OES.objectDoc.borneDebutId) {
+      delete this.OES.objectDoc.positionDebut;
+      delete this.OES.objectDoc.positionFin;
+      delete this.OES.objectDoc.geometry;
+
+      /**
+       * Hack to calculate the approximate position when the object is aligned with bornes
+       */
+      if (!this.OES.objectDoc.approximatePositionDebut) {
+        this.OES.getApproximatePosition(this.OES.objectDoc.borneDebutId,
+        this.OES.objectDoc.borne_debut_aval,
+        this.OES.objectDoc.borne_debut_distance, 'approximatePositionDebut')
+        .then(() => {
+            if (this.OES.objectDoc.borneFinId && !this.OES.objectDoc.approximatePositionFin) {
+                this.OES.getApproximatePosition(this.OES.objectDoc.borneFinId,
+                    this.OES.objectDoc.borne_fin_aval,
+                    this.OES.objectDoc.borne_fin_distance, 'approximatePositionFin')
+                    .then(() => {
+                        // Save document.
+                        this.editionService.saveObject(this.OES.objectDoc).then(() => {
+                            this.appLayer.syncAllAppLayer();
+                            this.route.navigateByUrl('/main');
+                        });
+                    });
+            }
+        });
+      }
+    }
   }
 
   changeUrgence() {
@@ -71,24 +130,26 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
       this.OES.doc.observateurId = this.OES.contact;
   }
 
-  compareRef(obj1, obj2) {
-    let a, b, comparison;
-    comparison = 0;
-    if (this.showText('fullName')) {
-        a = obj1.libelle;
-        b = obj2.libelle;
-    } else {
-        a = obj1.abrege ? obj1.abrege : obj1.designation;
-        b = obj2.abrege ? obj2.abrege : obj2.designation;
-    }
+  compareRef() {
+    return (obj1, obj2) => {
+      let a, b, comparison;
+      comparison = 0;
+      if (this.showText('fullName')) {
+          a = obj1.libelle;
+          b = obj2.libelle;
+      } else {
+          a = obj1.abrege ? obj1.abrege : obj1.designation;
+          b = obj2.abrege ? obj2.abrege : obj2.designation;
+      }
 
-    if (a > b) {
-        comparison = 1;
-    } else if (a < b) {
-        comparison = -1;
-    }
+      if (a > b) {
+          comparison = 1;
+      } else if (a < b) {
+          comparison = -1;
+      }
 
-    return comparison;
+      return comparison;
+    }
   }
 
 }

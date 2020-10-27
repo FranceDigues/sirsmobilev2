@@ -105,6 +105,15 @@
                 </div>
               </div>
             </div>
+            <div class="sirs-card-action">
+              <a (click)="goMain()" class="btn-flat waves-effect waves-teal">
+                <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
+              </a>
+              <button type="button" class="btn pink waves-effect waves-teal right"
+              (click)="save()">
+                <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
+              </button>
+            </div>
           </form>
         </ion-content>
       </div>
