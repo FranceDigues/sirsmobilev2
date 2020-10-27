@@ -86,7 +86,11 @@
                 </div>
               </div>
               <div class="suite" *ngSwitchCase="'suite'">
-
+                <div class="sirs-field">
+                  <label for="suite_field" class="active">Suite à apporter</label>
+                  <textarea id="suite_field" class="materialize-textarea"
+                  [(ngModel)]="OES.doc.suite"></textarea>
+                </div>
               </div>
               <div class="observateur" *ngSwitchCase="'observateur'">
 
