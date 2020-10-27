@@ -11,6 +11,7 @@ import { RightSlideComponent } from './right.component';
 import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
 import { ObservationEditModule } from './detailsobject/observation-edit/observation-edit.module';
 import { EditObjectsModule } from './editobjects/editobjects.module';
+import { ObservationDetailsComponent } from './detailsobject/observation-details/observation-details.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { EditObjectsModule } from './editobjects/editobjects.module';
   declarations: [
     RightSlideComponent, RightSlideCreateObjectsComponent,
     FilterPipe, DetailsObjectComponent, SelectedObjectsComponent,
+    ObservationDetailsComponent
   ],
   exports: [RightSlideComponent]
 })

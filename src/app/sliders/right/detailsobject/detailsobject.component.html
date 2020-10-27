@@ -53,6 +53,5 @@
   </div>
 </div>
 <div *ngIf="objectDetails.detailsType === 'observationDetails'" class="full-height full-width">
-  <!-- <observation-details></observation-details> -->
-  <!-- TODO -->
+  <observation-details (detailsTypeChange)="objectDetails.detailsType = 'objectDetails'"></observation-details>
 </div>
