@@ -38,7 +38,11 @@
                 </div>
               </div>
               <div class="evolution" *ngSwitchCase="'evolution'">
-
+                <div class="sirs-field">
+                  <label for="description" class="active">Description</label>
+                  <textarea id="description" class="materialize-textarea"
+                  [(ngModel)]="OES.doc.evolution"></textarea>
+                </div>
               </div>
               <div class="urgence" *ngSwitchCase="'urgence'">
 
@@ -56,9 +60,6 @@
           </form>
         </ion-content>
       </div>
-    <div class="observation-form" *ngSwitchCase="'note'">
-
-    </div>
     <div class="full-height full-width" *ngSwitchCase="'media'">
       <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
     </div>
