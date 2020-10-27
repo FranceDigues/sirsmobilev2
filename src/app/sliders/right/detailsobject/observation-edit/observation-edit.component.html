@@ -2,19 +2,19 @@
   <div fxLayout="column" fxLayoutAlign="center">
     <div class="observation-form" *ngSwitchCase="'form'">
       <ion-content>
-          <form class="sirs-card" #observationForm="ngForm">
-            <div class="sirs-card-content" [ngSwitch]="tab">
-              <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
-              <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
+        <form class="sirs-card" #observationForm="ngForm">
+          <div class="sirs-card-content" [ngSwitch]="tab">
+            <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
+            <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
 
-              <ul #tabs class="tabs">
-                  <li class="tab"><a [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</a></li>
-                  <li class="tab"><a [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</a></li>
-                  <li class="tab"><a [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</a></li>
-                  <li class="tab"><a [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</a></li>
-                  <li class="tab"><a [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</a></li>
-                  <li class="tab"><a [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</a></li>
-              </ul>
+            <ul #tabs class="tabs">
+              <li class="tab"><a [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</a></li>
+              <li class="tab"><a [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</a></li>
+              <li class="tab"><a [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</a></li>
+              <li class="tab"><a [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</a></li>
+              <li class="tab"><a [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</a></li>
+              <li class="tab"><a [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</a></li>
+            </ul>
 
               <div class="medias" *ngSwitchCase="'medias'">
                 <div class="pics row" *ngIf="OES.showContent">
@@ -41,24 +41,24 @@
                 <div class="sirs-field">
                   <label for="description" class="active">Description</label>
                   <textarea id="description" class="materialize-textarea"
-                  [(ngModel)]="OES.doc.evolution"></textarea>
+                  [(ngModel)]="OES.doc.evolution" name="description"></textarea>
                 </div>
               </div>
               <div class="urgence" *ngSwitchCase="'urgence'">
-                <div *ngIf="showText('fullName')">
+                <div class="sirs-field" *ngIf="showText('fullName')">
                   <select id="urgenceList" class="browser-default"
-                          [(ngModel)]="OES.urgence">
-                          <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                          [(ngModel)]="OES.urgence" name="urgenceList">
+                          <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
                           [value]="urgence.id" (ngModelChange)="changeUrgence()"
                           [selected]="urgence.id === OES.urgence">
                             {{ urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id }}
                           </option>
                   </select>
                 </div>
-                <div *ngIf="showText('abstract')">
+                <div class="sirs-field" *ngIf="showText('abstract')">
                     <select id="urgenceList" class="browser-default"
-                    [(ngModel)]="OES.urgence">
-                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                    [(ngModel)]="OES.urgence" name="urgenceList">
+                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
                                 [value]="urgence.id"
                                 (ngModelChange)="changeUrgence()"
                                 [selected]="OES.urgence === urgence.id">
@@ -67,9 +67,9 @@
                         </option>
                     </select>
                 </div>
-                <div *ngIf="showText('both')">
-                    <select id="urgenceList" class="browser-default" [(ngModel)]="OES.urgence">
-                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef)"
+                <div class="sirs-field" *ngIf="showText('both')">
+                    <select id="urgenceList" class="browser-default" [(ngModel)]="OES.urgence" name="urgenceList">
+                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
                                 [value]="urgence.id"
                                 (ngModelChange)="changeUrgence()"
                                 [selected]="OES.urgence === urgence.id">
@@ -82,24 +82,27 @@
               <div class="nombre" *ngSwitchCase="'nombre'">
                 <div class="sirs-field">
                   <label for="nombre_Desordres" class="active">Nombre Desordres</label>
-                  <input type="number" id="nombre_Desordres" class="materialize-textarea" [(ngModel)]="OES.doc.nombreDesordres"/>
+                  <input type="number" id="nombre_Desordres" class="materialize-textarea"
+                  [(ngModel)]="OES.doc.nombreDesordres" name="nombre_Desordres"/>
                 </div>
               </div>
               <div class="suite" *ngSwitchCase="'suite'">
                 <div class="sirs-field">
                   <label for="suite_field" class="active">Suite à apporter</label>
                   <textarea id="suite_field" class="materialize-textarea"
-                  [(ngModel)]="OES.doc.suite"></textarea>
+                  [(ngModel)]="OES.doc.suite" name="suite_field"></textarea>
                 </div>
               </div>
               <div class="observateur" *ngSwitchCase="'observateur'">
-                <select id="contactList" class="browser-default"
-                [(ngModel)]="OES.contact" (ngModelChange)="changeContact()">
-                  <option *ngFor="let contact of OES.contactList | sortByDocNom"
-                  [selected]="contact.id === OES.contact">
-                    {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
-                  </option>
-                </select>
+                <div class="sirs-field">
+                  <select id="contactList" class="browser-default"
+                  [(ngModel)]="OES.contact" name="contactList" (ngModelChange)="changeContact()">
+                    <option *ngFor="let contact of OES.contactList | async | sortByDocNom"
+                    [selected]="contact.id === OES.contact">
+                      {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
           </form>
