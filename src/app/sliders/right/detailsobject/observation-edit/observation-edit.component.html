@@ -93,7 +93,13 @@
                 </div>
               </div>
               <div class="observateur" *ngSwitchCase="'observateur'">
-
+                <select id="contactList" class="browser-default"
+                [(ngModel)]="OES.contact" (ngModelChange)="changeContact()">
+                  <option *ngFor="let contact of OES.contactList | sortByDocNom"
+                  [selected]="contact.id === OES.contact">
+                    {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
+                  </option>
+                </select>
               </div>
             </div>
           </form>
