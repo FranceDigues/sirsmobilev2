@@ -112,20 +112,16 @@ export class ObservationMediaComponent implements OnInit {
     const options: Options = {
       quality: 50,
       encodingType: this.camera.EncodingType.JPEG,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      destinationType: this.camera.DestinationType.DATA_URL,
     };
     this.cameraService.getPictureInGallery(options)
     .then(
-      (value: string) => {
-        const valueTmp = value.replace('data:image/jpeg;base64,', '') ;
-        console.log('galleryPhoto: ', value);
-        this.file.resolveLocalFilesystemUrl(valueTmp)
-        .then(
-          (file: Entry) => {
-            console.log('galleryPhoto file: ', file);
-            this.savePicture(file);
-          }
-        );
+      (imageData: string) => {
+        const photoId = UuidUtils.generateUuid();
+        const fileName = photoId + '.jpg';
+        this.fillMediaOptions(photoId, fileName);
+        this.OES.importPhotoData = imageData;
+        this.cdr.detectChanges();
       }
     );
   }
