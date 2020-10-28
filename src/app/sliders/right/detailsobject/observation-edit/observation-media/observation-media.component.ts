@@ -157,7 +157,7 @@ export class ObservationMediaComponent implements OnInit {
   savePicture(file: Entry) {
     file.getMetadata((metadata: Metadata) => {
       if (metadata.size > 1048576) {
-        this.warningSizeMessage();
+        this.OES.warningSizeMessage();
         file.remove(() => console.log('File has been removed correctly'));
         return;
       } else {
@@ -181,13 +181,6 @@ export class ObservationMediaComponent implements OnInit {
     });
   }
 
-  warningSizeMessage() {
-    this.toastCtrl.create({
-      message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
-      duration: 3000
-    }).then(toast => toast.present());
-  }
-
   fillMediaOptions(photoId: string, fileName: string) {
     // Store the photo in the object document.
     this.OES.mediaOptions['id'] = photoId;
@@ -197,24 +190,20 @@ export class ObservationMediaComponent implements OnInit {
     this.OES.mediaOptions['valid'] = false;
   }
 
-  getImage(imageUrl: string): Observable<Blob> {
-    return this.http.get(imageUrl, { responseType: 'blob' });
-  }
-
   save() {
       if (this.OES.mediaOptions.id && this.OES.mediaOptions.id !== '') {
         if (typeof this.OES.photos === 'undefined') {
-          this.OES.photos = [];
+          this.OES.doc.photos = [];
         }
-        const mediaOptions = Object.assign([], this.OES.mediaOptions);
-        this.OES.photos.push(mediaOptions);
+        const mediaOptions = Object.assign({}, this.OES.mediaOptions);
+        this.OES.doc.photos.push(mediaOptions);
         if (this.OES.importPhotoData) {
           if (typeof this.OES.objectDoc._attachments === 'undefined') {
             this.OES.objectDoc._attachments = {};
           }
 
           // Convert url image to blob
-          this.getImage(this.OES.importPhotoData).subscribe(
+          this.OES.getImage(this.OES.importPhotoData).subscribe(
             (blob) => {
               let reader = new FileReader();
               reader.readAsDataURL(blob);

@@ -13,6 +13,8 @@ import { StorageService } from '../../libs/geomatys-ionic-libraries-framework/de
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { DatabaseService } from './database.service';
 import WKT from 'ol/format/WKT';
+import { ToastController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +47,7 @@ export class ObservationEditService {
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
                 private fileOpener: FileOpener, private authService: AuthService,
                 private sirsDoc: SirsDocService, private storageService: StorageService,
-                private webview: WebView, private db: DatabaseService) {
+                private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
                     this.showContent = true;
@@ -253,18 +255,25 @@ export class ObservationEditService {
 
     }
 
-    getPhotoPath(photo, notConvertFile?) {
-        let path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-        path = this.mediaPath + '/' + path;
-        if (notConvertFile && notConvertFile === true) {
-            return path;
+    getPhotoPath(photo, details?) {
+        let path;
+        if (details && details === true) {
+            path = photo.id + '.jpg';
+            path = this.mediaPath + '/' + path;
+        } else {
+            path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            path = this.mediaPath + '/' + path;
         }
         const image_url = this.webview.convertFileSrc(path);
         return image_url;
     }
 
-    loadImage(photo) {
-        let image_url = this.getPhotoPath(photo);
+    getImage(imageUrl: string): Observable<Blob> {
+        return this.http.get(imageUrl, { responseType: 'blob' });
+    }
+
+    loadImage(photo, details?) {
+        let image_url = this.getPhotoPath(photo, details);
         this.http.head(image_url, {}).subscribe(
         () => {
             this.loaded[photo.id] = true;
@@ -319,6 +328,7 @@ export class ObservationEditService {
                             },
                             (err) => {
                                 console.error(err);
+                                this.loaded[photo.id] = true;
                             });
                 } else {
                     this.loaded[photo.id] = true;
@@ -341,6 +351,14 @@ export class ObservationEditService {
                 console.log('Error open method :', error);
             }
         )
+    }
+
+
+    warningSizeMessage() {
+        this.toastCtrl.create({
+        message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+        duration: 3000
+        }).then(toast => toast.present());
     }
 
     handlePos(pos) {
