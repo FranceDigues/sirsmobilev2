@@ -12,6 +12,7 @@ import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.comp
 import { ObservationEditModule } from './detailsobject/observation-edit/observation-edit.module';
 import { EditObjectsModule } from './editobjects/editobjects.module';
 import { ObservationDetailsComponent } from './detailsobject/observation-details/observation-details.component';
+import { DirectiveModule } from '../../directive.module';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { ObservationDetailsComponent } from './detailsobject/observation-details
     MatButtonModule,
     DetailsContentModule,
     ObservationEditModule,
-    EditObjectsModule
+    EditObjectsModule,
+    DirectiveModule
   ],
   providers: [
   ],

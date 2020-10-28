@@ -154,18 +154,6 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
 }
 
-@Directive({
-  selector: '[ngInit]'
-})
-export class NgInitDirective implements OnInit {
-
-  @Output() ngInit: EventEmitter<any> = new EventEmitter();
-
-  ngOnInit() {
-      this.ngInit.emit();
-  }
-}
-
 @Pipe({
   name: 'sortByDocNom'
 })

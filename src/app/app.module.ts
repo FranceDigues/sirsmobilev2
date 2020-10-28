@@ -44,7 +44,7 @@ import { SyncService } from './sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObservationEditService } from './observationedit.service';
-
+import { DirectiveModule } from './directive.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,7 +54,7 @@ import { ObservationEditService } from './observationedit.service';
     IonicModule.forRoot(), IonicStorageModule.forRoot(),
     AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
     DatabaseConnectionPageModule, LibCameraModule,
-    NgbCollapseModule, FlexLayoutModule
+    NgbCollapseModule, FlexLayoutModule, DirectiveModule
   ],
   providers: [
     StatusBar,OLService,SplashScreen,NativeStorage,
