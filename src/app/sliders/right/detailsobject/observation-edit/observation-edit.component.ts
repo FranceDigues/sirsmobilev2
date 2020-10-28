@@ -107,18 +107,28 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
         .then(() => {
             if (this.OES.objectDoc.borneFinId && !this.OES.objectDoc.approximatePositionFin) {
                 this.OES.getApproximatePosition(this.OES.objectDoc.borneFinId,
-                    this.OES.objectDoc.borne_fin_aval,
-                    this.OES.objectDoc.borne_fin_distance, 'approximatePositionFin')
-                    .then(() => {
-                        // Save document.
-                        this.editionService.saveObject(this.OES.objectDoc).then(() => {
-                            this.appLayer.syncAllAppLayer();
-                            this.route.navigateByUrl('/main');
-                        });
+                this.OES.objectDoc.borne_fin_aval,
+                this.OES.objectDoc.borne_fin_distance, 'approximatePositionFin')
+                .then(() => {
+                    // Save document.
+                    this.editionService.saveObject(this.OES.objectDoc).then(() => {
+                        this.appLayer.syncAllAppLayer();
+                        this.route.navigateByUrl('/main');
                     });
+                });
             }
         });
+      } else {
+        this.editionService.saveObject(this.OES.objectDoc).then(() => {
+          this.appLayer.syncAllAppLayer();
+          this.route.navigateByUrl('/main');
+        });
       }
+    } else {
+      this.editionService.saveObject(this.OES.objectDoc).then(() => {
+        this.appLayer.syncAllAppLayer();
+        this.route.navigateByUrl('/main');
+      });
     }
   }
 
