@@ -22,6 +22,6 @@
     </ion-list>
   </ion-content>
 </div>
-<div *ngIf="status === 'details'">
+<div class="full-height" *ngIf="status === 'details'">
   <right-slide-details-objects (statusChange)="changeStatus($event)"></right-slide-details-objects>
 </div>
