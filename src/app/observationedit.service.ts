@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable } from '@angular/core';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObjectDetails } from './objectdetails.service';
 import { LocalDatabase } from './usingLocalDatabase.service';
@@ -47,7 +47,8 @@ export class ObservationEditService {
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
                 private fileOpener: FileOpener, private authService: AuthService,
                 private sirsDoc: SirsDocService, private storageService: StorageService,
-                private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController) {
+                private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
+                private ref: ApplicationRef) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
                     this.showContent = true;
@@ -277,6 +278,7 @@ export class ObservationEditService {
         this.http.head(image_url, {}).subscribe(
         () => {
             this.loaded[photo.id] = true;
+            this.ref.tick(); // Force Ionic to detect changes
         },
         (error) => {
             if (this.objectDoc._attachments) {
@@ -318,24 +320,31 @@ export class ObservationEditService {
                                     targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
                                         file.createWriter((fileWriter) => {
                                             fileWriter.write(blobImage);
-                                            this.loaded[photo.id] = true;
+                                            setTimeout(() => {
+                                                this.loaded[photo.id] = true;
+                                                this.ref.tick(); // Force Ionic to detect changes
+                                            }, 100); // Add Delay to be sure the src image is working (writing file is finished)
                                         }, () => {
-                                            console.log('cannot write the data to the file');
                                             this.loaded[photo.id] = true;
+                                            this.ref.tick(); // Force Ionic to detect changes
+                                            console.log('cannot write the data to the file');
                                         });
                                     });
                                 });
                             },
                             (err) => {
-                                console.error(err);
                                 this.loaded[photo.id] = true;
+                                this.ref.tick(); // Force Ionic to detect changes
+                                console.error(err);
                             });
                 } else {
                     this.loaded[photo.id] = true;
+                    this.ref.tick(); // Force Ionic to detect changes
                     console.log("no attachment exit to load image");
                 }
             } else {
                 this.loaded[photo.id] = true;
+                this.ref.tick(); // Force Ionic to detect changes
             }
         });
     }

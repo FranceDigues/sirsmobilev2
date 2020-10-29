@@ -23,7 +23,7 @@
   </div>
   <div *ngIf="OES.mediaPath">
     <div *ngFor="let photo of photos; let index = index" (ngInit)="OES.loadImage(photo, true)">
-      <!-- <ng-container *ngIf="OES.loaded[photo.id]"> -->
+      <ng-container *ngIf="OES.loaded[photo.id]">
         <img (click)="OES.open(photo)" alt="Photo non disponible sur le mobile"
               [src]="OES.getPhotoPath(photo, true)"/>
         <!-- <ion-img (click)="OES.open(photo)" alt="Photo non disponible sur le mobile"
@@ -34,10 +34,10 @@
         (click)="removePhoto(photo, index);$event.stopPropagation()">
           <ion-icon name="trash-outline"></ion-icon>
         </button>
-      <!-- </ng-container>
+      </ng-container>
       <div class="progress" *ngIf="!OES.loaded[photo.id]">
         <div class="indeterminate"></div>
-      </div> -->
+      </div>
     </div>
     <div style="height: 200px;"></div>
   </div>
