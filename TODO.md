@@ -1,9 +1,5 @@
 # TODO
 
-- (fix) Finish to fix the bug in Observation Details Component. When adding image from Observation Details Component,
-the image will not show directly. The component should be reloaded (like when you Cancel and next come back to the 
-Observation Details Component) to see the image loaded.
-
 - (feat) In RightSlideEditObjectsComponent html, it's missing media tab,
 media view and note view (already have edit-note component for note view I think) -> See source code to know how to complete (mobile-hybride).
 
