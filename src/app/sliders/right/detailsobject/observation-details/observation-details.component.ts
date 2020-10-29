@@ -77,12 +77,6 @@ export class ObservationDetailsComponent implements OnInit {
     this.route.navigateByUrl('/observation/' + this.objectId + '/' + this.doc.id);
   }
 
-  // getPhotoPath(photo) {
-  //   let path = photo.id + '.jpg';
-  //   let image_url = this.mediaPath + '/' + path;
-  //   return image_url;
-  // }
-
   canShowEditionButtons() {
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
         return true;
