@@ -177,6 +177,13 @@ export class ObservationMediaComponent implements OnInit {
     });
   }
 
+  warningSizeMessage() {
+    this.toastCtrl.create({
+      message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+      duration: 3000
+    }).then(toast => toast.present());
+  }
+
   fillMediaOptions(photoId: string, fileName: string) {
     // Store the photo in the object document.
     this.OES.mediaOptions['id'] = photoId;
