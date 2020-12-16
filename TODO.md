@@ -14,3 +14,5 @@ media view and note view (already have edit-note component for note view I think
 - (fix) The LongClickSelect plugin should color differently the selected objects
 
 - (fix) LongClickSelect plugin should stop selecting when the user drags map (not the case)
+
+- Publier L'application Sirs Mobile sur le google play avec le CI
