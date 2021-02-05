@@ -1,0 +1,309 @@
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AuthService } from '../../../../auth.service';
+import { EditObjectService } from '../../../../editobjects.service';
+import { CameraService } from '@ionic-lib/lib-camera/camera.service';
+import { DirectoryEntry, Entry, File, Metadata } from '@ionic-native/file/ngx';
+import { Options } from '@ionic-lib/lib-camera/interface.model';
+import { Camera } from '@ionic-native/camera/ngx';
+import { UuidUtils } from '../../../../uuid-utils';
+import { ModalController, ToastController } from '@ionic/angular';
+import { formatDate } from '@angular/common';
+import { SirsDocService } from '../../../../sirsdoc.service';
+import { transform } from 'ol/proj';
+import { HttpClient } from '@angular/common/http';
+import { EditionModeService } from '../../../../editionmode.service';
+import { GeolocationService } from '../../../../geolocation.service';
+import { AlertController } from '@ionic/angular';
+import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
+
+@Component({
+    selector: 'app-media-form',
+    templateUrl: './media-form.component.html',
+    styleUrls: ['./media-form.component.scss'],
+})
+export class MediaFormComponent implements OnInit {
+    @Input() coteList;
+    @Input() orientationList;
+    @Input() objectType;
+    @Input() objectDoc;
+    public importPhotoData;
+    public view = 'form';
+    public mediaOptions;
+    public mediaPath;
+    public dataProjection;
+
+    constructor(private authService: AuthService,
+                private cameraService: CameraService,
+                private camera: Camera,
+                private file: File,
+                private toastCtrl: ToastController,
+                public EOS: EditObjectService,
+                private sirsDoc: SirsDocService,
+                private cdr: ChangeDetectorRef,
+                private httpClient: HttpClient,
+                private geolocation: GeolocationService,
+                public alertController: AlertController,
+                public modalController: ModalController,
+                private editionService: EditionModeService) {
+    }
+
+    ngOnInit() {
+        this.dataProjection = this.sirsDoc.get().epsgCode;
+        this.mediaPath = this.file.externalDataDirectory + 'medias';
+        this.mediaOptions = {
+            id: '',
+            chemin: '',
+            designation: '',
+            orientationPhoto: '',
+            coteId: '',
+            commentaire: '',
+            author: this.authService.getValue()._id
+        };
+    }
+
+    back() {
+        this.setView('form');
+    }
+
+    save() {
+        if (this.mediaOptions.id) {
+            if (!this.objectDoc.photos) {
+                this.objectDoc.photos = [];
+            }
+            this.objectDoc.photos.push(this.mediaOptions);
+            if (this.importPhotoData) {
+                if (!this.objectDoc._attachments) {
+                    this.objectDoc._attachments = {};
+                }
+
+                // Convert url image to blob
+                this.httpClient.get(this.importPhotoData, {responseType: 'blob'})
+                    .subscribe(
+                        (blob) => {
+                            const reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            // Convert blob to base64
+                            reader.onloadend = () => {
+                                if (typeof reader.result === 'string') {
+                                    const base64data = reader.result.replace('data:image/jpeg;base64,', '');
+                                    // Save the photo like attachment to the object
+                                    this.objectDoc._attachments[this.mediaOptions.id] = {
+                                        content_type: 'image/jpeg',
+                                        data: base64data
+                                    };
+                                    this.editionService.saveObject(this.objectDoc)
+                                        .then(() => {
+                                            this.setView('form');
+                                        });
+                                }
+                            };
+                        }
+                    );
+            }
+        } else {
+            this.toastCtrl.create({
+                message: 'Formulaire d\'ajout de média incomplet: Veuillez ajouter une photo',
+                duration: 7000
+            }).then(toast => toast.present());
+        }
+    }
+
+    async selectPositionByReferralSystem() {
+        const data = this.mediaOptions.systemeRepId ? {
+            systemeRepId: this.mediaOptions.systemeRepId,
+            borne_aval: this.mediaOptions.borne_debut_aval ? 'true' : 'false',
+            borne_distance: this.mediaOptions.borne_debut_distance,
+            borneId: this.mediaOptions.borneDebutId,
+            borneLibelle: this.mediaOptions.borneDebutLibelle || '',
+            media: true
+        } : {
+            systemeRepId: '',
+            borne_aval: '',
+            borne_distance: 0,
+            borneId: '',
+            borneLibelle: '',
+            media: true
+        };
+
+        const modal = await this.modalController.create({
+            component: PositionByBorneModalComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                data
+            }
+        });
+        return await modal.present();
+    }
+
+    getPhotoPath() {
+
+    }
+
+    locateMe() {
+        this.geolocation.getCurrentLocation()
+            .then(
+                (position) => {
+                    this.handlePos(position);
+                }
+            );
+    }
+
+    async selectPosition() {
+        const alert = await this.alertController.create({
+            header: 'Sélectionner une position sur la carte',
+            message: `Voulez vous modifier le positionnement de l'objet ? \n Cette opération va écraser les anciennes valeurs`,
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: (blah) => {
+                        console.log('Confirm Cancel: blah');
+                    }
+                }, {
+                    text: 'Valider',
+                    handler: () => {
+                        console.log('Confirm Okay');
+                        this.setView('map');
+                    }
+                }
+            ]
+        });
+
+        await alert.present();
+    }
+
+    handlePos(pos) {
+        const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
+        this.mediaOptions.positionDebut = `POINT(${coordinate[0]} ${coordinate[1]})`;
+    }
+
+    drawNote() {
+        this.view = 'note';
+    }
+
+    takePhoto() {
+        this.mediaOptions.id = '';
+        this.mediaOptions.chemin = '';
+        const options: Options = {
+            quality: 50,
+            destinationType: this.camera.DestinationType.FILE_URI,
+            encodingType: this.camera.EncodingType.JPEG
+        };
+        this.cameraService.takePhoto(options)
+            .then(
+                (value: string) => {
+                    const valueTmp = value.replace('data:image/jpeg;base64,', '');
+                    this.file.resolveLocalFilesystemUrl(valueTmp)
+                        .then(
+                            (file: Entry) => {
+                                this.savePicture(file);
+                            }
+                        );
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+    }
+
+    savePicture(file: Entry) {
+        file.getMetadata((metadata: Metadata) => {
+            if (metadata.size > 1048576) {
+                this.toastCtrl.create({
+                    message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+                    duration: 3000
+                }).then(toast => toast.present());
+                file.remove(() => console.log('File has been removed correctly'));
+                return;
+            } else {
+                this.file.resolveDirectoryUrl(this.mediaPath)
+                    .then(
+                        (targetDir: DirectoryEntry) => {
+                            // Copy image file in its final directory.
+                            this.importPhotoData = null;
+                            const photoId = UuidUtils.generateUuid();
+                            const fileName = photoId + '.jpg';
+                            // Copy image file in its final directory.
+                            file.copyTo(targetDir, fileName, () => {
+                                // Store the photo in the object document.
+                                this.fillMediaOptions(photoId, fileName);
+                                // Force Image to change
+                                // ??
+                                this.cdr.detectChanges();
+                            });
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    );
+            }
+        });
+    }
+
+    setView(view) {
+        this.view = view;
+    }
+
+    saveNote(file) {
+        this.savePicture(file);
+    }
+
+    getPhotoFromGallery() {
+        const options: Options = {
+            quality: 50,
+            encodingType: this.camera.EncodingType.JPEG,
+            destinationType: this.camera.DestinationType.DATA_URL,
+        };
+        this.cameraService.getPhotoFromGallery(options)
+            .then(
+                (imageData: string) => {
+                    if (this.calculateImageSize(imageData) > 1048576) {
+                        this.toastCtrl.create({
+                            message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+                            duration: 3000
+                        }).then(toast => toast.present());
+                        return;
+                    }
+
+                    const photoId = UuidUtils.generateUuid();
+                    const fileName = photoId + '.jpg';
+                    // Store the photo in the object document.
+                    this.fillMediaOptions(photoId, fileName);
+                    this.importPhotoData = imageData;
+                    this.cdr.detectChanges();
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+    }
+
+    fillMediaOptions(photoId: string, fileName: string) {
+        // Store the photo in the object document.
+        this.mediaOptions.id = photoId;
+        this.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
+        this.mediaOptions.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
+        this.mediaOptions.chemin = '/' + fileName;
+        this.mediaOptions.valid = false;
+    }
+
+    calculateImageSize(base64String) {
+        let padding;
+        let inBytes;
+        let base64StringLength;
+        if (base64String.endsWith('==')) {
+            padding = 2;
+        } else if (base64String.endsWith('=')) {
+            padding = 1;
+        } else {
+            padding = 0;
+        }
+
+        base64StringLength = base64String.length;
+        inBytes = (base64StringLength / 4) * 3 - padding;
+        return inBytes;
+    }
+
+}

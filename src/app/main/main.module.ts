@@ -8,7 +8,7 @@ import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { GeolocService } from '../geoloc.service';
+import { GeolocationService } from '../geolocation.service';
 import { RealPositionStyle } from '../style.service';
 import { EditionModeService } from '../editionmode.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
@@ -31,7 +31,7 @@ import { RightSlideModule } from '../sliders/right/right-slide.module';
   ],
   providers: [
     Geolocation,
-    GeolocService,
+    GeolocationService,
     RealPositionStyle,
     EditionModeService,
     SirsDocService,

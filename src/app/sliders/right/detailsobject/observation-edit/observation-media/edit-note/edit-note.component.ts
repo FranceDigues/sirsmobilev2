@@ -22,7 +22,7 @@ export class EditNoteComponent implements AfterViewInit {
   selectedColor: string = '#9e2956';
   lineWidth: number = 5;
   colors: Array<string>;
-  drawing: boolean = false
+  drawing: boolean = false;
 
   constructor(private platform: Platform, private base64ToGallery: Base64ToGallery,
               private toastCtrl: ToastController, private file: File,

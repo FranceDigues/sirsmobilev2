@@ -10,7 +10,7 @@ import { AppVersionsService } from '../appversions.service';
 import { AuthService } from '../auth.service';
 import { BackLayerService } from '../backlayer.service';
 import { DatabaseService } from '../database.service';
-import { GeolocService } from '../geoloc.service';
+import { GeolocationService } from '../geolocation.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
 import { MapService } from '../map.service';
 import { DatabaseModel } from '../models/database.model';
@@ -28,7 +28,7 @@ export class MainPage implements AfterViewInit {
 
   pathRightSlide = 'objectsCreation';
 
-  constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocService,
+  constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocationService,
               public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
               private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
               private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,

@@ -12,27 +12,30 @@ import { EditObjectsModule } from '../../editobjects/editobjects.module';
 import { EditNoteComponent } from './observation-media/edit-note/edit-note.component';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
 import { DirectiveModule } from '../../../../directive.module';
+import { EditNoteModule } from './observation-media/edit-note/edit-note.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    FlexLayoutModule,
-    EditObjectsModule,
-    DirectiveModule
-  ],
-  providers: [
-    Base64ToGallery
-  ],
-  declarations: [
-      ObservationEditComponent,
-      ObservationEditComponent, NgInitDirective,
-      ObservationMediaComponent, PositionByBorneModal2Component,
-      EditNoteComponent, ArraySortPipe2
-  ],
-  exports: [ObservationEditComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        FlexLayoutModule,
+        EditObjectsModule,
+        DirectiveModule,
+        EditNoteModule
+    ],
+    providers: [
+        Base64ToGallery
+    ],
+    declarations: [
+        ObservationEditComponent,
+        ObservationEditComponent, NgInitDirective,
+        ObservationMediaComponent, PositionByBorneModal2Component,
+        ArraySortPipe2
+    ],
+    exports: [ObservationEditComponent]
 })
-export class ObservationEditModule {}
+export class ObservationEditModule {
+}

@@ -1,0 +1,26 @@
+<ion-content scrollX="true">
+    <div class="pics row">
+        <div class="pic col col-25"
+             *ngFor="let photo of photos;let index=index">
+            <div class="pic-quicklook">
+                <div class="progress" ng-if="!c.loaded[photo.id]">
+                    <div class="indeterminate"></div>
+                </div>
+                <img (click)="openPhoto(photo)"
+                     alt="Photo non disponible sur le mobile"
+                     ng-src="{{getPhotoPath(photo)}}"/>
+            </div>
+            <button style="margin-left: 60px;margin-top: 10px;" type="button"
+                    class="btn-floating btn-small waves-effect waves-light pink"
+                    (click)="removePhoto(photo, index);$event.stopPropagation()">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </div>
+</ion-content>
+<div class="text-center">
+    <ion-button size="large" color="medium" (click)="openMediaForm()">
+        <mat-icon>perm_media</mat-icon>
+        <span>&nbsp;&nbsp;Ajouter un media</span>
+    </ion-button>
+</div>

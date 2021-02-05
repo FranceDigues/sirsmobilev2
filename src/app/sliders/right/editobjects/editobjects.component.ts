@@ -5,153 +5,171 @@ import { EditObjectService } from 'src/app/editobjects.service';
 import { DatabaseService } from '../../../database.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 
-
 @Component({
-  selector: 'app-editobjects',
-  templateUrl: './editobjects.component.html',
-  styleUrls: ['./editobjects.component.scss'],
+    selector: 'app-editobjects',
+    templateUrl: './editobjects.component.html',
+    styleUrls: ['./editobjects.component.scss'],
 })
 export class RightSlideEditObjectsComponent implements OnInit {
+    public tab = 'fields';
+    public view = 'form';
+    public objectDoc;
+    public refTypes;
+    public orientationList;
+    public coteList;
+    public objectType;
 
-  tab = 'fields';
-  view = 'form';
+    // * EOS for Edit Object Service -> to have better lisibility
 
-  // * EOS for Edit Object Service -> to have better lisibility
-
-  constructor(public EOS: EditObjectService, private route: Router, private alertCtrl: AlertController,
-              private activeRoute: ActivatedRoute, private databaseService: DatabaseService,
-              private modalCtrl: ModalController) {
-                const type = this.activeRoute.snapshot.paramMap.get('type');
-                const id = this.activeRoute.snapshot.paramMap.get('id');
-                console.log('init Service');
-                this.EOS.init(type, id);
-  }
-
-  ngOnInit() {}
-
-  backToMain() {
-    console.log('EOS ObjectDoc', this.EOS.objectDoc);
-    this.route.navigateByUrl('/main');
-  }
-
-  changeSlidePath(path: string) {
-    this.view = path;
-    console.log('view : ', this.view);
-  }
-
-  displayName(str: string) {
-    for(let i = 1; i < str.length; i++) {
-      const char = str.charAt(i);
-      if (char !== `'` && i > 0) {
-          if (char === char.toUpperCase()) {
-            str = str.slice(0, i) + ' ' + str.slice(i);
-            i++;
-            continue;
-          }
-      }
+    constructor(public EOS: EditObjectService, private router: Router,
+                private alertCtrl: AlertController,
+                private activatedRoute: ActivatedRoute, private databaseService: DatabaseService,
+                private modalCtrl: ModalController) {
     }
-    return str;
-  }
 
-  setTab(tab) {
-    if (tab !== this.tab) {
-      this.tab = tab;
+    ngOnInit() {
+        this.objectType = this.activatedRoute.snapshot.paramMap.get('type');
+        const id = this.activatedRoute.snapshot.paramMap.get('id');
+        this.EOS.init(this.objectType, id);
+        this.activatedRoute.data
+            .subscribe((data: {
+                objectDoc: any,
+                refTypes: any,
+                orientationList: any,
+                coteList: any
+            }) => {
+                this.objectDoc = data.objectDoc;
+                this.refTypes = data.refTypes;
+                this.orientationList = data.orientationList;
+                this.coteList = data.coteList;
+            });
     }
-  }
 
-  setView(view) {
-    if (view !== this.view) {
-      this.view = view;
+    backToMain() {
+        console.log('EOS ObjectDoc', this.EOS.objectDoc);
+        this.router.navigateByUrl('/main');
     }
-  }
 
-  selectPos() {
-    this.alertCtrl.create({
-      header: 'Localisation manuelle',
-      message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Annuler',
-          role: 'cancel'
-        },
-        {
-          text: 'Ok',
-          handler: () => {
-            this.setView('map');
-          }
-        }
-      ]
-    }).then(
-      (alert) => {
-        alert.present();
-      }
-    );
-  }
+    changeSlidePath(path: string) {
+        this.view = path;
+        console.log('view : ', this.view);
+    }
 
-  selectPosLine() {
-      this.alertCtrl.create({
-        header: 'Localisation manuelle',
-        message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
-        backdropDismiss: false,
-        buttons: [
-          {
-            text: 'Annuler',
-            role: 'cancel'
-          },
-          {
-            text: 'Ok',
-            handler: () => {
-              this.setView('drawLine');
+    displayName(str: string) {
+        for (let i = 1; i < str.length; i++) {
+            const char = str.charAt(i);
+            if (char !== `'` && i > 0) {
+                if (char === char.toUpperCase()) {
+                    str = str.slice(0, i) + ' ' + str.slice(i);
+                    i++;
+                    continue;
+                }
             }
-          }
-        ]
-      }).then(
-        (alert) => {
-          alert.present();
         }
-      );
-  }
-
-  private initData() {
-    if (!this.EOS.objectDoc.systemeRepId) {
-      return {
-        systemeRepId: '',
-        borne_debut_aval: '',
-        borne_fin_aval: '',
-        borne_aval: '',
-        borne_debut_distance: 0,
-        borne_fin_distance: 0,
-        borne_distance: 0,
-        borneDebutId: '',
-        borneFinId: '',
-        borneId: '',
-        borneLibelle: '',
-        borneDebutLibelle: '',
-        borneFinLibelle: ''
-      };
-    } else if (!this.EOS.isLinear) {
-      return {
-        systemeRepId: this.EOS.objectDoc.systemeRepId,
-        borne_debut_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
-        borne_debut_distance: this.EOS.objectDoc.borne_debut_distance,
-        borneDebutId: this.EOS.objectDoc.borneDebutId,
-        borneDebutLibelle: this.EOS.objectDoc.borneDebutLibelle || ''
-      };
-    } else {
-      return {
-          systemeRepId: this.EOS.objectDoc.systemeRepId,
-          borne_debut_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
-          borne_fin_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
-          borne_debut_distance: this.EOS.objectDoc.borne_debut_distance || 0,
-          borne_fin_distance: this.EOS.objectDoc.borne_fin_distance || 0,
-          borneDebutId: this.EOS.objectDoc.borneDebutId || '',
-          borneFinId: this.EOS.objectDoc.borneFinId || '',
-          borneDebutLibelle: this.EOS.objectDoc.borneDebutLibelle || '',
-          borneFinLibelle: this.EOS.objectDoc.borneFinLibelle || ''
-        };
-      }
+        return str;
     }
+
+    setTab(tab) {
+        if (tab !== this.tab) {
+            this.tab = tab;
+        }
+    }
+
+    setView(view) {
+        console.log(view);
+        if (view !== this.view) {
+            this.view = view;
+        }
+    }
+
+    selectPos() {
+        this.alertCtrl.create({
+            header: 'Localisation manuelle',
+            message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
+            backdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        this.setView('map');
+                    }
+                }
+            ]
+        }).then(
+            (alert) => {
+                alert.present();
+            }
+        );
+    }
+
+    selectPosLine() {
+        this.alertCtrl.create({
+            header: 'Localisation manuelle',
+            message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
+            backdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        this.setView('drawLine');
+                    }
+                }
+            ]
+        }).then(
+            (alert) => {
+                alert.present();
+            }
+        );
+    }
+
+    private initData() {
+        if (!this.EOS.objectDoc.systemeRepId) {
+            return {
+                systemeRepId: '',
+                borne_debut_aval: '',
+                borne_fin_aval: '',
+                borne_aval: '',
+                borne_debut_distance: 0,
+                borne_fin_distance: 0,
+                borne_distance: 0,
+                borneDebutId: '',
+                borneFinId: '',
+                borneId: '',
+                borneLibelle: '',
+                borneDebutLibelle: '',
+                borneFinLibelle: ''
+            };
+        } else if (!this.EOS.isLinear) {
+            return {
+                systemeRepId: this.EOS.objectDoc.systemeRepId,
+                borne_debut_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
+                borne_debut_distance: this.EOS.objectDoc.borne_debut_distance,
+                borneDebutId: this.EOS.objectDoc.borneDebutId,
+                borneDebutLibelle: this.EOS.objectDoc.borneDebutLibelle || ''
+            };
+        } else {
+            return {
+                systemeRepId: this.EOS.objectDoc.systemeRepId,
+                borne_debut_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
+                borne_fin_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
+                borne_debut_distance: this.EOS.objectDoc.borne_debut_distance || 0,
+                borne_fin_distance: this.EOS.objectDoc.borne_fin_distance || 0,
+                borneDebutId: this.EOS.objectDoc.borneDebutId || '',
+                borneFinId: this.EOS.objectDoc.borneFinId || '',
+                borneDebutLibelle: this.EOS.objectDoc.borneDebutLibelle || '',
+                borneFinLibelle: this.EOS.objectDoc.borneFinLibelle || ''
+            };
+        }
+    }
+
     // ! TODO Decides what to do -> don't know
     // // Edit Debut
     // if (this.EOS.objectDoc.systemeRepId && !this.EOS.linearPosEditionHandler.endPoint) {
@@ -174,54 +192,54 @@ export class RightSlideEditObjectsComponent implements OnInit {
     //   };
     // }
 
-  async selectPosBySR() {
-    const data = this.initData();
-    const modal = await this.modalCtrl.create({
-      component: PositionByBorneModalComponent,
-      animated: true,
-      cssClass: 'modal-css',
-      componentProps: {
-        data: data
-      }
-    });
-    return await modal.present();
-  }
-
-  drawPolygon() {
-      this.alertCtrl.create({
-        header: 'Localisation manuelle',
-        message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
-        backdropDismiss: false,
-        buttons: [
-          {
-            text: 'Annuler',
-            role: 'cancel'
-          },
-          {
-            text: 'Ok',
-            handler: () => {
-              this.setView('drawPolygon');
+    async selectPosBySR() {
+        const data = this.initData();
+        const modal = await this.modalCtrl.create({
+            component: PositionByBorneModalComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                data: data
             }
-          }
-        ]
-      }).then(
-        (alert) => {
-          alert.present();
-        }
-      );
-  }
+        });
+        return await modal.present();
+    }
+
+    drawPolygon() {
+        this.alertCtrl.create({
+            header: 'Localisation manuelle',
+            message: 'Voulez vous localiser l\'objet manuellement ? Cette opération va écraser les anciennes valeurs de localisation',
+            backdropDismiss: false,
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Ok',
+                    handler: () => {
+                        this.setView('drawPolygon');
+                    }
+                }
+            ]
+        }).then(
+            (alert) => {
+                alert.present();
+            }
+        );
+    }
 
 }
 
 @Pipe({
-  name: 'lonlat'
+    name: 'lonlat'
 })
-export class LonLatPipe  implements PipeTransform {
+export class LonLatPipe implements PipeTransform {
 
-  transform(coordinate: any, fallback: any) {
-    if (coordinate) {
-      return (coordinate[0].toFixed(3).toString() + ', ' + coordinate[1].toFixed(3).toString());
+    transform(coordinate: any, fallback: any) {
+        if (coordinate) {
+            return (coordinate[0].toFixed(3).toString() + ', ' + coordinate[1].toFixed(3).toString());
+        }
+        return fallback;
     }
-    return fallback;
-  }
 }

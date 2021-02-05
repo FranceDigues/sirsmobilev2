@@ -51,16 +51,17 @@ export class ObservationEditService {
                 private ref: ApplicationRef) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
                     this.mediaPath = this.file.externalDataDirectory + 'medias';
+                    console.log('test path');
                     this.showContent = true;
                     this.loaded = {};
                     this.mediaOptions = {
                         id: '',
                         chemin: '',
-                        designation: "",
-                        positionDebut: "",
-                        orientationPhoto: "",
-                        coteId: "",
-                        commentaire: "",
+                        designation: '',
+                        positionDebut: '',
+                        orientationPhoto: '',
+                        coteId: '',
+                        commentaire: '',
                         author: this.authService.getValue()._id
                     };
                     this.importPhotoData = null;
@@ -130,11 +131,11 @@ export class ObservationEditService {
         this.mediaOptions = {
             id: '',
             chemin: '',
-            designation: "",
-            positionDebut: "",
-            orientationPhoto: "",
-            coteId: "",
-            commentaire: "",
+            designation: '',
+            positionDebut: '',
+            orientationPhoto: '',
+            coteId: '',
+            commentaire: '',
             author: this.authService.getValue()._id
         };
         this.importPhotoData = null;
@@ -361,7 +362,6 @@ export class ObservationEditService {
             }
         )
     }
-
 
     warningSizeMessage() {
         this.toastCtrl.create({

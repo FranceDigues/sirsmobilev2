@@ -1,0 +1,155 @@
+<div [ngSwitch]="view" class="wrapper">
+    <div class="object-form" *ngSwitchCase="'form'" fxLayout="row" fxLayoutAlign="center start">
+        <div class="sirs-card" fxFlex="80">
+            <div class="sirs-card-wrapper">
+                <div class="sirs-card-content">
+                    <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
+                    <div class="text-center">
+                        <ion-button color="medium" (click)="takePhoto()">
+                            <ion-icon name="camera-outline"></ion-icon>&nbsp;&nbsp;Prendre une photo
+                        </ion-button>
+                        <ion-button color="medium" (click)="drawNote()">
+                            <ion-icon name="pencil-outline"></ion-icon>&nbsp;&nbsp;Déssiner une note
+                        </ion-button>
+                        <ion-button color="medium" (click)="getPhotoFromGallery()">
+                            <mat-icon>perm_media</mat-icon>&nbsp;&nbsp;Importer un media
+                        </ion-button>
+                    </div>
+                    <div class="pics row" *ngIf="mediaOptions.id !=='' ">
+                        <div class="pic col col-25">
+                            <div class="pic-quicklook">
+                                <img alt="Photo non disponible sur le mobile"
+                                     style="height: 50px;"
+                                     [src]="importPhototData ? importPhototData : getPhotoPath(mediaOptions)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="blue-text text-darken-2">Depuis un appareil externe</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div>
+                        <input type="text" [ngModel]="mediaOptions.designation"
+                               placeholder="Numéro de photo">
+                    </div>
+                    <div class="spacer"></div>
+                    <span class="blue-text text-darken-2">Position</span><br>
+                    <div class="spacer"></div>
+                    <ion-button color="medium" (click)="locateMe()">
+                        <ion-icon name="locate-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium" (click)="selectPosition()">
+                        <ion-icon name="location-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium"
+                                *ngIf="objectType !== 'DesordreDependance'"
+                                (click)="selectPositionByReferralSystem()">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                    </ion-button>
+                    <div *ngIf="mediaOptions.positionDebut" class="sirs-field-inline">
+                        <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+                        <span class="sirs-field-value">{{mediaOptions.positionDebut}}</span>
+                    </div>
+                    <div *ngIf="mediaOptions.borneDebutId" class="sirs-field-inline">
+                        <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
+                        <span class="sirs-field-value">{{mediaOptions.borneDebutId ? 'à ' + mediaOptions.borne_debut_distance + ' m de la borne ' +
+                            mediaOptions.borneDebutLibelle + ' en ' + (mediaOptions.borne_debut_aval ? 'amont' : 'aval') : 'à definir'}}</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxFlex="50">
+                            <label>Orientations</label>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('fullName')"
+                                    [ngModel]="mediaOptions.orientationPhoto">
+                                <option *ngFor="let v of orientationList"
+                                        [value]="v.id">{{v.value.libelle}}</option>
+                            </select>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('abstract')"
+                                    [ngModel]="mediaOptions.orientationPhoto">
+                                <ng-container *ngFor="let v of orientationList">
+                                    <option *ngIf="v.value.abrege" [value]="v.id">{{ v.value.abrege}}</option>
+                                    <option *ngIf="!v.value.abrege" [value]="v.id">
+                                        {{ v.value.designation + ' : ' + v.value.libelle}}</option>
+                                </ng-container>
+                            </select>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('both')"
+                                    [ngModel]="mediaOptions.orientationPhoto">
+                                <ng-container *ngFor="let v of orientationList">
+                                    <option *ngIf="v.value.abrege" [value]="v.id">
+                                        {{ v.value.abrege + ' : ' + v.value.libelle }}
+                                    </option>
+                                    <option *ngIf="!v.value.abrege" [value]="v.id">
+                                        {{ v.value.designation + ' : ' + v.value.libelle }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                        <div fxFlex="50">
+                            <label>Côte</label>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('fullName')"
+                                    [ngModel]="mediaOptions.coteId">
+                                <ng-container *ngFor="let v of coteList">
+                                    <option [value]="v.id">
+                                        {{ v.value.libelle }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('abstract')"
+                                    [ngModel]="mediaOptions.coteId">
+                                <ng-container *ngFor="let v of coteList">
+                                    <option *ngIf="v.value.abrege" [value]="v.id">
+                                        {{ v.value.abrege }}
+                                    </option>
+                                    <option *ngIf="!v.value.abrege" [value]="v.id">
+                                        {{ v.value.designation + ' : ' + v.value.libelle }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                            <select class="browser-default"
+                                    *ngIf="EOS.showText('both')"
+                                    [ngModel]="mediaOptions.coteId">
+                                <ng-container *ngFor="let v of coteList">
+                                    <option *ngIf="v.value.abrege" [value]="v.id">
+                                        {{ v.value.abrege + ' : ' + v.value.libelle }}
+                                    </option>
+                                    <option *ngIf="!v.value.abrege" [value]="v.id">
+                                        {{ v.value.designation + ' : ' + v.value.libelle }}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" [ngModel]="mediaOptions.commentaire" placeholder="Commentaire">
+                    </div>
+                </div>
+                <div class="sirs-card-action" fxLayout="row" fxLayoutAlign="space-between center">
+                    <a href="" class="btn-flat waves-effect waves-teal"
+                       (click)="back()">
+                        <mat-icon>arrow_back</mat-icon>
+                        <span>&nbsp;&nbsp;Annuler</span>
+                    </a>
+                    <ion-button color="danger"
+                                [disabled]="mediaOptions.id"
+                                (click)="save()">
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                        <span>&nbsp;&nbsp;Terminer</span>
+                    </ion-button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--     Position Map -->
+    <div class="full-height" *ngSwitchCase="'map'">
+        <map-point class="full-height" (slidePathChange)="setView($event)" (successData)="handlePos($event)"></map-point>
+    </div>
+    <!-- Note -->
+    <div class="full-height" *ngSwitchCase="'note'" ng-init="save = saveNote; exit = backToForm">
+        <edit-note (slidePathChange)="setView($event)" (successData)="saveNote($event)"></edit-note>
+    </div>
+</div>

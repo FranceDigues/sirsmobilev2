@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { GeolocService } from 'src/app/geoloc.service';
+import { GeolocationService } from 'src/app/geolocation.service';
 import { AppLayer, EditionLayer } from 'src/app/layers.service';
 import { MapService } from 'src/app/map.service';
 
@@ -13,7 +13,7 @@ export class LeftSlideMenuComponent implements OnInit {
 
   @Output() readonly slidePathChange = new EventEmitter<string>();
 
-  constructor(public editionLayer: EditionLayer, public geoloc: GeolocService,
+  constructor(public editionLayer: EditionLayer, public geoloc: GeolocationService,
               public mapService: MapService, private appLayer: AppLayer, private route: Router) { }
 
   ngOnInit() {}

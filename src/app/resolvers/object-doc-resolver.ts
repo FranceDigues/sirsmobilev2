@@ -1,0 +1,25 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
+import { LocalDatabase } from "../usingLocalDatabase.service";
+import { EditionModeService } from "../editionmode.service";
+import { Observable } from "rxjs";
+
+@Injectable({providedIn: 'root'})
+export class ObjectDocResolver implements Resolve<any> {
+    constructor(private localDocument: LocalDatabase,
+                private editionService: EditionModeService) {
+    }
+
+    resolve(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): Observable<any> | Promise<any> | any {
+        const id = route.paramMap.get('id');
+        const type = route.paramMap.get('type');
+        if (id && id !== '') {
+            return this.localDocument.get(id);
+        } else {
+            return this.localDocument.create(this.editionService.newObject(type));
+        }
+    }
+}

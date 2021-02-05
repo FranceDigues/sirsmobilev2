@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
-import { GeolocService } from './geoloc.service';
+import { GeolocationService } from './geolocation.service';
 import { GeolocLayer } from './layers.service';
 import { transform } from 'ol/proj';
 import VectorLayer from 'ol/layer/Vector';
@@ -15,7 +15,7 @@ export class MapEditObjectService {
 
     defaultVisibleValueArrayLayer = [];
 
-    constructor(private olService: OLService, private geoloc: GeolocService,
+    constructor(private olService: OLService, private geoloc: GeolocationService,
                 private geolocLayer: GeolocLayer) {}
 
     initMap() {

@@ -176,7 +176,7 @@ export class ObservationDetailsComponent implements OnInit {
       encodingType: this.camera.EncodingType.JPEG,
       destinationType: this.camera.DestinationType.DATA_URL,
     };
-    this.cameraService.getPictureInGallery(options)
+    this.cameraService.getPhotoFromGallery(options)
     .then(
       (imageData: string) => {
         if (imageData) {
