@@ -50,7 +50,6 @@ export class ObservationEditService {
                 private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
                 private ref: ApplicationRef) {
                     this.dataProjection = this.sirsDoc.get().epsgCode;
-                    this.mediaPath = this.file.externalDataDirectory + 'medias';
                     console.log('test path');
                     this.showContent = true;
                     this.loaded = {};
@@ -139,7 +138,6 @@ export class ObservationEditService {
             author: this.authService.getValue()._id
         };
         this.importPhotoData = null;
-        this.mediaPath = this.file.externalDataDirectory + 'medias';
         this.showContent = true;
         this.loaded = {};
     }
@@ -261,10 +259,10 @@ export class ObservationEditService {
         let path;
         if (details && details === true) {
             path = photo.id + '.jpg';
-            path = this.mediaPath + '/' + path;
+            path = this.file.dataDirectory + '/' + path;
         } else {
             path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-            path = this.mediaPath + '/' + path;
+            path = this.file.dataDirectory + '/' + path;
         }
         const image_url = this.webview.convertFileSrc(path);
         return image_url;
@@ -316,7 +314,7 @@ export class ObservationEditService {
                                     }
                                     fileName = keyAttachment + ext;
                                 }
-                                this.file.resolveDirectoryUrl(this.mediaPath)
+                                this.file.resolveDirectoryUrl(this.file.dataDirectory)
                                 .then((targetDir: DirectoryEntry) => {
                                     targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
                                         file.createWriter((fileWriter) => {

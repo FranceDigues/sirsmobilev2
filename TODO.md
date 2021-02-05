@@ -1,8 +1,5 @@
 # TODO
 
-- (feat) In RightSlideEditObjectsComponent html, it's missing media tab,
-media view and note view (already have edit-note component for note view I think) -> See source code to know how to complete (mobile-hybride).
-
 - (fix) In Gallery (Left Slide), not same behaviour like last app. (images and documents not showed)
 
 - (fix) When coming to the main map, the loading is not perfect. The loading duration is 1.6 seconds. Should be perfect like when the map finishes to be charged (Especially when the db has just been replicated, the loading of all objects in the map is way longer)

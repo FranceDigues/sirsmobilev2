@@ -49,7 +49,6 @@ export class MediaFormComponent implements OnInit {
 
     ngOnInit() {
         this.dataProjection = this.sirsDoc.get().epsgCode;
-        this.mediaPath = this.file.externalDataDirectory + 'medias';
         this.mediaOptions = {
             id: '',
             chemin: '',
@@ -218,7 +217,7 @@ export class MediaFormComponent implements OnInit {
                 file.remove(() => console.log('File has been removed correctly'));
                 return;
             } else {
-                this.file.resolveDirectoryUrl(this.mediaPath)
+                this.file.resolveDirectoryUrl(this.file.dataDirectory)
                     .then(
                         (targetDir: DirectoryEntry) => {
                             // Copy image file in its final directory.

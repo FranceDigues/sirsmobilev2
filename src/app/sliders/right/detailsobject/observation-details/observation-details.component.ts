@@ -42,7 +42,6 @@ export class ObservationDetailsComponent implements OnInit {
                 this.objectDoc = this.objectDetails.selectedObject;
                 this.showContent = true;
                 this.loaded = {};
-                this.mediaPath = this.file.externalDataDirectory + 'medias';
 
                 if (!this.doc.photos) {
                   this.doc.photos = [];
