@@ -13,6 +13,7 @@ import { AppLayer } from './layers.service';
 import { ObjectDocService } from './objectdoc.service';
 import { SirsDocService } from './sirsdoc.service';
 import { UuidUtils as uuid } from './uuid-utils';
+import { PositionService } from './services/position.service';
 
 @Injectable({
     providedIn: 'root'
@@ -51,6 +52,7 @@ export class EditObjectService {
                 private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
                 private route: Router, private appLayer: AppLayer, private toastCtrl: ToastController,
                 private GeolocationService: GeolocationService, private alertCtrl: AlertController,
+                private positionService: PositionService,
                 private storageService: StorageService) {
     }
 
@@ -547,11 +549,11 @@ export class EditObjectService {
     }
 
     getStartPos() {
-        return this.objectDoc.positionDebut ? this.parsePos(this.objectDoc.positionDebut) : undefined;
+        return this.objectDoc.positionDebut ? this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut) : undefined;
     }
 
     getEndPos() {
-        return this.objectDoc.positionFin ? this.parsePos(this.objectDoc.positionFin) : undefined;
+        return this.objectDoc.positionFin ? this.positionService.getLatLongFromWKT(this.objectDoc.positionFin) : undefined;
     }
 
     getStartPosBorne() {
@@ -579,25 +581,15 @@ export class EditObjectService {
     }
 
     getStartPosDependance() {
-        return this.objectDoc.geometry ? this.parsePos(this.objectDoc.geometry) : undefined;
+        return this.objectDoc.geometry ? this.positionService.getLatLongFromWKT(this.objectDoc.geometry) : undefined;
     }
 
     getEndPosDependance() {
-        return this.objectDoc.geometry ? this.parsePosEnd(this.objectDoc.geometry) : undefined;
+        return this.objectDoc.geometry ? this.positionService.getLatLongFromWKT(this.objectDoc.geometry, true) : undefined;
     }
 
     getEndPointSR() {
         return this.objectDoc.systemeRepId || null;
-    }
-
-    parsePos(position) {
-        const geometry = this.wktFormat.readGeometry(position);
-        return transform(geometry.getFirstCoordinate(), this.dataProjection, 'EPSG:4326');
-    }
-
-    parsePosEnd(position) {
-        const geometry = this.wktFormat.readGeometry(position);
-        return transform(geometry.getLastCoordinate(), this.dataProjection, 'EPSG:4326');
     }
 
     // * Location

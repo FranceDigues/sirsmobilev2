@@ -230,16 +230,3 @@ export class RightSlideEditObjectsComponent implements OnInit {
     }
 
 }
-
-@Pipe({
-    name: 'lonlat'
-})
-export class LonLatPipe implements PipeTransform {
-
-    transform(coordinate: any, fallback: any) {
-        if (coordinate) {
-            return (coordinate[0].toFixed(3).toString() + ', ' + coordinate[1].toFixed(3).toString());
-        }
-        return fallback;
-    }
-}

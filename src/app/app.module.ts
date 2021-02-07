@@ -45,31 +45,33 @@ import { AppTronconsService, DigueController, SystemeEndiguement, TronconControl
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObservationEditService } from './observationedit.service';
 import { DirectiveModule } from './directive.module';
+import { PositionService } from './services/position.service';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule, MatIconModule,
-    IonicModule.forRoot(), IonicStorageModule.forRoot(),
-    AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
-    DatabaseConnectionPageModule, LibCameraModule,
-    NgbCollapseModule, FlexLayoutModule, DirectiveModule
-  ],
-  providers: [
-    StatusBar,OLService,SplashScreen,NativeStorage,
-    MapService,Insomnia,Geolocation,EditionModeService,
-    RealPositionStyle,GetStyle,HandlingStyle,DefaultStyle,
-    AppLayer,GeolocLayer,EditionLayer,BackLayer,
-    SyncService,DatabaseService,AuthService,GlobalConfigService,
-    AppVersionsService,SirsDocService,GalleryService,BackLayerService,
-    BackLayer,SystemeEndiguement,AppTronconsService,DigueController,
-    TronconController,ObjectDocService,FilterPipe,EditObjectService,
-    Toast,SelectedObjectsService,ObjectDetails,MapEditObjectService,
-    FormsTemplateService,CacheMapManager,File,WebView,FileOpener,
-    ObservationEditService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    entryComponents: [],
+    imports: [
+        BrowserModule, MatIconModule,
+        IonicModule.forRoot(), IonicStorageModule.forRoot(),
+        AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
+        DatabaseConnectionPageModule, LibCameraModule,
+        NgbCollapseModule, FlexLayoutModule, DirectiveModule
+    ],
+    providers: [
+        StatusBar, OLService, SplashScreen, NativeStorage,
+        MapService, Insomnia, Geolocation, EditionModeService,
+        RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
+        AppLayer, GeolocLayer, EditionLayer, BackLayer,
+        SyncService, DatabaseService, AuthService, GlobalConfigService,
+        AppVersionsService, SirsDocService, GalleryService, BackLayerService,
+        BackLayer, SystemeEndiguement, AppTronconsService, DigueController,
+        TronconController, ObjectDocService, FilterPipe, EditObjectService,
+        Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
+        FormsTemplateService, CacheMapManager, File, WebView, FileOpener,
+        ObservationEditService, PositionService,
+        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

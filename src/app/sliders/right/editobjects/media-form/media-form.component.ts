@@ -15,6 +15,9 @@ import { EditionModeService } from '../../../../editionmode.service';
 import { GeolocationService } from '../../../../geolocation.service';
 import { AlertController } from '@ionic/angular';
 import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { PositionService } from '../../../../services/position.service';
+import { Coordinates } from '@ionic-native/geolocation/ngx';
 
 @Component({
     selector: 'app-media-form',
@@ -36,6 +39,7 @@ export class MediaFormComponent implements OnInit {
                 private cameraService: CameraService,
                 private camera: Camera,
                 private file: File,
+                private webview: WebView,
                 private toastCtrl: ToastController,
                 public EOS: EditObjectService,
                 private sirsDoc: SirsDocService,
@@ -44,6 +48,7 @@ export class MediaFormComponent implements OnInit {
                 private geolocation: GeolocationService,
                 public alertController: AlertController,
                 public modalController: ModalController,
+                private positionService: PositionService,
                 private editionService: EditionModeService) {
     }
 
@@ -62,6 +67,10 @@ export class MediaFormComponent implements OnInit {
 
     back() {
         this.setView('form');
+    }
+
+    getPosition() {
+        return this.mediaOptions.positionDebut ? this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut) : 'à définir';
     }
 
     save() {
@@ -135,15 +144,23 @@ export class MediaFormComponent implements OnInit {
         return await modal.present();
     }
 
-    getPhotoPath() {
-
+    getPhotoPath(photo, details?) {
+        let path;
+        if (details && details === true) {
+            path = photo.id + '.jpg';
+            path = this.file.dataDirectory + '/' + path;
+        } else {
+            path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
+            path = this.file.dataDirectory + '/' + path;
+        }
+        return this.webview.convertFileSrc(path);
     }
 
     locateMe() {
         this.geolocation.getCurrentLocation()
             .then(
-                (position) => {
-                    this.handlePos(position);
+                (position: Coordinates) => {
+                    this.positionService.getWKTFromLatLong(position);
                 }
             );
     }
@@ -171,11 +188,6 @@ export class MediaFormComponent implements OnInit {
         });
 
         await alert.present();
-    }
-
-    handlePos(pos) {
-        const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
-        this.mediaOptions.positionDebut = `POINT(${coordinate[0]} ${coordinate[1]})`;
     }
 
     drawNote() {

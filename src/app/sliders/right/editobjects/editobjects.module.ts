@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { LonLatPipe, RightSlideEditObjectsComponent } from './editobjects.component';
+import { RightSlideEditObjectsComponent } from './editobjects.component';
 import { FormsTemplateModule } from './forms-template/forms-template.module';
 import { MapLineComponent } from './map-line/map-line.component';
 import { MapPointComponent } from './map-point/map-point.component';
@@ -29,7 +29,6 @@ import { EditNoteModule } from '../detailsobject/observation-edit/observation-me
         RightSlideEditObjectsComponent,
         MapLineComponent, MapPointComponent,
         MapPolygonComponent, PositionByBorneModalComponent,
-        LonLatPipe,
         MediaDetailsComponent,
         MediaFormComponent
     ],

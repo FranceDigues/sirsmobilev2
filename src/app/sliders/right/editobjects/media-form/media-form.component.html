@@ -15,12 +15,11 @@
                             <mat-icon>perm_media</mat-icon>&nbsp;&nbsp;Importer un media
                         </ion-button>
                     </div>
-                    <div class="pics row" *ngIf="mediaOptions.id !=='' ">
+                    <div class="pics row" *ngIf="mediaOptions.id !== ''">
                         <div class="pic col col-25">
-                            <div class="pic-quicklook">
-                                <img alt="Photo non disponible sur le mobile"
-                                     style="height: 50px;"
-                                     [src]="importPhototData ? importPhototData : getPhotoPath(mediaOptions)"/>
+                            <div class="pic-quicklook" fxLayout="row" fxLayoutAlign="center center">
+                                <ion-img style="height: 100px; width: 100px;" alt="Photo non disponible sur le mobile"
+                                         [src]="importPhotoData ? importPhotoData : getPhotoPath(mediaOptions)"></ion-img>
                             </div>
                         </div>
                     </div>
@@ -48,7 +47,7 @@
                     </ion-button>
                     <div *ngIf="mediaOptions.positionDebut" class="sirs-field-inline">
                         <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
-                        <span class="sirs-field-value">{{mediaOptions.positionDebut}}</span>
+                        <span class="sirs-field-value">{{ getPosition()}}</span>
                     </div>
                     <div *ngIf="mediaOptions.borneDebutId" class="sirs-field-inline">
                         <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
@@ -135,7 +134,7 @@
                         <span>&nbsp;&nbsp;Annuler</span>
                     </a>
                     <ion-button color="danger"
-                                [disabled]="mediaOptions.id"
+                                [disabled]="!mediaOptions.id"
                                 (click)="save()">
                         <ion-icon name="checkmark-outline"></ion-icon>
                         <span>&nbsp;&nbsp;Terminer</span>
@@ -146,7 +145,8 @@
     </div>
     <!--     Position Map -->
     <div class="full-height" *ngSwitchCase="'map'">
-        <map-point class="full-height" (slidePathChange)="setView($event)" (successData)="handlePos($event)"></map-point>
+        <map-point class="full-height" (slidePathChange)="setView($event)"
+                   (successData)="handlePos($event)"></map-point>
     </div>
     <!-- Note -->
     <div class="full-height" *ngSwitchCase="'note'" ng-init="save = saveNote; exit = backToForm">
