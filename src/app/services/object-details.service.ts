@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LocalDatabase } from './local-database.service';
 import { Router } from '@angular/router';
-import { EditionModeService } from './editionmode.service';
+import { EditionModeService } from './edition-mode.service';
 import { AppLayer } from './layers.service';
 import { AlertController } from '@ionic/angular';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { EditionModeService } from "../editionmode.service";
+import { EditionModeService } from "../services/edition-mode.service";
 import { Observable } from "rxjs";
 
 @Injectable({providedIn: 'root'})

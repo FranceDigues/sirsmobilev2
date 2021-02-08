@@ -3,9 +3,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { AppModule } from 'src/app/app.module';
-import { DatabaseService } from 'src/app/database.service';
-import { EditObjectService } from 'src/app/editobjects.service';
-import { SirsDocService } from 'src/app/sirsdoc.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { EditObjectService } from 'src/app/services/editobjects.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { CreteComponent } from './crete.component';
 
 describe('CreteComponent FormTemplate', () => {

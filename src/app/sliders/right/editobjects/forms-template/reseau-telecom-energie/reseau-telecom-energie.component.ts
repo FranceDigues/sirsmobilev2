@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsTemplateService } from 'src/app/formstemplate.service';
-import { EditObjectService } from '../../../../../editobjects.service';
+import { FormsTemplateService } from 'src/app/sliders/formstemplate.service';
+import { EditObjectService } from '../../../../../services/editobjects.service';
 
 @Component({
   selector: 'form-reseau-telecom-energie',

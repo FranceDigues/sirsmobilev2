@@ -21,17 +21,14 @@ export class MapService {
 
     getCurrentView() {
         if (!this.currentView) {
-            console.log('r y srs', this.dbService.activeDB);
             const isCurrentView = this.dbService.activeDB.context.currentView;
             if (isCurrentView) {
-                console.log('the new last view');
                 return new View({
                     zoom: isCurrentView.zoom,
                     center: isCurrentView.coords,
                     enableRotation: false
                 });
             } else {
-                console.log('the default view');
                 return new View({
                     zoom: 6,
                     center: transform([2.7246, 47.0874], 'EPSG:4326', 'EPSG:3857'),

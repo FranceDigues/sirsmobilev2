@@ -6,16 +6,16 @@ import { transform } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import { Fill, Style } from 'ol/style';
 import proj4 from 'proj4';
-import { AppVersionsService } from '../appversions.service';
-import { AuthService } from '../auth.service';
-import { BackLayerService } from '../backlayer.service';
-import { DatabaseService } from '../database.service';
-import { GeolocationService } from '../geolocation.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../layers.service';
-import { MapService } from '../map.service';
+import { AppVersionsService } from '../services/app-versions.service';
+import { AuthService } from '../services/auth.service';
+import { BackLayerService } from '../services/back-layer.service';
+import { DatabaseService } from '../services/database.service';
+import { GeolocationService } from '../services/geolocation.service';
+import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../services/layers.service';
+import { MapService } from '../services/map.service';
 import { DatabaseModel } from '../models/database.model';
-import { SelectedObjectsService } from '../selectedobjects.service';
-import { SirsDocService } from '../sirsdoc.service';
+import { SelectedObjectsService } from '../services/selected-objects.service';
+import { SirsDocService } from '../services/sirsdoc.service';
 
 @Component({
   selector: 'app-main',
@@ -41,7 +41,6 @@ export class MainPage implements AfterViewInit {
                 this.geolocLayer.init();
                 this.platform.pause.subscribe(
                   async () => {
-                    console.log('here ?????');
                     const currentView = this.mapService.currentView;
                     if (currentView) {
                       this.dbService.getCurrentDatabaseHardDisk().

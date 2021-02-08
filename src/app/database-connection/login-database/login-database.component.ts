@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { AuthService } from 'src/app/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -30,11 +30,11 @@ export class LoginDatabaseComponent implements OnInit {
     this.authService.login(this.auth.username, this.auth.password)
     .then(
       () => {
-        console.log('Login OK');
+        console.error('Login OK');
         this.status = 2;
       },
       async (error) => {
-        console.log('Login ERROR : ' + error);
+        console.error('Login ERROR : ' + error);
         const alert = await this.alrtCtrl.create({
           header: 'Erreur',
           message: 'Impossible de d\'authentifier. Veuillez vérifier vos informations de connexion.',

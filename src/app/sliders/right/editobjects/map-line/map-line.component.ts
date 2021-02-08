@@ -3,8 +3,8 @@ import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import { transform } from 'ol/proj';
-import { SirsDocService } from 'src/app/sirsdoc.service';
-import { EditObjectService } from '../../../../editobjects.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
+import { EditObjectService } from '../../../../services/editobjects.service';
 import DragPan from 'ol/interaction/DragPan';
 import Feature from 'ol/Feature';
 import { Style } from 'ol/style';
@@ -12,7 +12,7 @@ import MultiPoint from 'ol/geom/MultiPoint';
 import LineString from 'ol/geom/LineString';
 import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
-import { MapEditObjectService } from 'src/app/mapeditobject.service';
+import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
 
 @Component({
   selector: 'map-line',

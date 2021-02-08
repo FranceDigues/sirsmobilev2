@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
-import { SirsDocService } from '../sirsdoc.service';
+import { SirsDocService } from './sirsdoc.service';
 import { Coordinates } from '@ionic-native/geolocation/ngx';
 
 @Injectable({

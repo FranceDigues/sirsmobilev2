@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { EditionLayer } from './layers.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LocalDatabase } from './local-database.service';
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +47,6 @@ export class EditionModeService {
                 private editionLayer: EditionLayer) { }
 
     newObject(type) {
-        console.log(this.authService);
         const objectDoc: any = {
             '@class': 'fr.sirs.core.model.' + type,
             author: this.authService.user._id,

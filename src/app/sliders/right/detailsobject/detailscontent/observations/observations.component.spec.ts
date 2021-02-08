@@ -3,8 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { AppModule } from 'src/app/app.module';
-import { DatabaseService } from 'src/app/database.service';
-import { ObjectDetails } from 'src/app/objectdetails.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { ObjectDetails } from 'src/app/services/object-details.service';
 import { ObservationsGenericComponent } from './observations.component';
 
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { DatabaseModel } from './models/database.model';
+import { DatabaseModel } from '../models/database.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +20,9 @@ export class DatabaseService {
   async getRemoteDB() {
     if (this.remoteDB === null) {
       if (this.activeDB === null) {
-        console.log('ERROR');
+        console.error('ERROR');
         return null;
       }
-      console.log('On rentre dans la fonction getRemoteDB');
       this.remoteDB = new PouchDB(this.activeDB.url,
         {
           auth: {
@@ -38,9 +37,8 @@ export class DatabaseService {
   getLocalDB() {
     if (this.localDB == null) {
       if (this.activeDB == null) {
-        console.log('ERROR');
+        console.error('ERROR');
       }
-      console.log('On RENTRE dans la fonction getLocalDB');
       this.localDB = new PouchDB(this.activeDB.name,
         {
           iosDatabaseLocation: 'Library',

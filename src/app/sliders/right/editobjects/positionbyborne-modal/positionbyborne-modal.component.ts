@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { EditObjectService } from '../../../../editobjects.service';
+import { EditObjectService } from '../../../../services/editobjects.service';
 import WKT from 'ol/format/WKT';
-import { DatabaseService } from '../../../../database.service';
+import { DatabaseService } from '../../../../services/database.service';
 
 @Component({
   selector: 'app-positionbyborne-modal',

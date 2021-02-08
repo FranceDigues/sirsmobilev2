@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
-import { Random } from './uuid-utils';
+import { LocalDatabase } from './local-database.service';
+import { Random } from '../utils/uuid-utils';
 
 @Injectable({
     providedIn: 'root'

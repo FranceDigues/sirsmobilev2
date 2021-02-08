@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { FileOpener } from '@ionic-native/file-opener/ngx';
-// import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
 import { AlertController } from '@ionic/angular';
 import { DatabaseService } from './database.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LocalDatabase } from './local-database.service';
 
 
 @Injectable({
@@ -17,8 +17,11 @@ export class GalleryService {
     availableFiles = [];
     selected = undefined;
 
-    constructor(private alertCtrl: AlertController, private localDocument: LocalDatabase,
-                private http: HttpClient, private databaseService: DatabaseService) { }
+    constructor(private alertCtrl: AlertController,
+                private file: File,
+                private localDocument: LocalDatabase,
+                private httpClient: HttpClient, private databaseService: DatabaseService) {
+    }
 
     setActiveTab(tab) {
         this.activeTab = tab;
@@ -26,8 +29,25 @@ export class GalleryService {
         this.initDirectory();
     }
 
-    initDirectory() { // TODO
-        console.log('hey !');
+    initDirectory() {
+        this.file.listDir(this.file.dataDirectory, this.activeTab)
+            .then((fileEntries) => {
+                const files = [];
+                fileEntries.forEach((entry) => {
+                    files.push({
+                        id: entry.fullPath,
+                        label: entry.name,
+                        childCount: 0,
+                        isDirectory: entry.isDirectory,
+                        _entry: entry
+                    });
+                });
+                this.availableFiles = files;
+            }, (error) => {
+                console.error(error);
+            });
+
+
         // this.file.checkDir(this.file.externalDataDirectory, this.activeTab)
         // .then(
         //     () => {
@@ -37,11 +57,10 @@ export class GalleryService {
         //                 this.visitDirectory(directory)
         //                 .then(
         //                     (files) => {
-        //                         console.log('files', files)
         //                         this.availableFiles = files;
         //                     },
         //                     (err) => {
-        //                         console.log('error', err);
+        //                         console.error('error', err);
         //                     }
         //                 )
         //             }
@@ -63,29 +82,6 @@ export class GalleryService {
         //         )
         //     }
         // )
-    }
-
-    visitDirectory(directory): Promise<Array<object>> {
-        return new Promise((resolve, rejects) => {
-            const files = [];
-            directory.createReader().readEntries(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        files.push({
-                            id: entry.fullPath,
-                            label: entry.name,
-                            childCount: 0,
-                            isDirectory: entry.isDirectory,
-                            _entry: entry
-                        });
-                    });
-                },
-                (err) => {
-                    rejects(err);
-                }
-            );
-            resolve(files);
-        });
     }
 
     getPhotoPath() {
@@ -120,16 +116,15 @@ export class GalleryService {
                     text: 'OK',
                     handler: () => {
                         this.selected._entry.remove(() => {
-                            console.log('The file has been removed successfully');
-                            this.fileDoc = undefined;
-                            this.initDirectory();
-                        },
-                        (error) => {
-                            console.log('Error deleting the file', error);
-                        },
-                        () => {
-                            console.log('The file doesn\'t exist');
-                        });
+                                this.fileDoc = undefined;
+                                this.initDirectory();
+                            },
+                            (error) => {
+                                console.error('Error deleting the file', error);
+                            },
+                            () => {
+                                console.error('The file doesn\'t exist');
+                            });
                     }
                 }
             ]
@@ -142,7 +137,7 @@ export class GalleryService {
             backdropDismiss: false,
             header: 'Suppression tous les fichiers',
             message: 'Voulez vous vraiment supprimer tous les fichiers de ce répertoire ?' +
-            'NB: Cette operation ne supprime pas les fichiers dans la base de données.',
+                'NB: Cette operation ne supprime pas les fichiers dans la base de données.',
             buttons: [
                 {
                     text: 'Annuler',
@@ -156,14 +151,13 @@ export class GalleryService {
                             promises.push(file._entry.remove());
                         });
                         Promise.all(promises)
-                        .then(
-                            (values) => {
-                                console.log('values ?', values);
-                                console.log('The files has been removes successfully');
-                                this.fileDoc = undefined;
-                                this.initDirectory();
-                            }
-                        );
+                            .then(
+                                (values) => {
+                                    console.log('The files has been removes successfully');
+                                    this.fileDoc = undefined;
+                                    this.initDirectory();
+                                }
+                            );
                     }
                 }
             ]
@@ -187,14 +181,12 @@ export class GalleryService {
         // this.localDocument.query('getAllFilesAttachments', { attachments: true })
         // .then(
         //     (results) => {
-        //         console.log('results', results);
         //         results.forEach(
         //             (item) => {
-        //                 console.log('item', item);
         //                 item.value.attachments.forEach(
         //                     (value, key) => {
         //                         if (!value.content_type.startsWith('image/')) {
-        //                             this.http.head(this.file.externalDataDirectory + 'documents' + '/' + item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1))
+        //                             this.httpClient.head(this.file.externalDataDirectory + 'documents' + '/' + item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1))
         //                             .subscribe(
         //                                 () => {
         //                                     console.log('Working');

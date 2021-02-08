@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SelectedObjectsService } from 'src/app/selectedobjects.service';
-import { LocalDatabase } from '../../../usingLocalDatabase.service';
-import { ObjectDetails } from '../../../objectdetails.service';
+import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
+import { LocalDatabase } from '../../../services/local-database.service';
+import { ObjectDetails } from '../../../services/object-details.service';
 import { Toast } from '@ionic-native/toast/ngx';
 import Feature from 'ol/Feature';
 

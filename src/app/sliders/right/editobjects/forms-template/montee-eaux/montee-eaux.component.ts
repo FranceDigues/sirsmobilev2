@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { EditObjectService } from 'src/app/editobjects.service';
-import { FormsTemplateService } from 'src/app/formstemplate.service';
-import { UuidUtils as uuid } from '../../../../../uuid-utils';
+import { EditObjectService } from 'src/app/services/editobjects.service';
+import { FormsTemplateService } from 'src/app/sliders/formstemplate.service';
+import { UuidUtils as uuid } from '../../../../../utils/uuid-utils';
 
 
 @Component({

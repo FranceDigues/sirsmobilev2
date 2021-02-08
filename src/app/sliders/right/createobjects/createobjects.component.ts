@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppLayersService } from '../../../applayers.service';
-import { AuthService } from '../../../auth.service';
+import { AppLayersService } from '../../../services/app-layers.service';
+import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({

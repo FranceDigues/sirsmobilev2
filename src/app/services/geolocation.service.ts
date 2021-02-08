@@ -43,7 +43,6 @@ export class GeolocationService {
             this.geolocation.getCurrentPosition(options)
                 .then(
                     (position) => {
-                        console.log('position', position);
                         this.coords = position.coords;
                         this.gpsAccuracy = Math.round(position.coords.accuracy);
                         this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');

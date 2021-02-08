@@ -6,14 +6,14 @@ import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { getDistance } from 'ol/sphere';
 import { DatabaseService } from './database.service';
-import { EditionModeService } from './editionmode.service';
+import { EditionModeService } from './edition-mode.service';
 import { GeolocationService } from './geolocation.service';
-import { GlobalConfigService } from './globalconfig.service';
+import { ConfigService } from './config.service';
 import { AppLayer } from './layers.service';
-import { ObjectDocService } from './objectdoc.service';
+import { ObjectDocService } from './object-doc.service';
 import { SirsDocService } from './sirsdoc.service';
-import { UuidUtils as uuid } from './uuid-utils';
-import { PositionService } from './services/position.service';
+import { UuidUtils as uuid } from '../utils/uuid-utils';
+import { PositionService } from './position.service';
 
 @Injectable({
     providedIn: 'root'
@@ -48,7 +48,7 @@ export class EditObjectService {
 
     constructor(private activeRoute: ActivatedRoute, private objectDocService: ObjectDocService,
                 private databaseService: DatabaseService, private loadingCtrl: LoadingController,
-                private globalConfigService: GlobalConfigService,
+                private globalConfigService: ConfigService,
                 private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
                 private route: Router, private appLayer: AppLayer, private toastCtrl: ToastController,
                 private GeolocationService: GeolocationService, private alertCtrl: AlertController,
@@ -67,7 +67,6 @@ export class EditObjectService {
                     this.objectDocService.getObjectDoc(type, id)
                         .then(
                             (objectDoc) => {
-                                console.log('la base : ', objectDoc);
                                 // Hack for borne fin data without borneFinId
                                 if (typeof (objectDoc.borne_fin_aval) !== 'undefined' && typeof (objectDoc.borne_fin_distance) !== 'undefined' && !objectDoc.borneFinId) {
                                     objectDoc.borneFinId = objectDoc.borneDebutId;
@@ -75,7 +74,6 @@ export class EditObjectService {
                                     objectDoc.borne_fin_distance = objectDoc.borne_debut_distance;
                                 }
                                 this.objectDoc = objectDoc;
-                                console.log('tmp :', this.objectDoc);
                                 this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
                                 this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
                                 this.objectType = this.objectDoc;
@@ -90,7 +88,6 @@ export class EditObjectService {
                                                 res[ref[0]] = ref[1];
                                             }
                                             this.refs = res;
-                                            console.log('refss: ', this.refs);
                                             this.initTronconList();
                                             this.checkDependance(loading);
                                             this.getStartPosBorne();
@@ -194,7 +191,7 @@ export class EditObjectService {
                     featureProjection: 'EPSG:3857'
                 });
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
             geomTronc = geom.getClosestPoint(positionCoord);
             // Calculate the distance between two point
@@ -219,7 +216,6 @@ export class EditObjectService {
         } else {
             this.objectDoc[field] = isMultiple ? [] : undefined;
         }
-        console.log('RES SETUP REF', this.objectDoc);
     }
 
     createMeasure() {
@@ -244,7 +240,6 @@ export class EditObjectService {
                     if (Array.isArray(value)) {
                         this.troncons = value;
                         this.allTroncons = value;
-                        console.log('tronconnns', value);
                     } else {
                         console.error('Not good type');
                     }
@@ -303,7 +298,7 @@ export class EditObjectService {
                             loading.dismiss();
                         }, 100);
                     }).catch((err) => {
-                    console.log(err);
+                    console.error(err);
                     loading.dismiss();
                 });
             } else {
@@ -513,8 +508,7 @@ export class EditObjectService {
         }
     }
 
-    changeObjectType() { // ! take care -> check if it's correct
-        console.log('isLinear', this.isLinear);
+    changeObjectType() {
         if (this.objDependanceType === 'line') {
             delete this.objectDoc.positionFin;
             delete this.objectDoc.approximatePositionFin;

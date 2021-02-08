@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { GeolocationService } from 'src/app/geolocation.service';
-import { AppLayer, EditionLayer } from 'src/app/layers.service';
-import { MapService } from 'src/app/map.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
+import { AppLayer, EditionLayer } from 'src/app/services/layers.service';
+import { MapService } from 'src/app/services/map.service';
 
 @Component({
   selector: 'left-slide-menu',

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LocalDatabase } from './usingLocalDatabase.service';
-import { EditionModeService } from './editionmode.service';
+import { LocalDatabase } from './local-database.service';
+import { EditionModeService } from './edition-mode.service';
 
 @Injectable({
     providedIn: 'root'

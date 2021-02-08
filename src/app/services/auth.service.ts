@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import MD5 from 'crypto-js/md5';
-import { DatabaseModel } from './models/database.model';
+import { DatabaseModel } from '../models/database.model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -50,7 +50,6 @@ export class AuthService {
       this.dbService.getLocalDB().query('Utilisateur/byLogin', options)
       .then(
         (result) => {
-          console.log(result);
           if (result.rows.length === 1) {
             const hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
@@ -63,9 +62,8 @@ export class AuthService {
                   resolve(database);
                 }
               );
-              console.log('NOTE THE TYPE PLS', this.user);
             } else {
-              console.log('error');
+              console.error('error');
               reject();
             }
           } else {
@@ -73,8 +71,7 @@ export class AuthService {
           }
         },
         (error) => {
-          console.log('HERE ???');
-          console.log(error);
+          console.error(error);
           reject();
         }
       );

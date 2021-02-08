@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DatabaseService } from 'src/app/database.service';
-import { SyncService } from 'src/app/sync.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { SyncService } from 'src/app/services/sync.service';
 
 @Component({
   selector: 'left-slide-synchronisation',

@@ -19,8 +19,8 @@ import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/edit
 import { EditObjectsModule } from './sliders/right/editobjects/editobjects.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
 import { Observable } from "rxjs";
-import { LocalDatabase } from "./usingLocalDatabase.service";
-import { EditionModeService } from "./editionmode.service";
+import { LocalDatabase } from "./services/local-database.service";
+import { EditionModeService } from "./services/edition-mode.service";
 import { ObjectDocResolver } from "./resolvers/object-doc-resolver";
 import { RefTypesResolver } from "./resolvers/ref-types-resolver";
 import { OrientationListResolver } from "./resolvers/orientation-list-resolver";

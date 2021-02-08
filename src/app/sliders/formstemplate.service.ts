@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EditObjectService } from './editobjects.service';
+import { EditObjectService } from '../services/editobjects.service';
 
 @Injectable({
     providedIn: 'root'

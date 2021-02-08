@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { colorFactory } from 'src/app/color-factory';
+import { colorFactory } from 'src/app/utils/color-factory';
 
 
 @Component({
@@ -39,7 +39,6 @@ export class ColorModalComponent implements OnInit {
 
   validate() {
     if (this.selectedColor) {
-      console.log(this.selectedColor);
       this.modalCtrl.dismiss(this.selectedColor);
     }
   }

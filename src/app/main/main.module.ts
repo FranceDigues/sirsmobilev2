@@ -8,13 +8,13 @@ import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { GeolocationService } from '../geolocation.service';
-import { RealPositionStyle } from '../style.service';
-import { EditionModeService } from '../editionmode.service';
+import { GeolocationService } from '../services/geolocation.service';
+import { RealPositionStyle } from '../services/style.service';
+import { EditionModeService } from '../services/edition-mode.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SirsDocService } from '../sirsdoc.service';
+import { SirsDocService } from '../services/sirsdoc.service';
 import { LeftSlideModule } from '../sliders/left/left-slide.module';
 import { RightSlideModule } from '../sliders/right/right-slide.module';
 

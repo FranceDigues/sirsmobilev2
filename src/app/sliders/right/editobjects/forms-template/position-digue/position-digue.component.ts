@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditObjectService } from 'src/app/editobjects.service';
+import { EditObjectService } from 'src/app/services/editobjects.service';
 
 @Component({
   selector: 'form-template-position-digue',

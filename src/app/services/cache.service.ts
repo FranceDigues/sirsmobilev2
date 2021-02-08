@@ -18,7 +18,7 @@ import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import TileGrid from 'ol/tilegrid/TileGrid';
-import { MapService } from 'src/app/map.service';
+import { MapService } from 'src/app/services/map.service';
 
 @Injectable({
     providedIn: 'root'

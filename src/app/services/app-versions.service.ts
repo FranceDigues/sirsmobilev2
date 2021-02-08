@@ -19,7 +19,7 @@ export class AppVersionsService {
                     this.versions = data;
                 },
                 (err) => {
-                    console.log('init err', err);
+                    console.error('init err', err);
                 }
             );
         } else {
@@ -29,7 +29,7 @@ export class AppVersionsService {
                     this.versions = data;
                 },
                 (err) => {
-                    console.log('init err', err);
+                    console.error('init err', err);
                 }
             );
         }

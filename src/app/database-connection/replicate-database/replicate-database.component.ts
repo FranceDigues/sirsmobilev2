@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { Subject } from 'rxjs';
-import { DatabaseService } from './../../database.service';
+import { DatabaseService } from '../../services/database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 import { designDocs, indexedViews } from './couchDB-Vues';
 import { AlertController } from '@ionic/angular';

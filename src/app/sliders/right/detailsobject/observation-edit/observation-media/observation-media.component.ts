@@ -1,18 +1,18 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ObservationEditService } from 'src/app/observationedit.service';
+import { ObservationEditService } from 'src/app/services/observation-edit.service';
 import { ModalController, ToastController } from '@ionic/angular';
 import { PositionByBorneModal2Component } from './positionbyborne-modal2/positionbyborne-modal2.component';
-import { GeolocationService } from 'src/app/geolocation.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { Camera } from '@ionic-native/camera/ngx';
 import { File, Entry, Metadata, DirectoryEntry } from '@ionic-native/file/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { UuidUtils } from 'src/app/uuid-utils';
+import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
-import { GlobalConfigService } from 'src/app/globalconfig.service';
-import { EditionModeService } from 'src/app/editionmode.service';
-import { AppLayer } from 'src/app/layers.service';
+import { ConfigService } from 'src/app/services/config.service';
+import { EditionModeService } from 'src/app/services/edition-mode.service';
+import { AppLayer } from 'src/app/services/layers.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -32,7 +32,7 @@ export class ObservationMediaComponent implements OnInit {
                 private geolocation: GeolocationService, private cameraService: CameraService,
                 private camera: Camera, private file: File, private webview: WebView,
                 private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
-                private globalConfigService: GlobalConfigService,
+                private globalConfigService: ConfigService,
                 private editionService: EditionModeService, private appLayer: AppLayer,
                 private http: HttpClient) {
         this.view = 'media';

@@ -5,8 +5,8 @@ import { MateriauIdGenericComponent } from './materiau-id.component';
 import { AppModule } from '../../../../../app.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IonicStorageModule } from '@ionic/storage';
-import { DatabaseService } from 'src/app/database.service';
-import { SirsDocService } from 'src/app/sirsdoc.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 
 describe('MateriauIdGenericComponent', () => {
   let component: MateriauIdGenericComponent;

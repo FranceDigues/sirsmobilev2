@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { DatabaseService } from 'src/app/database.service';
+import { DatabaseService } from 'src/app/services/database.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 
 
@@ -30,7 +30,6 @@ export class EditDatabaseComponent implements OnInit {
     this.nativeStorage.getItem('databases')
     .then(
       (data) => {
-        console.log(data);
         this.databases = data;
         this.name = this.formBuilder.control(this.databases[this.databaseIndex].name, Validators.required);
         this.url = this.formBuilder.control(this.databases[this.databaseIndex].url, Validators.required);
@@ -45,7 +44,7 @@ export class EditDatabaseComponent implements OnInit {
         });
       },
       (error) => {
-        console.log('There is no database in hard disk', error);
+        console.error('There is no database in hard disk', error);
         this.onBack();
       }
     );

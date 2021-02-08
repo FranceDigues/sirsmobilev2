@@ -1,16 +1,16 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ObjectDetails } from 'src/app/objectdetails.service';
-import { LocalDatabase } from 'src/app/usingLocalDatabase.service';
-import { ObservationEditService } from 'src/app/observationedit.service';
+import { ObjectDetails } from 'src/app/services/object-details.service';
+import { LocalDatabase } from 'src/app/services/local-database.service';
+import { ObservationEditService } from 'src/app/services/observation-edit.service';
 import { AlertController } from '@ionic/angular';
-import { EditionModeService } from 'src/app/editionmode.service';
-import { AuthService } from 'src/app/auth.service';
+import { EditionModeService } from 'src/app/services/edition-mode.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { Camera } from '@ionic-native/camera/ngx';
-import { UuidUtils } from 'src/app/uuid-utils';
+import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
-import { AppLayer } from 'src/app/layers.service';
+import { AppLayer } from 'src/app/services/layers.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { File } from '@ionic-native/file/ngx';
 

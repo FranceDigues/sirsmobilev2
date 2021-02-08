@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { AppLayersService } from 'src/app/applayers.service';
-import { AppLayer } from 'src/app/layers.service';
-import { colorFactory } from 'src/app/color-factory';
+import { AppLayersService } from 'src/app/services/app-layers.service';
+import { AppLayer } from 'src/app/services/layers.service';
+import { colorFactory } from 'src/app/utils/color-factory';
 import { ModalController, NavController } from '@ionic/angular';
 import { ColorModalComponent } from './color-modal/color-modal.component';
-import { DatabaseService } from '../../../database.service';
+import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../../models/database.model';
 
 @Component({
@@ -53,9 +53,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     updateFavorites() {
-        console.log('update de favorites');
         this.appLayersService.favorites = Object.assign([], this.layers);
-        console.log(this.layers);
         this.dbService.getCurrentDatabaseHardDisk()
         .then(
             (db: DatabaseModel) => {
@@ -113,7 +111,6 @@ export class LeftSlideCraftlayersComponent implements OnInit {
         .then(
             (color) => {
                 if (color.data) {
-                    console.log('color ::', color.data);
                     layer.color = color.data;
                     setTimeout(() => {
                         // this.appLayer.reloadLayer(layer): // TODO verify you can reactive this

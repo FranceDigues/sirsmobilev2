@@ -1,8 +1,8 @@
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
-import { EditObjectService } from 'src/app/editobjects.service';
-import { DatabaseService } from '../../../database.service';
+import { EditObjectService } from 'src/app/services/editobjects.service';
+import { DatabaseService } from '../../../services/database.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 
 @Component({

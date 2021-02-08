@@ -94,7 +94,6 @@ export class AddDatabaseComponent implements OnInit {
         const array = [
           this.databaseForm.value
         ];
-        console.log('');
         this.nativeStorage.setItem('databases', array);
         this.onBack();
       }

@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
-import { AppLayersService } from 'src/app/applayers.service';
-import { DatabaseService } from 'src/app/database.service';
-import { AppLayer } from 'src/app/layers.service';
+import { AppLayersService } from 'src/app/services/app-layers.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { AppLayer } from 'src/app/services/layers.service';
 import { DatabaseModel } from 'src/app/models/database.model';
 
 @Component({
@@ -62,7 +62,6 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     const favorites = this.appLayersService.getFavorites();
 
     for (const favorite of favorites) {
-      // console.log('favorite.title / layer.title', favorite.title, layer.title);
       if (favorite.title === layer.title) {
         return true;
       }

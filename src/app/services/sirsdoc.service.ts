@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LocalDatabase } from './local-database.service';
 
 @Injectable({
     providedIn: 'root',

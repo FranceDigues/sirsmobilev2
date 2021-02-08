@@ -20,30 +20,30 @@ import { IonicStorageModule } from '@ionic/storage';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AppVersionsService } from './appversions.service';
-import { AuthService } from './auth.service';
-import { BackLayerService } from './backlayer.service';
-import { CacheMapManager } from './cache.service';
+import { AppVersionsService } from './services/app-versions.service';
+import { AuthService } from './services/auth.service';
+import { BackLayerService } from './services/back-layer.service';
+import { CacheMapManager } from './services/cache.service';
 import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
-import { DatabaseService } from './database.service';
-import { EditionModeService } from './editionmode.service';
-import { EditObjectService } from './editobjects.service';
-import { FormsTemplateService } from './formstemplate.service';
-import { GalleryService } from './gallery.service';
-import { GlobalConfigService } from './globalconfig.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './layers.service';
-import { MapService } from './map.service';
-import { MapEditObjectService } from './mapeditobject.service';
-import { ObjectDetails } from './objectdetails.service';
-import { ObjectDocService } from './objectdoc.service';
-import { SelectedObjectsService } from './selectedobjects.service';
-import { SirsDocService } from './sirsdoc.service';
+import { DatabaseService } from './services/database.service';
+import { EditionModeService } from './services/edition-mode.service';
+import { EditObjectService } from './services/editobjects.service';
+import { FormsTemplateService } from './sliders/formstemplate.service';
+import { GalleryService } from './services/gallery.service';
+import { ConfigService } from './services/config.service';
+import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './services/layers.service';
+import { MapService } from './services/map.service';
+import { MapEditObjectService } from './services/map-edit-object.service';
+import { ObjectDetails } from './services/object-details.service';
+import { ObjectDocService } from './services/object-doc.service';
+import { SelectedObjectsService } from './services/selected-objects.service';
+import { SirsDocService } from './services/sirsdoc.service';
 import { FilterPipe } from './sliders/right/createobjects/createobjects.component';
-import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './style.service';
-import { SyncService } from './sync.service';
-import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './troncon.service';
+import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './services/style.service';
+import { SyncService } from './services/sync.service';
+import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './services/troncon.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { ObservationEditService } from './observationedit.service';
+import { ObservationEditService } from './services/observation-edit.service';
 import { DirectiveModule } from './directive.module';
 import { PositionService } from './services/position.service';
 
@@ -62,7 +62,7 @@ import { PositionService } from './services/position.service';
         MapService, Insomnia, Geolocation, EditionModeService,
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         AppLayer, GeolocLayer, EditionLayer, BackLayer,
-        SyncService, DatabaseService, AuthService, GlobalConfigService,
+        SyncService, DatabaseService, AuthService, ConfigService,
         AppVersionsService, SirsDocService, GalleryService, BackLayerService,
         BackLayer, SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,

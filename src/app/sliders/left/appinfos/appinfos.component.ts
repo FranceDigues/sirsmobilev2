@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AppVersionsService } from 'src/app/appversions.service';
+import { AppVersionsService } from 'src/app/services/app-versions.service';
 
 @Component({
   selector: 'left-slide-appinfos',

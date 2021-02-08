@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertController, IonicModule, Platform } from '@ionic/angular';
 import { AppModule } from '../../app.module';
-import { AuthService } from '../../auth.service';
-import { DatabaseService } from '../../database.service';
+import { AuthService } from '../../services/auth.service';
+import { DatabaseService } from '../../services/database.service';
 import { DatabaseChoiceComponent } from './database-choice.component';
 
 export class MockAlert {
@@ -124,7 +124,6 @@ describe('Testing DatabaseConnectionPage', () => {
         component.ngOnInit();
         setTimeout(() => {
             expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
-            expect(console.log);
             done();
         }, 10);
     });
@@ -159,7 +158,6 @@ describe('Testing DatabaseConnectionPage', () => {
         setTimeout(() => {
             expect(component.status).toEqual(1);
             expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
-            expect(console.log).toHaveBeenCalled();
             done();
         }, 10);
     });
@@ -289,11 +287,8 @@ describe('Testing DatabaseConnectionPage', () => {
                 authUser: 'test'
             }
         };
-
         component.selectedDatabase = goodDB;
         dbService.activeDB = goodDB;
-
-        console.log(component.selectedDatabase);
         component.validateDatabase();
 
         expect(route.navigateByUrl).toHaveBeenCalledWith('/main');

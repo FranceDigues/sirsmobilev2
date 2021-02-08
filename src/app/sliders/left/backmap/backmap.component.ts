@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { BackLayerService } from 'src/app/backlayer.service';
-import { BackLayer } from 'src/app/layers.service';
+import { BackLayerService } from 'src/app/services/back-layer.service';
+import { BackLayer } from 'src/app/services/layers.service';
 
 @Component({
   selector: 'left-slide-backmap',

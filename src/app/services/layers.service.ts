@@ -19,15 +19,15 @@ import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import { AppLayersService } from './applayers.service';
-import { BackLayerService } from './backlayer.service';
+import { AppLayersService } from './app-layers.service';
+import { BackLayerService } from './back-layer.service';
 import { FeatureCache } from './cache.service';
 import { DatabaseService } from './database.service';
 import { MapService } from './map.service';
-import { DatabaseModel, ListBackLayer } from './models/database.model';
+import { DatabaseModel, ListBackLayer } from '../models/database.model';
 import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
-import { LocalDatabase } from './usingLocalDatabase.service';
+import { LocalDatabase } from './local-database.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Injectable({
@@ -76,7 +76,7 @@ export class EditionLayer {
                 return;
             },
             (error) => {
-                console.log('Error debug', error);
+                console.error(error);
                 return;
             }
         );
@@ -104,7 +104,6 @@ export class EditionLayer {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
             });
-            console.log(geometry);
         } else {
             geometry = this.wktFormat.readGeometry(
                 featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
@@ -253,7 +252,6 @@ export class BackLayer {
     }
 
     private goodBackLayerSource(layerModel: ListBackLayer) {
-        console.log(layerModel);
         if (layerModel.source.type === 'OSM') {
             return new OSM(layerModel.source);
         } else if (layerModel.source.type === 'TileWMS') {
@@ -273,8 +271,6 @@ export class BackLayer {
 
     createBackLayerInstance(layerModel): TileLayer {
         let layer = null;
-
-        console.log('LayerModel', layerModel);
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;
 
@@ -425,7 +421,6 @@ export class AppLayer {
         if (layerModel.visible === true) {
             this.setAppLayerFeatures(olLayer);
         }
-        console.log('end', olLayer);
         return olLayer;
     }
 
@@ -500,7 +495,7 @@ export class AppLayer {
                         return results.map(this.createAppFeatureModel);
                     },
                     (error) => {
-                        console.log(error);
+                        console.error(error);
                     });
             } else {
                 console.error('Error type');
@@ -525,18 +520,15 @@ export class AppLayer {
                         );
                     },
                     (error) => {
-                        console.log(error);
+                        console.error(error);
                     });
             } else {
                 console.error('Error type');
             }
         }
-        console.log('end of setAppLayerFeatures', promise);
         // Wait for promise resolution or rejection.
         promise.then(
             (featureModels) => {
-                // @hb get the featureModels from the promise
-                console.log('here ????');
                 olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
                 // $rootScope.loadingflag = false; // TODO remplace ?
             },
@@ -611,7 +603,6 @@ export class AppLayer {
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
             if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
-                console.log('je vais là ??', featureModels, featureModel, layerModel);
                 if (this.mapService.archiveObjectsFlag) {
                     // Show all the objects
                     const feature = new Feature();
@@ -728,9 +719,7 @@ export class AppLayer {
 
     addLabelFeatureLayer(layerModel) {
         const olLayer = this.getAppLayerInstance(layerModel);
-        console.log(olLayer.get('model'));
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
-        console.log(olLayer.get('model'));
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }

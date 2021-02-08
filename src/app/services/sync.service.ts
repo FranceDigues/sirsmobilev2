@@ -21,7 +21,6 @@ export class SyncService {
 
   cancelSync() {
     this.sync ? this.synch.cancel() : noop();
-    console.log('Come back main');
     this.route.navigateByUrl('/main');
   }
 
@@ -32,21 +31,18 @@ export class SyncService {
     this.status = 1;
 
     this.insomnia.keepAwake();
-    console.log('Juste acant ???');
     const localDB = await this.dbService.getLocalDB();
     const remoteDB = await this.dbService.getRemoteDB();
     let index = 0;
     const subject = new Subject<any>();
     const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
-    console.log('Before ?');
     this.synch = PouchDB.sync(localDB, remoteDB, options)
     .on('complete', () => {
-      console.log('Next (GOOD)');
       subject.next(++index);
       subject.complete();
     })
     .on('error', (error) => {
-      console.log('Error Sync', error);
+      console.error('Error Sync', error);
       subject.error(error);
     })
     .on('change', (info) => {

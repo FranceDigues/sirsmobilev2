@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
-import { BackLayerModel, DatabaseModel } from './models/database.model';
+import { BackLayerModel, DatabaseModel } from '../models/database.model';
 
 @Injectable({
     providedIn: 'root'

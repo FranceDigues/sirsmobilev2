@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
-import { DatabaseModel } from './models/database.model';
+import { DatabaseModel } from '../models/database.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GlobalConfigService {
+export class ConfigService {
 
     context: 'fullName' | 'abstract' | 'both' = 'fullName';
+    public mediaPath;
 
     constructor(private dbService: DatabaseService) { }
 

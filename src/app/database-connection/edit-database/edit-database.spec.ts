@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { IonicModule } from '@ionic/angular';
 import { AppModule } from 'src/app/app.module';
-import { DatabaseService } from '../../database.service';
+import { DatabaseService } from '../../services/database.service';
 import { EditDatabaseComponent } from './edit-database.component';
 
 

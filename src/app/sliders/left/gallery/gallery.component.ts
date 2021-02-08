@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GalleryService } from 'src/app/gallery.service';
+import { GalleryService } from 'src/app/services/gallery.service';
 
 @Component({
   selector: 'left-slide-gallery',

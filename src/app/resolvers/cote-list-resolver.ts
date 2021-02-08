@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { LocalDatabase } from "../usingLocalDatabase.service";
+import { LocalDatabase } from "../services/local-database.service";
 import { Observable } from "rxjs";
 
 @Injectable({providedIn: 'root'})

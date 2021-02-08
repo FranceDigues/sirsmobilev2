@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseService } from './database.service';
-import { DatabaseModel } from './models/database.model';
+import { DatabaseModel } from '../models/database.model';
 
 describe('Testing Database Service', () => {
     let databaseService: DatabaseService;

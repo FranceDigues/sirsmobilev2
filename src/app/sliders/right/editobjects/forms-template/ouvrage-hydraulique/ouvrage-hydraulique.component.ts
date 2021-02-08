@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { EditObjectService } from 'src/app/editobjects.service';
-import { FormsTemplateService } from 'src/app/formstemplate.service';
+import { EditObjectService } from 'src/app/services/editobjects.service';
+import { FormsTemplateService } from 'src/app/sliders/formstemplate.service';
 
 @Component({
   selector: 'form-ouvrage-hydraulique',

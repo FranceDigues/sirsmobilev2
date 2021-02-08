@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SyncService } from '../../sync.service';
+import { SyncService } from '../../services/sync.service';
 import { Router } from '@angular/router';
-import { DatabaseService } from 'src/app/database.service';
+import { DatabaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-firstsync',
@@ -19,13 +19,13 @@ export class FirstsyncComponent implements OnInit {
     this.syncService.sync(isFirstSync)
     .then(
       () => {
-        console.log('Le status est de ', this.syncService.status);
+        console.error('Le status est de ', this.syncService.status);
         setTimeout(() => {
           this.router.navigateByUrl('/main');
         }, 1300);
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
   }

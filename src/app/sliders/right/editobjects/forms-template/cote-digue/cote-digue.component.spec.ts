@@ -3,8 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { AppModule } from '../../../../../app.module';
-import { DatabaseService } from 'src/app/database.service';
-import { SirsDocService } from 'src/app/sirsdoc.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 
 import { CoteDigueGenericComponent } from './cote-digue.component';
 

@@ -4,8 +4,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AlertController, Platform } from '@ionic/angular';
 import { DatabaseModel } from 'src/app/models/database.model';
-import { AuthService } from '../../auth.service';
-import { DatabaseService } from '../../database.service';
+import { AuthService } from '../../services/auth.service';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-database-choice',

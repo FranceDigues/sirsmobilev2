@@ -9,8 +9,8 @@ import DragPan from 'ol/interaction/DragPan';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import { Style } from 'ol/style';
-import { MapEditObjectService } from 'src/app/mapeditobject.service';
-import { EditObjectService } from '../../../../editobjects.service';
+import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
+import { EditObjectService } from '../../../../services/editobjects.service';
 
 @Component({
   selector: 'map-polygon',

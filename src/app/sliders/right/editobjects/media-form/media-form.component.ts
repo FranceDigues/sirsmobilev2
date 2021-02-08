@@ -1,18 +1,18 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { AuthService } from '../../../../auth.service';
-import { EditObjectService } from '../../../../editobjects.service';
+import { AuthService } from '../../../../services/auth.service';
+import { EditObjectService } from '../../../../services/editobjects.service';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { DirectoryEntry, Entry, File, Metadata } from '@ionic-native/file/ngx';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { Camera } from '@ionic-native/camera/ngx';
-import { UuidUtils } from '../../../../uuid-utils';
+import { UuidUtils } from '../../../../utils/uuid-utils';
 import { ModalController, ToastController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
-import { SirsDocService } from '../../../../sirsdoc.service';
+import { SirsDocService } from '../../../../services/sirsdoc.service';
 import { transform } from 'ol/proj';
 import { HttpClient } from '@angular/common/http';
-import { EditionModeService } from '../../../../editionmode.service';
-import { GeolocationService } from '../../../../geolocation.service';
+import { EditionModeService } from '../../../../services/edition-mode.service';
+import { GeolocationService } from '../../../../services/geolocation.service';
 import { AlertController } from '@ionic/angular';
 import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
@@ -63,6 +63,7 @@ export class MediaFormComponent implements OnInit {
             commentaire: '',
             author: this.authService.getValue()._id
         };
+        this.mediaPath = `${this.file.dataDirectory}/medias`;
     }
 
     back() {
@@ -145,14 +146,8 @@ export class MediaFormComponent implements OnInit {
     }
 
     getPhotoPath(photo, details?) {
-        let path;
-        if (details && details === true) {
-            path = photo.id + '.jpg';
-            path = this.file.dataDirectory + '/' + path;
-        } else {
-            path = photo.id + photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase();
-            path = this.file.dataDirectory + '/' + path;
-        }
+        let path = (details) ? `${photo.id}.jpg` : `${photo.id}${photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase()}`;
+        path = `${this.mediaPath}/${path}`;
         return this.webview.convertFileSrc(path);
     }
 
@@ -173,14 +168,10 @@ export class MediaFormComponent implements OnInit {
                 {
                     text: 'Annuler',
                     role: 'cancel',
-                    cssClass: 'secondary',
-                    handler: (blah) => {
-                        console.log('Confirm Cancel: blah');
-                    }
+                    cssClass: 'secondary'
                 }, {
                     text: 'Valider',
                     handler: () => {
-                        console.log('Confirm Okay');
                         this.setView('map');
                     }
                 }
@@ -229,7 +220,7 @@ export class MediaFormComponent implements OnInit {
                 file.remove(() => console.log('File has been removed correctly'));
                 return;
             } else {
-                this.file.resolveDirectoryUrl(this.file.dataDirectory)
+                this.file.resolveDirectoryUrl(this.mediaPath)
                     .then(
                         (targetDir: DirectoryEntry) => {
                             // Copy image file in its final directory.

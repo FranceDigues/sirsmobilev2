@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GalleryService } from 'src/app/gallery.service';
+import { GalleryService } from 'src/app/services/gallery.service';
 
 @Component({
   selector: 'gallery-medias',
@@ -12,7 +12,6 @@ export class GalleryMediasComponent implements OnInit {
   constructor(public gallery: GalleryService, private route: Router) { }
 
   ngOnInit() {
-    console.log('availableFiles', this.gallery.availableFiles);
     // this.gallery.downloadRemoteDocuments();
   }
 

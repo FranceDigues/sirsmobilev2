@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ObjectDetails } from 'src/app/objectdetails.service';
+import { ObjectDetails } from 'src/app/services/object-details.service';
 
 @Component({
   selector: 'observations-generic',

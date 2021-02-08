@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import TileImage from 'ol/source/TileImage';
-import { BackLayerService } from 'src/app/backlayer.service';
+import { BackLayerService } from 'src/app/services/back-layer.service';
 
 @Component({
   selector: 'left-slide-addbacklayer',

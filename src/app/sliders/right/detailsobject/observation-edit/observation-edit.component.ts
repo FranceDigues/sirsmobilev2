@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, Directive, ElementRef, EventEmitter, OnInit, Output, ViewChild, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ObservationEditService } from 'src/app/observationedit.service';
-import { GlobalConfigService } from 'src/app/globalconfig.service';
-import { EditionModeService } from 'src/app/editionmode.service';
-import { AppLayer } from 'src/app/layers.service';
+import { ObservationEditService } from 'src/app/services/observation-edit.service';
+import { ConfigService } from 'src/app/services/config.service';
+import { EditionModeService } from 'src/app/services/edition-mode.service';
+import { AppLayer } from 'src/app/services/layers.service';
 
 declare var M: any;
 
@@ -24,7 +24,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
 
   constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
-              private cdr: ChangeDetectorRef, private globalConfigService: GlobalConfigService,
+              private cdr: ChangeDetectorRef, private globalConfigService: ConfigService,
               private route: Router, private editionService: EditionModeService,
               private appLayer: AppLayer) {
     this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');

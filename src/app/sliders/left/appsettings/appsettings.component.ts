@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { GlobalConfigService } from 'src/app/globalconfig.service';
+import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
   selector: 'left-slide-appsettings',
@@ -10,7 +10,7 @@ export class AppsettingsLeftSlideComponent implements OnInit {
 
   @Output() readonly slidePathChange = new EventEmitter<string>();
 
-  constructor(private globalConfig: GlobalConfigService) { }
+  constructor(private globalConfig: ConfigService) { }
 
   ngOnInit() {}
 

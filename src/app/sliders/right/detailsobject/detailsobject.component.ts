@@ -1,11 +1,11 @@
 import { Component, EventEmitter, OnInit, Output, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { ObjectDetails } from 'src/app/objectdetails.service';
-import { AuthService } from '../../../auth.service';
+import { ObjectDetails } from 'src/app/services/object-details.service';
+import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { LocalDatabase } from '../../../usingLocalDatabase.service';
-import { EditionLayer } from '../../../layers.service';
-import { SelectedObjectsService } from 'src/app/selectedobjects.service';
+import { LocalDatabase } from '../../../services/local-database.service';
+import { EditionLayer } from '../../../services/layers.service';
+import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
 
 declare var M: any;
 
