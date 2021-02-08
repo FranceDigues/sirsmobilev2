@@ -2,23 +2,19 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { GalleryDocumentComponent } from './document/document.component';
-import { LeftSlideGalleryComponent } from './gallery.component';
-import { GalleryMediasComponent } from './medias/medias.component';
+import { GalleryComponent } from './gallery.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-  ],
-  providers: [
-  ],
-  declarations: [
-    LeftSlideGalleryComponent,
-    GalleryDocumentComponent,
-    GalleryMediasComponent
-  ],
-  exports: [LeftSlideGalleryComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+    ],
+    providers: [],
+    declarations: [
+        GalleryComponent
+    ],
+    exports: [GalleryComponent]
 })
-export class GalleryModule {}
+export class GalleryModule {
+}

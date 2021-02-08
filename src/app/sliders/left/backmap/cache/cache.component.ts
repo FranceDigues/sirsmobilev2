@@ -8,7 +8,7 @@ import View from 'ol/View';
 import { BackLayerService } from 'src/app/services/back-layer.service';
 import { BackLayer } from 'src/app/services/layers.service';
 import { MapService } from 'src/app/services/map.service';
-import { ListBackLayer } from 'src/app/models/database.model';
+import { ListBackLayer } from 'src/app/components/database-connection/models/database.model';
 import { OLService } from '../../../../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-map/ol.service';
 import { CacheMapManager } from 'src/app/services/cache.service';
 

@@ -49,7 +49,7 @@ export class ObservationEditService {
                 private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
                 private ref: ApplicationRef) {
         this.dataProjection = this.sirsDoc.get().epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}/medias`;
+        this.mediaPath = `${this.file.dataDirectory}medias`;
         this.showContent = true;
         this.loaded = {};
         this.mediaOptions = {
@@ -351,7 +351,7 @@ export class ObservationEditService {
                 (error) => {
                     console.log('Error open method :', error);
                 }
-            )
+            );
     }
 
     warningSizeMessage() {

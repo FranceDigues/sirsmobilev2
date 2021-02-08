@@ -24,12 +24,11 @@ import { AppVersionsService } from './services/app-versions.service';
 import { AuthService } from './services/auth.service';
 import { BackLayerService } from './services/back-layer.service';
 import { CacheMapManager } from './services/cache.service';
-import { DatabaseConnectionPageModule } from './database-connection/database-connection.module';
+import { DatabaseConnectionPageModule } from './components/database-connection/database-connection.module';
 import { DatabaseService } from './services/database.service';
 import { EditionModeService } from './services/edition-mode.service';
-import { EditObjectService } from './services/editobjects.service';
+import { EditObjectService } from './services/edit-object.service';
 import { FormsTemplateService } from './sliders/formstemplate.service';
-import { GalleryService } from './services/gallery.service';
 import { ConfigService } from './services/config.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './services/layers.service';
 import { MapService } from './services/map.service';
@@ -46,6 +45,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObservationEditService } from './services/observation-edit.service';
 import { DirectiveModule } from './directive.module';
 import { PositionService } from './services/position.service';
+import { ObjectEditModule } from './components/object-edit/object-edit.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -55,7 +55,8 @@ import { PositionService } from './services/position.service';
         IonicModule.forRoot(), IonicStorageModule.forRoot(),
         AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
         DatabaseConnectionPageModule, LibCameraModule,
-        NgbCollapseModule, FlexLayoutModule, DirectiveModule
+        NgbCollapseModule, FlexLayoutModule, DirectiveModule,
+        ObjectEditModule
     ],
     providers: [
         StatusBar, OLService, SplashScreen, NativeStorage,
@@ -63,7 +64,7 @@ import { PositionService } from './services/position.service';
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         AppLayer, GeolocLayer, EditionLayer, BackLayer,
         SyncService, DatabaseService, AuthService, ConfigService,
-        AppVersionsService, SirsDocService, GalleryService, BackLayerService,
+        AppVersionsService, SirsDocService, BackLayerService,
         BackLayer, SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,

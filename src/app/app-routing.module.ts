@@ -1,30 +1,22 @@
-import { Injectable, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import {
-    ActivatedRouteSnapshot,
     PreloadAllModules,
-    Resolve,
     RouterModule,
-    RouterStateSnapshot,
     Routes
 } from '@angular/router';
 import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.component';
 import { CacheModule } from './sliders/left/backmap/cache/cache.module';
-import { LeftSlideGalleryComponent } from './sliders/left/gallery/gallery.component';
+import { GalleryComponent } from './sliders/left/gallery/gallery.component';
 import { GalleryModule } from './sliders/left/gallery/gallery.module';
 import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
 import { SynchronisationModule } from './sliders/left/synchronisation/synchronisation.module';
-import { ObservationEditComponent } from './sliders/right/detailsobject/observation-edit/observation-edit.component';
-import { ObservationEditModule } from './sliders/right/detailsobject/observation-edit/observation-edit.module';
-import { RightSlideEditObjectsComponent } from './sliders/right/editobjects/editobjects.component';
-import { EditObjectsModule } from './sliders/right/editobjects/editobjects.module';
 import { RightSlideModule } from './sliders/right/right-slide.module';
-import { Observable } from "rxjs";
-import { LocalDatabase } from "./services/local-database.service";
-import { EditionModeService } from "./services/edition-mode.service";
-import { ObjectDocResolver } from "./resolvers/object-doc-resolver";
-import { RefTypesResolver } from "./resolvers/ref-types-resolver";
-import { OrientationListResolver } from "./resolvers/orientation-list-resolver";
-import { CoteListResolver } from "./resolvers/cote-list-resolver";
+import { ObjectDocResolver } from './resolvers/object-doc-resolver';
+import { RefTypesResolver } from './resolvers/ref-types-resolver';
+import { OrientationListResolver } from './resolvers/orientation-list-resolver';
+import { CoteListResolver } from './resolvers/cote-list-resolver';
+import { ObjectEditComponent } from './components/object-edit/object-edit.component';
+import { ObservationEditComponent } from './components/object-info/observation-edit/observation-edit.component';
 
 const routes: Routes = [
     {
@@ -34,11 +26,11 @@ const routes: Routes = [
     },
     {
         path: 'database-connection',
-        loadChildren: () => import('./database-connection/database-connection.module').then(m => m.DatabaseConnectionPageModule)
+        loadChildren: () => import('./components/database-connection/database-connection.module').then(m => m.DatabaseConnectionPageModule)
     },
     {
         path: 'main',
-        loadChildren: () => import('./main/main.module').then(m => m.MainPageModule)
+        loadChildren: () => import('./components/main/main.module').then(m => m.MainPageModule)
     },
     {
         path: 'sync',
@@ -46,7 +38,7 @@ const routes: Routes = [
     },
     {
         path: 'gallery',
-        component: LeftSlideGalleryComponent
+        component: GalleryComponent
     },
     {
         path: 'cache/:id',
@@ -54,13 +46,12 @@ const routes: Routes = [
     },
     {
         path: 'object/:type/:id',
-        component: RightSlideEditObjectsComponent,
+        component: ObjectEditComponent,
         resolve: {
             objectDoc: ObjectDocResolver,
             refTypes: RefTypesResolver,
             orientationList: OrientationListResolver,
             coteList: CoteListResolver
-
         }
     },
     {

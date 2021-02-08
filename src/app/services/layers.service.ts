@@ -24,7 +24,7 @@ import { BackLayerService } from './back-layer.service';
 import { FeatureCache } from './cache.service';
 import { DatabaseService } from './database.service';
 import { MapService } from './map.service';
-import { DatabaseModel, ListBackLayer } from '../models/database.model';
+import { DatabaseModel, ListBackLayer } from '../components/database-connection/models/database.model';
 import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './local-database.service';

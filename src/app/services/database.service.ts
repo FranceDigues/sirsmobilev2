@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { DatabaseModel } from '../models/database.model';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
   providedIn: 'root',

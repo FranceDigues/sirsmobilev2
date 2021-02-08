@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import MD5 from 'crypto-js/md5';
-import { DatabaseModel } from '../models/database.model';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 import { Router } from '@angular/router';
 
 @Injectable({

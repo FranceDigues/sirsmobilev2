@@ -3,7 +3,7 @@ import { LoadingController } from '@ionic/angular';
 import { AppLayersService } from 'src/app/services/app-layers.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { AppLayer } from 'src/app/services/layers.service';
-import { DatabaseModel } from 'src/app/models/database.model';
+import { DatabaseModel } from 'src/app/components/database-connection/models/database.model';
 
 @Component({
   selector: 'left-slide-disponible-layers',
