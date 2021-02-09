@@ -1,5 +1,5 @@
-<ion-content>
-    <ion-tabs style="background-color: #00BCD0;">
+<div class="wrapper" fxLayout="column" fxLayoutAlign="start stretch">
+    <ion-tabs style="height: 58px;">
         <ion-tab-bar slot="top">
             <ion-tab-button (click)="setActiveTab('documents')" [selected]="activeTab === 'documents'">
                 <ion-label>Documents</ion-label>
@@ -11,42 +11,47 @@
             </ion-tab-button>
         </ion-tab-bar>
     </ion-tabs>
-    <div class="gallery-content">
-        <div>
-            <div class="sirs-card-action" style="background-color: #0097A7;padding:5px;">
-                <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-                    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-                </a>
-                <button type="button" class="btn pink waves-effect waves-teal right"
-                        (click)="deleteAllFiles()">
-                    <ion-icon slot="start" name="trash-outline"></ion-icon>
-                </button>
-            </div>
-            <div class="row" style="padding-top: 0px;padding-left: 0px;">
-                <div class="col col-50" style="padding-left: 0px;border-right: 1px solid cadetblue;">
-                    <div style="height: 410px;margin-top: 1px;">
-                        <ion-list style="padding: 0 0 !important;">
-                            <div *ngFor="let file of availableFiles">
-                                <ion-item (click)="select(file)"
-                                          [class]="{hb: fileDoc && file.label === fileDoc.libelle}">
-                                    <span style="text-overflow:ellipsis">{{ file.label }}</span>
-                                </ion-item>
-                            </div>
-                        </ion-list>
-                    </div>
+    <div fxFlex class="gallery-content" fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="sirs-card-action" style="background-color: #0097A7;padding:10px;">
+            <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
+                <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+            </a>
+            <button type="button" class="btn pink waves-effect waves-teal right"
+                    (click)="deleteAllFiles()">
+                <ion-icon slot="start" name="trash-outline"></ion-icon>
+            </button>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="start stretch">
+            <div fxFlex="50" style="overflow:auto;border-right: 1px solid cadetblue;">
+                <div style="height: 410px;margin-top: 1px;">
+                    <ion-list style="padding: 0 0 !important;">
+                        <div *ngFor="let file of availableFiles">
+                            <ion-item (click)="select(file)"
+                                      [ngClass]="{'selected': fileDoc && file.label === fileDoc.libelle}">
+                                <span style="text-overflow:ellipsis">{{ file.label }}</span>
+                            </ion-item>
+                        </div>
+                    </ion-list>
                 </div>
-                <div *ngIf="fileDoc" class="col col-50">
-                    <h5>{{ fileDoc.libelle }}</h5>
-                    <button type="button" class="btn waves-effect waves-light" (click)="open()">
+            </div>
+            <div *ngIf="fileDoc" fxFlex="50" style="overflow:auto;" fxLayout="column" fxLayoutAlign="start stretch">
+                <div style="padding: 10px;">
+                    <span style="font-weight: bold">Nom : </span>
+                    <span>{{ fileDoc.libelle }}</span>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between center" style="padding: 0 15px;">
+                    <ion-button size="small" color="medium" (click)="open()">
                         <ion-icon name="folder-open-outline"></ion-icon>&nbsp;Ouvrir
-                    </button>
-                    <button type="button" class="btn waves-effect waves-light" (click)="deleteFile()">
+                    </ion-button>
+                    <ion-button size="small" color="danger" (click)="deleteFile()">
                         <ion-icon name="trash-outline"></ion-icon>&nbsp;Supprimer
-                    </button>
-                    <img *ngIf="activeTab === 'medias'" class="row col col-50" style="margin-top: 10px;"
-                         alt="Photo non disponible sur le mobile" [src]="getPhotoPath()"/>
+                    </ion-button>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center" style="padding: 15px;">
+                    <img *ngIf="activeTab === 'medias'"
+                         alt="Photo non disponible sur le mobile" [src]="getPhotoPath()">
                 </div>
             </div>
         </div>
     </div>
-</ion-content>
+</div>

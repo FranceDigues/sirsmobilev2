@@ -80,12 +80,11 @@ export class MediaFormComponent implements OnInit {
             if (!this.objectDoc.photos) {
                 this.objectDoc.photos = [];
             }
+            if (!this.objectDoc._attachments) {
+                this.objectDoc._attachments = {};
+            }
             this.objectDoc.photos.push(this.mediaOptions);
             if (this.importPhotoData) {
-                if (!this.objectDoc._attachments) {
-                    this.objectDoc._attachments = {};
-                }
-
                 // Convert url image to blob
                 this.httpClient.get(this.importPhotoData, {responseType: 'blob'})
                     .subscribe(
@@ -107,8 +106,29 @@ export class MediaFormComponent implements OnInit {
                                         });
                                 }
                             };
+                        },
+                        (error) => {
+                            console.log(error);
                         }
                     );
+            } else {
+                // var xhr = new XMLHttpRequest();
+                // xhr.onload = function () {
+                //     var reader = new FileReader();
+                //     reader.onloadend = function () {
+                //         // Save the photo like attachment to the object
+                //         $scope.c.doc._attachments[self.mediaOptions.id] = {
+                //             content_type: 'image/jpeg',
+                //             data: reader.result.replace('data:image/jpeg;base64,', '')
+                //         };
+                //     };
+                //
+                //     reader.readAsDataURL(xhr.response);
+                // };
+                // xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
+                // xhr.responseType = 'blob';
+                // xhr.send();
+                // $scope.c.setView('form');
             }
         } else {
             this.toastCtrl.create({

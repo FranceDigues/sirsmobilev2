@@ -3,7 +3,7 @@
         <div class="pic col col-25"
              *ngFor="let photo of photos;let index=index">
             <div class="pic-quicklook">
-                <div class="progress" ng-if="!c.loaded[photo.id]">
+                <div class="progress" *ngIf="!c.loaded[photo.id]">
                     <div class="indeterminate"></div>
                 </div>
                 <img (click)="openPhoto(photo)"

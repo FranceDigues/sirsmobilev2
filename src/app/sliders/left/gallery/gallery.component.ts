@@ -58,11 +58,12 @@ export class GalleryComponent implements OnInit {
     }
 
     getPhotoPath() {
-        return this.selected ? this.webview.convertFileSrc(`${this.file.dataDirectory}${this.selected.id}`) : '';
+        return this.selected ? this.webview.convertFileSrc(`${this.file.dataDirectory}medias/${this.selected.label}`) : '';
     }
 
     open() {
-        const url = this.getPhotoPath();
+        console.log('HB');
+        const url = decodeURI(this.selected._entry.nativeURL);
         this.fileOpener.open(url, 'image/jpeg')
             .then(
                 () => {
