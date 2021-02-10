@@ -16,7 +16,7 @@ import { RefTypesResolver } from './resolvers/ref-types-resolver';
 import { OrientationListResolver } from './resolvers/orientation-list-resolver';
 import { CoteListResolver } from './resolvers/cote-list-resolver';
 import { ObjectEditComponent } from './components/object-edit/object-edit.component';
-import { ObservationEditComponent } from './components/object-info/observation-edit/observation-edit.component';
+import { ObservationEditComponent } from './components/object-details/observation-edit/observation-edit.component';
 
 const routes: Routes = [
     {

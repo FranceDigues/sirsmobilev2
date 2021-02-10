@@ -128,11 +128,11 @@
                     </div>
                 </div>
                 <div class="sirs-card-action" fxLayout="row" fxLayoutAlign="space-between center">
-                    <a href="" class="btn-flat waves-effect waves-teal"
-                       (click)="back()">
-                        <mat-icon>arrow_back</mat-icon>
+                    <ion-button color="light"
+                                (click)="back()">
+                        <ion-icon name="arrow-back"></ion-icon>
                         <span>&nbsp;&nbsp;Annuler</span>
-                    </a>
+                    </ion-button>
                     <ion-button color="danger"
                                 [disabled]="!mediaOptions.id"
                                 (click)="save()">

@@ -1,0 +1,9 @@
+<div style="width: 100%;height: 100%" fxLayout="column" fxLayoutAlign="center center">
+    <ion-spinner *ngIf="!loaded" color="primary" name="lines"></ion-spinner>
+    <img style="height: 100%;width: 100%" *ngIf="loaded" (click)="openPhoto(photo)"
+         alt="Photo non disponible sur le mobile"
+         [src]="getPhotoPath(photo)"/>
+</div>
+<button mat-mini-fab color="warn" class="remove-btn" (click)="removePhoto();$event.stopPropagation()">
+    <mat-icon>delete</mat-icon>
+</button>

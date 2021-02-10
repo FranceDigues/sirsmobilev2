@@ -8,10 +8,9 @@ import { FilterPipe, RightSlideCreateObjectsComponent } from './createobjects/cr
 import { RightSlideComponent } from './right.component';
 import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
 import { DirectiveModule } from '../../directive.module';
-import { ObjectInfoModule } from '../../components/object-info/object-info.module';
-import { DetailsContentModule } from '../../components/object-info/detailscontent/details-content.module';
-import { ObservationEditModule } from '../../components/object-info/observation-edit/observation-edit.module';
-import { ObservationDetailsComponent } from '../../components/object-info/observation-details/observation-details.component';
+import { ObjectDetailsModule } from '../../components/object-details/object-details.module';
+import { DetailsContentModule } from '../../components/object-details/detailscontent/details-content.module';
+import { ObservationEditModule } from '../../components/object-details/observation-edit/observation-edit.module';
 
 @NgModule({
     imports: [
@@ -22,7 +21,7 @@ import { ObservationDetailsComponent } from '../../components/object-info/observ
         MatButtonModule,
         DetailsContentModule,
         ObservationEditModule,
-        ObjectInfoModule,
+        ObjectDetailsModule,
         DirectiveModule
     ],
     providers: [],
@@ -30,8 +29,7 @@ import { ObservationDetailsComponent } from '../../components/object-info/observ
         RightSlideComponent,
         RightSlideCreateObjectsComponent,
         FilterPipe,
-        SelectedObjectsComponent,
-        ObservationDetailsComponent
+        SelectedObjectsComponent
     ],
     exports: [RightSlideComponent]
 })

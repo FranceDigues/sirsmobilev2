@@ -266,8 +266,8 @@ export class ObservationEditService {
     }
 
     loadImage(photo, details?) {
-        let image_url = this.getPhotoPath(photo, details);
-        this.http.head(image_url, {}).subscribe(
+        let imageUrl = this.getPhotoPath(photo, details);
+        this.http.head(imageUrl, {}).subscribe(
             () => {
                 this.loaded[photo.id] = true;
                 this.ref.tick(); // Force Ionic to detect changes

@@ -11,10 +11,10 @@ declare var M: any;
 
 @Component({
   selector: 'right-slide-details-objects',
-  templateUrl: './object-info.component.html',
-  styleUrls: ['./object-info.component.scss'],
+  templateUrl: './object-details.component.html',
+  styleUrls: ['./object-details.component.scss'],
 })
-export class ObjectInfoComponent implements OnInit, AfterViewInit {
+export class ObjectDetailsComponent implements OnInit, AfterViewInit {
 
   static observationsObjectType = [
     'Desordre',
@@ -117,7 +117,7 @@ export class ObjectInfoComponent implements OnInit, AfterViewInit {
   }
 
   canShowObservationsTab() {
-    if (ObjectInfoComponent.observationsObjectType.indexOf(this.objectType) !== -1) {
+    if (ObjectDetailsComponent.observationsObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
@@ -125,7 +125,7 @@ export class ObjectInfoComponent implements OnInit, AfterViewInit {
   }
 
   canShowPrestationsTab() {
-    if (ObjectInfoComponent.prestationsObjectType.indexOf(this.objectType) !== -1) {
+    if (ObjectDetailsComponent.prestationsObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
@@ -133,7 +133,7 @@ export class ObjectInfoComponent implements OnInit, AfterViewInit {
   }
 
   canShowDesordresTab() {
-    if (ObjectInfoComponent.desordreObjectType.indexOf(this.objectType) !== -1) {
+    if (ObjectDetailsComponent.desordreObjectType.indexOf(this.objectType) !== -1) {
       return true;
     } else {
       return false;
@@ -141,7 +141,7 @@ export class ObjectInfoComponent implements OnInit, AfterViewInit {
   }
 
   canShowEditionButtons() {
-    if (ObjectInfoComponent.editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
+    if (ObjectDetailsComponent.editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
       return false;
     }
     if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {

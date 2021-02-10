@@ -62,7 +62,6 @@ export class GalleryComponent implements OnInit {
     }
 
     open() {
-        console.log('HB');
         const url = decodeURI(this.selected._entry.nativeURL);
         this.fileOpener.open(url, 'image/jpeg')
             .then(

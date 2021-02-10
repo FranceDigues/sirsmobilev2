@@ -3,7 +3,7 @@
     <div class="edit-object">
         <ion-content [scrollEvents]="tab === 'fields'">
             <div fxLayout="column" fxLayoutAlign="center">
-                <form class="sirs-card" #objectForm="ngForm">
+                <form class="sirs-card" #objectForm="ngForm" style="overflow-x: hidden;">
                     <div class="sirs-card-content">
                         <h2 *ngIf="EOS.isNew" class="sirs-card-title">Nouveau/Nouvelle {{ displayName(EOS.type) }}</h2>
                         <h2 *ngIf="!EOS.isNew && EOS.isClosed" class="sirs-card-title">Détail
@@ -201,6 +201,7 @@
                         <!-- Medias Part -->
                         <div class="full-height full-width" *ngIf="tab === 'medias'">
                             <app-media-details [photos]="EOS.objectDoc.photos"
+                                               [objectDoc]="objectDoc"
                                                (changeView)="setView($event)"></app-media-details>
                         </div>
                     </div>

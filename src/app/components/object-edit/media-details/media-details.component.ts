@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 @Component({
     selector: 'app-media-details',
@@ -7,9 +8,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MediaDetailsComponent implements OnInit {
     @Input() photos: Array<any>;
+    @Input() objectDoc;
     @Output() changeView = new EventEmitter<string>();
 
-    constructor() {
+    constructor(private toastCtrl: ToastController) {
     }
 
     ngOnInit() {
@@ -19,16 +21,16 @@ export class MediaDetailsComponent implements OnInit {
         this.changeView.emit('media');
     }
 
-    openPhoto() {
-
-    }
-
-    getPhotoPath(photo) {
-
-    }
-
-    removePhoto(photo, index) {
-
+    removePhoto(photo) {
+        const index = this.photos.findIndex(item => item.id === photo.id);
+        if (index > -1) {
+            this.photos.splice(index, 1);
+        } else {
+            this.toastCtrl.create({
+                message: 'Impossible de supprimer cette photo',
+                duration: 3000
+            }).then(toast => toast.present());
+        }
     }
 
 }

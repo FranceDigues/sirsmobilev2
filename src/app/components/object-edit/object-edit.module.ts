@@ -12,7 +12,8 @@ import { MediaDetailsComponent } from './media-details/media-details.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MediaFormComponent } from './media-form/media-form.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { EditNoteModule } from '../object-info/observation-edit/observation-media/edit-note/edit-note.module';
+import { EditNoteModule } from '../object-details/observation-edit/observation-media/edit-note/edit-note.module';
+import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklook.module';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import { EditNoteModule } from '../object-info/observation-edit/observation-medi
         FormsTemplateModule,
         MatIconModule,
         FlexLayoutModule,
-        EditNoteModule
+        EditNoteModule,
+        PhotoQuicklookModule
     ],
     providers: [],
     declarations: [

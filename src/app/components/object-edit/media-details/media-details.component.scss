@@ -1,0 +1,18 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  .wrap {
+    height: 100%;
+    width: 100%;
+
+    .pic-quicklook {
+      height: 110px;
+
+      > img {
+        height: 100%;
+      }
+    }
+  }
+}
