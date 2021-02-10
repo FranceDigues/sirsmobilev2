@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'left-slide',
-  templateUrl: './left.component.html',
-  styleUrls: ['./left.component.scss'],
+  selector: 'left-panel',
+  templateUrl: './left-panel.component.html',
+  styleUrls: ['./left-panel.component.scss'],
 })
-export class LeftSlideComponent implements OnInit {
+export class LeftPanelComponent implements OnInit {
 
   slidePath = 'menu';
 

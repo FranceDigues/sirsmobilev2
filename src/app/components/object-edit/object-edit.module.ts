@@ -14,6 +14,7 @@ import { MediaFormComponent } from './media-form/media-form.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditNoteModule } from '../object-details/observation-edit/observation-media/edit-note/edit-note.module';
 import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklook.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklo
         MatIconModule,
         FlexLayoutModule,
         EditNoteModule,
-        PhotoQuicklookModule
+        PhotoQuicklookModule,
+        MatButtonModule
     ],
     providers: [],
     declarations: [

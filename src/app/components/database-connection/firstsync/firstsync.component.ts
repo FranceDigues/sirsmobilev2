@@ -19,7 +19,6 @@ export class FirstsyncComponent implements OnInit {
     this.syncService.sync(isFirstSync)
     .then(
       () => {
-        console.error('Le status est de ', this.syncService.status);
         setTimeout(() => {
           this.router.navigateByUrl('/main');
         }, 1300);

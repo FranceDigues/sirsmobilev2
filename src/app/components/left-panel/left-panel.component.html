@@ -1,0 +1,21 @@
+<div [ngSwitch]="slidePath" class="full-height">
+    <div class="full-height" *ngSwitchCase="'menu'">
+        <left-slide-menu class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
+    </div>
+    <div class="full-height" *ngSwitchCase="'craftLayers'">
+        <left-slide-craftlayers class="full-height"
+                                (slidePathChange)="changeSlidePath($event)"></left-slide-craftlayers>
+    </div>
+    <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
+        <left-slide-troncon class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-troncon>
+    </div>
+    <div class="full-height" *ngSwitchCase="'backMap'">
+        <left-slide-backmap (slidePathChange)="changeSlidePath($event)"></left-slide-backmap>
+    </div>
+    <div class="full-height" *ngSwitchCase="'appInfos'">
+        <app-infos class="full-height" (slidePathChange)="changeSlidePath($event)"></app-infos>
+    </div>
+    <div class="full-height" *ngSwitchCase="'appSettings'">
+        <app-settings (slidePathChange)="changeSlidePath($event)"></app-settings>
+    </div>
+</div>

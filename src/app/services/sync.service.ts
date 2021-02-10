@@ -77,7 +77,6 @@ export class SyncService {
     this.insomnia.allowSleepAgain();
     this.dbService.activeDB.lastSync = new Date().getTime();
     this.status = 2;
-    console.log('SYNC FINISH');
 
     setTimeout(() => {
       this.status = 0;

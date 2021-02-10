@@ -210,10 +210,9 @@
                             <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>
                             Annuler
                         </a>
-                        <button type="button" class="btn pink waves-effect waves-teal right"
-                                [disabled]="!objectForm.valid" (click)="EOS.save()">
+                        <button mat-raised-button color="warn" [disabled]="!objectForm.valid" (click)="EOS.save()">
                             <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
-                            Terminer
+                            <span>Terminer</span>
                         </button>
                     </div>
                 </form>

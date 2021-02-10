@@ -5,10 +5,10 @@ import { SyncService } from 'src/app/services/sync.service';
 
 @Component({
   selector: 'left-slide-synchronisation',
-  templateUrl: './synchronisation.component.html',
-  styleUrls: ['./synchronisation.component.scss'],
+  templateUrl: './database-sync.component.html',
+  styleUrls: ['./database-sync.component.scss'],
 })
-export class LeftSlideSynchronisationComponent implements OnInit {
+export class DatabaseSyncComponent implements OnInit {
 
   constructor(public syncService: SyncService,
               private router: Router,

@@ -5,7 +5,7 @@ import { colorFactory } from 'src/app/utils/color-factory';
 import { ModalController, NavController } from '@ionic/angular';
 import { ColorModalComponent } from './color-modal/color-modal.component';
 import { DatabaseService } from '../../../services/database.service';
-import { DatabaseModel } from '../../../components/database-connection/models/database.model';
+import { DatabaseModel } from '../../database-connection/models/database.model';
 
 @Component({
   selector: 'left-slide-craftlayers',

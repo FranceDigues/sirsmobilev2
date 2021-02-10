@@ -14,7 +14,7 @@
                     </div>
                     <div class="sirs-field">
                         <span class="sirs-field-title">Dernière synchronisation</span>
-                        <p>{{ (dbService.activeDB.lastSync | date:'dd/MM/yyyy HH:mm:ss') || 'Aucune' }}</p>
+                        <p>{{ (dbService.activeDB.lastSync | date:'dd/MM/yyyy HH:mm:ss') || 'Aucune' }}</p>
                     </div>
                 </div>
                 <div *ngIf="syncService.status === 1">
@@ -33,30 +33,36 @@
                     <p>Une erreur s'est produite pendant la synchronisation.</p>
                 </div>
                 <div class="sirs-card-action">
-                    <div *ngIf="syncService.status === 0">
-                        <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-                            <ion-icon name="arrow-back-outline"></ion-icon>Retour
-                        </a>
-                        <button type="button" class="btn pink waves-effect waves-teal right" (click)="launch()">
-                            <ion-icon name="sync-outline"></ion-icon>Lancer la synchronisation
+                    <div *ngIf="syncService.status === 0" fxLayout="row" fxLayoutAlign="space-between center">
+                        <button mat-button (click)="goBack()">
+                            <ion-icon name="arrow-back"></ion-icon>
+                            <span>&nbsp;&nbsp;Retour</span>
+                        </button>
+                        <button mat-raised-button color="warn" (click)="launch()">
+                            <ion-icon name="sync-outline"></ion-icon>
+                            <span>Lancer la synchronisation</span>
                         </button>
                     </div>
                     <div *ngIf="syncService.status === 1" class="text-right">
-                        <button type="button" class="btn pink waves-effect waves-teal right" (click)="cancelSync()">
-                            <ion-icon name="close-outline"></ion-icon>Annuler la synchronisation
+                        <button mat-raised-button color="warn" (click)="cancelSync()">
+                            <ion-icon name="close-outline"></ion-icon>
+                            <span>Annuler la synchronisation</span>
                         </button>
                     </div>
                     <div *ngIf="syncService.status === 2" class="text-right">
-                        <a (click)="goBack()" class="btn pink waves-effect waves-teal">
-                            <ion-icon name="checkmark-outline"></ion-icon>Terminer
-                        </a>
+                        <button mat-raised-button color="warn" (click)="goBack()">
+                            <ion-icon name="checkmark-outline"></ion-icon>
+                            <span>Terminer</span>
+                        </button>
                     </div>
                     <div *ngIf="syncService.status === 3" class="text-right">
-                        <a (click)="goBack()" class="btn-flat waves-effect waves-teal">
-                            <ion-icon name="arrow-back-outline"></ion-icon>Abandonner
-                        </a>
-                        <button type="button" class="btn pink waves-effect waves-teal right" (click)="launch()" >
-                            <ion-icon name="sync-outline"></ion-icon>Réessayer
+                        <button mat-button (click)="goBack()">
+                            <ion-icon name="arrow-back"></ion-icon>
+                            <span>&nbsp;&nbsp;Abandonner</span>
+                        </button>
+                        <button mat-raised-button color="warn" (click)="launch()">
+                            <ion-icon name="sync-outline"></ion-icon>
+                            <span>Réessayer</span>
                         </button>
                     </div>
                 </div>

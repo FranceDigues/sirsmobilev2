@@ -4,13 +4,13 @@ import {
     RouterModule,
     Routes
 } from '@angular/router';
-import { LeftSlideCacheComponent } from './sliders/left/backmap/cache/cache.component';
-import { CacheModule } from './sliders/left/backmap/cache/cache.module';
-import { GalleryComponent } from './sliders/left/gallery/gallery.component';
-import { GalleryModule } from './sliders/left/gallery/gallery.module';
-import { LeftSlideSynchronisationComponent } from './sliders/left/synchronisation/synchronisation.component';
-import { SynchronisationModule } from './sliders/left/synchronisation/synchronisation.module';
-import { RightSlideModule } from './sliders/right/right-slide.module';
+import { LeftSlideCacheComponent } from './components/left-panel/backmap/cache/cache.component';
+import { CacheModule } from './components/left-panel/backmap/cache/cache.module';
+import { GalleryComponent } from './components/left-panel/gallery/gallery.component';
+import { GalleryModule } from './components/left-panel/gallery/gallery.module';
+import { DatabaseSyncComponent } from './components/database-sync/database-sync.component';
+import { DatabaseSyncModule } from './components/database-sync/database-sync.module';
+import { RightPanelModule } from './components/right-panel/right-panel.module';
 import { ObjectDocResolver } from './resolvers/object-doc-resolver';
 import { RefTypesResolver } from './resolvers/ref-types-resolver';
 import { OrientationListResolver } from './resolvers/orientation-list-resolver';
@@ -34,7 +34,7 @@ const routes: Routes = [
     },
     {
         path: 'sync',
-        component: LeftSlideSynchronisationComponent
+        component: DatabaseSyncComponent
     },
     {
         path: 'gallery',
@@ -63,10 +63,10 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
-        SynchronisationModule,
+        DatabaseSyncModule,
         GalleryModule,
         CacheModule,
-        RightSlideModule
+        RightPanelModule
     ],
     exports: [RouterModule]
 })

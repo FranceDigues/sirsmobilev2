@@ -15,8 +15,8 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SirsDocService } from '../../services/sirsdoc.service';
-import { LeftSlideModule } from '../../sliders/left/left-slide.module';
-import { RightSlideModule } from '../../sliders/right/right-slide.module';
+import { LeftPanelModule } from '../left-panel/left-panel.module';
+import { RightPanelModule } from '../right-panel/right-panel.module';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import { RightSlideModule } from '../../sliders/right/right-slide.module';
     NgbCollapseModule,
     MatIconModule,
     FlexLayoutModule,
-    LeftSlideModule, RightSlideModule
+    LeftPanelModule, RightPanelModule
   ],
   providers: [
     Geolocation,

@@ -4,6 +4,9 @@ import { ObjectDetailsComponent } from './object-details.component';
 import { FormsModule } from '@angular/forms';
 import { DetailsContentModule } from './detailscontent/details-content.module';
 import { ObservationDetailsModule } from './observation-details/observation-details.module';
+import { MatButtonModule } from '@angular/material/button';
+import { IonicModule } from '@ionic/angular';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -11,8 +14,11 @@ import { ObservationDetailsModule } from './observation-details/observation-deta
     imports: [
         CommonModule,
         FormsModule,
+        IonicModule,
         DetailsContentModule,
-        ObservationDetailsModule
+        ObservationDetailsModule,
+        MatButtonModule,
+        MatIconModule
     ],
     exports: [ObjectDetailsComponent]
 })

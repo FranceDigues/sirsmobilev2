@@ -1,5 +1,13 @@
-.db-checked {
+:host {
+  .db-checked {
     font-size: 21px;
     top: 37% !important;
     right: 33px !important;
+  }
+
+  button {
+    span {
+      margin-left: 10px;
+    }
+  }
 }

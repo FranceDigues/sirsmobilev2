@@ -32,77 +32,89 @@
 $font-path: "assets/fonts";
 
 @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url($font-path + '/MaterialIcons-Regular.eot'); /* For IE6-8 */
-    src: local('Material Icons'),
-      local('MaterialIcons-Regular'),
-      url($font-path + '/MaterialIcons-Regular.woff2') format('woff2'),
-      url($font-path + '/MaterialIcons-Regular.woff') format('woff'),
-      url($font-path + '/MaterialIcons-Regular.ttf') format('truetype');
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url($font-path + '/MaterialIcons-Regular.eot'); /* For IE6-8 */
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url($font-path + '/MaterialIcons-Regular.woff2') format('woff2'),
+  url($font-path + '/MaterialIcons-Regular.woff') format('woff'),
+  url($font-path + '/MaterialIcons-Regular.ttf') format('truetype');
 }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
 }
 
 .tabs .indicator {
-    background-color: #0098A6 !important;
+  background-color: #0098A6 !important;
 }
 
 .full-height {
-    height: 100%;
+  height: 100%;
 }
 
 ion-toolbar {
-    --min-height: 64px;
+  --min-height: 64px;
 }
 
 ion-reorder-group {
-    touch-action: none;
+  touch-action: none;
 }
 
 ion-reorder {
-    touch-action: none;
+  touch-action: none;
 }
 
 ion-modal {
-    --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
 }
 
 .menu-content-open {
-    pointer-events: auto; // if menu is active, the map stays interactive
-    cursor: pointer;
-    touch-action: manipulation;
+  pointer-events: auto; // if menu is active, the map stays interactive
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .header-slide {
-    height: 64px;
+  height: 64px;
 }
 
 .scroll-all-content {
-    padding-bottom: 20px;
-    height: calc(100% - 15px);
+  padding-bottom: 20px;
+  height: calc(100% - 15px);
 }
 
 .modal-css .modal-wrapper {
-    width: 80%;
-    height: 80%;
-    position: fixed;
+  width: 80%;
+  height: 80%;
+  position: fixed;
+}
+
+.mat-raised-button[disabled][disabled] {
+  pointer-events: none;
+  background-color: #DFDFDF !important;
+  box-shadow: none;
+  color: #9F9F9F !important;
+  cursor: default;
+}
+
+.mat-button[disabled] {
+  color: #b3b2b2 !important;
 }

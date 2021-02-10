@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsTemplateService } from 'src/app/sliders/formstemplate.service';
+import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 
 @Component({

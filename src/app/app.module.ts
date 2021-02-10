@@ -28,7 +28,7 @@ import { DatabaseConnectionPageModule } from './components/database-connection/d
 import { DatabaseService } from './services/database.service';
 import { EditionModeService } from './services/edition-mode.service';
 import { EditObjectService } from './services/edit-object.service';
-import { FormsTemplateService } from './sliders/formstemplate.service';
+import { FormsTemplateService } from './services/formstemplate.service';
 import { ConfigService } from './services/config.service';
 import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './services/layers.service';
 import { MapService } from './services/map.service';
@@ -37,7 +37,7 @@ import { ObjectDetails } from './services/object-details.service';
 import { ObjectDocService } from './services/object-doc.service';
 import { SelectedObjectsService } from './services/selected-objects.service';
 import { SirsDocService } from './services/sirsdoc.service';
-import { FilterPipe } from './sliders/right/createobjects/createobjects.component';
+import { FilterPipe } from './components/right-panel/createobjects/createobjects.component';
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './services/style.service';
 import { SyncService } from './services/sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './services/troncon.service';

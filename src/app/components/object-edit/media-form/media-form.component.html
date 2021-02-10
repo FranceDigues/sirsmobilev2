@@ -1,8 +1,8 @@
 <div [ngSwitch]="view" class="wrapper">
     <div class="object-form" *ngSwitchCase="'media-form'" fxLayout="row" fxLayoutAlign="center start">
         <div class="sirs-card" fxFlex="80">
-            <div class="sirs-card-wrapper">
-                <div class="sirs-card-content">
+            <div class="sirs-card-wrapper" fxLayout="column" fxLayoutAlign="start stretch">
+                <div class="sirs-card-content" fxFlex>
                     <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
                     <div class="text-center">
                         <ion-button color="medium" (click)="takePhoto()">
@@ -127,18 +127,15 @@
                         <input type="text" [ngModel]="mediaOptions.commentaire" placeholder="Commentaire">
                     </div>
                 </div>
-                <div class="sirs-card-action" fxLayout="row" fxLayoutAlign="space-between center">
-                    <ion-button color="light"
-                                (click)="back()">
+                <div class="sirs-card-action">
+                    <button mat-button (click)="back()">
                         <ion-icon name="arrow-back"></ion-icon>
                         <span>&nbsp;&nbsp;Annuler</span>
-                    </ion-button>
-                    <ion-button color="danger"
-                                [disabled]="!mediaOptions.id"
-                                (click)="save()">
+                    </button>
+                    <button mat-raised-button color="warn" [disabled]="!mediaOptions.id" (click)="save()">
                         <ion-icon name="checkmark-outline"></ion-icon>
-                        <span>&nbsp;&nbsp;Terminer</span>
-                    </ion-button>
+                        <span>Terminer</span>
+                    </button>
                 </div>
             </div>
         </div>

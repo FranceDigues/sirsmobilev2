@@ -41,12 +41,23 @@
         font-weight: 300;
         margin-bottom: 12px;
       }
+    }
 
-      .sirs-card-action {
-        padding: 14px 20px 20px;
-        margin-bottom: 10px;
-        border-top: 1px solid rgba(160, 160, 160, 0.2);
-        overflow: hidden;
+    .sirs-card-action {
+      padding: 14px 20px 20px;
+      margin-bottom: 10px;
+      border-top: 1px solid rgba(160, 160, 160, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-self: center;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+
+      button {
+        span {
+          margin-left: 10px;
+        }
       }
     }
 

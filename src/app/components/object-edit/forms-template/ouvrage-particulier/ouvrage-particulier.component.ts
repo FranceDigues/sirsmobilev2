@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { FormsTemplateService } from 'src/app/sliders/formstemplate.service';
+import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 
 @Component({
   selector: 'form-ouvrage-particulier',

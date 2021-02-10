@@ -11,19 +11,21 @@ import { EditDatabaseComponent } from './edit-database/edit-database.component';
 import { FirstsyncComponent } from './firstsync/firstsync.component';
 import { LoginDatabaseComponent } from './login-database/login-database.component';
 import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    IonicModule,
-    DatabaseConnectionPageRoutingModule,
-    FlexLayoutModule
-  ],
-  providers: [
-  ],
-  declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,
-    ReplicateDatabaseComponent, LoginDatabaseComponent, FirstsyncComponent]
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        IonicModule,
+        DatabaseConnectionPageRoutingModule,
+        FlexLayoutModule,
+        MatButtonModule
+    ],
+    providers: [],
+    declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,
+        ReplicateDatabaseComponent, LoginDatabaseComponent, FirstsyncComponent]
 })
-export class DatabaseConnectionPageModule {}
+export class DatabaseConnectionPageModule {
+}

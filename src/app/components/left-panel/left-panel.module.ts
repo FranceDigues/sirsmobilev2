@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { AppinfosLeftSlideComponent } from './appinfos/appinfos.component';
-import { AppsettingsLeftSlideComponent } from './appsettings/appsettings.component';
+import { AppInfosComponent } from '../app-infos/app-infos.component';
+import { AppSettingsComponent } from '../app-settings/app-settings.component';
 import { LeftSlideAddBackLayerComponent } from './backmap/addbacklayer/addbacklayer.component';
 import { LeftSlideBackmapComponent } from './backmap/backmap.component';
 import { ColorModalComponent } from './craftlayers/color-modal/color-modal.component';
 import { LeftSlideCraftlayersComponent } from './craftlayers/craftlayers.component';
 import { LeftSlideDisponibleLayersComponent } from './craftlayers/disponible/disponible.component';
-import { LeftSlideComponent } from './left.component';
+import { LeftPanelComponent } from './left-panel.component';
 import { LeftSlideMenuComponent } from './menu/menu.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.component';
 import { GalleryModule } from './gallery/gallery.module';
@@ -23,10 +23,10 @@ import { GalleryModule } from './gallery/gallery.module';
     ],
     providers: [],
     declarations: [
-        LeftSlideComponent,
+        LeftPanelComponent,
         LeftSlideMenuComponent,
-        AppinfosLeftSlideComponent,
-        AppsettingsLeftSlideComponent,
+        AppInfosComponent,
+        AppSettingsComponent,
         LeftSlideBackmapComponent,
         LeftSlideAddBackLayerComponent,
         ArraySortPipe,
@@ -34,7 +34,7 @@ import { GalleryModule } from './gallery/gallery.module';
         LeftSlideCraftlayersComponent,
         ColorModalComponent,
         LeftSlideDisponibleLayersComponent],
-    exports: [LeftSlideComponent]
+    exports: [LeftPanelComponent]
 })
-export class LeftSlideModule {
+export class LeftPanelModule {
 }

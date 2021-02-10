@@ -30,7 +30,6 @@ export class LoginDatabaseComponent implements OnInit {
     this.authService.login(this.auth.username, this.auth.password)
     .then(
       () => {
-        console.error('Login OK');
         this.status = 2;
       },
       async (error) => {
