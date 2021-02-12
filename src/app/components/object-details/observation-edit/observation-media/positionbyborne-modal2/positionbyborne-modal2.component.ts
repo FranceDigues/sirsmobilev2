@@ -135,12 +135,9 @@ export class PositionByBorneModal2Component implements OnInit {
   }
 
   init() {
-    console.log(this.OES.troncons);
     this.troncon = this.OES.troncons.find((item) => {
       return item.id === this.OES.objectDoc.linearId;
     });
-    console.log(this.OES.troncons);
-    console.log(this.troncon);
     this.loadingCtrl.create({ message: 'Chargement' })
     .then(
       (loading: HTMLIonLoadingElement) => {

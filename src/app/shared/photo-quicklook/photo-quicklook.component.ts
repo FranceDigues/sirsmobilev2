@@ -31,7 +31,6 @@ export class PhotoQuicklookComponent implements OnInit {
     }
 
     async openPhoto(photo) {
-        console.log('hilmi');
         const fileEntries = await this.file.listDir(this.file.dataDirectory, 'medias');
         const find = fileEntries.find(item => item.name === `${photo.id}.jpg`);
         if (find) {
@@ -39,10 +38,10 @@ export class PhotoQuicklookComponent implements OnInit {
             this.fileOpener.open(url, 'image/jpeg')
                 .then(
                     () => {
-                        console.log('File opened successfully');
+                        console.debug('File opened successfully');
                     },
                     (error) => {
-                        console.log('Error open method :', error);
+                        console.error('Error open method :', error);
                     }
                 );
         }
@@ -108,7 +107,7 @@ export class PhotoQuicklookComponent implements OnInit {
                                                     }, () => {
                                                         this.loaded = true;
                                                         this.ref.tick(); // Force Ionic to detect changes
-                                                        console.log('cannot write the data to the file');
+                                                        console.error('cannot write the data to the file');
                                                     });
                                                 });
                                             });
@@ -121,7 +120,7 @@ export class PhotoQuicklookComponent implements OnInit {
                         } else {
                             this.loaded = true;
                             this.ref.tick(); // Force Ionic to detect changes
-                            console.log('no attachment exit to load image');
+                            console.error('no attachment exit to load image');
                         }
                     } else {
                         this.loaded = true;

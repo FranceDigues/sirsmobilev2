@@ -122,7 +122,6 @@ export class MapLineComponent implements OnInit, AfterViewInit {
       this.toast.showLongTop('Vous devez placer 2 points').subscribe();
       return;
     }
-    console.log(this.source);
     const arrayOfArrayCoords = this.source.getFeatures()[0].getGeometry().getCoordinates();
     const coordsStart = transform(arrayOfArrayCoords[0], 'EPSG:3857', 'EPSG:4326');
     const coordsEnd = transform(arrayOfArrayCoords[1], 'EPSG:3857', 'EPSG:4326');

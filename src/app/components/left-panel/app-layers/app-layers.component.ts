@@ -9,8 +9,8 @@ import { DatabaseModel } from '../../database-connection/models/database.model';
 
 @Component({
   selector: 'left-slide-craftlayers',
-  templateUrl: './craftlayers.component.html',
-  styleUrls: ['./craftlayers.component.scss'],
+  templateUrl: './app-layers.component.html',
+  styleUrls: ['./app-layers.component.scss'],
 })
 export class LeftSlideCraftlayersComponent implements OnInit {
 

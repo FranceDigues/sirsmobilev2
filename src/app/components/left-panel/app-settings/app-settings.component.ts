@@ -22,7 +22,6 @@ export class AppSettingsComponent implements OnInit {
 
     updateGlobalConfig(state) {
         this.globalConfig.updateValue(state);
-        console.log('updatedState:', state);
     }
 
     getGlobalConfig() {

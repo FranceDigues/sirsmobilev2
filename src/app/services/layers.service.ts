@@ -41,7 +41,8 @@ export class EditionLayer {
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase, private SirsDoc: SirsDocService,
-                private realPositionService: RealPositionStyle, private mapService: MapService) { }
+                private realPositionService: RealPositionStyle, private mapService: MapService) {
+    }
 
     init() {
         this.editionLayer = this.createEditionLayerInstance();
@@ -58,7 +59,7 @@ export class EditionLayer {
     createEditionLayerInstance() {
         const olLayer = new VectorLayer({
             name: 'Edition',
-            source: new VectorSource({ useSpatialIndex: false })
+            source: new VectorSource({useSpatialIndex: false})
         });
 
         this.setEditionLayerFeatures(olLayer); // Set the layer that contains the newx objects of the edition mode
@@ -68,18 +69,18 @@ export class EditionLayer {
     setEditionLayerFeatures(olLayer) {
         const olSource = olLayer.getSource();
 
-        return this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
-        .then(
-            (results) => {
-                olSource.clear();
-                olSource.addFeatures(this.createEditionFeatureInstances(results));
-                return;
-            },
-            (error) => {
-                console.error(error);
-                return;
-            }
-        );
+        return this.localDB.query('objetsModeEdition5/objetsModeEdition5', {include_docs: true})
+            .then(
+                (results) => {
+                    olSource.clear();
+                    olSource.addFeatures(this.createEditionFeatureInstances(results));
+                    return;
+                },
+                (error) => {
+                    console.error(error);
+                    return;
+                }
+            );
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -87,8 +88,8 @@ export class EditionLayer {
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
                 || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
-                    features.push(this.createEditionFeatureInstance(featureDoc.doc));
-                }
+                features.push(this.createEditionFeatureInstance(featureDoc.doc));
+            }
         });
         return features;
     }
@@ -126,7 +127,7 @@ export class EditionLayer {
             }
         }
 
-        const feature = new Feature({ geometry });
+        const feature = new Feature({geometry});
         feature.setStyle(this.realPositionService.style(this.mapService.selection, feature, [0, 0, 255, 1], geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
@@ -155,6 +156,7 @@ export class EditionLayer {
 })
 export class GeolocLayer {
     geolocLayer: VectorLayer = null;
+
     // geolocLayer: VectorLayer = this.createGeolocLayer();
 
     init() {
@@ -180,8 +182,8 @@ export class GeolocLayer {
                     case 'Circle':
                         return [
                             new Style({
-                                fill: new Fill({ color: [255, 255, 255, 0.3] }),
-                                stroke: new Stroke({ color: [0, 0, 255, 1], width: 1 })
+                                fill: new Fill({color: [255, 255, 255, 0.3]}),
+                                stroke: new Stroke({color: [0, 0, 255, 1], width: 1})
                             })
                         ];
                     case 'Point':
@@ -230,15 +232,16 @@ export class BackLayer {
 
     constructor(private backLayerService: BackLayerService, private mapService: MapService,
                 private ol: OLService, private dbService: DatabaseService,
-                private webview: WebView) { }
+                private webview: WebView) {
+    }
 
     init() {
         this.backLayerService.init()
-        .then(
-            () => {
-                this.backLayer = this.createBackLayer();
-            }
-        );
+            .then(
+                () => {
+                    this.backLayer = this.createBackLayer();
+                }
+            );
     }
 
     createBackLayer() {
@@ -300,14 +303,15 @@ export class BackLayer {
             this.updateActiveBackLayerInHardDisk(layer);
         }
     }
+
     private updateActiveBackLayerInHardDisk(backLayer) {
         this.dbService.getCurrentDatabaseHardDisk()
-        .then(
-            (db: DatabaseModel) => {
-                db.context.backLayer.active = backLayer;
-                this.dbService.updateCurrentDatabaseHardDisk(db);
-            }
-        );
+            .then(
+                (db: DatabaseModel) => {
+                    db.context.backLayer.active = backLayer;
+                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                }
+            );
     }
 
     updateBackLayerMap(layer: ListBackLayer) {
@@ -336,7 +340,8 @@ export class AppLayer {
     constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
                 private storageService: StorageService, private SirsDoc: SirsDocService,
                 private mapService: MapService, private RealPositionStyle: RealPositionStyle,
-                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) { }
+                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) {
+    }
 
     init() {
         this.appLayer = this.createAppLayer();
@@ -347,7 +352,7 @@ export class AppLayer {
             name: 'Objects',
             layers: this.appLayersService.getFavorites().map(
                 (layerModel) => {
-                    console.log('start', layerModel); return (this.createAppLayerInstance(layerModel));
+                    return (this.createAppLayerInstance(layerModel));
                 })
         });
     }
@@ -356,7 +361,7 @@ export class AppLayer {
         let olLayer: VectorLayer;
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             //@hb Change the layer Source to Cluster source
-            olLayer = new VectorLayer ({
+            olLayer = new VectorLayer({
                 name: layerModel.title,
                 visible: layerModel.visible,
                 model: layerModel,
@@ -398,14 +403,14 @@ export class AppLayer {
                                     zIndex: tmpStyle.getZIndex(),
                                     text: tmpStyle.getText()
                                 }));
-                                });
+                            });
                         }
                     }
                     return styles;
                 },
                 source: new Cluster({
                     distance: 24,
-                    source: new VectorSource({ useSpatialIndex: true })
+                    source: new VectorSource({useSpatialIndex: true})
                 })
             });
 
@@ -414,7 +419,7 @@ export class AppLayer {
                 name: layerModel.title,
                 visible: layerModel.visible,
                 model: layerModel,
-                source: new VectorSource({ useSpatialIndex: false })
+                source: new VectorSource({useSpatialIndex: false})
             });
         }
 
@@ -428,7 +433,6 @@ export class AppLayer {
         const layerModel = olLayer.get('model');
         let olSource = null;
 
-        console.log('olLayer ATTENTION VERIF', olLayer);
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             olSource = olLayer.getSource().getSource();
         } else {
@@ -438,7 +442,7 @@ export class AppLayer {
         // Try to get the promise of a previous query.
         let promise = null;
         if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
-        layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
+            layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
             // Get all the favorites tronçons ids
             const favorites = await this.storageService.getItem('AppTronconsFavorities');
             const keys = [];
@@ -488,8 +492,8 @@ export class AppLayer {
             if (Array.isArray(tmp)) {
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
+                        return item.id;
+                    })
                 }).then(
                     (results) => {
                         return results.map(this.createAppFeatureModel);
@@ -505,14 +509,15 @@ export class AppLayer {
             if (Array.isArray(tmp)) {
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
+                        return item.id;
+                    })
                 }).then(
                     (results) => {
                         return this.localDB.query('getBornesIdsHB', {
-                            keys: results.map((obj) => {
-                                return obj.value;
-                            })}
+                                keys: results.map((obj) => {
+                                    return obj.value;
+                                })
+                            }
                         ).then(
                             (results2) => {
                                 return results2.map(this.createAppFeatureModel);

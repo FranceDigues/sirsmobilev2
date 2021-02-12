@@ -155,7 +155,7 @@ export class ObservationMediaComponent implements OnInit {
         file.getMetadata((metadata: Metadata) => {
             if (metadata.size > 1048576) {
                 this.OES.warningSizeMessage();
-                file.remove(() => console.log('File has been removed correctly'));
+                file.remove(() => console.debug('File has been removed correctly'));
                 return;
             } else {
                 this.file.resolveDirectoryUrl(this.OES.mediaPath)

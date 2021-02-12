@@ -48,7 +48,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         this.firstStep();
       },
       (error) => {
-        console.log('no databases in HardDisk ' + error);
+        console.error('no databases in HardDisk ' + error);
       }
     );
   }
@@ -65,7 +65,6 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.remoteDB.info()
     .then(
       (result) => {
-        console.log(result);
         this.firstStepComplete(result.doc_count);
       },
       (err) => {
@@ -82,7 +81,6 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   async firstStepError(error) {
-    console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
@@ -107,11 +105,9 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.completion = '0/' + docCount;
 
     const subject = new Subject<any>();
-    console.log('remote', this.remoteDB);
-    console.log('local', this.localDB);
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
-      console.log('2 - En COURS');
+      console.debug('2 - En COURS');
       const arg = {
         repCount: Math.min(result.docs_written, docCount),
         docCount
@@ -119,17 +115,17 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       subject.next(arg);
     })
     .on('complete', () => {
-      console.log('2 - COMPLETE');
+      console.debug('2 - COMPLETE');
       subject.complete();
     })
     .on('paused', (err) => {
-      console.log('paused', err);
+      console.debug('paused', err);
     })
     .on('denied', (err) => {
-      console.log('denied', err);
+      console.debug('denied', err);
     })
     .on('error', (error) => {
-      console.log(error);
+      console.error(error);
       subject.error(error);
     });
 
@@ -152,7 +148,6 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   async secondStepError(error) {
-    console.log(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
@@ -181,14 +176,14 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     designDocs.forEach((element, i) => {
       const promise = this.localDB.put(element).then(
         () => {
-          console.log('3 - EN COURS');
+          console.debug('3 - EN COURS');
           this.thirdStepProgess(i + 1);
         },
         (error) => {
-          console.log('SECOND CASE', error, element);
+          console.debug('SECOND CASE', error, element);
           if (error.status === 409) { // already done
             this.thirdStepProgess(i + 1);
-            console.log('3 - COMPLETE');
+            console.debug('3 - COMPLETE');
           } else {
             this.thirdStepError(error);
           }
@@ -202,8 +197,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         this.thirdStepComplete();
       },
       (error) => {
-        console.log('Faut check les views already in local db');
-        console.log(error);
+        console.debug(error);
         this.thirdStepError(error);
       }
     );
@@ -211,19 +205,19 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   thirdStepProgess(proceedDocs) {
     this.percent = (proceedDocs / designDocs.length) * 100;
-    console.log('THIRD PROGRESS : ' + proceedDocs);
     this.completion = proceedDocs + '/' + designDocs.length;
+    console.debug('THIRD PROGRESS : ' + proceedDocs);
   }
 
   thirdStepComplete() {
-    console.log('3 - REAL COMPLETE');
+    console.debug('3 - REAL COMPLETE');
     setTimeout(() => {
       this.fourthStep();
     }, 1000);
   }
 
   async thirdStepError(error) {
-    console.log(error);
+    console.error(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
@@ -242,7 +236,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   fourthStep() {
-    console.log('FOURTH STEP');
+    console.debug('FOURTH STEP');
     this.step = 4;
     this.description = 'Contruction des index...';
     this.percent = 0;
@@ -276,7 +270,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   fourthStepProgress(proceedViews) {
     this.percent = (proceedViews / indexedViews.length) * 100;
-    console.log('FOURTH PROGRESS : ' + proceedViews);
+    console.debug('FOURTH PROGRESS : ' + proceedViews);
     this.completion = proceedViews + '/' + indexedViews.length;
   }
 
@@ -287,7 +281,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   async fourthStepError(error) {
-    console.log(error);
+    console.error(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
@@ -326,13 +320,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   fifthStepComplete() {
     this.databases[this.databaseIndex].replicated = true;
     this.dbService.updateDatabasesHardDisk(this.databases);
-
-    console.log('FINIIIIIIIIIII');
     this.statusChange.emit(4);
   }
 
   async fifthStepError(error) {
-    console.log(error);
+    console.error(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',

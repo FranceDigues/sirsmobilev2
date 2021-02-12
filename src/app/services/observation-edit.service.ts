@@ -319,7 +319,6 @@ export class ObservationEditService {
                                                 }, () => {
                                                     this.loaded[photo.id] = true;
                                                     this.ref.tick(); // Force Ionic to detect changes
-                                                    console.log('cannot write the data to the file');
                                                 });
                                             });
                                         });
@@ -332,7 +331,6 @@ export class ObservationEditService {
                     } else {
                         this.loaded[photo.id] = true;
                         this.ref.tick(); // Force Ionic to detect changes
-                        console.log('no attachment exit to load image');
                     }
                 } else {
                     this.loaded[photo.id] = true;
@@ -346,10 +344,10 @@ export class ObservationEditService {
         this.fileOpener.open(url, 'image/jpeg')
             .then(
                 () => {
-                    console.log('File opened successfully');
+                    console.debug('File opened successfully');
                 },
                 (error) => {
-                    console.log('Error open method :', error);
+                    console.error('Error open method :', error);
                 }
             );
     }

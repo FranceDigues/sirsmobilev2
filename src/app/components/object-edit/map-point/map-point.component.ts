@@ -87,7 +87,6 @@ export class MapPointComponent implements OnInit {
             this.goBack();
             return;
         }
-        console.log(this.source);
         const coords = this.source.getFeatures()[0].getGeometry().getCoordinates();
         const finalRes = transform(coords, 'EPSG:3857', 'EPSG:4326');
         const args = {

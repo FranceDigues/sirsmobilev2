@@ -66,7 +66,6 @@ export class ObjectDetails {
 
     init() {
         const regex = new RegExp('.*Id$');
-        console.log('selectedObject what type ?', this.selectedObject);
         for (let key in this.selectedObject) {
             if (regex.test(key)) {
                 const value = this.selectedObject[key];

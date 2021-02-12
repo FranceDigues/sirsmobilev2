@@ -16,7 +16,6 @@ export class LeftPanelComponent implements OnInit {
 
   changeSlidePath(path: string) {
     this.slidePath = path;
-    console.log('slide : ', this.slidePath);
   }
 
   goReset() {

@@ -13,7 +13,7 @@
                  class="color-block"
                  (click)="selectColor(colors[index].rgb)"
                  [ngStyle]="{'background-color': calculateBackGroundColor(colors[index])}">
-                <mat-icon *ngIf="ifSelected(colors[index].rgb)">
+                <mat-icon *ngIf="ifSelected(colors[index].rgb)" class="white-icon">
                     check
                 </mat-icon>
             </div>

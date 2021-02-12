@@ -33,7 +33,7 @@ export class SystemeEndiguement {
                     }, 100);
                 },
                 (err) => {
-                    console.log('err Endiguement', err);
+                    console.error('err Endiguement', err);
                     loading.dismiss();
                 }
             );
@@ -111,7 +111,7 @@ export class TronconController {
                             }, 100);
                         },
                         (err) => {
-                            console.log(err);
+                            console.error(err);
                             loading.dismiss();
                         }
                     );
@@ -126,7 +126,7 @@ export class TronconController {
                             }, 100);
                         },
                         (err) => {
-                            console.log(err);
+                            console.error(err);
                             loading.dismiss();
                         }
                     );

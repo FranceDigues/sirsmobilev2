@@ -75,7 +75,6 @@ export class MediaFormComponent implements OnInit {
     }
 
     save() {
-        console.log('HB');
         if (this.mediaOptions.id) {
             if (!this.objectDoc.photos) {
                 this.objectDoc.photos = [];
@@ -108,7 +107,7 @@ export class MediaFormComponent implements OnInit {
                             };
                         },
                         (error) => {
-                            console.log(error);
+                            console.error(error);
                         }
                     );
             } else {
@@ -238,7 +237,7 @@ export class MediaFormComponent implements OnInit {
                     message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
                     duration: 3000
                 }).then(toast => toast.present());
-                file.remove(() => console.log('File has been removed correctly'));
+                file.remove(() => console.debug('File has been removed correctly'));
                 return;
             } else {
                 this.file.resolveDirectoryUrl(this.mediaPath)

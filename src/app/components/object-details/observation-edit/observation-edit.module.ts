@@ -9,7 +9,7 @@ import { ArraySortPipe2, NgInitDirective, ObservationEditComponent } from './obs
 import { ObservationMediaComponent } from './observation-media/observation-media.component';
 import { PositionByBorneModal2Component } from './observation-media/positionbyborne-modal2/positionbyborne-modal2.component';
 import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
-import { DirectiveModule } from '../../../directive.module';
+import { DirectiveModule } from '../../../directives/directive.module';
 import { EditNoteModule } from './observation-media/edit-note/edit-note.module';
 import { ObjectEditModule } from '../../object-edit/object-edit.module';
 

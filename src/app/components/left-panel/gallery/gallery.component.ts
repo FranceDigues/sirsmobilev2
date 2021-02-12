@@ -66,10 +66,10 @@ export class GalleryComponent implements OnInit {
         this.fileOpener.open(url, 'image/jpeg')
             .then(
                 () => {
-                    console.log('File opened successfully');
+                    console.debug('File opened successfully');
                 },
                 (error) => {
-                    console.log('Error open method :', error);
+                    console.error('Error open method :', error);
                 }
             );
     }
@@ -125,7 +125,7 @@ export class GalleryComponent implements OnInit {
                         Promise.all(promises)
                             .then(
                                 (values) => {
-                                    console.log('The files has been removes successfully');
+                                    // The files has been removes successfully
                                     this.fileDoc = undefined;
                                     this.initDirectory();
                                 }

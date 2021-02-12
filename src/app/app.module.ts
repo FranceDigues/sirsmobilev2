@@ -43,7 +43,7 @@ import { SyncService } from './services/sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './services/troncon.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObservationEditService } from './services/observation-edit.service';
-import { DirectiveModule } from './directive.module';
+import { DirectiveModule } from './directives/directive.module';
 import { PositionService } from './services/position.service';
 import { ObjectEditModule } from './components/object-edit/object-edit.module';
 

@@ -34,7 +34,6 @@ export class CreateObjectComponent implements OnInit {
       const type = this.selectedLayer.filterValue.substring(
         this.selectedLayer.filterValue.lastIndexOf('.') + 1
       );
-      console.log('show button', this.authService.getValue(), type);
       return (this.authService.getValue().role !== 'GUEST' &&
       type !== 'BorneDigue' && type !== 'TronconDigue');
     } else {

@@ -105,7 +105,6 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
       this.toast.showLongTop('Vous devez définir un polygon');
       return;
     }
-    console.log(this.source);
     const wktFormat = new WKT();
     const geometry = this.source.getFeatures()[0].getGeometry();
     this.EOS.objectDoc.geometry = wktFormat.writeGeometry(geometry);

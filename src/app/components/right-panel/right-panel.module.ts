@@ -10,7 +10,7 @@ import {
 } from './create-object/create-object.component';
 import { RightPanelComponent } from './right-panel.component';
 import { SelectedObjectsComponent } from './selected-objects/selected-objects.component';
-import { DirectiveModule } from '../../directive.module';
+import { DirectiveModule } from '../../directives/directive.module';
 import { ObjectDetailsModule } from '../object-details/object-details.module';
 import { DetailsContentModule } from '../object-details/detailscontent/details-content.module';
 import { ObservationEditModule } from '../object-details/observation-edit/observation-edit.module';

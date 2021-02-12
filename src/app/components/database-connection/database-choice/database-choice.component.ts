@@ -45,7 +45,7 @@ export class DatabaseChoiceComponent implements OnInit {
           (error) => {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
-            console.log('no \'databases\' in HardDisk ' + error);
+            console.error('no \'databases\' in HardDisk ' + error);
           }
         );
       }
@@ -60,7 +60,7 @@ export class DatabaseChoiceComponent implements OnInit {
         this.databases = databases;
       },
       (error) => {
-        console.log('no \'databases\' in HardDisk ' + error);
+        console.error('no \'databases\' in HardDisk ' + error);
       }
     );
   }
@@ -71,7 +71,6 @@ export class DatabaseChoiceComponent implements OnInit {
     }
     this.selectedDatabase = db;
     this.dbService.setActiveDB(this.selectedDatabase);
-    console.log('ACTIVE DB', this.dbService.activeDB);
     for (let i = 0; i < this.databases.length; i++) {
       if (this.databases[i] === this.selectedDatabase) {
         this.databaseIndex = i;

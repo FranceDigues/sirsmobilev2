@@ -47,7 +47,6 @@ export class EditNoteComponent implements AfterViewInit {
   validate() {
     this.exportCanvasImage().then(
       res => {
-        console.log('RESSS', res);
         this.successData.emit(res);
         this.goBack();
       },
@@ -147,8 +146,8 @@ export class EditNoteComponent implements AfterViewInit {
           );
         },
         err =>  {
-          console.log('Error saving image to gallery ', err)
-          rejects(err)
+          console.error('Error saving image to gallery ', err);
+          rejects(err);
         }
       );
     });

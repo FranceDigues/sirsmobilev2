@@ -46,13 +46,11 @@ export class ObjectEditComponent implements OnInit {
     }
 
     backToMain() {
-        console.log('EOS ObjectDoc', this.EOS.objectDoc);
         this.router.navigateByUrl('/main');
     }
 
     changeSlidePath(path: string) {
         this.view = path;
-        console.log('view : ', this.view);
     }
 
     displayName(str: string) {
@@ -76,7 +74,6 @@ export class ObjectEditComponent implements OnInit {
     }
 
     setView(view) {
-        console.log(view);
         if (view !== this.view) {
             this.view = view;
         }

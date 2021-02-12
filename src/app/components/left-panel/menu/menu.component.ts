@@ -48,8 +48,6 @@ export class LeftSlideMenuComponent implements OnInit {
   }
 
   changeShowArchivedObjects() {
-    console.log('before flag :', this.mapService.archiveObjectsFlag);
-    console.log('after flag :', !this.mapService.archiveObjectsFlag);
     this.mapService.archiveObjectsFlag = !this.mapService.archiveObjectsFlag;
     this.appLayer.syncAllAppLayer();
   }
