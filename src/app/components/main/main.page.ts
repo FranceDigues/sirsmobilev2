@@ -180,9 +180,9 @@ export class MainPage implements AfterViewInit {
     .then(
       (bool) => {
         if (bool) {
-          this.pathRightSlide = 'shoreLine';
+          this.pathRightSlide = 'trait-berge';
         } else {
-          this.pathRightSlide = 'shoreLine';
+          this.pathRightSlide = 'trait-berge';
           this.menu.open('right-slider');
         }
       }

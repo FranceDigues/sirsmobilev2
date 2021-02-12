@@ -4,13 +4,18 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IonicModule } from '@ionic/angular';
-import { FilterPipe, RightSlideCreateObjectsComponent } from './createobjects/createobjects.component';
+import {
+    CreateObjectComponent,
+    FilterPipe
+} from './create-object/create-object.component';
 import { RightPanelComponent } from './right-panel.component';
-import { SelectedObjectsComponent } from './selectedobjects/selectedobjects.component';
+import { SelectedObjectsComponent } from './selected-objects/selected-objects.component';
 import { DirectiveModule } from '../../directive.module';
 import { ObjectDetailsModule } from '../object-details/object-details.module';
 import { DetailsContentModule } from '../object-details/detailscontent/details-content.module';
 import { ObservationEditModule } from '../object-details/observation-edit/observation-edit.module';
+import { TraitBergeComponent } from './trait-berge/trait-berge.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     imports: [
@@ -22,14 +27,16 @@ import { ObservationEditModule } from '../object-details/observation-edit/observ
         DetailsContentModule,
         ObservationEditModule,
         ObjectDetailsModule,
-        DirectiveModule
+        DirectiveModule,
+        FlexLayoutModule
     ],
     providers: [],
     declarations: [
         RightPanelComponent,
-        RightSlideCreateObjectsComponent,
+        CreateObjectComponent,
         FilterPipe,
-        SelectedObjectsComponent
+        SelectedObjectsComponent,
+        TraitBergeComponent
     ],
     exports: [RightPanelComponent]
 })

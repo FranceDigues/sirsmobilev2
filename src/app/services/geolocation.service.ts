@@ -8,7 +8,6 @@ import * as moment from 'moment';
     providedIn: 'root'
 })
 export class GeolocationService {
-
     gpsAccuracy = null;
     coords = null;
     lastGPSUpdate = null;

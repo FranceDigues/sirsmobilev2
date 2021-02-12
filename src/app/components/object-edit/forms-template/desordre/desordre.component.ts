@@ -1,7 +1,7 @@
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
-import { FilterPipe } from '../../../right-panel/createobjects/createobjects.component';
+import { FilterPipe } from '../../../right-panel/create-object/create-object.component';
 
 @Component({
   selector: 'form-desordre',

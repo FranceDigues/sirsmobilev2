@@ -5,11 +5,11 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'right-slide-create-objects',
-  templateUrl: './createobjects.component.html',
-  styleUrls: ['./createobjects.component.scss'],
+  selector: 'create-object',
+  templateUrl: './create-object.component.html',
+  styleUrls: ['./create-object.component.scss'],
 })
-export class RightSlideCreateObjectsComponent implements OnInit {
+export class CreateObjectComponent implements OnInit {
 
   constructor(public appLayersService: AppLayersService, private authService: AuthService,
               private route: Router) { }

@@ -37,7 +37,7 @@ import { ObjectDetails } from './services/object-details.service';
 import { ObjectDocService } from './services/object-doc.service';
 import { SelectedObjectsService } from './services/selected-objects.service';
 import { SirsDocService } from './services/sirsdoc.service';
-import { FilterPipe } from './components/right-panel/createobjects/createobjects.component';
+import { FilterPipe } from './components/right-panel/create-object/create-object.component';
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './services/style.service';
 import { SyncService } from './services/sync.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from './services/troncon.service';

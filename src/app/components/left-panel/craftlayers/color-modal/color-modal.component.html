@@ -1,50 +1,31 @@
-<ion-header translucent>
-  <ion-toolbar>
-    <ion-title>Choisissez une couleur</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="closeModal()">Fermer</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content fullscreen>
-    <div class="square-container" *ngFor="let color of colors; let index=index;">
-      <div class="square-container" *ngIf="index % 4 === 0">
-          <div class="square" *ngIf="index < colors.length"
-            (click)="selectColor(colors[index].rgb)"
-            [ngStyle]="{'background-color': calculateBackGroundColor(colors[index])}">
-              <ion-button class="content" [fill]="ifSelected(colors[index].rgb)" color="light">
-                {{colors[index].name}}
-              </ion-button>
+<div style="height: 100%;width: 100%" fxLayout="column" fxLayoutAlign="start stretch">
+    <ion-header translucent>
+        <ion-toolbar>
+            <ion-title style="text-align: center;">Choisissez une couleur</ion-title>
+            <ion-buttons slot="end">
+                <ion-button (click)="closeModal()">Fermer</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fxFlex>
+        <div class="square-container" fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="10px">
+            <div *ngFor="let color of colors; let index=index;"
+                 class="color-block"
+                 (click)="selectColor(colors[index].rgb)"
+                 [ngStyle]="{'background-color': calculateBackGroundColor(colors[index])}">
+                <mat-icon *ngIf="ifSelected(colors[index].rgb)">
+                    check
+                </mat-icon>
             </div>
-          <div class="square" *ngIf="index + 1 < colors.length"
-            (click)="selectColor(colors[index+1].rgb)"
-            [ngStyle]="{'background-color': calculateBackGroundColor(colors[index+1])}">
-              <ion-button class="content" [fill]="ifSelected(colors[index+1].rgb)" color="light">
-                {{colors[index+1].name}}
-              </ion-button>
-            </div>
-          <div class="square" *ngIf="index + 2 < colors.length"
-            (click)="selectColor(colors[index+2].rgb)"
-            [ngStyle]="{'background-color': calculateBackGroundColor(colors[index+2])}">
-              <ion-button class="content" [fill]="ifSelected(colors[index+2].rgb)" color="light">
-                {{colors[index+2].name}}
-              </ion-button>
-            </div>
-          <div class="square" *ngIf="index + 3 < colors.length"
-            (click)="selectColor(colors[index+3].rgb)"
-            [ngStyle]="{'background-color': calculateBackGroundColor(colors[index+3])}">
-            <ion-button class="content" [fill]="ifSelected(colors[index+3].rgb)" color="light">
-              {{colors[index+3].name}}
-            </ion-button>
-          </div>
         </div>
-      </div>
-</ion-content>
-<ion-footer slot="end">
-  <div class="right" style="padding: 0;">
-    <button class="waves-effect waves-light btn" [disabled]="!selectedColor" (click)="validate()">
-      Valider le choix
-      <ion-icon slot="end" name="thumbs-up-outline"></ion-icon>
-    </button>
-  </div>
-</ion-footer>
+    </ion-content>
+    <ion-footer slot="end" style="padding: 10px;">
+        <div class="right" style="padding: 0;">
+            <ion-button color="medium" [disabled]="!selectedColor" (click)="validate()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span style="margin-left: 10px">Valider le choix</span>
+            </ion-button>
+        </div>
+    </ion-footer>
+</div>
+

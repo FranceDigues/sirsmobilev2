@@ -22,9 +22,9 @@
                             <ion-icon class="couches-metiers-icons" name="git-merge-outline" [ngClass]="getClassIcon(layer.realPosition)"></ion-icon>
                             <ion-icon class="couches-metiers-icons" name="eye-outline" [ngClass]="getClassIcon(layer.visible)"></ion-icon>
                             <ion-icon class="couches-metiers-icons" name="pencil-outline" [ngClass]="getClassIcon(layer.editable)"></ion-icon>
-                            <ion-icon class="couches-metiers-icons" name="body-outline" [ngClass]="getClassIcon(layer.selectable)"></ion-icon>
-                            <ion-icon class="couches-metiers-icons" name="document-text-outline" [ngClass]="getClassIcon(layer.featLabels)"></ion-icon>
-                            <ion-icon class="couches-metiers-icons" name="brush-outline"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="color-palette-outline"></ion-icon>
                         </div>
                         <h5 class="couches-metiers-title">{{ layer.title }}</h5>
                         <ion-reorder slot="end"></ion-reorder>
@@ -40,13 +40,13 @@
                             <ion-icon class="ion-icon-options" name="pencil-outline" [ngClass]="getClassIcon(layer.editable)">edit</ion-icon>
                         </ion-item-option>
                         <ion-item-option color="light" (click)="layer.selectable = !layer.selectable">
-                            <ion-icon class="ion-icon-options" name="body-outline" [ngClass]="getClassIcon(layer.selectable)">accessibility_new</ion-icon>
+                            <ion-icon class="ion-icon-options" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)">accessibility_new</ion-icon>
                         </ion-item-option>
                         <ion-item-option color="light" (click)="featureLabels(layer)">
-                            <ion-icon class="ion-icon-options" name="document-text-outline" [ngClass]="getClassIcon(layer.featLabels)">textsms</ion-icon>
+                            <ion-icon class="ion-icon-options" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)">textsms</ion-icon>
                         </ion-item-option>
                         <ion-item-option color="light" (click)="openModal(layer)">
-                            <ion-icon class="ion-icon-options" name="brush-outline">brush</ion-icon>
+                            <ion-icon class="ion-icon-options" name="color-palette-outline">brush</ion-icon>
                         </ion-item-option>
                         <ion-item-option color="light" (click)="appLayer.forceRefresh(layer)">
                             <ion-icon class="ion-icon-options" name="refresh-outline"></ion-icon>
