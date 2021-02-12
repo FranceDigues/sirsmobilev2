@@ -331,7 +331,7 @@ export class BackLayer {
 @Injectable({
     providedIn: 'root'
 })
-export class AppLayer {
+export class MapManagerService {
 
     appLayer: LayerGroup = null;
     // appLayer: LayerGroup = this.createAppLayer();
@@ -360,7 +360,7 @@ export class AppLayer {
     createAppLayerInstance(layerModel) {
         let olLayer: VectorLayer;
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
-            //@hb Change the layer Source to Cluster source
+            // Change the layer Source to Cluster source
             olLayer = new VectorLayer({
                 name: layerModel.title,
                 visible: layerModel.visible,
@@ -431,13 +431,8 @@ export class AppLayer {
 
     async setAppLayerFeatures(olLayer) {
         const layerModel = olLayer.get('model');
-        let olSource = null;
 
-        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
-            olSource = olLayer.getSource().getSource();
-        } else {
-            olSource = olLayer.getSource();
-        }
+        const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue' ? olLayer.getSource().getSource() : olLayer.getSource();
 
         // Try to get the promise of a previous query.
         let promise = null;

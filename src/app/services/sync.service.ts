@@ -3,7 +3,7 @@ import { DatabaseService } from './database.service';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
 import { Subject, noop } from 'rxjs';
 import { Router } from '@angular/router';
-import { AppLayer, EditionLayer } from './layers.service';
+import { MapManagerService, EditionLayer } from './map-manager.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ export class SyncService {
     isFirstSync: boolean = false;
 
     constructor(private dbService: DatabaseService, private insomnia: Insomnia,
-                private route: Router, private appLayer: AppLayer, private editionLayer: EditionLayer) {
+                private route: Router, private mapManagerService: MapManagerService, private editionLayer: EditionLayer) {
     }
 
     cancelSync() {
@@ -90,7 +90,7 @@ export class SyncService {
             this.status = 0;
         }, 3000);
         if (!this.isFirstSync) {
-            this.appLayer.clearAll();
+            this.mapManagerService.clearAll();
             this.editionLayer.redrawEditionLayerAfterSynchronization();
         }
     }

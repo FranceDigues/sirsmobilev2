@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from '../../services/layers.service';
+import { MapManagerService, BackLayer, EditionLayer, GeolocLayer } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
@@ -30,13 +30,13 @@ export class MainPage implements AfterViewInit {
 
     constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocationService,
                 public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
-                private mapService: MapService, private appLayer: AppLayer, private authService: AuthService,
+                private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
                 private selectedObjectsService: SelectedObjectsService) {
         this.appVersionsService.init();
         this.backLayer.init();
-        this.appLayer.init();
+        this.mapManagerService.init();
         this.editionLayer.init();
         this.geolocLayer.init();
         this.platform.pause.subscribe(
@@ -75,7 +75,7 @@ export class MainPage implements AfterViewInit {
                     this.ol.createMap('map');
                     this.ol.getMap().setView(this.mapService.currentView);
                     this.ol.addLayer(this.backLayer.backLayer);
-                    this.ol.addLayer(this.appLayer.appLayer);
+                    this.ol.addLayer(this.mapManagerService.appLayer);
                     this.ol.addLayer(this.editionLayer.editionLayer);
                     this.ol.addLayer(this.geolocLayer.geolocLayer);
                     this.ol.getMap().addInteraction(new LongClickSelect({

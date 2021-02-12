@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { AppLayersService } from 'src/app/services/app-layers.service';
 import { DatabaseService } from 'src/app/services/database.service';
-import { AppLayer } from 'src/app/services/layers.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 import { DatabaseModel } from 'src/app/components/database-connection/models/database.model';
 
 @Component({
@@ -18,7 +18,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   available = [];
 
   constructor(private appLayersService: AppLayersService,
-              private appLayer: AppLayer, private dbService: DatabaseService,
+              private mapManagerService: MapManagerService, private dbService: DatabaseService,
               private loadingCtrl: LoadingController) {
                 this.loadingCtrl.create({ message: 'Chargement' })
                 .then(
@@ -76,10 +76,10 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   toggleLayer(layer) {
     if (this.isActive(layer)) {
       const index = this.appLayersService.removeFavorite(layer);
-      this.appLayer.appLayer.getLayers().removeAt(index);
+      this.mapManagerService.appLayer.getLayers().removeAt(index);
     } else {
       this.appLayersService.addFavorite(layer);
-      this.appLayer.appLayer.getLayers().push(this.appLayer.createAppLayerInstance(layer));
+      this.mapManagerService.appLayer.getLayers().push(this.mapManagerService.createAppLayerInstance(layer));
     }
     this.updateFavorites();
   }

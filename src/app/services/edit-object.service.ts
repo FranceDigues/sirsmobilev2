@@ -9,7 +9,7 @@ import { DatabaseService } from './database.service';
 import { EditionModeService } from './edition-mode.service';
 import { GeolocationService } from './geolocation.service';
 import { ConfigService } from './config.service';
-import { AppLayer } from './layers.service';
+import { MapManagerService } from './map-manager.service';
 import { ObjectDocService } from './object-doc.service';
 import { SirsDocService } from './sirsdoc.service';
 import { UuidUtils as uuid } from '../utils/uuid-utils';
@@ -50,7 +50,7 @@ export class EditObjectService {
                 private databaseService: DatabaseService, private loadingCtrl: LoadingController,
                 private globalConfigService: ConfigService,
                 private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
-                private route: Router, private appLayer: AppLayer, private toastCtrl: ToastController,
+                private route: Router, private mapManagerService: MapManagerService, private toastCtrl: ToastController,
                 private GeolocationService: GeolocationService, private alertCtrl: AlertController,
                 private positionService: PositionService,
                 private storageService: StorageService) {
@@ -330,7 +330,7 @@ export class EditObjectService {
             return;
         }
 
-        //@hb Add the source of the Desordre
+        // Add the source of the Desordre
         if (this.objectDoc['@class'] === 'fr.sirs.core.model.Desordre') {
             this.objectDoc['sourceId'] = 'RefSource:4';
         }

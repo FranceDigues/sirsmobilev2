@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
 import { GeolocationService } from './geolocation.service';
-import { GeolocLayer } from './layers.service';
+import { GeolocLayer } from './map-manager.service';
 import { transform } from 'ol/proj';
 import VectorLayer from 'ol/layer/Vector';
 import { Style, Stroke, Fill, Circle } from 'ol/style';

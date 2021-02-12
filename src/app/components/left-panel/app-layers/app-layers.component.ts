@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AppLayersService } from 'src/app/services/app-layers.service';
-import { AppLayer } from 'src/app/services/layers.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 import { colorFactory } from 'src/app/utils/color-factory';
 import { ModalController, NavController } from '@ionic/angular';
 import { ColorModalComponent } from './color-modal/color-modal.component';
@@ -23,7 +23,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     path = 0;
 
     constructor(private appLayersService: AppLayersService,
-                public appLayer: AppLayer, private modalCtrl: ModalController,
+                public mapManagerService: MapManagerService, private modalCtrl: ModalController,
                 private navCtrl: NavController, private dbService: DatabaseService) { }
 
     goBack() {
@@ -72,24 +72,24 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     move(from, to) {
-        this.appLayer.moveAppLayer((this.layers.length - (from + 1)), (this.layers.length - (to + 1)));
+        this.mapManagerService.moveAppLayer((this.layers.length - (from + 1)), (this.layers.length - (to + 1)));
         this.clearAll();
         const tmpLayersAfterSort = Object.assign([], this.layers);
         this.appLayersService.setFavorites(tmpLayersAfterSort);
     }
 
     clearAll() {
-        this.appLayer.clearAll();
+        this.mapManagerService.clearAll();
     }
 
     toggleVisibility(layer) {
         layer.visible = !layer.visible;
-        this.appLayer.syncAppLayer(layer);
+        this.mapManagerService.syncAppLayer(layer);
     }
 
     togglePosition(layer) {
         layer.realPosition = !layer.realPosition;
-        this.appLayer.syncAppLayer(layer);
+        this.mapManagerService.syncAppLayer(layer);
     }
 
     goToLayerList() {
@@ -97,7 +97,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     }
 
     featureLabels(layer) {
-        this.appLayer.addLabelFeatureLayer(layer);
+        this.mapManagerService.addLabelFeatureLayer(layer);
     }
 
     async openModal(layer) {
@@ -113,7 +113,7 @@ export class LeftSlideCraftlayersComponent implements OnInit {
                 if (color.data) {
                     layer.color = color.data;
                     setTimeout(() => {
-                        // this.appLayer.reloadLayer(layer): // TODO verify you can reactive this
+                        // this.mapManagerService.reloadLayer(layer): // TODO verify you can reactive this
                     }, 1000);
                 }
             }

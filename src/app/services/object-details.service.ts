@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LocalDatabase } from './local-database.service';
 import { Router } from '@angular/router';
 import { EditionModeService } from './edition-mode.service';
-import { AppLayer } from './layers.service';
+import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 
 @Injectable({
@@ -37,7 +37,7 @@ export class ObjectDetails {
 
 
     constructor(private localDB: LocalDatabase, private route: Router,
-                private editionService: EditionModeService, private appLayer: AppLayer,
+                private editionService: EditionModeService, private mapManagerService: MapManagerService,
                 private alertCtrl: AlertController) {
         // Paths
         this.photoDir = null;
@@ -149,8 +149,8 @@ export class ObjectDetails {
         this.editionService.saveObject(this.selectedObject)
         .then(() => {
             this.tempDesordre.v = null;
-            this.appLayer.syncAllAppLayer();
-            this.appLayer.clearAll();
+            this.mapManagerService.syncAllAppLayer();
+            this.mapManagerService.clearAll();
         });
     }
 
@@ -182,8 +182,8 @@ export class ObjectDetails {
 
                         this.editionService.saveObject(this.selectedObject)
                         .then(() => {
-                            this.appLayer.syncAllAppLayer();
-                            this.appLayer.clearAll();
+                            this.mapManagerService.syncAllAppLayer();
+                            this.mapManagerService.clearAll();
                         });
                     }
                 }
@@ -227,8 +227,8 @@ export class ObjectDetails {
 
         this.editionService.saveObject(this.selectedObject)
         .then(() => {
-            this.appLayer.syncAllAppLayer();
-            this.appLayer.clearAll();
+            this.mapManagerService.syncAllAppLayer();
+            this.mapManagerService.clearAll();
         });
     }
 
@@ -260,8 +260,8 @@ export class ObjectDetails {
 
                         this.editionService.saveObject(this.selectedObject)
                         .then(() => {
-                            this.appLayer.syncAllAppLayer();
-                            this.appLayer.clearAll();
+                            this.mapManagerService.syncAllAppLayer();
+                            this.mapManagerService.clearAll();
                         });
                     }
                 }

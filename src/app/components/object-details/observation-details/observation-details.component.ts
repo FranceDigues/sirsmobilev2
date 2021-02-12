@@ -10,7 +10,7 @@ import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { Camera } from '@ionic-native/camera/ngx';
 import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
-import { AppLayer } from 'src/app/services/layers.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { File } from '@ionic-native/file/ngx';
 
@@ -36,7 +36,7 @@ export class ObservationDetailsComponent implements OnInit {
                 public OES: ObservationEditService, private alertCtrl: AlertController,
                 private editionService: EditionModeService, private authService: AuthService,
                 private route: Router, private cameraService: CameraService, private camera: Camera,
-                private appLayer: AppLayer, private file: File) {
+                private mapManagerService: MapManagerService, private file: File) {
         this.doc = this.objectDetails.selectedObservation;
         this.objectId = this.objectDetails.selectedObject._id;
         this.objectDoc = this.objectDetails.selectedObject;
@@ -216,7 +216,7 @@ export class ObservationDetailsComponent implements OnInit {
         this.editionService.saveObject(this.objectDoc)
             .then(
                 () => {
-                    this.appLayer.syncAllAppLayer();
+                    this.mapManagerService.syncAllAppLayer();
                     this.photos.push(photo);
                     // TODO HILMI RELOAD COMPONENT
                 }

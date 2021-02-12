@@ -30,7 +30,7 @@ import { EditionModeService } from './services/edition-mode.service';
 import { EditObjectService } from './services/edit-object.service';
 import { FormsTemplateService } from './services/formstemplate.service';
 import { ConfigService } from './services/config.service';
-import { AppLayer, BackLayer, EditionLayer, GeolocLayer } from './services/layers.service';
+import { MapManagerService, BackLayer, EditionLayer, GeolocLayer } from './services/map-manager.service';
 import { MapService } from './services/map.service';
 import { MapEditObjectService } from './services/map-edit-object.service';
 import { ObjectDetails } from './services/object-details.service';
@@ -62,7 +62,7 @@ import { ObjectEditModule } from './components/object-edit/object-edit.module';
         StatusBar, OLService, SplashScreen, NativeStorage,
         MapService, Insomnia, Geolocation, EditionModeService,
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
-        AppLayer, GeolocLayer, EditionLayer, BackLayer,
+        MapManagerService, GeolocLayer, EditionLayer, BackLayer,
         SyncService, DatabaseService, AuthService, ConfigService,
         AppVersionsService, SirsDocService, BackLayerService,
         BackLayer, SystemeEndiguement, AppTronconsService, DigueController,

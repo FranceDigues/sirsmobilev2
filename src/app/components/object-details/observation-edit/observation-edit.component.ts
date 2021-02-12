@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { AppLayer } from 'src/app/services/layers.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 
 declare var M: any;
 
@@ -26,7 +26,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
   constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
               private cdr: ChangeDetectorRef, private globalConfigService: ConfigService,
               private route: Router, private editionService: EditionModeService,
-              private appLayer: AppLayer) {
+              private mapManagerService: MapManagerService) {
     this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
     this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
 
@@ -112,7 +112,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
                 .then(() => {
                     // Save document.
                     this.editionService.saveObject(this.OES.objectDoc).then(() => {
-                        this.appLayer.syncAllAppLayer();
+                        this.mapManagerService.syncAllAppLayer();
                         this.route.navigateByUrl('/main');
                     });
                 });
@@ -120,13 +120,13 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
         });
       } else {
         this.editionService.saveObject(this.OES.objectDoc).then(() => {
-          this.appLayer.syncAllAppLayer();
+          this.mapManagerService.syncAllAppLayer();
           this.route.navigateByUrl('/main');
         });
       }
     } else {
       this.editionService.saveObject(this.OES.objectDoc).then(() => {
-        this.appLayer.syncAllAppLayer();
+        this.mapManagerService.syncAllAppLayer();
         this.route.navigateByUrl('/main');
       });
     }

@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { LocalDatabase } from '../../services/local-database.service';
-import { EditionLayer } from '../../services/layers.service';
+import { EditionLayer } from '../../services/map-manager.service';
 import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
 
 declare var M: any;

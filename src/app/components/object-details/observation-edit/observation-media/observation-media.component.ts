@@ -12,7 +12,7 @@ import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
 import { ConfigService } from 'src/app/services/config.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { AppLayer } from 'src/app/services/layers.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
@@ -33,7 +33,7 @@ export class ObservationMediaComponent implements OnInit {
                 private camera: Camera, private file: File, private webview: WebView,
                 private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
                 private globalConfigService: ConfigService,
-                private editionService: EditionModeService, private appLayer: AppLayer,
+                private editionService: EditionModeService, private mapManagerService: MapManagerService,
                 private http: HttpClient) {
         this.view = 'media';
         this.config = this.globalConfigService.context;
@@ -223,7 +223,7 @@ export class ObservationMediaComponent implements OnInit {
                                 this.editionService.saveObject(this.OES.objectDoc)
                                     .then(() => {
                                         this.cancel();
-                                        this.appLayer.syncAllAppLayer();
+                                        this.mapManagerService.syncAllAppLayer();
                                     });
                             }
                         }

@@ -8,7 +8,9 @@ import { Random } from '../utils/uuid-utils';
 })
 export class AppLayersService {
 
-    constructor(private localDB: LocalDatabase, private databaseSrvc: DatabaseService) { }
+    constructor(private localDB: LocalDatabase,
+                private databaseSrvc: DatabaseService) {
+    }
 
     favorites = this.databaseSrvc.activeDB.favorites;
 
@@ -18,15 +20,15 @@ export class AppLayersService {
         return new Promise((resolve, rejects) => {
             if (!this.cachedDescriptions) {
                 this.localDB.get('$sirs')
-                .then(
-                    (result) => {
-                        this.cachedDescriptions = result.moduleDescriptions;
-                        resolve(this.cachedDescriptions);
-                    },
-                    (error) => {
-                        rejects(error);
-                    }
-                );
+                    .then(
+                        (result) => {
+                            this.cachedDescriptions = result.moduleDescriptions;
+                            resolve(this.cachedDescriptions);
+                        },
+                        (error) => {
+                            rejects(error);
+                        }
+                    );
             } else {
                 resolve(this.cachedDescriptions);
             }
@@ -59,20 +61,20 @@ export class AppLayersService {
     getAvailable() {
         return new Promise((resolve, rejects) => {
             this.moduleDescriptions()
-            .then(
-                (modules: any) => {
-                    let leaves = [];
-                    for (const module in modules) {
-                        if (modules[module].layers) {
-                            leaves = leaves.concat(this.extraLeaves(modules[module].layers));
+                .then(
+                    (modules: any) => {
+                        let leaves = [];
+                        for (const module in modules) {
+                            if (modules[module].layers) {
+                                leaves = leaves.concat(this.extraLeaves(modules[module].layers));
+                            }
                         }
+                        resolve(leaves);
+                    },
+                    (error) => {
+                        rejects(error);
                     }
-                    resolve(leaves);
-                },
-                (error) => {
-                    rejects(error);
-                }
-            );
+                );
         });
     }
 

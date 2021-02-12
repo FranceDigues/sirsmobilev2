@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { AppLayer, EditionLayer } from 'src/app/services/layers.service';
+import { MapManagerService, EditionLayer } from 'src/app/services/map-manager.service';
 import { MapService } from 'src/app/services/map.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class LeftSlideMenuComponent implements OnInit {
   @Output() readonly slidePathChange = new EventEmitter<string>();
 
   constructor(public editionLayer: EditionLayer, public geoloc: GeolocationService,
-              public mapService: MapService, private appLayer: AppLayer, private route: Router) { }
+              public mapService: MapService, private mapManagerService: MapManagerService, private route: Router) { }
 
   ngOnInit() {}
 
@@ -49,7 +49,7 @@ export class LeftSlideMenuComponent implements OnInit {
 
   changeShowArchivedObjects() {
     this.mapService.archiveObjectsFlag = !this.mapService.archiveObjectsFlag;
-    this.appLayer.syncAllAppLayer();
+    this.mapManagerService.syncAllAppLayer();
   }
 
   goAppInfos() {
