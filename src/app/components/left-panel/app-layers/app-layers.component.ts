@@ -8,11 +8,11 @@ import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
 
 @Component({
-  selector: 'left-slide-craftlayers',
-  templateUrl: './app-layers.component.html',
-  styleUrls: ['./app-layers.component.scss'],
+    selector: 'app-layers',
+    templateUrl: './app-layers.component.html',
+    styleUrls: ['./app-layers.component.scss'],
 })
-export class LeftSlideCraftlayersComponent implements OnInit {
+export class AppLayersComponent implements OnInit {
 
     @Output() readonly slidePathChange = new EventEmitter<string>();
     layers = Object.assign([], this.appLayersService.getFavorites());
@@ -24,7 +24,8 @@ export class LeftSlideCraftlayersComponent implements OnInit {
 
     constructor(private appLayersService: AppLayersService,
                 public mapManagerService: MapManagerService, private modalCtrl: ModalController,
-                private navCtrl: NavController, private dbService: DatabaseService) { }
+                private navCtrl: NavController, private dbService: DatabaseService) {
+    }
 
     goBack() {
         this.slidePathChange.emit('menu');
@@ -55,12 +56,12 @@ export class LeftSlideCraftlayersComponent implements OnInit {
     updateFavorites() {
         this.appLayersService.favorites = Object.assign([], this.layers);
         this.dbService.getCurrentDatabaseHardDisk()
-        .then(
-            (db: DatabaseModel) => {
-                db.favorites = this.appLayersService.favorites;
-                this.dbService.updateCurrentDatabaseHardDisk(db);
-            }
-        );
+            .then(
+                (db: DatabaseModel) => {
+                    db.favorites = this.appLayersService.favorites;
+                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                }
+            );
     }
 
     onRenderItems(event) {
@@ -105,26 +106,25 @@ export class LeftSlideCraftlayersComponent implements OnInit {
             component: ColorModalComponent,
             animated: true,
             cssClass: 'modal-css',
-            componentProps: { layer }
+            componentProps: {layer}
         });
         modal.onDidDismiss()
-        .then(
-            (color) => {
-                if (color.data) {
-                    layer.color = color.data;
-                    setTimeout(() => {
-                        // this.mapManagerService.reloadLayer(layer): // TODO verify you can reactive this
-                    }, 1000);
+            .then(
+                (color) => {
+                    if (color.data) {
+                        layer.color = color.data;
+                        setTimeout(() => {
+                            // this.mapManagerService.reloadLayer(layer): // TODO verify you can reactive this
+                        }, 1000);
+                    }
                 }
-            }
-        );
+            );
         return await modal.present();
     }
 
     onBack() {
         this.slidePathChange.emit('menu');
     }
-
 
 
 }

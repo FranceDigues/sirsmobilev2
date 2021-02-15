@@ -7,7 +7,7 @@ import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { LeftSlideAddBackLayerComponent } from './backmap/addbacklayer/addbacklayer.component';
 import { LeftSlideBackmapComponent } from './backmap/backmap.component';
 import { ColorModalComponent } from './app-layers/color-modal/color-modal.component';
-import { LeftSlideCraftlayersComponent } from './app-layers/app-layers.component';
+import { AppLayersComponent } from './app-layers/app-layers.component';
 import { LeftSlideDisponibleLayersComponent } from './app-layers/disponible/disponible.component';
 import { LeftPanelComponent } from './left-panel.component';
 import { MenuPanelComponent } from './menu-panel/menu-panel.component';
@@ -35,7 +35,7 @@ import { MatIconModule } from '@angular/material/icon';
         LeftSlideAddBackLayerComponent,
         ArraySortPipe,
         LeftSlideTronconComponent,
-        LeftSlideCraftlayersComponent,
+        AppLayersComponent,
         ColorModalComponent,
         LeftSlideDisponibleLayersComponent],
     exports: [LeftPanelComponent]

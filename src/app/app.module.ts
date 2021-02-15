@@ -30,7 +30,7 @@ import { EditionModeService } from './services/edition-mode.service';
 import { EditObjectService } from './services/edit-object.service';
 import { FormsTemplateService } from './services/formstemplate.service';
 import { ConfigService } from './services/config.service';
-import { MapManagerService, BackLayer, EditionLayer, GeolocLayer } from './services/map-manager.service';
+import { MapManagerService, BackLayer, GeolocLayer } from './services/map-manager.service';
 import { MapService } from './services/map.service';
 import { MapEditObjectService } from './services/map-edit-object.service';
 import { ObjectDetails } from './services/object-details.service';
@@ -47,6 +47,7 @@ import { DirectiveModule } from './directives/directive.module';
 import { PositionService } from './services/position.service';
 import { ObjectEditModule } from './components/object-edit/object-edit.module';
 import { Network } from '@ionic-native/network/ngx';
+import { EditionLayerService } from './services/edition-layer.service';
 
 @NgModule({
     declarations: [AppComponent],
@@ -63,7 +64,7 @@ import { Network } from '@ionic-native/network/ngx';
         StatusBar, OLService, SplashScreen, NativeStorage,
         MapService, Insomnia, Geolocation, EditionModeService,
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
-        MapManagerService, GeolocLayer, EditionLayer, BackLayer,
+        MapManagerService, GeolocLayer, EditionLayerService, BackLayer,
         SyncService, DatabaseService, AuthService, ConfigService,
         AppVersionsService, SirsDocService, BackLayerService,
         BackLayer, SystemeEndiguement, AppTronconsService, DigueController,

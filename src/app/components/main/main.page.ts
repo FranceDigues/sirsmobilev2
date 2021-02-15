@@ -11,12 +11,13 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService, BackLayer, EditionLayer, GeolocLayer } from '../../services/map-manager.service';
+import { MapManagerService, BackLayer, GeolocLayer } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
 import { SirsDocService } from '../../services/sirsdoc.service';
 import { Network } from '@ionic-native/network/ngx';
+import { EditionLayerService } from '../../services/edition-layer.service';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocationService,
-                public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
+                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
@@ -38,7 +39,7 @@ export class MainPage implements AfterViewInit {
         this.appVersionsService.init();
         this.backLayer.init();
         this.mapManagerService.init();
-        this.editionLayer.init();
+        this.editionLayerService.init();
         this.geolocLayer.init();
 
         this.platform.pause.subscribe(
@@ -104,7 +105,7 @@ export class MainPage implements AfterViewInit {
                     this.ol.getMap().setView(this.mapService.currentView);
                     this.ol.addLayer(this.backLayer.backLayer);
                     this.ol.addLayer(this.mapManagerService.appLayer);
-                    this.ol.addLayer(this.editionLayer.editionLayer);
+                    this.ol.addLayer(this.editionLayerService.editionLayer);
                     this.ol.addLayer(this.geolocLayer.geolocLayer);
                     this.ol.getMap().addInteraction(new LongClickSelect({
                         circleStyle: new Style({

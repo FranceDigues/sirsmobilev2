@@ -4,8 +4,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { LocalDatabase } from '../../services/local-database.service';
-import { EditionLayer } from '../../services/map-manager.service';
 import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
+import { EditionLayerService } from '../../services/edition-layer.service';
 
 declare var M: any;
 
@@ -80,7 +80,7 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
 
   constructor(public objectDetails: ObjectDetails, private authService: AuthService,
               private route: Router, private alertCtrl: AlertController,
-              private localDB: LocalDatabase, private editionLayer: EditionLayer,
+              private localDB: LocalDatabase, private editionLayerService: EditionLayerService,
               private selectedObjectsService: SelectedObjectsService) {
                 this.activeTab = 'description';
                 this.objectDetails.detailsType = 'objectDetails';
@@ -188,7 +188,7 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
                 // Remove the selected features
                 this.selectedObjectsService.deleteFeature(this.document._id);
                 this.goBack();
-                this.editionLayer.redrawEditionLayerAfterSynchronization();
+                this.editionLayerService.redrawEditionLayerAfterSynchronization();
               }
             );
           }

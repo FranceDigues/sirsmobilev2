@@ -3,8 +3,8 @@
         <menu-panel class="full-height" (slidePathChange)="changeSlidePath($event)"></menu-panel>
     </div>
     <div class="full-height" *ngSwitchCase="'craftLayers'">
-        <left-slide-craftlayers class="full-height"
-                                (slidePathChange)="changeSlidePath($event)"></left-slide-craftlayers>
+        <app-layers class="full-height"
+                                (slidePathChange)="changeSlidePath($event)"></app-layers>
     </div>
     <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
         <left-slide-troncon class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-troncon>

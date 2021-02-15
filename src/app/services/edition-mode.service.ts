@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { EditionLayer } from './map-manager.service';
 import { LocalDatabase } from './local-database.service';
+import { EditionLayerService } from './edition-layer.service';
 
 @Injectable({
     providedIn: 'root'
@@ -44,7 +44,7 @@ export class EditionModeService {
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-                private editionLayer: EditionLayer) { }
+                private editionLayerService: EditionLayerService) { }
 
     newObject(type) {
         const objectDoc: any = {
@@ -65,7 +65,7 @@ export class EditionModeService {
             .then(
                 () => {
                     if (objectDoc.positionDebut && objectDoc.positionFin) {
-                        const source = this.editionLayer.editionLayer.getSource();
+                        const source = this.editionLayerService.editionLayer.getSource();
                         const features = source.getFeatures();
                         let i = features.length;
                         while (i--) {
@@ -74,7 +74,7 @@ export class EditionModeService {
                                 break;
                             }
                         }
-                        source.addFeature(this.editionLayer.createEditionFeatureInstance(objectDoc));
+                        source.addFeature(this.editionLayerService.createEditionFeatureInstance(objectDoc));
                     }
                     return objectDoc;
                 }

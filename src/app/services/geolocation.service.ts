@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Coordinates, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
+import { AppConfigService } from './app-config.service';
 
 
 @Injectable({
@@ -11,9 +12,10 @@ export class GeolocationService {
     gpsAccuracy = null;
     coords = null;
     lastGPSUpdate = null;
-    enableGeoloc = true;
 
-    constructor(private geolocation: Geolocation, private loadingCtrl: LoadingController) {
+    constructor(private geolocation: Geolocation,
+                private loadingCtrl: LoadingController,
+                private appConfigService: AppConfigService) {
     }
 
     getCoords() {
@@ -54,5 +56,14 @@ export class GeolocationService {
                     }
                 );
         });
+    }
+
+
+    get enabled(): boolean {
+        return this.appConfigService.config.mode.enableGeolocation;
+    }
+
+    set enabled(flag: boolean) {
+        this.appConfigService.changeGeolocationFlag(flag);
     }
 }

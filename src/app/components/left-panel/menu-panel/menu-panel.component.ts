@@ -1,8 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeolocationService } from 'src/app/services/geolocation.service';
-import { MapManagerService, EditionLayer } from 'src/app/services/map-manager.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
 import { MapService } from 'src/app/services/map.service';
+import { AppConfigService } from '../../../services/app-config.service';
+import { EditionLayerService } from '../../../services/edition-layer.service';
 
 @Component({
     selector: 'menu-panel',
@@ -10,14 +12,17 @@ import { MapService } from 'src/app/services/map.service';
     styleUrls: ['./menu-panel.component.scss'],
 })
 export class MenuPanelComponent implements OnInit {
+    public editionFlag;
 
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
-    constructor(public editionLayer: EditionLayer, public geoloc: GeolocationService,
+    constructor(public editionLayerService: EditionLayerService, public geolocationService: GeolocationService,
+                private appConfigService: AppConfigService,
                 public mapService: MapService, private mapManagerService: MapManagerService, private route: Router) {
     }
 
     ngOnInit() {
+        this.editionFlag = this.editionLayerService.isEnabled();
     }
 
     goCraftLayers() {
@@ -41,12 +46,14 @@ export class MenuPanelComponent implements OnInit {
     }
 
     changeEditionMode() {
-        const tmp = this.editionLayer.editionLayer.getVisible();
-        this.editionLayer.editionLayer.setVisible(!tmp);
+        this.editionFlag = !this.editionFlag;
+        // Hide or show the edition layer
+        this.editionLayerService.changeVisibility(this.editionFlag);
+        this.appConfigService.changeEditionModeFlag(this.editionFlag);
     }
 
     changeLocationGPS() {
-        this.geoloc.enableGeoloc = !this.geoloc.enableGeoloc;
+        this.geolocationService.enabled = !this.geolocationService.enabled;
     }
 
     changeShowArchivedObjects() {
