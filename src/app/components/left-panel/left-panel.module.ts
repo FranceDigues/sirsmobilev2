@@ -10,7 +10,7 @@ import { ColorModalComponent } from './app-layers/color-modal/color-modal.compon
 import { LeftSlideCraftlayersComponent } from './app-layers/app-layers.component';
 import { LeftSlideDisponibleLayersComponent } from './app-layers/disponible/disponible.component';
 import { LeftPanelComponent } from './left-panel.component';
-import { LeftSlideMenuComponent } from './menu/menu.component';
+import { MenuPanelComponent } from './menu-panel/menu-panel.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.component';
 import { GalleryModule } from './gallery/gallery.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     providers: [],
     declarations: [
         LeftPanelComponent,
-        LeftSlideMenuComponent,
+        MenuPanelComponent,
         AppInfosComponent,
         AppSettingsComponent,
         LeftSlideBackmapComponent,

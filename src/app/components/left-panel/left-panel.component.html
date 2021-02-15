@@ -1,6 +1,6 @@
 <div [ngSwitch]="slidePath" class="full-height">
     <div class="full-height" *ngSwitchCase="'menu'">
-        <left-slide-menu class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-menu>
+        <menu-panel class="full-height" (slidePathChange)="changeSlidePath($event)"></menu-panel>
     </div>
     <div class="full-height" *ngSwitchCase="'craftLayers'">
         <left-slide-craftlayers class="full-height"

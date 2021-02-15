@@ -46,6 +46,7 @@ import { ObservationEditService } from './services/observation-edit.service';
 import { DirectiveModule } from './directives/directive.module';
 import { PositionService } from './services/position.service';
 import { ObjectEditModule } from './components/object-edit/object-edit.module';
+import { Network } from '@ionic-native/network/ngx';
 
 @NgModule({
     declarations: [AppComponent],
@@ -69,7 +70,7 @@ import { ObjectEditModule } from './components/object-edit/object-edit.module';
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, CacheMapManager, File, WebView, FileOpener,
-        ObservationEditService, PositionService,
+        ObservationEditService, PositionService, Network,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

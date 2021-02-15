@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { LoadingController, MenuController, Platform } from '@ionic/angular';
+import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
 import { transform } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
@@ -16,6 +16,8 @@ import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
 import { SirsDocService } from '../../services/sirsdoc.service';
+import { Network } from '@ionic-native/network/ngx';
+
 
 @Component({
     selector: 'app-main',
@@ -23,36 +25,62 @@ import { SirsDocService } from '../../services/sirsdoc.service';
     styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements AfterViewInit {
-
-    navbarController = true; // ? mb remove bcs unused
-
-    pathRightSlide = 'objectsCreation';
+    public pathRightSlide = 'objectsCreation';
+    public connectSubscription;
+    public disconnectSubscription;
 
     constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocationService,
                 public editionLayer: EditionLayer, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
-                private selectedObjectsService: SelectedObjectsService) {
+                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController) {
         this.appVersionsService.init();
         this.backLayer.init();
         this.mapManagerService.init();
         this.editionLayer.init();
         this.geolocLayer.init();
+
         this.platform.pause.subscribe(
-            async () => {
-                const currentView = this.mapService.currentView;
-                if (currentView) {
-                    this.dbService.getCurrentDatabaseHardDisk().then(
-                        (db: DatabaseModel) => {
-                            db.context.currentView = {
-                                zoom: this.ol.map.getView().getZoom(),
-                                coords: this.ol.map.getView().getCenter()
-                            };
-                            this.dbService.updateCurrentDatabaseHardDisk(db);
-                        }
-                    );
+            () => {
+                this.saveCurrentView();
+                // stop connect watch
+                if (this.connectSubscription) {
+                    this.connectSubscription.unsubscribe();
                 }
+                // stop disconnect watch
+                if (this.disconnectSubscription) {
+                    this.disconnectSubscription.unsubscribe();
+                }
+            });
+
+        this.platform.resume.subscribe(
+            async () => {
+                this.saveCurrentView();
+                await this.watchDeviceConnection();
+            });
+    }
+
+    async watchDeviceConnection() {
+        // watch network for a disconnection
+        this.connectSubscription = this.network.onConnect()
+            .subscribe(async () => {
+                const toast = await this.toastCtrl.create({
+                    message: 'Connexion établie avec succès',
+                    duration: 2000,
+                    position: 'top'
+                });
+                toast.present();
+            });
+        // watch network for a disconnection
+        this.disconnectSubscription = this.network.onDisconnect()
+            .subscribe(async () => {
+                const toast = await this.toastCtrl.create({
+                    message: 'La connexion est échoué',
+                    duration: 2000,
+                    position: 'top'
+                });
+                toast.present();
             });
     }
 
@@ -101,13 +129,14 @@ export class MainPage implements AfterViewInit {
                     }, 1600);
                 }
             );
+        this.locateMe();
     }
 
     locateMe() {
         this.geoloc.getCurrentLocation()
             .then(
-                (result) => {
-                    this.zoomToMe();
+                (coordinates) => {
+                    this.geolocLayer.redrawGeolocLayer(coordinates);
                 },
                 (error) => {
                     console.error('Error getting location', error);
@@ -115,18 +144,41 @@ export class MainPage implements AfterViewInit {
             );
     }
 
-    zoomToMe() {
-        const coords = this.geoloc.getCoords();
-        if (coords) {
-            const map = this.ol.getMap();
-            map.getView().setCenter(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'));
-            map.getView().setZoom(18);
-            this.geolocLayer.redrawGeolocLayer(coords);
+    zoomToCurrentLocation() {
+        this.geoloc.getCurrentLocation()
+            .then(
+                (coordinates) => {
+                    if (coordinates) {
+                        const map = this.ol.getMap();
+                        map.getView().setCenter(transform([coordinates.longitude, coordinates.latitude], 'EPSG:4326', 'EPSG:3857'));
+                        map.getView().setZoom(18);
+                        this.geolocLayer.redrawGeolocLayer(coordinates);
+                    }
+                },
+                (error) => {
+                    console.error('Error getting location', error);
+                }
+            );
+    }
+
+    saveCurrentView() {
+        const currentView = this.mapService.currentView;
+        if (currentView) {
+            this.dbService.getCurrentDatabaseHardDisk().then(
+                (db: DatabaseModel) => {
+                    db.context.currentView = {
+                        zoom: this.ol.map.getView().getZoom(),
+                        coords: this.ol.map.getView().getCenter()
+                    };
+                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                }
+            );
         }
     }
 
-    refresh() {
-    }
+    // refresh() {
+    //     window.location.reload();
+    // }
 
     logout() {
         this.authService.logout();
