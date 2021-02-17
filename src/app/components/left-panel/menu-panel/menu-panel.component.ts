@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { MapService } from 'src/app/services/map.service';
-import { AppConfigService } from '../../../services/app-config.service';
 import { EditionLayerService } from '../../../services/edition-layer.service';
+import { DatabaseService } from '../../../services/database.service';
 
 @Component({
     selector: 'menu-panel',
@@ -17,7 +17,7 @@ export class MenuPanelComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
     constructor(public editionLayerService: EditionLayerService, public geolocationService: GeolocationService,
-                private appConfigService: AppConfigService,
+                private databaseService: DatabaseService,
                 public mapService: MapService, private mapManagerService: MapManagerService, private route: Router) {
     }
 
@@ -49,11 +49,11 @@ export class MenuPanelComponent implements OnInit {
         this.editionFlag = !this.editionFlag;
         // Hide or show the edition layer
         this.editionLayerService.changeVisibility(this.editionFlag);
-        this.appConfigService.changeEditionModeFlag(this.editionFlag);
+        this.databaseService.changeEditionModeFlag(this.editionFlag);
     }
 
     changeLocationGPS() {
-        this.geolocationService.enabled = !this.geolocationService.enabled;
+        this.geolocationService.isEnabled = !this.geolocationService.isEnabled;
     }
 
     changeShowArchivedObjects() {

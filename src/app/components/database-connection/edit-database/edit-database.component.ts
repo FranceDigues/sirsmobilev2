@@ -27,7 +27,7 @@ export class EditDatabaseComponent implements OnInit {
               private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.nativeStorage.getItem('databases')
+    this.nativeStorage.getItem('databases-settings')
     .then(
       (data) => {
         this.databases = data;
@@ -98,7 +98,7 @@ export class EditDatabaseComponent implements OnInit {
   editStorage() {
       this.addDefaultProperties();
       this.databases[this.databaseIndex] = this.databaseForm.value;
-      this.dbService.updateDatabasesHardDisk(this.databases);
+      this.dbService.saveDatabaseSettings(this.databases);
       this.onBack();
   }
 

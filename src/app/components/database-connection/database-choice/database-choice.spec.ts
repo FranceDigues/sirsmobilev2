@@ -104,26 +104,26 @@ describe('Testing DatabaseConnectionPage', () => {
         .returnValue(new Promise((resolve) => {
             resolve('');
         }));
-        spyOn(dbService, 'getDatabasesHardDisk').and
+        spyOn(dbService, 'getDatabaseSettings').and
         .returnValue(new Promise((resolve) => {
             resolve(res);
         }));
         component.init();
         setTimeout(() => {
             expect(platform.ready).toHaveBeenCalled();
-            expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
+            expect(dbService.getDatabaseSettings).toHaveBeenCalled();
             expect(component.databases).toEqual(res);
             done();
         }, 10);
     });
 
     it('ngOnInit method should call DatabaseService and call error console log', (done) => {
-        spyOn(dbService, 'getDatabasesHardDisk').and.returnValue(Promise.reject('error'));
+        spyOn(dbService, 'getDatabaseSettings').and.returnValue(Promise.reject('error'));
         spyOn(console, 'log');
 
         component.ngOnInit();
         setTimeout(() => {
-            expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
+            expect(dbService.getDatabaseSettings).toHaveBeenCalled();
             done();
         }, 10);
     });
@@ -137,27 +137,27 @@ describe('Testing DatabaseConnectionPage', () => {
                 password: 'test',
             }
         ];
-        spyOn(dbService, 'getDatabasesHardDisk').and
+        spyOn(dbService, 'getDatabaseSettings').and
         .returnValue(new Promise((resolve) => {
             resolve(res);
         }));
         component.changeStatus(1);
         setTimeout(() => {
             expect(component.status).toEqual(1);
-            expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
+            expect(dbService.getDatabaseSettings).toHaveBeenCalled();
             expect(component.databases).toEqual(res);
             done();
         }, 10);
     });
 
     it('changeStatus method should change status value and call error console log', (done) => {
-        spyOn(dbService, 'getDatabasesHardDisk').and.returnValue(Promise.reject('error'));
+        spyOn(dbService, 'getDatabaseSettings').and.returnValue(Promise.reject('error'));
         spyOn(console, 'log');
 
         component.changeStatus(1);
         setTimeout(() => {
             expect(component.status).toEqual(1);
-            expect(dbService.getDatabasesHardDisk).toHaveBeenCalled();
+            expect(dbService.getDatabaseSettings).toHaveBeenCalled();
             done();
         }, 10);
     });

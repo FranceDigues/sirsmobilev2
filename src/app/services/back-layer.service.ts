@@ -14,10 +14,10 @@ export class BackLayerService {
 
     init() {
         return new Promise((resolve) => {
-            this.dbService.getCurrentDatabaseHardDisk()
+            this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    this.backLayers = db.context.backLayer;
+                    this.backLayers = db.settings.backLayer;
                     resolve('');
                 }
             );
@@ -59,11 +59,11 @@ export class BackLayerService {
     }
 
     updateListInHardDisk() {
-        this.dbService.getCurrentDatabaseHardDisk()
+        this.dbService.getCurrentDatabaseSettings()
         .then(
             (db: DatabaseModel) => {
-                db.context.backLayer = this.backLayers;
-                this.dbService.updateCurrentDatabaseHardDisk(db);
+                db.settings.backLayer = this.backLayers;
+                this.dbService.setCurrentDatabaseSettings(db);
             }
         );
     }

@@ -38,7 +38,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.insomnia.keepAwake();
-    this.dbService.getDatabasesHardDisk()
+    this.dbService.getDatabaseSettings()
     .then(
       async (databases) => {
         this.databases = databases;
@@ -319,7 +319,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   fifthStepComplete() {
     this.databases[this.databaseIndex].replicated = true;
-    this.dbService.updateDatabasesHardDisk(this.databases);
+    this.dbService.saveDatabaseSettings(this.databases);
     this.statusChange.emit(4);
   }
 

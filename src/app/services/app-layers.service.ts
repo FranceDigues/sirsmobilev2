@@ -12,7 +12,7 @@ export class AppLayersService {
                 private databaseSrvc: DatabaseService) {
     }
 
-    favorites = this.databaseSrvc.activeDB.favorites;
+    favorites = this.databaseSrvc.activeDB.favoritesLayers;
 
     cachedDescriptions = null;
 

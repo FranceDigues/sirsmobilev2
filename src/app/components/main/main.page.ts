@@ -165,13 +165,13 @@ export class MainPage implements AfterViewInit {
     saveCurrentView() {
         const currentView = this.mapService.currentView;
         if (currentView) {
-            this.dbService.getCurrentDatabaseHardDisk().then(
+            this.dbService.getCurrentDatabaseSettings().then(
                 (db: DatabaseModel) => {
-                    db.context.currentView = {
+                    db.settings.currentView = {
                         zoom: this.ol.map.getView().getZoom(),
                         coords: this.ol.map.getView().getCenter()
                     };
-                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                    this.dbService.setCurrentDatabaseSettings(db);
                 }
             );
         }

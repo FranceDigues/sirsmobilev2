@@ -5,24 +5,22 @@ export interface DatabaseModel {
     password: string;
     replicated?: boolean;
     lastSync?: number;
-    favorites?: Array<FavoritesModel>;
-    context?: ContextModel;
+    favoritesLayers?: Array<FavoritesLayersModel>;
+    settings?: SettingsModel;
 }
 
-export interface ContextModel {
+export interface SettingsModel {
     authUser?;
     showText?: string;
     backLayer?: BackLayerModel;
-    settings?: {
-        geolocation: boolean,
-        edition: boolean,
+    mode?: {
+        enableGeolocation: boolean,
+        enableEdition: boolean
     };
     currentView?: {
         zoom?: any,
         coords?: any,
     };
-    lastLocation?;
-    version?;
 }
 
 export interface BackLayerModel {
@@ -49,7 +47,7 @@ export interface ListBackLayer {
     };
 }
 
-export interface FavoritesModel {
+export interface FavoritesLayersModel {
     visible: boolean;
     title?: string;
     filterValue?: string;

@@ -8,12 +8,12 @@ import { getDistance } from 'ol/sphere';
 import { DatabaseService } from './database.service';
 import { EditionModeService } from './edition-mode.service';
 import { GeolocationService } from './geolocation.service';
-import { ConfigService } from './config.service';
 import { MapManagerService } from './map-manager.service';
 import { ObjectDocService } from './object-doc.service';
 import { SirsDocService } from './sirsdoc.service';
 import { UuidUtils as uuid } from '../utils/uuid-utils';
 import { PositionService } from './position.service';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root'
@@ -34,7 +34,7 @@ export class EditObjectService {
         startPoint: false,
         endPoint: false
     };
-    config = null;
+    showTextConfig;
     troncons = [];
     allTroncons = [];
     geoloc = undefined;
@@ -48,10 +48,9 @@ export class EditObjectService {
 
     constructor(private activeRoute: ActivatedRoute, private objectDocService: ObjectDocService,
                 private databaseService: DatabaseService, private loadingCtrl: LoadingController,
-                private globalConfigService: ConfigService,
                 private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
                 private route: Router, private mapManagerService: MapManagerService, private toastCtrl: ToastController,
-                private GeolocationService: GeolocationService, private alertCtrl: AlertController,
+                private geolocationService: GeolocationService, private alertCtrl: AlertController,
                 private positionService: PositionService,
                 private storageService: StorageService) {
     }
@@ -94,7 +93,6 @@ export class EditObjectService {
                                             this.getEndPosBorne();
                                         }
                                     );
-                                this.config = this.globalConfigService.context;
                                 if (this.isNew) {
                                     this.isLinear = false;
                                 } else {
@@ -111,6 +109,11 @@ export class EditObjectService {
                                 }
                             });
                 });
+
+        this.databaseService.getCurrentDatabaseSettings()
+            .then((config: DatabaseModel) => {
+                this.showTextConfig = config.settings.showText;
+            });
     }
 
     resetValues() {
@@ -127,7 +130,7 @@ export class EditObjectService {
             startPoint: false,
             endPoint: false
         };
-        this.config = null;
+        this.showTextConfig = null;
         this.troncons = [];
         this.allTroncons = [];
         this.geoloc = undefined;
@@ -140,7 +143,7 @@ export class EditObjectService {
     }
 
     showText(type) {
-        return this.config === type;
+        return this.showTextConfig === type;
     }
 
     formatDate() {
@@ -589,7 +592,7 @@ export class EditObjectService {
     // * Location
 
     locateMe() {
-        this.GeolocationService.getCurrentLocation()
+        this.geolocationService.getCurrentLocation()
             .then(
                 (position) => {
                     if (this.isDependance()) {
@@ -602,7 +605,7 @@ export class EditObjectService {
     }
 
     locateMeEnd() {
-        this.GeolocationService.getCurrentLocation()
+        this.geolocationService.getCurrentLocation()
             .then(
                 (position) => {
                     this.handlePosDependanceEnd(position);

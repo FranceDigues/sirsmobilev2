@@ -55,11 +55,11 @@ export class AppLayersComponent implements OnInit {
 
     updateFavorites() {
         this.appLayersService.favorites = Object.assign([], this.layers);
-        this.dbService.getCurrentDatabaseHardDisk()
+        this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    db.favorites = this.appLayersService.favorites;
-                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                    db.favoritesLayers = this.appLayersService.favorites;
+                    this.dbService.setCurrentDatabaseSettings(db);
                 }
             );
     }

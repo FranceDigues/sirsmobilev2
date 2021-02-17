@@ -10,11 +10,10 @@ import { File, Entry, Metadata, DirectoryEntry } from '@ionic-native/file/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
-import { ConfigService } from 'src/app/services/config.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { MapManagerService } from 'src/app/services/map-manager.service';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { DatabaseService } from '../../../../services/database.service';
+import { DatabaseModel } from '../../../database-connection/models/database.model';
 
 @Component({
     selector: 'observation-media',
@@ -26,22 +25,25 @@ export class ObservationMediaComponent implements OnInit {
     @Output() readonly viewChange = new EventEmitter<string>();
 
     view: 'media' | 'map' | 'note';
-    config: 'fullName' | 'abstract' | 'both';
+    showTextConfig: string;
 
     constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
                 private geolocation: GeolocationService, private cameraService: CameraService,
                 private camera: Camera, private file: File, private webview: WebView,
                 private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
-                private globalConfigService: ConfigService,
                 private editionService: EditionModeService, private mapManagerService: MapManagerService,
-                private http: HttpClient) {
+                private databaseService: DatabaseService) {
         this.view = 'media';
-        this.config = this.globalConfigService.context;
+
         this.OES.importPhotoData = null;
         this.OES.mediaOptions.id = '';
     }
 
     ngOnInit() {
+        this.databaseService.getCurrentDatabaseSettings()
+            .then((config: DatabaseModel) => {
+                this.showTextConfig = config.settings.showText;
+            });
     }
 
     cancel() {
@@ -53,8 +55,7 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     showText(str: 'fullName' | 'abstract' | 'both') {
-        const isSameString = this.config === str;
-        return isSameString;
+        return this.showTextConfig === str;
     }
 
     initData() {

@@ -33,7 +33,7 @@ export class DatabaseChoiceComponent implements OnInit {
     this.platform.ready()
     .then(
       () => {
-        this.dbService.getDatabasesHardDisk()
+        this.dbService.getDatabaseSettings()
         .then(
           (databases) => {
             this.databases = databases;
@@ -54,7 +54,7 @@ export class DatabaseChoiceComponent implements OnInit {
 
   changeStatus(status: number) {
     this.status = status;
-    this.dbService.getDatabasesHardDisk()
+    this.dbService.getDatabaseSettings()
     .then(
       (databases) => {
         this.databases = databases;
@@ -104,7 +104,7 @@ export class DatabaseChoiceComponent implements OnInit {
           text: 'OK',
           handler: () => {
             this.databases.splice(this.databaseIndex, 1);
-            this.dbService.updateDatabasesHardDisk(this.databases);
+            this.dbService.saveDatabaseSettings(this.databases);
             this.selectedDatabase = null;
             return;
           }
@@ -117,10 +117,10 @@ export class DatabaseChoiceComponent implements OnInit {
   validateDatabase() {
     if (this.selectedDatabase.replicated === false) {
       this.status = 3;
-    } else if (this.selectedDatabase.replicated && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
+    } else if (this.selectedDatabase.replicated && (this.selectedDatabase.settings.authUser === undefined || !this.selectedDatabase.settings.authUser)) {
       this.status = 4;
     } else {
-      this.authService.user = this.dbService.activeDB.context.authUser;
+      this.authService.user = this.dbService.activeDB.settings.authUser;
       this.router.navigateByUrl('/main');
     }
   }

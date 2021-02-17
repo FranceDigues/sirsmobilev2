@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalDatabase } from './local-database.service';
 import { SirsDocService } from './sirsdoc.service';
-import { AppConfigService } from './app-config.service';
 import { RealPositionStyle } from './style.service';
 import { MapService } from './map.service';
 import VectorLayer from 'ol/layer/Vector';
@@ -9,6 +8,8 @@ import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import VectorSource from 'ol/source/Vector';
 import WKT from 'ol/format/WKT';
+import { DatabaseService } from './database.service';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root'
@@ -19,13 +20,16 @@ export class EditionLayerService {
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase, private SirsDoc: SirsDocService,
-                private appConfigService: AppConfigService,
+                private databaseService: DatabaseService,
                 private realPositionService: RealPositionStyle, private mapService: MapService) {
     }
 
     init() {
         this.editionLayer = this.createEditionLayerInstance();
-        this.editionLayer.setVisible(this.appConfigService.config.mode.enableEdition);
+        this.databaseService.getCurrentDatabaseSettings()
+            .then((config: DatabaseModel) => {
+                this.editionLayer.setVisible(config.settings.mode.enableEdition);
+            });
     }
 
     get getEditionLayer() {
@@ -131,7 +135,7 @@ export class EditionLayerService {
     }
 
     isEnabled() {
-        return this.appConfigService.config.mode.enableEdition;
+        return this.editionLayer && this.editionLayer.getVisible();
     }
 
     changeVisibility(flag: boolean) {

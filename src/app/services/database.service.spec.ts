@@ -33,7 +33,7 @@ describe('Testing Database Service', () => {
         expect(databaseService.activeDB).toEqual(res);
     })
 
-    it('updateDatabasesHardDisk method should update databases in hardDisk', () => {
+    it('saveDatabaseSettings method should update databases in hardDisk', () => {
         let databases = [
             {
                 name: 'test',
@@ -51,18 +51,18 @@ describe('Testing Database Service', () => {
 
         spyOn(nativeStorage, 'setItem');
 
-        databaseService.updateDatabasesHardDisk(databases);
-        expect(nativeStorage.setItem).toHaveBeenCalledWith('databases', databases);
+        databaseService.saveDatabaseSettings(databases);
+        expect(nativeStorage.setItem).toHaveBeenCalledWith('databases-settings', databases);
     });
 
-    it('getDatabasesHardDisk method should return databases from hardDisk', () => {
+    it('getDatabaseSettings method should return databases from hardDisk', () => {
         spyOn(nativeStorage, 'getItem');
 
-        databaseService.getDatabasesHardDisk();
-        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases');
+        databaseService.getDatabaseSettings();
+        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases-settings');
     });
 
-    it('getCurrentDatabaseHardDisk method should return current database', () => {
+    it('getCurrentDatabaseSettings method should return current database', () => {
         const db1 = {
             name: 'test1',
             url: 'test1',
@@ -83,16 +83,16 @@ describe('Testing Database Service', () => {
         databaseService.setActiveDB(db1);
         spyOn(nativeStorage, 'getItem').and.returnValue(Promise.resolve(databases))
 
-        databaseService.getCurrentDatabaseHardDisk()
+        databaseService.getCurrentDatabaseSettings()
         .then(
             (res) => {
                 expect(res).toEqual(db1);
             }
         )
-        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases');
+        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases-settings');
     });
 
-    it('getCurrentDatabaseHardDisk method should return null because error', () => {
+    it('getCurrentDatabaseSettings method should return null because error', () => {
         const db1 = {
             name: 'test1',
             url: 'test1',
@@ -119,17 +119,17 @@ describe('Testing Database Service', () => {
         databaseService.setActiveDB(fakeDB);
         spyOn(nativeStorage, 'getItem').and.returnValue(Promise.resolve(databases))
 
-        databaseService.getCurrentDatabaseHardDisk()
+        databaseService.getCurrentDatabaseSettings()
         .then(
             (res) => {
                 expect(res).toBeNull();
             }
 
         );
-        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases');
+        expect(nativeStorage.getItem).toHaveBeenCalledWith('databases-settings');
     });
 
-    it('updateCurrentDatabaseHardDisk method should update the targetted db in HardDisk', (done) => {
+    it('setCurrentDatabaseSettings method should update the targetted db in HardDisk', (done) => {
         const db1 = {
             name: 'test1',
             url: 'test1',
@@ -155,12 +155,12 @@ describe('Testing Database Service', () => {
 
         databaseService.setActiveDB(db1);
         spyOn(nativeStorage, 'getItem').and.returnValue(Promise.resolve(databases))
-        spyOn(databaseService, 'updateDatabasesHardDisk');
+        spyOn(databaseService, 'saveDatabaseSettings');
 
-        databaseService.updateCurrentDatabaseHardDisk(db1Updated);
+        databaseService.setCurrentDatabaseSettings(db1Updated);
         setTimeout(() => {
-            expect(nativeStorage.getItem).toHaveBeenCalledWith('databases');
-            expect(databaseService.updateDatabasesHardDisk).toHaveBeenCalledWith([db1Updated, db2]);
+            expect(nativeStorage.getItem).toHaveBeenCalledWith('databases-settings');
+            expect(databaseService.saveDatabaseSettings).toHaveBeenCalledWith([db1Updated, db2]);
             done();
         }, 20);
     });

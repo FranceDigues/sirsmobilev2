@@ -21,7 +21,7 @@ export class MapService {
 
     getCurrentView() {
         if (!this.currentView) {
-            const isCurrentView = this.dbService.activeDB.context.currentView;
+            const isCurrentView = this.dbService.activeDB.settings.currentView;
             if (isCurrentView) {
                 return new View({
                     zoom: isCurrentView.zoom,

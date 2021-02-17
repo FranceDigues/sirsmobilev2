@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ConfigService } from 'src/app/services/config.service';
+import { DatabaseService } from '../../../services/database.service';
+import { DatabaseModel } from '../../database-connection/models/database.model';
 
 @Component({
     selector: 'app-settings',
@@ -7,25 +8,25 @@ import { ConfigService } from 'src/app/services/config.service';
     styleUrls: ['./app-settings.component.scss'],
 })
 export class AppSettingsComponent implements OnInit {
-
     @Output() readonly slidePathChange = new EventEmitter<string>();
+    public showTextConfig;
 
-    constructor(private globalConfig: ConfigService) {
+    constructor(private databaseService: DatabaseService) {
     }
 
     ngOnInit() {
+        this.databaseService.getCurrentDatabaseSettings()
+            .then((config: DatabaseModel) => {
+                this.showTextConfig = config.settings.showText;
+            });
     }
 
     goBack() {
         this.slidePathChange.emit('menu');
     }
 
-    updateGlobalConfig(state) {
-        this.globalConfig.updateValue(state);
-    }
-
-    getGlobalConfig() {
-        return this.globalConfig.getValue();
+    changeShowTextConfig(value: string) {
+        this.databaseService.changeShowTextConfig(value);
     }
 
 }

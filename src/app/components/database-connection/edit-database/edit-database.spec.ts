@@ -64,7 +64,7 @@ describe('Testing EditDatabaseComponent', () => {
         component.ngOnInit();
 
         setTimeout(() => {
-            expect(nativeStorage.getItem).toHaveBeenCalledWith('databases');
+            expect(nativeStorage.getItem).toHaveBeenCalledWith('databases-settings');
             expect(component.databases).toEqual(databases);
             expect(formBuilder.control).toHaveBeenCalled();
             expect(formBuilder.group).toHaveBeenCalled();
@@ -127,7 +127,7 @@ describe('Testing EditDatabaseComponent', () => {
             favorites
         };
 
-        spyOn(dbService, 'updateDatabasesHardDisk');
+        spyOn(dbService, 'saveDatabaseSettings');
 
         component.databaseIndex = 0;
         component.databaseForm = formBuilder.group(db2);
@@ -135,7 +135,7 @@ describe('Testing EditDatabaseComponent', () => {
 
         component.editStorage();
         expect(component.databases).toEqual([db2, db1]);
-        expect(dbService.updateDatabasesHardDisk).toHaveBeenCalledWith(component.databases);
+        expect(dbService.saveDatabaseSettings).toHaveBeenCalledWith(component.databases);
     });
 
 });

@@ -29,7 +29,6 @@ import { DatabaseService } from './services/database.service';
 import { EditionModeService } from './services/edition-mode.service';
 import { EditObjectService } from './services/edit-object.service';
 import { FormsTemplateService } from './services/formstemplate.service';
-import { ConfigService } from './services/config.service';
 import { MapManagerService, BackLayer, GeolocLayer } from './services/map-manager.service';
 import { MapService } from './services/map.service';
 import { MapEditObjectService } from './services/map-edit-object.service';
@@ -65,7 +64,7 @@ import { EditionLayerService } from './services/edition-layer.service';
         MapService, Insomnia, Geolocation, EditionModeService,
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         MapManagerService, GeolocLayer, EditionLayerService, BackLayer,
-        SyncService, DatabaseService, AuthService, ConfigService,
+        SyncService, DatabaseService, AuthService,
         AppVersionsService, SirsDocService, BackLayerService,
         BackLayer, SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,

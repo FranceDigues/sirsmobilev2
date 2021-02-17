@@ -2,20 +2,27 @@ import { Injectable } from '@angular/core';
 import { Coordinates, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
-import { AppConfigService } from './app-config.service';
-
+import { DatabaseService } from './database.service';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GeolocationService {
-    gpsAccuracy = null;
-    coords = null;
-    lastGPSUpdate = null;
+    private gpsAccuracy = null;
+    private coords = null;
+    private lastGPSUpdate = null;
+    private enabled = false;
 
     constructor(private geolocation: Geolocation,
                 private loadingCtrl: LoadingController,
-                private appConfigService: AppConfigService) {
+                private databaseService: DatabaseService) {
+        this.databaseService.getCurrentDatabaseSettings()
+            .then(
+                (config: DatabaseModel) => {
+                    this.enabled = config.settings.mode.enableGeolocation;
+                }
+            );
     }
 
     getCoords() {
@@ -58,12 +65,11 @@ export class GeolocationService {
         });
     }
 
-
-    get enabled(): boolean {
-        return this.appConfigService.config.mode.enableGeolocation;
+    get isEnabled(): boolean {
+        return this.enabled;
     }
 
-    set enabled(flag: boolean) {
-        this.appConfigService.changeGeolocationFlag(flag);
+    set isEnabled(flag: boolean) {
+        this.databaseService.changeGeolocationFlag(flag);
     }
 }

@@ -12,7 +12,7 @@
         <ion-item (click)="goSynchronisation()">Synchronisation</ion-item>
         <ion-item>
             Localisation GPS
-            <ion-toggle slot="end" [checked]="geolocationService.enabled"
+            <ion-toggle slot="end" [checked]="geolocationService.isEnabled"
                         (ionChange)="changeLocationGPS()"></ion-toggle>
         </ion-item>
         <ion-item>

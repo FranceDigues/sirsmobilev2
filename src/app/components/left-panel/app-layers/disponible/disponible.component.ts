@@ -85,11 +85,11 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   }
 
   updateFavorites() {
-    this.dbService.getCurrentDatabaseHardDisk()
+    this.dbService.getCurrentDatabaseSettings()
     .then(
       (db: DatabaseModel) => {
-        db.favorites = this.appLayersService.getFavorites();
-        this.dbService.updateCurrentDatabaseHardDisk(db);
+        db.favoritesLayers = this.appLayersService.getFavorites();
+        this.dbService.setCurrentDatabaseSettings(db);
       }
     );
   }

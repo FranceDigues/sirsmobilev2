@@ -1,27 +1,36 @@
 <ion-header translucent>
-  <ion-toolbar class="header-slide" color="secondary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Configuration</ion-title>
-  </ion-toolbar>
+    <ion-toolbar class="header-slide" color="secondary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Configuration</ion-title>
+    </ion-toolbar>
 </ion-header>
 <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
-  <label class="block-title">Affichage de texte : </label>
-  <ion-list>
-    <ion-radio-group value='{{getGlobalConfig()}}'>
-      <ion-item>
-        Abrégé
-        <ion-radio value="abstract" slot="end" color="success" (click)="updateGlobalConfig('abstract')"></ion-radio>
-      </ion-item>
-      <ion-item>
-        Nom complet
-        <ion-radio value="fullName" slot="end" color="success" (click)="updateGlobalConfig('fullName')"></ion-radio>
-      </ion-item>
-      <ion-item>
-        Abrégé / Nom complet
-        <ion-radio value="both" slot="end" color="success" (click)="updateGlobalConfig('both')"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
-  </ion-list>
+    <label class="block-title">Affichage de texte : </label>
+    <ion-list>
+        <ion-radio-group [value]="showTextConfig">
+            <ion-item>
+                <span>Abrégé</span>
+                <ion-radio [value]="'abstract'"
+                           slot="end"
+                           color="success"
+                           (click)="changeShowTextConfig('abstract')"></ion-radio>
+            </ion-item>
+            <ion-item>
+                <span>Nom complet</span>
+                <ion-radio [value]="'fullName'"
+                           slot="end"
+                           color="success"
+                           (click)="changeShowTextConfig('fullName')"></ion-radio>
+            </ion-item>
+            <ion-item>
+                <span>Abrégé / Nom complet</span>
+                <ion-radio [value]="'both'"
+                           slot="end"
+                           color="success"
+                           (click)="changeShowTextConfig('both')"></ion-radio>
+            </ion-item>
+        </ion-radio-group>
+    </ion-list>
 </ion-content>

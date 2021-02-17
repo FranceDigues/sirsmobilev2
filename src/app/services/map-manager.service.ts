@@ -184,11 +184,11 @@ export class BackLayer {
     }
 
     private updateActiveBackLayerInHardDisk(backLayer) {
-        this.dbService.getCurrentDatabaseHardDisk()
+        this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    db.context.backLayer.active = backLayer;
-                    this.dbService.updateCurrentDatabaseHardDisk(db);
+                    db.settings.backLayer.active = backLayer;
+                    this.dbService.setCurrentDatabaseSettings(db);
                 }
             );
     }

@@ -14,11 +14,11 @@ export class AuthService {
   constructor(private dbService: DatabaseService, private route: Router) { }
 
   isAuth() {
-    this.dbService.getCurrentDatabaseHardDisk()
+    this.dbService.getCurrentDatabaseSettings()
     .then(
       (database: DatabaseModel) => {
-        if (database.context.authUser !== null) {
-          this.user = database.context.authUser;
+        if (database.settings.authUser !== null) {
+          this.user = database.settings.authUser;
           return true;
         } else {
           return false;
@@ -28,16 +28,16 @@ export class AuthService {
   }
 
   getValue() {
-    return this.dbService.activeDB.context.authUser;
+    return this.dbService.activeDB.settings.authUser;
   }
 
   logout() {
     this.user = null;
-    this.dbService.getCurrentDatabaseHardDisk()
+    this.dbService.getCurrentDatabaseSettings()
     .then(
       (database: DatabaseModel) => {
-        database.context.authUser = null;
-        this.dbService.updateCurrentDatabaseHardDisk(database);
+        database.settings.authUser = null;
+        this.dbService.setCurrentDatabaseSettings(database);
         this.route.navigateByUrl('/');
       }
     );
@@ -54,11 +54,11 @@ export class AuthService {
             const hash = MD5(password);
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
               this.user = result.rows[0].doc;
-              this.dbService.getCurrentDatabaseHardDisk()
+              this.dbService.getCurrentDatabaseSettings()
               .then(
                 (database: DatabaseModel) => {
-                  database.context.authUser = this.user;
-                  this.dbService.updateCurrentDatabaseHardDisk(database);
+                  database.settings.authUser = this.user;
+                  this.dbService.setCurrentDatabaseSettings(database);
                   resolve(database);
                 }
               );
