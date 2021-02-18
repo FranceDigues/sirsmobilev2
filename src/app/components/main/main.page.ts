@@ -38,7 +38,7 @@ export class MainPage implements AfterViewInit {
                 private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController) {
         this.appVersionsService.init();
         this.backLayer.init();
-        this.mapManagerService.init();
+        // this.mapManagerService.init();
         this.editionLayerService.init();
         this.geolocLayer.init();
 
@@ -131,6 +131,7 @@ export class MainPage implements AfterViewInit {
                 }
             );
         this.locateMe();
+        this.mapManagerService.init();
     }
 
     locateMe() {

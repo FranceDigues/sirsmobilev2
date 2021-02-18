@@ -213,7 +213,6 @@ export class BackLayer {
 export class MapManagerService {
 
     appLayer: LayerGroup = null;
-    // appLayer: LayerGroup = this.createAppLayer();
     wktFormat = new WKT();
 
     constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
@@ -223,209 +222,224 @@ export class MapManagerService {
     }
 
     init() {
-        this.appLayer = this.createAppLayer();
+        console.log('HB');
+        this.createAppLayer()
+            .then(appLayer => {
+                this.appLayer = appLayer;
+            });
     }
 
-    createAppLayer(): LayerGroup {
-        return new LayerGroup({
-            name: 'Objects',
-            layers: this.appLayersService.getFavorites().map(
-                (layerModel) => {
-                    return (this.createAppLayerInstance(layerModel));
-                })
+    createAppLayer() {
+        return new Promise(resolve => {
+            const promises = [];
+            this.appLayersService.getFavorites()
+                .forEach((layerModel) => {
+                    promises.push(this.createAppLayerInstance(layerModel));
+                });
+
+            Promise.all(promises).then(responses => {
+                const layerGroup = new LayerGroup({
+                    name: 'Objects',
+                    layers: responses
+                });
+                resolve(layerGroup);
+            });
         });
     }
 
     createAppLayerInstance(layerModel) {
-        let olLayer: VectorLayer;
-        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
-            // Change the layer Source to Cluster source
-            olLayer = new VectorLayer({
-                name: layerModel.title,
-                visible: layerModel.visible,
-                model: layerModel,
-                style: (feature, resolution) => {
-                    const features = feature.get('features');
-                    const styles = [];
+        return new Promise(resolve => {
+            let olLayer: VectorLayer;
+            if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
+                // Change the layer Source to Cluster source
+                olLayer = new VectorLayer({
+                    name: layerModel.title,
+                    visible: layerModel.visible,
+                    model: layerModel,
+                    style: (feature, resolution) => {
+                        const features = feature.get('features');
+                        const styles = [];
 
-                    if (Array.isArray(features) && features.length > 0) {
-                        features.forEach((tmpFeature) => {
-                            let style = tmpFeature.getStyle();
+                        if (Array.isArray(features) && features.length > 0) {
+                            features.forEach((tmpFeature) => {
+                                let style = tmpFeature.getStyle();
+                                if (typeof style === 'function') {
+                                    style = style.call(tmpFeature, tmpFeature, resolution);
+                                } else if (style instanceof Style) {
+                                    style = [].concat(style);
+                                }
+
+                                if (Array.isArray(style)) {
+                                    style.forEach((tmpStyle) => {
+                                        tmpStyle.setGeometry(tmpFeature.getGeometry());
+                                        if (tmpStyle.getText() !== undefined && tmpStyle.getText() !== null) {
+                                            tmpStyle.getText().setText(undefined);
+                                        }
+                                        styles.push(tmpStyle);
+                                    });
+                                }
+                            });
+
+                            let style = features[0].getStyle();
                             if (typeof style === 'function') {
-                                style = style.call(tmpFeature, tmpFeature, resolution);
+                                style = style.call(feature, feature, resolution);
                             } else if (style instanceof Style) {
                                 style = [].concat(style);
                             }
 
+
                             if (Array.isArray(style)) {
                                 style.forEach((tmpStyle) => {
-                                    tmpStyle.setGeometry(tmpFeature.getGeometry());
-                                    if (tmpStyle.getText() !== undefined && tmpStyle.getText() !== null) {
-                                        tmpStyle.getText().setText(undefined);
-                                    }
-                                    styles.push(tmpStyle);
+                                    styles.push(new Style({
+                                        zIndex: tmpStyle.getZIndex(),
+                                        text: tmpStyle.getText()
+                                    }));
                                 });
                             }
-                        });
-
-                        let style = features[0].getStyle();
-                        if (typeof style === 'function') {
-                            style = style.call(feature, feature, resolution);
-                        } else if (style instanceof Style) {
-                            style = [].concat(style);
                         }
-
-
-                        if (Array.isArray(style)) {
-                            style.forEach((tmpStyle) => {
-                                styles.push(new Style({
-                                    zIndex: tmpStyle.getZIndex(),
-                                    text: tmpStyle.getText()
-                                }));
-                            });
-                        }
-                    }
-                    return styles;
-                },
-                source: new Cluster({
-                    distance: 24,
-                    source: new VectorSource({useSpatialIndex: true})
-                })
-            });
-
-        } else {
-            olLayer = new VectorLayer({
-                name: layerModel.title,
-                visible: layerModel.visible,
-                model: layerModel,
-                source: new VectorSource({useSpatialIndex: false})
-            });
-        }
-
-        if (layerModel.visible === true) {
-            this.setAppLayerFeatures(olLayer);
-        }
-        return olLayer;
-    }
-
-    async setAppLayerFeatures(olLayer) {
-        const layerModel = olLayer.get('model');
-
-        const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue' ? olLayer.getSource().getSource() : olLayer.getSource();
-
-        // Try to get the promise of a previous query.
-        let promise = null;
-        if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
-            layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-            // Get all the favorites tronçons ids
-            const favorites = await this.storageService.getItem('AppTronconsFavorities');
-            const keys = [];
-            if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
-                favorites.forEach((key) => {
-                    keys.push([layerModel.filterValue, key.id]);
+                        return styles;
+                    },
+                    source: new Cluster({
+                        distance: 24,
+                        source: new VectorSource({useSpatialIndex: true})
+                    })
                 });
 
-                promise = this.localDB.query('ElementSpecial3', {
-                    keys
-                }).then(
-                    (results) => {
-                        return results.map(this.createAppFeatureModel);
-                    },
-                    (error) => {
-                        console.error(error);
-                    }
-                );
             } else {
-                if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
-                    promise = this.localDB.query('Element/byClassAndLinear', {
-                        startkey: [layerModel.filterValue],
-                        endkey: [layerModel.filterValue, {}],
-                        include_docs: true
+                olLayer = new VectorLayer({
+                    name: layerModel.title,
+                    visible: layerModel.visible,
+                    model: layerModel,
+                    source: new VectorSource({useSpatialIndex: false})
+                });
+            }
+
+            if (layerModel.visible === true) {
+                this.setAppLayerFeatures(olLayer).then(response => {
+                    resolve(olLayer);
+                });
+            }
+            resolve(olLayer);
+        });
+    }
+
+    setAppLayerFeatures(olLayer) {
+        return new Promise(async resolve => {
+            const layerModel = olLayer.get('model');
+            const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue'
+                ? olLayer.getSource().getSource() : olLayer.getSource();
+            // Try to get the promise of a previous query.
+            let promise = null;
+            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
+                layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
+                // Get all the favorites tronçons ids
+                const favorites = await this.storageService.getItem('AppTronconsFavorities');
+                const keys = [];
+                if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
+                    favorites.forEach((key) => {
+                        keys.push([layerModel.filterValue, key.id]);
+                    });
+
+                    promise = this.localDB.query('ElementSpecial3', {
+                        keys
                     }).then(
                         (results) => {
-                            return results.filter((item) => {
-                                return !item.doc.editMode;
-                            }).map(this.createAppFeatureModel);
+                            return results.map(this.createAppFeatureModel.bind(this));
                         },
                         (error) => {
                             console.error(error);
                         }
                     );
                 } else {
-                    promise = new Promise((resolve) => {
-                        resolve([]);
-                    }).then(
-                        () => {
-                            return [];
-                        }
-                    );
-                }
-            }
-        } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-            const tmp = await this.storageService.getItem('AppTronconsFavorities');
-            if (Array.isArray(tmp)) {
-                promise = this.localDB.query('TronconDigue/streamLight', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-                }).then(
-                    (results) => {
-                        return results.map(this.createAppFeatureModel);
-                    },
-                    (error) => {
-                        console.error(error);
-                    });
-            } else {
-                console.error('Error type');
-            }
-        } else {
-            const tmp = await this.storageService.getItem('AppTronconsFavorities');
-            if (Array.isArray(tmp)) {
-                promise = this.localDB.query('getBornesFromTronconID', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-                }).then(
-                    (results) => {
-                        return this.localDB.query('getBornesIdsHB', {
-                                keys: results.map((obj) => {
-                                    return obj.value;
-                                })
-                            }
-                        ).then(
-                            (results2) => {
-                                return results2.map(this.createAppFeatureModel);
+                    if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
+                        promise = this.localDB.query('Element/byClassAndLinear', {
+                            startkey: [layerModel.filterValue],
+                            endkey: [layerModel.filterValue, {}],
+                            include_docs: true
+                        }).then(
+                            (results) => {
+                                return results.filter((item) => {
+                                    return !item.doc.editMode;
+                                }).map(this.createAppFeatureModel);
+                            },
+                            (error) => {
+                                console.error(error);
                             }
                         );
-                    },
-                    (error) => {
-                        console.error(error);
-                    });
+                    } else {
+                        promise = new Promise((resolve2) => {
+                            resolve2([]);
+                        }).then(
+                            () => {
+                                return [];
+                            }
+                        );
+                    }
+                }
+            } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
+                const tmp = await this.storageService.getItem('AppTronconsFavorities');
+                if (Array.isArray(tmp)) {
+                    promise = this.localDB.query('TronconDigue/streamLight', {
+                        keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                    }).then(
+                        (results) => {
+                            return results.map(this.createAppFeatureModel);
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                } else {
+                    console.error('Error type');
+                }
             } else {
-                console.error('Error type');
+                const tmp = await this.storageService.getItem('AppTronconsFavorities');
+                if (Array.isArray(tmp)) {
+                    promise = this.localDB.query('getBornesFromTronconID', {
+                        keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                    }).then(
+                        (results) => {
+                            return this.localDB.query('getBornesIdsHB', {
+                                    keys: results.map((obj) => {
+                                        return obj.value;
+                                    })
+                                }
+                            ).then(
+                                (results2) => {
+                                    return results2.map(this.createAppFeatureModel.bind(this));
+                                }
+                            );
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                } else {
+                    console.error('Error type');
+                }
             }
-        }
-        // Wait for promise resolution or rejection.
-        promise.then(
-            (featureModels) => {
-                olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
-                // $rootScope.loadingflag = false; // TODO remplace ?
-            },
-            (error) => {
-                // TODO → handle error
-            }
-        );
-
-
+            // Wait for promise resolution or rejection.
+            promise.then(
+                (featureModels) => {
+                    olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
+                    resolve();
+                    // $rootScope.loadingflag = false; // TODO remplace ?
+                },
+                (error) => {
+                    console.error(error);
+                }
+            );
+        });
     }
 
     createAppFeatureModel(featureDoc) {
-        featureDoc = featureDoc.doc || featureDoc.value; // depending on 'include_docs' option when querying docs
-
-        const dataProjection = typeof this.SirsDoc.get().epsgCode === 'undefined' ? 'EPSG:2154' : this.SirsDoc.get().epsgCode;
-
-        let projGeometry = null;
-        let realGeometry = null;
+        // depending on 'include_docs' option when querying docs
+        featureDoc = featureDoc.doc || featureDoc.value;
+        const dataProjection = (!this.SirsDoc.get() && !this.SirsDoc.get().epsgCode) ? 'EPSG:2154' : this.SirsDoc.get().epsgCode;
+        let projGeometry;
+        let realGeometry;
 
         if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
@@ -463,7 +477,6 @@ export class MapManagerService {
                     }).getFirstCoordinate()
                 ]);
             }
-
         }
 
         return {
