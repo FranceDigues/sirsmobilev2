@@ -29,6 +29,7 @@ import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './local-database.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -211,9 +212,9 @@ export class BackLayer {
     providedIn: 'root'
 })
 export class MapManagerService {
-
     appLayer: LayerGroup = null;
     wktFormat = new WKT();
+    public mapLoadingSubject = new Subject();
 
     constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
                 private storageService: StorageService, private SirsDoc: SirsDocService,
@@ -222,7 +223,6 @@ export class MapManagerService {
     }
 
     init() {
-        console.log('HB');
         this.createAppLayer()
             .then(appLayer => {
                 this.appLayer = appLayer;
@@ -425,7 +425,7 @@ export class MapManagerService {
                 (featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
                     resolve();
-                    // $rootScope.loadingflag = false; // TODO remplace ?
+                    this.mapLoadingSubject.complete();
                 },
                 (error) => {
                     console.error(error);

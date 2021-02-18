@@ -30,7 +30,7 @@ export class MainPage implements AfterViewInit {
     public connectSubscription;
     public disconnectSubscription;
 
-    constructor(private ol: OLService, private backLayerService: BackLayerService, public geoloc: GeolocationService,
+    constructor(private ol: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
                 public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
@@ -125,9 +125,12 @@ export class MainPage implements AfterViewInit {
                             return true;
                         }
                     }));
-                    setTimeout(() => {
-                        loading.dismiss();
-                    }, 1600);
+                    this.mapManagerService.mapLoadingSubject
+                        .subscribe({
+                            complete: () => {
+                                loading.dismiss();
+                            }
+                        });
                 }
             );
         this.locateMe();
@@ -135,7 +138,7 @@ export class MainPage implements AfterViewInit {
     }
 
     locateMe() {
-        this.geoloc.getCurrentLocation()
+        this.geolocationService.getCurrentLocation()
             .then(
                 (coordinates) => {
                     this.geolocLayer.redrawGeolocLayer(coordinates);
@@ -147,7 +150,7 @@ export class MainPage implements AfterViewInit {
     }
 
     zoomToCurrentLocation() {
-        this.geoloc.getCurrentLocation()
+        this.geolocationService.getCurrentLocation()
             .then(
                 (coordinates) => {
                     if (coordinates) {

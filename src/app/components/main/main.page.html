@@ -11,12 +11,12 @@
         <nav class="navbar navbar-custom navbar-expand-sm">
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <a *ngIf="editionLayerService.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
-                <div class="gps-infos" fxLayout="column" fxLayoutAlign="center center" *ngIf="geoloc.lastGPSUpdate">
-                    <span class="gps-text">Précision du signal GPS : {{ geoloc.gpsAccuracy }}m</span>
-                    <span class="gps-text">&nbsp;{{ geoloc.lastGPSUpdate }}</span>
+                <div class="gps-infos" fxLayout="column" fxLayoutAlign="center center" *ngIf="geolocationService.lastGPSUpdate">
+                    <span class="gps-text">Précision du signal GPS : {{ geolocationService.gpsAccuracy }}&nbsp;m</span>
+                    <span class="gps-text">&nbsp;{{ geolocationService.lastGPSUpdate }}</span>
                 </div>
             </div>
-            <a *ngIf="geoloc.enabled" class="nav-item nav-link header-icon" (click)="locateMe()">
+            <a *ngIf="geolocationService.isEnabled" class="nav-item nav-link header-icon" (click)="locateMe()">
                 <ion-icon name="navigate-outline"></ion-icon>
             </a>
             <a class="nav-item nav-link header-icon" (click)="zoomToCurrentLocation()">
