@@ -97,7 +97,7 @@ export class DatabaseService {
         this.getCurrentDatabaseSettings()
             .then(
                 (database: DatabaseModel) => {
-                    database.settings.showText = value;
+                    database.context.showText = value;
                     this.setCurrentDatabaseSettings(database);
                 },
             );
@@ -107,7 +107,7 @@ export class DatabaseService {
         this.getCurrentDatabaseSettings()
             .then(
                 (database: DatabaseModel) => {
-                    database.settings.mode.enableEdition = flag;
+                    database.context.settings.edition = flag;
                     this.setCurrentDatabaseSettings(database);
                 },
             );
@@ -117,7 +117,8 @@ export class DatabaseService {
         this.getCurrentDatabaseSettings()
             .then(
                 (database: DatabaseModel) => {
-                    database.settings.mode.enableGeolocation = flag;
+                    console.log("database : ", database);
+                    database.context.settings.geolocation = flag;
                     this.setCurrentDatabaseSettings(database);
                 },
             );

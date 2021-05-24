@@ -58,7 +58,7 @@ export class AppLayersComponent implements OnInit {
         this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    db.favoritesLayers = this.appLayersService.favorites;
+                    db.favorites = this.appLayersService.favorites;
                     this.dbService.setCurrentDatabaseSettings(db);
                 }
             );

@@ -10,9 +10,11 @@ export class AppLayersService {
 
     constructor(private localDB: LocalDatabase,
                 private databaseSrvc: DatabaseService) {
+
+        console.log("favorites origin : ", this.databaseSrvc.activeDB.favorites);
     }
 
-    favorites = this.databaseSrvc.activeDB.favoritesLayers;
+    favorites = this.databaseSrvc.activeDB.favorites;
 
     cachedDescriptions = null;
 

@@ -9,7 +9,7 @@
             <ion-list>
                 <ion-radio-group>
                     <ion-item
-                            *ngFor="let layer of (this.appLayersService.getFavorites() | filterPipe: { editable: true })">
+                            *ngFor="let layer of (this.appLayersService.getFavorites())"> <!--  | filterPipe: { editable: true } TODO : figure out why this pipe here and how to fix it.-->
                         {{ layer.title }}
                         <ion-radio color="success" slot="end" (click)="selectLayer(layer)"></ion-radio>
                     </ion-item>

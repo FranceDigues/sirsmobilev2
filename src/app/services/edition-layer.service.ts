@@ -28,7 +28,7 @@ export class EditionLayerService {
         this.editionLayer = this.createEditionLayerInstance();
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
-                this.editionLayer.setVisible(config.settings.mode.enableEdition);
+                this.editionLayer.setVisible(config.context.settings.edition);
             });
     }
 

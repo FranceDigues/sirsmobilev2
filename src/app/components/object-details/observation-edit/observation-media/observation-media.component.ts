@@ -42,7 +42,7 @@ export class ObservationMediaComponent implements OnInit {
     ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
-                this.showTextConfig = config.settings.showText;
+                this.showTextConfig = config.context.showText;
             });
     }
 

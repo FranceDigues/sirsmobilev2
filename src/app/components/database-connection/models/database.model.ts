@@ -6,16 +6,22 @@ export interface DatabaseModel {
     replicated?: boolean;
     lastSync?: number;
     favoritesLayers?: Array<FavoritesLayersModel>;
+    favorites?: Array<FavoritesLayersModel>;
     settings?: SettingsModel;
+    context?: SettingsModel;
 }
 
 export interface SettingsModel {
     authUser?;
     showText?: string;
     backLayer?: BackLayerModel;
-    mode?: {
-        enableGeolocation: boolean,
-        enableEdition: boolean
+    // mode?: {
+    //     enableGeolocation: boolean,
+    //     enableEdition: boolean
+    // };
+    settings?: {
+        geolocation: boolean,
+        edition: boolean
     };
     currentView?: {
         zoom?: any,

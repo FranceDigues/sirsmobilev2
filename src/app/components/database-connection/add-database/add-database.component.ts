@@ -42,8 +42,8 @@ export class AddDatabaseComponent implements OnInit {
     }
 
     private addDefaultProperties() {
-        this.databaseForm.value.favoritesLayers = [];
-        this.databaseForm.value.settings = {
+        this.databaseForm.value.favorites = [];
+        this.databaseForm.value.context = {
             showText: 'fullName',
             authUser: null,
             currentView: null,
@@ -73,9 +73,9 @@ export class AddDatabaseComponent implements OnInit {
                         }
                     ]
             },
-            mode: {
-                enableGeolocation: true,
-                enableEdition: false,
+            settings: {
+                geolocation: true,
+                edition: false,
             },
             lastLocation: null
         };

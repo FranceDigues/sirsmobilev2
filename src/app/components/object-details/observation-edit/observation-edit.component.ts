@@ -53,7 +53,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
-                this.showTextConfig = config.settings.showText;
+                this.showTextConfig = config.context.showText;
             });
     }
 

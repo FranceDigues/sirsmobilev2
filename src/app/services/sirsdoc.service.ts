@@ -31,7 +31,10 @@ export class SirsDocService {
                 (result) => {
                     this.doc = result;
                 }
-            );
+            )
+            .catch(error => {
+                console.error(error);
+            });
         }
     }
 }

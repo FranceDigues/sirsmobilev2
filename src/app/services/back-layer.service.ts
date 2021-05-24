@@ -17,7 +17,7 @@ export class BackLayerService {
             this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    this.backLayers = db.settings.backLayer;
+                    this.backLayers = db.context.backLayer;
                     resolve('');
                 }
             );
@@ -62,7 +62,7 @@ export class BackLayerService {
         this.dbService.getCurrentDatabaseSettings()
         .then(
             (db: DatabaseModel) => {
-                db.settings.backLayer = this.backLayers;
+                db.context.backLayer = this.backLayers;
                 this.dbService.setCurrentDatabaseSettings(db);
             }
         );

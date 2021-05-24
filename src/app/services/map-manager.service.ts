@@ -188,7 +188,7 @@ export class BackLayer {
         this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
-                    db.settings.backLayer.active = backLayer;
+                    db.context.backLayer.active = backLayer;
                     this.dbService.setCurrentDatabaseSettings(db);
                 }
             );
@@ -225,29 +225,38 @@ export class MapManagerService {
     init() {
         this.createAppLayer()
             .then(appLayer => {
+                console.log("createAppLayer then")
                 this.appLayer = appLayer;
+            }, (error) => {
+                console.error(error);
             });
     }
 
     createAppLayer() {
+        console.log("createAppLayer")
         return new Promise(resolve => {
             const promises = [];
-            this.appLayersService.getFavorites()
-                .forEach((layerModel) => {
+            let appLayers = this.appLayersService.getFavorites();
+            if (appLayers && appLayers.length > 0) {
+                appLayers.forEach((layerModel) => {
                     promises.push(this.createAppLayerInstance(layerModel));
                 });
 
-            Promise.all(promises).then(responses => {
-                const layerGroup = new LayerGroup({
-                    name: 'Objects',
-                    layers: responses
+                Promise.all(promises).then(responses => {
+                    const layerGroup = new LayerGroup({
+                        name: 'Objects',
+                        layers: responses
+                    });
+                    resolve(layerGroup);
                 });
-                resolve(layerGroup);
-            });
+            } else {
+                this.mapLoadingSubject.complete();
+            }
         });
     }
 
     createAppLayerInstance(layerModel) {
+        console.log("createAppLayerInstance")
         return new Promise(resolve => {
             let olLayer: VectorLayer;
             if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
@@ -324,6 +333,7 @@ export class MapManagerService {
     }
 
     setAppLayerFeatures(olLayer) {
+        console.log("setAppLayerFeatures");
         return new Promise(async resolve => {
             const layerModel = olLayer.get('model');
             const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue'
@@ -332,6 +342,7 @@ export class MapManagerService {
             let promise = null;
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
+                console.log("case 1")
                 // Get all the favorites tronçons ids
                 const favorites = await this.storageService.getItem('AppTronconsFavorities');
                 const keys = [];
@@ -373,10 +384,15 @@ export class MapManagerService {
                             () => {
                                 return [];
                             }
-                        );
+                        ),
+                        (error) => {
+                            console.error(error);
+                        };
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
+
+                console.log("case 2")
                 const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 if (Array.isArray(tmp)) {
                     promise = this.localDB.query('TronconDigue/streamLight', {
@@ -394,6 +410,8 @@ export class MapManagerService {
                     console.error('Error type');
                 }
             } else {
+
+                console.log("case 3")
                 const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 if (Array.isArray(tmp)) {
                     promise = this.localDB.query('getBornesFromTronconID', {
@@ -424,7 +442,8 @@ export class MapManagerService {
             promise.then(
                 (featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
-                    resolve();
+                    console.log("complete azertyuiop !");
+                    resolve(null);
                     this.mapLoadingSubject.complete();
                 },
                 (error) => {
@@ -437,7 +456,16 @@ export class MapManagerService {
     createAppFeatureModel(featureDoc) {
         // depending on 'include_docs' option when querying docs
         featureDoc = featureDoc.doc || featureDoc.value;
-        const dataProjection = (!this.SirsDoc.get() && !this.SirsDoc.get().epsgCode) ? 'EPSG:2154' : this.SirsDoc.get().epsgCode;
+        let dataProjection;
+        if (!this.SirsDoc.get()) {
+            dataProjection = 'EPSG:2154'
+        } else {
+            if (this.SirsDoc.get().epsgCode) {
+                dataProjection = this.SirsDoc.get().epsgCode;
+            } else {
+                dataProjection = 'EPSG:2154'
+            }
+        }
         let projGeometry;
         let realGeometry;
 
@@ -542,6 +570,7 @@ export class MapManagerService {
     }
 
     syncAllAppLayer() {
+        console.log("syncAllAppLayer");
         const layers = this.appLayer.getLayers();
         layers.forEach((layer) => {
             const layerModel = layer.get('model');
@@ -550,12 +579,15 @@ export class MapManagerService {
             olLayer.setVisible(layerModel.visible);
             olLayer.getSource().clear();
             if (layerModel.visible === true) {
+                console.log("syncAllAppLayer");
                 this.setAppLayerFeatures(olLayer);
             }
         });
     }
 
     private getAppLayerInstance(layerModel) {
+        console.log("layerModel : ", layerModel);
+        console.log("getLayers : ", this.appLayer.getLayers());
         const layers = this.appLayer.getLayers();
         let i = layers.getLength();
         while (i--) {
@@ -567,6 +599,7 @@ export class MapManagerService {
     }
 
     syncAppLayer(layerModel) {
+        console.log("syncAppLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
@@ -578,6 +611,7 @@ export class MapManagerService {
         if (layerModel.visible === true) {
             // TODO loading here
             setTimeout(() => {
+                console.log("syncAppLayer");
                 this.setAppLayerFeatures(olLayer);
             }, 1000);
         }
@@ -610,16 +644,20 @@ export class MapManagerService {
     }
 
     addLabelFeatureLayer(layerModel) {
+        console.log("addLabelFeatureLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
+        console.log("addLabelFeatureLayer");
         this.setAppLayerFeatures(olLayer);
     }
 
     reloadLayer(layerModel) {
+        console.log("reloadLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
         // Load data if necessary.
         olLayer.getSource().clear();
+        console.log("reloadLayer");
         this.setAppLayerFeatures(olLayer);
     }
 

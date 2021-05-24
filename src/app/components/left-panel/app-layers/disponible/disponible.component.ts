@@ -76,10 +76,14 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   toggleLayer(layer) {
     if (this.isActive(layer)) {
       const index = this.appLayersService.removeFavorite(layer);
-      this.mapManagerService.appLayer.getLayers().removeAt(index);
+      if (this.mapManagerService.appLayer) {
+        this.mapManagerService.appLayer.getLayers().removeAt(index);
+      }
     } else {
       this.appLayersService.addFavorite(layer);
-      this.mapManagerService.appLayer.getLayers().push(this.mapManagerService.createAppLayerInstance(layer));
+      if (this.mapManagerService.appLayer) {
+        this.mapManagerService.appLayer.getLayers().push(this.mapManagerService.createAppLayerInstance(layer));
+      }
     }
     this.updateFavorites();
   }
@@ -88,7 +92,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     this.dbService.getCurrentDatabaseSettings()
     .then(
       (db: DatabaseModel) => {
-        db.favoritesLayers = this.appLayersService.getFavorites();
+        db.favorites = this.appLayersService.getFavorites();
         this.dbService.setCurrentDatabaseSettings(db);
       }
     );
