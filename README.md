@@ -48,6 +48,11 @@ ionic cordova run android
 
 ### Troubleshooting:
 
+### Reset platform Android
+
+If you must remove the platform android for a reason (modified config.xml, updated plugins, etc.), do NOT manually add it.
+Use run or build android command and let it build it automatically.
+
 #### Problem: Missing `cordova.variable.grable` file:
 ```
 capacitor-cordova-android-plugins/cordova.variables.gradle' as it does not exist

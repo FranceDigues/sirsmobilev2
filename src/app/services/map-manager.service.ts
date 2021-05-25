@@ -216,16 +216,23 @@ export class MapManagerService {
     wktFormat = new WKT();
     public mapLoadingSubject = new Subject();
 
-    constructor(private featureCache: FeatureCache, private localDB: LocalDatabase,
-                private storageService: StorageService, private SirsDoc: SirsDocService,
-                private mapService: MapService, private RealPositionStyle: RealPositionStyle,
-                private DefaultStyle: DefaultStyle, private appLayersService: AppLayersService) {
+    constructor(private featureCache: FeatureCache, 
+                private localDB: LocalDatabase,
+                private storageService: StorageService, 
+                private SirsDoc: SirsDocService,
+                private mapService: MapService, 
+                private RealPositionStyle: RealPositionStyle,
+                private DefaultStyle: DefaultStyle, 
+                private appLayersService: AppLayersService) {
+        // Make sur appLayer is initialized as it is heavily used.
+        if (!this.appLayer) {
+            this.init();
+        };
     }
 
     init() {
         this.createAppLayer()
             .then(appLayer => {
-                console.log("createAppLayer then")
                 this.appLayer = appLayer;
             }, (error) => {
                 console.error(error);
@@ -233,7 +240,6 @@ export class MapManagerService {
     }
 
     createAppLayer() {
-        console.log("createAppLayer")
         return new Promise(resolve => {
             const promises = [];
             let appLayers = this.appLayersService.getFavorites();
@@ -248,6 +254,7 @@ export class MapManagerService {
                         layers: responses
                     });
                     resolve(layerGroup);
+                    this.mapLoadingSubject.complete();
                 });
             } else {
                 this.mapLoadingSubject.complete();
@@ -256,7 +263,6 @@ export class MapManagerService {
     }
 
     createAppLayerInstance(layerModel) {
-        console.log("createAppLayerInstance")
         return new Promise(resolve => {
             let olLayer: VectorLayer;
             if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
@@ -333,7 +339,6 @@ export class MapManagerService {
     }
 
     setAppLayerFeatures(olLayer) {
-        console.log("setAppLayerFeatures");
         return new Promise(async resolve => {
             const layerModel = olLayer.get('model');
             const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue'
@@ -342,7 +347,6 @@ export class MapManagerService {
             let promise = null;
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                console.log("case 1")
                 // Get all the favorites tronçons ids
                 const favorites = await this.storageService.getItem('AppTronconsFavorities');
                 const keys = [];
@@ -391,8 +395,6 @@ export class MapManagerService {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-
-                console.log("case 2")
                 const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 if (Array.isArray(tmp)) {
                     promise = this.localDB.query('TronconDigue/streamLight', {
@@ -410,8 +412,6 @@ export class MapManagerService {
                     console.error('Error type');
                 }
             } else {
-
-                console.log("case 3")
                 const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 if (Array.isArray(tmp)) {
                     promise = this.localDB.query('getBornesFromTronconID', {
@@ -442,7 +442,6 @@ export class MapManagerService {
             promise.then(
                 (featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
-                    console.log("complete azertyuiop !");
                     resolve(null);
                     this.mapLoadingSubject.complete();
                 },
@@ -570,7 +569,6 @@ export class MapManagerService {
     }
 
     syncAllAppLayer() {
-        console.log("syncAllAppLayer");
         const layers = this.appLayer.getLayers();
         layers.forEach((layer) => {
             const layerModel = layer.get('model');
@@ -579,29 +577,23 @@ export class MapManagerService {
             olLayer.setVisible(layerModel.visible);
             olLayer.getSource().clear();
             if (layerModel.visible === true) {
-                console.log("syncAllAppLayer");
                 this.setAppLayerFeatures(olLayer);
             }
         });
     }
 
     private getAppLayerInstance(layerModel) {
-        console.log("layerModel : ", layerModel);
-        console.log("getLayers : ", this.appLayer.getLayers());
-        const layers = this.appLayer.getLayers();
-        let i = layers.getLength();
-        while (i--) {
-            if (layers.item(i).get('model') === layerModel) {
-                return layers.item(i);
+        const layers = this.appLayer.getLayers().getArray();
+        for (let i = 0; i < layers.length; i++) {
+            if (layers[i].get('model') === layerModel) {
+                return layers[i];
             }
         }
         return null;
     }
 
     syncAppLayer(layerModel) {
-        console.log("syncAppLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
-
         olLayer.setVisible(layerModel.visible);
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             olLayer.getSource().getSource().clear();
@@ -611,7 +603,6 @@ export class MapManagerService {
         if (layerModel.visible === true) {
             // TODO loading here
             setTimeout(() => {
-                console.log("syncAppLayer");
                 this.setAppLayerFeatures(olLayer);
             }, 1000);
         }
@@ -644,20 +635,16 @@ export class MapManagerService {
     }
 
     addLabelFeatureLayer(layerModel) {
-        console.log("addLabelFeatureLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
-        console.log("addLabelFeatureLayer");
         this.setAppLayerFeatures(olLayer);
     }
 
     reloadLayer(layerModel) {
-        console.log("reloadLayer")
         const olLayer = this.getAppLayerInstance(layerModel);
         // Load data if necessary.
         olLayer.getSource().clear();
-        console.log("reloadLayer");
         this.setAppLayerFeatures(olLayer);
     }
 

@@ -67,22 +67,30 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
       }
     }
     return false;
-    // return this.appLayersService.getFavorites().map(
-    //   (item) => {
-    //     return item.title;
-    //   }).indexOf(layer.title) !== 1;
   }
 
   toggleLayer(layer) {
     if (this.isActive(layer)) {
       const index = this.appLayersService.removeFavorite(layer);
       if (this.mapManagerService.appLayer) {
-        this.mapManagerService.appLayer.getLayers().removeAt(index);
+        try {
+          this.mapManagerService.appLayer.getLayers().removeAt(index);
+        } catch {
+          // No layer at index.
+          console.warn("No layer at index : ", index);
+        }
       }
     } else {
       this.appLayersService.addFavorite(layer);
       if (this.mapManagerService.appLayer) {
-        this.mapManagerService.appLayer.getLayers().push(this.mapManagerService.createAppLayerInstance(layer));
+        const appLayerInstance = this.mapManagerService.createAppLayerInstance(layer);
+        appLayerInstance
+          .then(layer => {
+            this.mapManagerService.appLayer.getLayers().getArray().push(layer);
+          })
+          .catch(error => {
+            console.warn(layer, " : Could not be added to the appLayer array.");
+          })
       }
     }
     this.updateFavorites();

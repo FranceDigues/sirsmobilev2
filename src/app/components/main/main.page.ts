@@ -102,19 +102,13 @@ export class MainPage implements AfterViewInit {
                     });
                     loading.present();
                     this.ol.createMap('map');
-                    console.log(1);
                     this.ol.getMap().setView(this.mapService.currentView);
-                    console.log(2);
                     this.ol.addLayer(this.backLayer.backLayer);
-                    console.log(3);
                     if (this.mapManagerService.appLayer) {
                         this.ol.addLayer(this.mapManagerService.appLayer);
                     }
-                    console.log(4);
                     this.ol.addLayer(this.editionLayerService.editionLayer);
-                    console.log(5);
                     this.ol.addLayer(this.geolocLayer.geolocLayer);
-                    console.log(6);
                     this.ol.getMap().addInteraction(new LongClickSelect({
                         circleStyle: new Style({
                             fill: new Fill({color: [255, 255, 255, 0.5]})
@@ -134,11 +128,9 @@ export class MainPage implements AfterViewInit {
                         }
                     }));
 
-                    console.log(7);
                     this.mapManagerService.mapLoadingSubject
                         .subscribe(
                             {complete: () => {
-                                console.log("complete !");
                                 loading.dismiss();
                             }
                         });

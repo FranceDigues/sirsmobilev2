@@ -44,7 +44,6 @@
     "angular-md5": "^0.1.10",
     "bootstrap": "4.5.2",
     "cordova": "^10.0.0",
-    "cordova-android": "9.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-geolocation": "^4.0.2",
@@ -95,7 +94,6 @@
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-network-information": "^2.0.2",
-    "cordova-plugin-sqlite-2": "^1.0.6",
     "cordova-plugin-statusbar": "^2.4.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -119,7 +117,6 @@
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
       "cordova-sqlite-storage": {},
-      "cordova-plugin-sqlite-2": {},
       "cordova-plugin-geolocation": {},
       "cordova-plugin-insomnia": {},
       "cordova-plugin-whitelist": {},
