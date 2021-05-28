@@ -20,7 +20,6 @@ export class GeolocationService {
         this.databaseService.getCurrentDatabaseSettings()
             .then(
                 (config: DatabaseModel) => {
-                    console.log("config : ", config);
                     this.enabled = config.context.settings.geolocation;
                 }
             );

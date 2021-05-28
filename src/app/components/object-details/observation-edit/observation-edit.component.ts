@@ -46,6 +46,8 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
         this.OES.init(this.objectId, this.obsId);
 
+        console.log("ObservationEditComponent OES : ", this.OES);
+
         // TODO CHECK inits -> doc.author + mb hidden inits
 
     }

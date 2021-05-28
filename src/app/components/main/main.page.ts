@@ -4,7 +4,10 @@ import { LoadingController, MenuController, Platform, ToastController } from '@i
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
 import { transform } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
-import { Fill, Style } from 'ol/style';
+import { Fill } from 'ol/style';
+import {Circle as CircleStyle, Stroke, Style} from 'ol/style';
+import { Vector as VectorSource } from "ol/source";
+import { Vector as VectorLayer } from "ol/layer";
 import proj4 from 'proj4';
 import { AppVersionsService } from '../../services/app-versions.service';
 import { AuthService } from '../../services/auth.service';
@@ -104,20 +107,88 @@ export class MainPage implements AfterViewInit {
                     this.ol.createMap('map');
                     this.ol.getMap().setView(this.mapService.currentView);
                     this.ol.addLayer(this.backLayer.backLayer);
-                    if (this.mapManagerService.appLayer) {
+                    if (this.mapManagerService.appLayer) { // This if actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
                         this.ol.addLayer(this.mapManagerService.appLayer);
+                    } else {
+                        console.warn("mapManagerService.appLayer is not initialized.");
                     }
                     this.ol.addLayer(this.editionLayerService.editionLayer);
                     this.ol.addLayer(this.geolocLayer.geolocLayer);
+
+                    // START OF CODE ATTEMPT.
+
+
+                    // var source = new VectorSource();
+                    // var vector = new VectorLayer({
+                    //     source: source,
+                    //     style: new Style({
+                    //         fill: new Fill({
+                    //             color: 'rgba(255, 255, 255, 0.2)',
+                    //         }),
+                    //         stroke: new Stroke({
+                    //             color: '#ffcc33',
+                    //             width: 2,
+                    //         }),
+                    //         image: new CircleStyle({
+                    //             radius: 7,
+                    //             fill: new Fill({
+                    //                 color: '#ffcc33',
+                    //             }),
+                    //         }),
+                    //     }),
+                    // });
+                    // this.ol.getMap().addLayer(vector);
+                    // let delay;
+                    // let intervalTask;
+                    // let longpress = 500;
+                    // this.ol.getMap().on("pointerdown", () => {
+                    //     console.log("pointerdown");
+                    //     delay = setTimeout(longClickEvent, longpress);
+
+                    //     function longClickEvent() {
+                    //         console.log("waited long enough now this is a longclick.");
+                    //         let radius = 50;
+                    //         intervalTask = setInterval(() => {
+                    //             console.log("++");
+                    //             radius++; // Make the radius bigger every 5 milliseconds;
+                    //             if (radius > 5000) {
+                    //                 clearInterval(intervalTask);
+                    //             }
+                    //         }, 5);
+                    //         let style = new Style({
+                    //             image: new CircleStyle({
+                    //                 radius: radius,
+                    //                 stroke: new Stroke({
+                    //                     color: 'rgba(255, 0, 0, 0.5)',
+                    //                     width: 200,
+                    //                 }),
+                    //             }),
+                    //         });
+
+                    //         this.layer = new VectorLayer({
+                    //             name: 'interactionCircle',
+                    //             visible: true,
+                    //             source: new VectorSource(),
+                    //             style: style
+                    //         });
+                    //     }
+                    // });
+                    // this.ol.getMap().on("pointerup", () => {
+                    //     console.log("pointerup");
+                    //     clearInterval(intervalTask);
+                    // });
+                    
                     this.ol.getMap().addInteraction(new LongClickSelect({
                         circleStyle: new Style({
                             fill: new Fill({color: [255, 255, 255, 0.5]})
                         }),
                         layers: (olLayer) => {
                             // TODO
+                            console.log("longSelect olLayer : ", olLayer);
                             return true;
                         },
                         endClick: (features) => {
+                            console.log("endClick features : ", features);
                             // If there is at least one object selected
                             if (features.length > 0) {
                                 this.pathRightSlide = 'objectsSelected';
@@ -127,6 +198,7 @@ export class MainPage implements AfterViewInit {
                             return true;
                         }
                     }));
+                    
 
                     this.mapManagerService.mapLoadingSubject
                         .subscribe(

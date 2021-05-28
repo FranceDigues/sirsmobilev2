@@ -117,7 +117,6 @@ export class DatabaseService {
         this.getCurrentDatabaseSettings()
             .then(
                 (database: DatabaseModel) => {
-                    console.log("database : ", database);
                     database.context.settings.geolocation = flag;
                     this.setCurrentDatabaseSettings(database);
                 },

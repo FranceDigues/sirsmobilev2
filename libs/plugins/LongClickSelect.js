@@ -413,7 +413,7 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
     this.setPixels(mapBrowserEvent, this.startPixel_, this.endPixel_);
     this.radiusTimeoutId_ = window.setTimeout(() => {
       this.increaseRadius_(mapBrowserEvent);
-    }, 20);
+    }, 2);
     return true;
   };
 
@@ -523,7 +523,7 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
    * @private
    */
   LongClickSelect.prototype.increaseRadius_ = function (mapBrowserEvent) {
-    this.endPixel_[0] += 4;
+    this.endPixel_[0] += 0.25;
     if (typeof this.maxRadius_ === 'number') {
       this.endPixel_[0] = Math.min(this.endPixel_[0], this.startPixel_[0] + this.maxRadius_);
     }
@@ -531,7 +531,7 @@ export let LongClickSelect = /*@__PURE__*/ (function (LongClick) {
     this.radiusTimeoutId_ = window.setTimeout(
       () => {
         this.increaseRadius_(mapBrowserEvent);
-      }, 20);
+      }, 2);
   }
 
   /**

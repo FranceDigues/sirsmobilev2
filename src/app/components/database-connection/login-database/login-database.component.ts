@@ -27,15 +27,12 @@ export class LoginDatabaseComponent implements OnInit {
   }
 
   authenticate() {
-    console.log("auth : ", this.auth);
     this.authService.login(this.auth.username, this.auth.password)
     .then(
       () => {
-        console.log("auth then");
         this.status = 2;
       },
       async (error) => {
-        console.log("auth error");
         console.error('Login ERROR : ' + error);
         const alert = await this.alrtCtrl.create({
           header: 'Erreur',

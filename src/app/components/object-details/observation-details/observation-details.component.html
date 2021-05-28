@@ -22,7 +22,7 @@
     </div>
   </div>
   <div *ngIf="OES.mediaPath">
-    <div *ngFor="let photo of photos; let index = index" (ngInit)="OES.loadImage(photo, true)">
+    <div *ngFor="let photo of photos; let index = index">
       <ng-container *ngIf="OES.loaded[photo.id]">
         <img (click)="OES.open(photo)" alt="Photo non disponible sur le mobile"
               [src]="OES.getPhotoPath(photo, true)"/>

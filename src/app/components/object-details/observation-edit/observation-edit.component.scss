@@ -6,8 +6,9 @@
 }
 
 .tabs .tab a.active {
-  color: #0098A6;
-  border-color: #0098A6;
+  color: #00545c;
+  border-color: #00545c;
+  font-weight: bold;
 }
 
 .tabs .indicator {
@@ -38,7 +39,8 @@
 }
 
 .sirs-card > .sirs-card-content {
-  padding: 20px;
+  padding-bottom: 20px;
+  padding-top: 20px;
   border-radius: 0 0 2px 2px;
 }
 
@@ -50,7 +52,8 @@
 }
 
 .sirs-card > .sirs-card-action {
-  padding: 14px 20px 20px;
+  padding-bottom: 10px;
+  padding-top: 15px;
   margin-bottom: 10px;
   border-top: 1px solid rgba(160, 160, 160, 0.2);
   overflow: hidden;
@@ -98,4 +101,8 @@ ion-content {
 
 .pic-quicklook > img {
   height: 100%;
+}
+
+.margin10 {
+  margin: 10px;
 }

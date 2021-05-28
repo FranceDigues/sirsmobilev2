@@ -220,7 +220,16 @@ export class ObservationMediaComponent implements OnInit {
                                 this.OES.objectDoc._attachments[this.OES.mediaOptions.id] = {
                                     content_type: 'image/jpeg',
                                     data: base64data
-                                }
+                                };
+                                // TODO : Save photo to media folder
+                                // this.file.createFile(this.file.dataDirectory + "medias", this.OES.objectId, false)
+                                //     .then((result) => {
+                                //         console.log("createFile result : ", result);
+                                //     }, error => {
+                                //         console.log("createFile error : ", error);
+                                //     }).catch(error => {
+                                //         console.error(error);
+                                //     });
                                 this.editionService.saveObject(this.OES.objectDoc)
                                     .then(() => {
                                         this.cancel();

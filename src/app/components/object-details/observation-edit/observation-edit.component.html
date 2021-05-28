@@ -18,7 +18,7 @@
 
               <div class="medias" *ngSwitchCase="'medias'">
                 <div class="pics row" *ngIf="OES.showContent">
-                  <div class="pic col col-25" *ngIf="OES.mediaPath">
+                  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="OES.mediaPath">
                     <div *ngFor="let photo of OES.photos" (ngInit)="OES.loadImage(photo)">
                       <div class="progress" *ngIf="!OES.loaded[photo.id]">
                         <div class="indeterminate"></div>
@@ -106,10 +106,10 @@
               </div>
             </div>
             <div class="sirs-card-action">
-              <a (click)="goMain()" class="btn-flat waves-effect waves-teal">
+              <a (click)="goMain()" class="margin10 btn-flat waves-effect waves-teal">
                 <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
               </a>
-              <button type="button" class="btn pink waves-effect waves-teal right"
+              <button type="button" class="margin10 btn pink waves-effect waves-teal right"
               (click)="save()">
                 <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
               </button>
