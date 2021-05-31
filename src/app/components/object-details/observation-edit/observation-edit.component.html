@@ -46,18 +46,22 @@
               </div>
               <div class="urgence" *ngSwitchCase="'urgence'">
                 <div class="sirs-field" *ngIf="showText('fullName')">
-                  <select id="urgenceList" class="browser-default"
-                          [(ngModel)]="OES.urgence" name="urgenceList">
+                  <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                          [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
                           <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
-                          [value]="urgence.id" (ngModelChange)="changeUrgence()"
+                          [value]="urgence.id" 
+                          (ngModelChange)="changeUrgence()"
                           [selected]="urgence.id === OES.urgence">
                             {{ urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id }}
                           </option>
                   </select>
+                  <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                    <ion-spinner name="crescent"></ion-spinner>
+                  </div>
                 </div>
                 <div class="sirs-field" *ngIf="showText('abstract')">
-                    <select id="urgenceList" class="browser-default"
-                    [(ngModel)]="OES.urgence" name="urgenceList">
+                    <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                    [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
                         <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
                                 [value]="urgence.id"
                                 (ngModelChange)="changeUrgence()"
@@ -66,17 +70,23 @@
                             urgence.libelle }}
                         </option>
                     </select>
+                    <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                      <ion-spinner name="crescent"></ion-spinner>
+                    </div>
                 </div>
                 <div class="sirs-field" *ngIf="showText('both')">
-                    <select id="urgenceList" class="browser-default" [(ngModel)]="OES.urgence" name="urgenceList">
+                    <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                    [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
                         <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
                                 [value]="urgence.id"
-                                (ngModelChange)="changeUrgence()"
                                 [selected]="OES.urgence === urgence.id">
                             {{ urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) :
                             (urgence.designation + ' : ' + urgence.libelle) }}
                         </option>
                     </select>
+                    <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                      <ion-spinner name="crescent"></ion-spinner>
+                    </div>
                 </div>
               </div>
               <div class="nombre" *ngSwitchCase="'nombre'">
@@ -95,13 +105,18 @@
               </div>
               <div class="observateur" *ngSwitchCase="'observateur'">
                 <div class="sirs-field">
-                  <select id="contactList" class="browser-default"
-                  [(ngModel)]="OES.contact" name="contactList" (ngModelChange)="changeContact()">
+                  <select id="contactList" class="browser-default" *ngIf="init.contactListInit"
+                  [(ngModel)]="OES.contact" 
+                  name="contactList" 
+                  (ngModelChange)="changeContact()">
                     <option *ngFor="let contact of OES.contactList | async | sortByDocNom"
                     [selected]="contact.id === OES.contact">
                       {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
                     </option>
                   </select>
+                  <div *ngIf="!init.contactListInit" fxLayout="column" fxLayoutAlign="center center">
+                    <ion-spinner name="crescent"></ion-spinner>
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,4 +136,9 @@
       <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
     </div>
   </div>
+</div>
+
+<div class="overlay" *ngIf="saving" fxLayout="column" fxLayoutAlign="center center">
+  <ion-spinner name="crescent"></ion-spinner>
+  <span class="savingStyle">SAUVEGARDE DES MODIFICATIONS EN COURS...</span>
 </div>

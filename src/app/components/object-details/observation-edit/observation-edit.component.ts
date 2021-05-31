@@ -34,6 +34,12 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur';
     showTextConfig: string;
 
+    // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
+    init = {
+        contactListInit: false
+    }
+    saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
+
 
     constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
@@ -44,12 +50,17 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
         this.view = 'form';
         this.tab = 'medias';
 
-        this.OES.init(this.objectId, this.obsId);
+        this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
         console.log("ObservationEditComponent OES : ", this.OES);
 
-        // TODO CHECK inits -> doc.author + mb hidden inits
+        this.OES.contactList.then(() => {
+            this.init.contactListInit = true;
+        }, () => {
+            this.init.contactListInit = true;
+        })
 
+        // TODO CHECK inits -> doc.author + mb hidden inits
     }
 
     ngOnInit() {
@@ -88,6 +99,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     }
 
     save() {
+        this.saving = true;
         if (this.OES.isNewObject) {
             if (this.OES.objectDoc.observations === undefined) {
                 this.OES.objectDoc.observations = [];
@@ -128,6 +140,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
                                 .then(() => {
                                     // Save document.
                                     this.editionService.saveObject(this.OES.objectDoc).then(() => {
+                                        this.saving = false;
                                         this.mapManagerService.syncAllAppLayer();
                                         this.route.navigateByUrl('/main');
                                     });
@@ -136,12 +149,14 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
                     });
             } else {
                 this.editionService.saveObject(this.OES.objectDoc).then(() => {
+                    this.saving = false;
                     this.mapManagerService.syncAllAppLayer();
                     this.route.navigateByUrl('/main');
                 });
             }
         } else {
             this.editionService.saveObject(this.OES.objectDoc).then(() => {
+                this.saving = false;
                 this.mapManagerService.syncAllAppLayer();
                 this.route.navigateByUrl('/main');
             });

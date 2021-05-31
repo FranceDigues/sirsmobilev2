@@ -84,13 +84,18 @@ export class ObservationEditService {
             include_docs: true
         });
 
+        // TODO : Call this at app init to optimize observation call.
         this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefUrgence'],
-            endkey: ['fr.sirs.core.model.RefUrgence', {}]
+            endkey: ['fr.sirs.core.model.RefUrgence', {}],
+            include_docs: true
         }).then(
             (urgenceList) => {
                 this.urgenceList = urgenceList.map(item => {
-                    item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(':') + 1), 10);
+                    item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
+                    if (item.doc && item.doc.abrege) {
+                        item.value.abrege = item.doc.abrege;
+                    }
                     return item.value;
                 });
             }
