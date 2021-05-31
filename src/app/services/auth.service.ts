@@ -54,7 +54,6 @@ export class AuthService {
               this.user = result.rows[0].doc;
               this.dbService.getCurrentDatabaseSettings()
               .then((database: DatabaseModel) => {
-                  console.log("getCurrentDatabaseSettings : ", database);
                   database.context.authUser = this.user;
                   this.dbService.setCurrentDatabaseSettings(database);
                   resolve(database);

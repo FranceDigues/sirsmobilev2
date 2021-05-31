@@ -21,6 +21,7 @@ import { SelectedObjectsService } from '../../services/selected-objects.service'
 import { SirsDocService } from '../../services/sirsdoc.service';
 import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from '../../services/edition-layer.service';
+import { ObservationEditService } from 'src/app/services/observation-edit.service';
 
 
 @Component({
@@ -38,7 +39,8 @@ export class MainPage implements AfterViewInit {
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
-                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController) {
+                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
+                public OES: ObservationEditService) {
         this.appVersionsService.init();
         this.backLayer.init();
         // this.mapManagerService.init();
@@ -95,6 +97,7 @@ export class MainPage implements AfterViewInit {
                 (sirsDoc: any) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
                     register(proj4);
+                    this.OES.preInit(this.sirsDocSrvc); // OES services needs sirsDocSrvc service to be (pre)init.
                 }
             );
         this.backLayerService.init()

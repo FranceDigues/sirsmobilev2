@@ -173,13 +173,30 @@
         <div class="row">
           <input type="text" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
         </div>
+
+        <!-- PHOTOGRAPHER'S NAME -->
+        <div>
+          <div>Photographe</div>
+          <div class="sirs-field">
+            <select id="contactList" class="browser-default" *ngIf="init.contactListInit" [(ngModel)]="OES.contact"
+              name="contactList" (ngModelChange)="changeContact()">
+              <option *ngFor="let contact of OES.contactList | async | sortByDocNom" [selected]="contact.id === OES.contact">
+                {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
+              </option>
+            </select>
+            <div *ngIf="!init.contactListInit" fxLayout="column" fxLayoutAlign="center center">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+          </div>
+        </div>
+
         <div class="sirs-card-action">
           <a (click)="cancel()" class="btn-flat waves-effect waves-teal">
             <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
           </a>
-          <button type="button" class="btn pink waves-effect waves-teal right"
-          (click)="save()">
-          <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
+          <button type="button" class="btn pink waves-effect waves-teal right" (click)="save()">
+            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
+            <span>Terminer</span>
           </button>
         </div>
       </div>

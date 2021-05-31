@@ -61,6 +61,7 @@ export class MediaFormComponent implements OnInit {
             orientationPhoto: '',
             coteId: '',
             commentaire: '',
+            photographeId: '',
             author: this.authService.getValue()._id
         };
         this.mediaPath = `${this.file.dataDirectory}medias`;

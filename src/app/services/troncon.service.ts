@@ -73,7 +73,6 @@ export class DigueController {
                     loading.dismiss();
                 },
                 (err) => {
-                    console.log('err Digue', err);
                     loading.dismiss();
                 }
             );

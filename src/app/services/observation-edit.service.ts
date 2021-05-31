@@ -48,7 +48,11 @@ export class ObservationEditService {
                 private sirsDoc: SirsDocService, private storageService: StorageService,
                 private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
                 private ref: ApplicationRef) {
-        this.dataProjection = this.sirsDoc.get().epsgCode;
+    }
+
+    // pre init method exists as the init methods are called from other components and services.
+    preInit(sirsDocSrvc: SirsDocService) {
+        this.dataProjection = sirsDocSrvc.get().epsgCode;
         this.mediaPath = `${this.file.dataDirectory}medias`;
         this.showContent = true;
         this.loaded = {};
@@ -60,14 +64,15 @@ export class ObservationEditService {
             orientationPhoto: '',
             coteId: '',
             commentaire: '',
+            photographeId: '',
             author: this.authService.getValue()._id
         };
         this.importPhotoData = null;
+
+        this.initRequests();
     }
 
-    init(objectId: string, obsId: string) {
-        this.setValuesToDefault();
-
+    initRequests() {
         this.orientations = this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
             endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}]
@@ -84,7 +89,6 @@ export class ObservationEditService {
             include_docs: true
         });
 
-        // TODO : Call this at app init to optimize observation call.
         this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefUrgence'],
             endkey: ['fr.sirs.core.model.RefUrgence', {}],
@@ -100,6 +104,12 @@ export class ObservationEditService {
                 });
             }
         );
+    }
+
+    init(objectId: string, obsId: string) {
+        this.setValuesToDefault();
+
+        this.initRequests();
 
         this.storageService.getItem('AppTronconsFavorities')
             .then(
@@ -139,6 +149,7 @@ export class ObservationEditService {
             orientationPhoto: '',
             coteId: '',
             commentaire: '',
+            photographeId: '',
             author: this.authService.getValue()._id
         };
         this.importPhotoData = null;

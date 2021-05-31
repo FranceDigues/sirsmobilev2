@@ -27,6 +27,11 @@ export class ObservationMediaComponent implements OnInit {
     view: 'media' | 'map' | 'note';
     showTextConfig: string;
 
+    // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
+    init = {
+        contactListInit: false
+    }
+
     constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
                 private geolocation: GeolocationService, private cameraService: CameraService,
                 private camera: Camera, private file: File, private webview: WebView,
@@ -37,6 +42,12 @@ export class ObservationMediaComponent implements OnInit {
 
         this.OES.importPhotoData = null;
         this.OES.mediaOptions.id = '';
+
+        this.OES.contactList.then(() => {
+            this.init.contactListInit = true;
+        }, () => {
+            this.init.contactListInit = true;
+        })
     }
 
     ngOnInit() {
@@ -221,15 +232,6 @@ export class ObservationMediaComponent implements OnInit {
                                     content_type: 'image/jpeg',
                                     data: base64data
                                 };
-                                // TODO : Save photo to media folder
-                                // this.file.createFile(this.file.dataDirectory + "medias", this.OES.objectId, false)
-                                //     .then((result) => {
-                                //         console.log("createFile result : ", result);
-                                //     }, error => {
-                                //         console.log("createFile error : ", error);
-                                //     }).catch(error => {
-                                //         console.error(error);
-                                //     });
                                 this.editionService.saveObject(this.OES.objectDoc)
                                     .then(() => {
                                         this.cancel();
@@ -246,6 +248,10 @@ export class ObservationMediaComponent implements OnInit {
                 duration: 7000
             }).then(toast => toast.present());
         }
+    }
+
+    changeContact() {
+        this.OES.mediaOptions.photographeId = this.OES.contact;
     }
 
 }

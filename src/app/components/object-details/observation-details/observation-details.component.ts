@@ -70,8 +70,6 @@ export class ObservationDetailsComponent implements OnInit {
         for (let photo of this.photos) {
             this.OES.loadImage(photo, true);
         }
-
-        console.log("this.OES : ", this.OES);
     }
 
     goBack() {

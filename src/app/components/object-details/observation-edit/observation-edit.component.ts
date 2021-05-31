@@ -52,8 +52,6 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
         this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
-        console.log("ObservationEditComponent OES : ", this.OES);
-
         this.OES.contactList.then(() => {
             this.init.contactListInit = true;
         }, () => {

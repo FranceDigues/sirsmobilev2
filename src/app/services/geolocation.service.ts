@@ -44,7 +44,7 @@ export class GeolocationService {
             enableHighAccuracy: true
         };
         const loading = await this.loadingCtrl.create({
-            message: 'En attente de location'
+            message: 'En attente de localisation'
         });
         loading.present();
         return new Promise((resolve, rejects) => {
