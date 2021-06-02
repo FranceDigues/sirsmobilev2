@@ -18,7 +18,8 @@ export class LeftSlideBackmapComponent implements OnInit {
   constructor(public backLayerService: BackLayerService, private alertCtrl: AlertController,
               private route: Router, public backLayer: BackLayer) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   changeSlidePath(path: string) {
     this.path = path;
@@ -36,6 +37,11 @@ export class LeftSlideBackmapComponent implements OnInit {
 
   goToCache(layer) {
     this.route.navigateByUrl('/cache/' + layer.name);
+  }
+
+  goToEdit(layer) {
+    this.backLayerService.setBackLayerToEdit(layer);
+    this.path = 'editBackLayer';
   }
 
   async removeLayer(layer) {

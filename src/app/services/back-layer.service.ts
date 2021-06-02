@@ -9,6 +9,8 @@ export class BackLayerService {
 
     backLayers: BackLayerModel;
 
+    private backLayerToEdit: BackLayerModel; // Variable made to transfer layer data from backmap to editBackLayer components.
+
     constructor(private dbService: DatabaseService) {
     }
 
@@ -66,6 +68,14 @@ export class BackLayerService {
                 this.dbService.setCurrentDatabaseSettings(db);
             }
         );
+    }
+
+    getBackLayerToEdit(): BackLayerModel {
+        return this.backLayerToEdit;
+    }
+
+    setBackLayerToEdit(layer: BackLayerModel) {
+        this.backLayerToEdit = layer;
     }
 
 }

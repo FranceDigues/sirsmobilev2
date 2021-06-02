@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { AppInfosComponent } from './app-infos/app-infos.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { LeftSlideAddBackLayerComponent } from './backmap/addbacklayer/addbacklayer.component';
+import { LeftSlideEditBackLayerComponent } from './backmap/edit-back-layer/edit-back-layer.component';
 import { LeftSlideBackmapComponent } from './backmap/backmap.component';
 import { ColorModalComponent } from './app-layers/color-modal/color-modal.component';
 import { AppLayersComponent } from './app-layers/app-layers.component';
@@ -33,6 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
         AppSettingsComponent,
         LeftSlideBackmapComponent,
         LeftSlideAddBackLayerComponent,
+        LeftSlideEditBackLayerComponent,
         ArraySortPipe,
         LeftSlideTronconComponent,
         AppLayersComponent,

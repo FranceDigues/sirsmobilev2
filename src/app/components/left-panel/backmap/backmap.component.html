@@ -23,7 +23,10 @@
           <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
             <ion-icon name="create-outline"></ion-icon>
           </ion-item-option>
-          <ion-item-option style="width: 50px" color="danger" (click)="removeLayer(layer)">
+          <ion-item-option *ngIf="layer.source.type!=='OSM'" style="width: 50px" color="light" (click)="goToEdit(layer)">
+            <ion-icon name="color-wand-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option *ngIf="layer.source.type!=='OSM'" style="width: 50px" color="danger" (click)="removeLayer(layer)">
             <ion-icon name="trash-outline"></ion-icon>
           </ion-item-option>
         </ion-item-options>
@@ -39,4 +42,7 @@
 </div>
 <div class="full-height" *ngIf="path === 'addBackLayer'">
   <left-slide-addbacklayer (slidePathChange)="changeSlidePath($event)"></left-slide-addbacklayer>
+</div>
+<div class="full-height" *ngIf="path === 'editBackLayer'">
+  <left-slide-editbacklayer (slidePathChange)="changeSlidePath($event)"></left-slide-editbacklayer>
 </div>
