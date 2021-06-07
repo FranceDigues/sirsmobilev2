@@ -36,6 +36,7 @@ export class BackLayerService {
             .then(
                 (db: DatabaseModel) => {
                     this.backLayers = db.context.backLayer;
+                    this.backLayer = this.createBackLayer();
                     resolve();
                 }
             );

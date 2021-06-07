@@ -60,8 +60,6 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
                 this.cacheMapManager.setTargetLayer(this.layerModel);
 
                 this.currentView.on('change:center', (event) => this.onCenterChanged(event));
-
-                console.log("layerModel : ", this.layerModel);
               }
 
   ngAfterViewInit() {
@@ -224,7 +222,6 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   }
 
   async deleteCache() {
-    console.log("deleteCache called.");
     const alert = await this.alertCtrl.create({
       header: 'Suppression de cache',
       message: 'Voulez vous supprimer le cache de cette couche de données ?',
