@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
@@ -7,28 +6,20 @@ import Circle from 'ol/geom/Circle';
 import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
 import LayerGroup from 'ol/layer/Group';
-import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { transform } from 'ol/proj';
 import Cluster from 'ol/source/Cluster';
-import OSM from 'ol/source/OSM';
-import TileWMS from 'ol/source/TileWMS';
 import VectorSource from 'ol/source/Vector';
-import XYZ from 'ol/source/XYZ';
 import Fill from 'ol/style/Fill';
 import Icon from 'ol/style/Icon';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import { AppLayersService } from './app-layers.service';
-import { BackLayerService } from './back-layer.service';
 import { FeatureCache } from './cache.service';
-import { DatabaseService } from './database.service';
 import { MapService } from './map.service';
-import { DatabaseModel, ListBackLayer } from '../components/database-connection/models/database.model';
 import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './local-database.service';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -100,111 +91,6 @@ export class GeolocLayer {
         const geolocLayerSource = this.getGeolocLayer.getSource();
         geolocLayerSource.clear();
         geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class BackLayer {
-
-    backLayer: LayerGroup;
-
-    constructor(private backLayerService: BackLayerService, private mapService: MapService,
-                private ol: OLService, private dbService: DatabaseService,
-                private webview: WebView) {
-    }
-
-    init() {
-        this.backLayerService.init()
-            .then(
-                () => {
-                    this.backLayer = this.createBackLayer();
-                }
-            );
-    }
-
-    createBackLayer() {
-        // * give time for backLayerService to init
-        return new LayerGroup({
-            name: 'Background',
-            layers: [
-                this.createBackLayerInstance(this.backLayerService.getActive())
-            ]
-        });
-    }
-
-    private goodBackLayerSource(layerModel: ListBackLayer) {
-        if (layerModel.source.type === 'OSM') {
-            return new OSM(layerModel.source);
-        } else if (layerModel.source.type === 'TileWMS') {
-            return new TileWMS(layerModel.source);
-        } else if (layerModel.source.type === 'XYZ') {
-            return new XYZ(layerModel.source);
-        } else {
-            return new OSM({
-                url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-            });
-        }
-    }
-
-    getUrl(url): string {
-        return this.webview.convertFileSrc(url);
-    }
-
-    createBackLayerInstance(layerModel): TileLayer {
-        let layer = null;
-        if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
-            const extent = layerModel.cache.extent;
-
-            const url = this.getUrl(layerModel.cache.url);
-            const source = new XYZ({
-                url
-            });
-            layer = new TileLayer({
-                name: layerModel.name,
-                extent,
-                source
-            });
-        } else {
-            layer = new TileLayer({
-                name: layerModel.name,
-                model: layerModel,
-                source: this.goodBackLayerSource(layerModel)
-            });
-        }
-        return layer;
-    }
-
-    setActiveBackLayers(layer) {
-        if (layer !== this.backLayerService.backLayers.active) {
-            this.backLayerService.backLayers.active = layer;
-            this.updateBackLayerMap(layer);
-            this.updateActiveBackLayerInHardDisk(layer);
-        }
-    }
-
-    private updateActiveBackLayerInHardDisk(backLayer) {
-        this.dbService.getCurrentDatabaseSettings()
-            .then(
-                (db: DatabaseModel) => {
-                    db.context.backLayer.active = backLayer;
-                    this.dbService.setCurrentDatabaseSettings(db);
-                }
-            );
-    }
-
-    updateBackLayerMap(layer: ListBackLayer) {
-        this.backLayer.getLayers().setAt(0, this.createBackLayerInstance(layer));
-
-        if (typeof layer.cache === 'object') {
-            this.mapService.currentView.fit(layer.cache.extent, this.ol.map.getSize());
-        }
-    }
-
-    syncBackLayer() {
-        const olLayer = this.createBackLayerInstance(this.backLayerService.getActive());
-        this.backLayer.getLayers().setAt(0, olLayer);
     }
 }
 

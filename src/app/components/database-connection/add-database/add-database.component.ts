@@ -52,7 +52,7 @@ export class AddDatabaseComponent implements OnInit {
                     name: 'OpenStreetMap',
                     source: {
                         type: 'OSM',
-                        url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                        url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                     }
                 },
                 list:
@@ -61,14 +61,14 @@ export class AddDatabaseComponent implements OnInit {
                             name: 'OpenStreetMap',
                             source: {
                                 type: 'OSM',
-                                url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                                url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                             }
                         },
                         {
                             name: 'Landscape',
                             source: {
                                 type: 'OSM',
-                                url: 'http://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
+                                url: 'https://{a-c}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png'
                             }
                         }
                     ]

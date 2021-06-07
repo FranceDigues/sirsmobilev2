@@ -121,7 +121,7 @@ export class CacheMapManager {
                 return new XYZ(layerModel.source);
             default:
                 return new OSM({
-                    url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                    url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 });
         };
     }

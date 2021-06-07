@@ -6,7 +6,6 @@ import { getHeight, getWidth } from 'ol/extent';
 import { transformExtent } from 'ol/proj';
 import View from 'ol/View';
 import { BackLayerService } from 'src/app/services/back-layer.service';
-import { BackLayer } from 'src/app/services/map-manager.service';
 import { MapService } from 'src/app/services/map.service';
 import { ListBackLayer } from 'src/app/components/database-connection/models/database.model';
 import { OLService } from '../../../../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-map/ol.service';
@@ -31,7 +30,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
               private mapService: MapService, private cacheMapManager: CacheMapManager,
-              private route: Router, private backLayer: BackLayer, private file: File,
+              private route: Router, private file: File,
               private alertCtrl: AlertController, private ol: OLService,
               private cdRef: ChangeDetectorRef) {
                 this.ol.map = null;
@@ -61,6 +60,8 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
                 this.cacheMapManager.setTargetLayer(this.layerModel);
 
                 this.currentView.on('change:center', (event) => this.onCenterChanged(event));
+
+                console.log("layerModel : ", this.layerModel);
               }
 
   ngAfterViewInit() {
@@ -204,7 +205,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     this.setNewCacheInGoodLayerInBackLayerList(cache);
     this.setNewCacheInActiveBackLayer(cache)
     this.backLayerService.updateListInHardDisk();
-    this.backLayer.syncBackLayer();
+    this.backLayerService.syncBackLayer();
 
     // Run cache plugin task.
     extent = transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
@@ -219,10 +220,11 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
       bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
     }]);
 
-    setTimeout(() => { this.route.navigateByUrl('/main') }, 300);
+    setTimeout(() => { this.route.navigateByUrl('/main') }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
   }
 
   async deleteCache() {
+    console.log("deleteCache called.");
     const alert = await this.alertCtrl.create({
       header: 'Suppression de cache',
       message: 'Voulez vous supprimer le cache de cette couche de données ?',
@@ -246,12 +248,13 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
             });
 
             delete this.layerModel.cache;
-            this.backLayerService.setActive(this.layerModel.name);
+            this.backLayerService.setActiveBackLayer(this.layerModel);
+            setTimeout(() => { this.route.navigateByUrl('/main') }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
           }
         }
       ]
     });
-    await alert.present;
+    await alert.present();
   }
 
 }

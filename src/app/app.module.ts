@@ -29,7 +29,7 @@ import { DatabaseService } from './services/database.service';
 import { EditionModeService } from './services/edition-mode.service';
 import { EditObjectService } from './services/edit-object.service';
 import { FormsTemplateService } from './services/formstemplate.service';
-import { MapManagerService, BackLayer, GeolocLayer } from './services/map-manager.service';
+import { MapManagerService, GeolocLayer } from './services/map-manager.service';
 import { MapService } from './services/map.service';
 import { MapEditObjectService } from './services/map-edit-object.service';
 import { ObjectDetails } from './services/object-details.service';
@@ -63,10 +63,10 @@ import { EditionLayerService } from './services/edition-layer.service';
         StatusBar, OLService, SplashScreen, NativeStorage,
         MapService, Insomnia, Geolocation, EditionModeService,
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
-        MapManagerService, GeolocLayer, EditionLayerService, BackLayer,
+        MapManagerService, GeolocLayer, EditionLayerService,
         SyncService, DatabaseService, AuthService,
         AppVersionsService, SirsDocService, BackLayerService,
-        BackLayer, SystemeEndiguement, AppTronconsService, DigueController,
+        SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, CacheMapManager, File, WebView, FileOpener,

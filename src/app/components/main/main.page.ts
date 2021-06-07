@@ -14,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService, BackLayer, GeolocLayer } from '../../services/map-manager.service';
+import { MapManagerService, GeolocLayer } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
@@ -37,13 +37,12 @@ export class MainPage implements AfterViewInit {
     constructor(private ol: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
                 public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
-                private menu: MenuController, private appVersionsService: AppVersionsService, private backLayer: BackLayer,
+                private menu: MenuController, private appVersionsService: AppVersionsService,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
                 private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
                 public OES: ObservationEditService) {
         this.appVersionsService.init();
-        this.backLayer.init();
-        // this.mapManagerService.init();
+        this.backLayerService.init();
         this.editionLayerService.init();
         this.geolocLayer.init();
 
@@ -109,7 +108,7 @@ export class MainPage implements AfterViewInit {
                     loading.present();
                     this.ol.createMap('map');
                     this.ol.getMap().setView(this.mapService.currentView);
-                    this.ol.addLayer(this.backLayer.backLayer);
+                    this.ol.addLayer(this.backLayerService.backLayer);
                     if (this.mapManagerService.appLayer) { // This if actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
                         this.ol.addLayer(this.mapManagerService.appLayer);
                     } else {

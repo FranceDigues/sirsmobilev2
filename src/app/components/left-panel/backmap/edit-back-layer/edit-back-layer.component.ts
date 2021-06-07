@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BackLayerService } from 'src/app/services/back-layer.service';
 import TileImage from 'ol/source/TileImage';
-import { BackLayer, MapManagerService } from 'src/app/services/map-manager.service';
 
 @Component({
   selector: 'left-slide-editbacklayer',
@@ -41,7 +40,6 @@ export class LeftSlideEditBackLayerComponent implements OnInit {
 
   constructor(
     private backLayerService: BackLayerService,
-    public backLayer: BackLayer,
   ) { }
 
   ngOnInit() {
@@ -73,9 +71,7 @@ export class LeftSlideEditBackLayerComponent implements OnInit {
   }
 
   goBack() {
-    console.log("end up as : ", this.backLayerForm);
-    this.backLayer.setActiveBackLayers(this.backLayerForm);
-    console.log("this.backLayerService.getList() : ", this.backLayerService.getList());
+    this.backLayerService.setActiveBackLayer(this.backLayerForm);
     this.slidePathChange.emit('select');
   }
 

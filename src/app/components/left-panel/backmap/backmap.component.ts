@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { BackLayerService } from 'src/app/services/back-layer.service';
-import { BackLayer } from 'src/app/services/map-manager.service';
+import { ListBackLayer } from '../../database-connection/models/database.model';
 
 @Component({
   selector: 'left-slide-backmap',
@@ -14,11 +14,13 @@ export class LeftSlideBackmapComponent implements OnInit {
   @Output() readonly slidePathChange = new EventEmitter<string>();
 
   path = 'select';
+  backLayersList: Array<ListBackLayer>;
 
   constructor(public backLayerService: BackLayerService, private alertCtrl: AlertController,
-              private route: Router, public backLayer: BackLayer) { }
+              private route: Router) { }
 
   ngOnInit() {
+    this.backLayersList = this.backLayerService.getList();
   }
 
   changeSlidePath(path: string) {
@@ -32,7 +34,7 @@ export class LeftSlideBackmapComponent implements OnInit {
   toggleOnlineMode(layer) {
     layer.cache.active = !layer.cache.active;
     // Update the view
-    this.backLayer.setActiveBackLayers(layer);
+    this.backLayerService.setActiveBackLayer(layer);
   }
 
   goToCache(layer) {
@@ -60,7 +62,7 @@ export class LeftSlideBackmapComponent implements OnInit {
             const isCurrent = (layer.name === this.backLayerService.getActive().name);
             this.backLayerService.remove(layer);
             if (isCurrent) {
-              this.backLayer.setActiveBackLayers(this.backLayerService.getList()[0]);
+              this.backLayerService.setActiveBackLayer(this.backLayerService.getList()[0]);
             }
           }
         }

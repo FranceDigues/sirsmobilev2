@@ -9,13 +9,13 @@
   </ion-header>
   <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
     <ion-list>
-      <ion-item-sliding *ngFor="let layer of backLayerService.getList()" side="end">
-        <ion-item (click)="backLayer.setActiveBackLayers(layer)">
+      <ion-item-sliding *ngFor="let layer of backLayersList" side="end">
+        <ion-item (click)="backLayerService.setActiveBackLayer(layer)">
           {{ layer.name }}
           <span *ngIf="layer.cache && layer.cache.active"> (hors ligne)</span>
           <ion-icon slot="end" *ngIf="layer.name === backLayerService.getActive().name" name="checkmark-outline"></ion-icon>
         </ion-item>
-        <ion-item-options style="width: 150px">
+        <ion-item-options>
           <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
             <ion-icon *ngIf="showingDownloadCloudIcon(layer)" name="cloud-download-outline"></ion-icon>
             <ion-icon *ngIf="showingOfflineCloudIcon(layer)" name="cloud-offline-outline"></ion-icon>
