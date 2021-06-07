@@ -51,7 +51,7 @@ export class ObservationEditService {
     }
 
     // pre init method exists as the init methods are called from other components and services.
-    preInit(sirsDocSrvc: SirsDocService) {
+    async preInit(sirsDocSrvc: SirsDocService) {
         this.dataProjection = sirsDocSrvc.get().epsgCode;
         this.mediaPath = `${this.file.dataDirectory}medias`;
         this.showContent = true;
@@ -65,7 +65,7 @@ export class ObservationEditService {
             coteId: '',
             commentaire: '',
             photographeId: '',
-            author: this.authService.getValue()._id
+            author: this.authService.user._id // Kinda hacked to get directly user value rather than using getValue() method. Otherwise getValue() returns null. Might be an async problem.
         };
         this.importPhotoData = null;
 

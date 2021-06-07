@@ -14,17 +14,23 @@ export class AuthService {
   constructor(private dbService: DatabaseService, private route: Router) { }
 
   isAuth() {
-    this.dbService.getCurrentDatabaseSettings()
-    .then(
-      (database: DatabaseModel) => {
-        if (database.context.authUser !== null) {
-          this.user = database.context.authUser;
-          return true;
-        } else {
-          return false;
+    return new Promise((resolve, reject) => {
+      this.dbService.getCurrentDatabaseSettings()
+      .then(
+        (database: DatabaseModel) => {
+          if (database.context.authUser !== null) {
+            this.user = database.context.authUser;
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         }
-      }
-    );
+      )
+      .catch(error => {
+        console.error("getCurrentDatabaseSettings error : ", error);
+        reject(error);
+      });
+    })
   }
 
   getValue() {
@@ -53,7 +59,7 @@ export class AuthService {
             if (result.rows[0].doc.password === hash.toString().toUpperCase()) {
               this.user = result.rows[0].doc;
               this.dbService.getCurrentDatabaseSettings()
-              .then((database: DatabaseModel) => {
+                .then((database: DatabaseModel) => {
                   database.context.authUser = this.user;
                   this.dbService.setCurrentDatabaseSettings(database);
                   resolve(database);

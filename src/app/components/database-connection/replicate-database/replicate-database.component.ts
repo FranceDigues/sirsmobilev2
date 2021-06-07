@@ -104,6 +104,26 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.percent = 0;
     this.completion = '0/' + docCount;
 
+
+    this.remoteDB.info()
+    .then(
+      (result) => {
+        console.debug("secondStep remoteDb info : ", result)
+      },
+      (err) => {
+        console.debug("secondStep remoteDb error : ", err)
+      }
+    );
+    this.localDB.info()
+    .then(
+      (result) => {
+        console.debug("secondStep localDB info : ", result)
+      },
+      (err) => {
+        console.debug("secondStep localDB error : ", err)
+      }
+    );
+
     const subject = new Subject<any>();
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
@@ -247,7 +267,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
     indexedViews.forEach((view) => {
       const promise = this.localDB.query(view, { limit: 0 }).then(
-        () => {
+        (data) => {
           this.fourthStepProgress(++proceedViews);
         },
         (error) => {

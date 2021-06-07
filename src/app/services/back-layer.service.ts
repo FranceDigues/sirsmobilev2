@@ -55,8 +55,6 @@ export class BackLayerService {
 
     createBackLayerInstance(layerModel): TileLayer {
         let layer = null;
-        console.log("createBackLayerInstance called : ", layerModel);
-        console.log("createBackLayerInstance called : ", this.getList());
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;
 
@@ -99,9 +97,7 @@ export class BackLayerService {
 
     // Used to set but also to refresh the active back layer.
     setActiveBackLayer(layer) {
-        console.log("setActiveBackLayer")
         // if (layer !== this.backLayerService.backLayers.active) {
-        console.log("got in the if")
         this.backLayers.active = layer;
         this.updateBackLayerMap(layer);
         this.updateActiveBackLayerInHardDisk(layer);

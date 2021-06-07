@@ -89,13 +89,14 @@ export class MainPage implements AfterViewInit {
             });
     }
 
-    ngAfterViewInit() {
+    async ngAfterViewInit() {
         let loading: HTMLIonLoadingElement = null;
-        this.sirsDocSrvc.initializeDoc()
+        await this.sirsDocSrvc.initializeDoc()
             .then(
-                (sirsDoc: any) => {
+                async (sirsDoc: any) => {
                     proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
                     register(proj4);
+                    await this.authService.isAuth(); // Init authService user value.
                     this.OES.preInit(this.sirsDocSrvc); // OES services needs sirsDocSrvc service to be (pre)init.
                 }
             );
@@ -109,7 +110,7 @@ export class MainPage implements AfterViewInit {
                     this.ol.createMap('map');
                     this.ol.getMap().setView(this.mapService.currentView);
                     this.ol.addLayer(this.backLayerService.backLayer);
-                    if (this.mapManagerService.appLayer) { // This if actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
+                    if (this.mapManagerService.appLayer) { // This "if" actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
                         this.ol.addLayer(this.mapManagerService.appLayer);
                     } else {
                         console.warn("mapManagerService.appLayer is not initialized.");
