@@ -44,6 +44,7 @@
     "angular-md5": "^0.1.10",
     "bootstrap": "4.5.2",
     "cordova": "^10.0.0",
+    "cordova-android": "9.1.0",
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-geolocation": "^4.0.2",

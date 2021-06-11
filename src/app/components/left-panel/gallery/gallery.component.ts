@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { LocalDatabase } from '../../../services/local-database.service';
@@ -149,63 +149,80 @@ export class GalleryComponent implements OnInit {
         }
     }
 
-    downloadRemoteDocuments() { // TODO
-        // this.localDocument.query('getAllFilesAttachments', { attachments: true })
-        // .then(
-        //     (results) => {
-        //         results.forEach(
-        //             (item) => {
-        //                 item.value.attachments.forEach(
-        //                     (value, key) => {
-        //                         if (!value.content_type.startsWith('image/')) {
-        //                             this.httpClient.head(this.file.externalDataDirectory + 'documents' + '/' + item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1))
-        //                             .subscribe(
-        //                                 () => {
-        //                                     console.log('Working');
-        //                                 },
-        //                                 () => {
-        //                                     this.databaseService.getLocalDB().getAttachment(item.id, key,
-        //                                         (err, blob) => {
-        //                                             this.file.resolveDirectoryUrl(this.file.externalDataDirectory + 'documents')
-        //                                             .then(
-        //                                                 (targetDir) => {
-        //                                                     this.file.getFile(targetDir, item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1), { create: true })
-        //                                                     .then(
-        //                                                         (file) => {
-        //                                                             file.createWriter((fileWriter) => {
-        //                                                                 fileWriter.write(blob);
-        //                                                                 setTimeout(() => {
-        //                                                                     this.file.checkDir(this.file.externalDataDirectory, 'documents')
-        //                                                                     .then(
-        //                                                                         (directory) => {
-        //                                                                             this.visitDirectory(directory)
-        //                                                                             .then(
-        //                                                                                 (files) => {
-        //                                                                                     this.availableFiles = files;
-        //                                                                                 }
-        //                                                                             );
-        //                                                                         }
-        //                                                                     );
-        //                                                                 }, 10);
-        //                                                             },
-        //                                                             (err) => {
-        //                                                                 console.log('Cannot write the data to the file', err);
-        //                                                             });
-        //                                                         }
-        //                                                     );
-        //                                                 }
-        //                                             );
-        //                                         });
-        //                                 }
-        //                             );
-        //                         }
-        //                     }
-        //                 );
-        //             }
-        //         );
-        //     }
-        // );
-    }
+    // downloadRemoteDocuments() { // TODO : See with Jordan what the gallery is supposed to display. Right now I don't know if this method is necessary.
+    //     this.localDocument.query('getAllFilesAttachments', { attachments: true })
+    //     .then(
+    //         (results) => {
+    //             results.forEach(
+    //                 (item) => {
+    //                     item.value.attachments.forEach(
+    //                         (value, key) => {
+    //                             if (!value.content_type.startsWith('image/')) {
+    //                                 this.httpClient.head(this.file.externalDataDirectory + 'documents' + '/' + item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1))
+    //                                 .subscribe(
+    //                                     () => {
+    //                                         console.log('Working');
+    //                                     },
+    //                                     () => {
+    //                                         this.databaseService.getLocalDB().getAttachment(item.id, key,
+    //                                             (err, blob) => {
+    //                                                 this.file.resolveDirectoryUrl(this.file.externalDataDirectory + 'documents')
+    //                                                 .then(
+    //                                                     (targetDir) => {
+    //                                                         this.file.getFile(targetDir, item.value.chemin.substring(item.value.chemin.lastIndexOf('/') + 1), { create: true })
+    //                                                         .then(
+    //                                                             (file) => {
+    //                                                                 file.createWriter((fileWriter) => {
+    //                                                                     fileWriter.write(blob);
+    //                                                                     setTimeout(() => {
+    //                                                                         this.file.checkDir(this.file.externalDataDirectory, 'documents')
+    //                                                                         .then(
+    //                                                                             (directory) => {
+    //                                                                                 this.visitDirectory(directory)
+    //                                                                                 .then(
+    //                                                                                     (files: Array<any>) => {
+    //                                                                                         this.availableFiles = files;
+    //                                                                                     }
+    //                                                                                 );
+    //                                                                             }
+    //                                                                         );
+    //                                                                     }, 10);
+    //                                                                 },
+    //                                                                 (err) => {
+    //                                                                     console.log('Cannot write the data to the file', err);
+    //                                                                 });
+    //                                                             }
+    //                                                         );
+    //                                                     }
+    //                                                 );
+    //                                             });
+    //                                     }
+    //                                 );
+    //                             }
+    //                         }
+    //                     );
+    //                 }
+    //             );
+    //         }
+    //     );
+    // }
+    // visitDirectory(directory) {
+    //     return new Promise((resolve, reject) => {
+    //         directory.createReader().readEntries(function (entries) {
+    //             var files = [];
+    //             entries.forEach((entry) => {
+    //                 files.push({
+    //                     id: entry.fullPath,
+    //                     label: entry.name,
+    //                     childCount: 0,
+    //                     isDirectory: entry.isDirectory,
+    //                     _entry: entry
+    //                 });
+    //             });
+    //             resolve(files);
+    //         });
+    //     })
+    // }
 
     goBack() {
         this.router.navigateByUrl('/main');

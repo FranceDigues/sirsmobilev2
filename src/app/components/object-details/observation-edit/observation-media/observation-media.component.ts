@@ -7,7 +7,6 @@ import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { Camera } from '@ionic-native/camera/ngx';
 import { File, Entry, Metadata, DirectoryEntry } from '@ionic-native/file/ngx';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
@@ -28,25 +27,43 @@ export class ObservationMediaComponent implements OnInit {
     showTextConfig: string;
 
     // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
-    init = {
-        contactListInit: false
-    }
+    contactList: Array<any> = [];
+    orientations: Array<any> = [];
+    cotes: Array<any> = [];
 
-    constructor(public OES: ObservationEditService, private modalCtrl: ModalController,
-                private geolocation: GeolocationService, private cameraService: CameraService,
-                private camera: Camera, private file: File, private webview: WebView,
-                private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
-                private editionService: EditionModeService, private mapManagerService: MapManagerService,
-                private databaseService: DatabaseService) {
+    constructor(
+        public OES: ObservationEditService, 
+        private modalCtrl: ModalController,
+        private geolocation: GeolocationService, 
+        private cameraService: CameraService,
+        private camera: Camera, 
+        private file: File,
+        private toastCtrl: ToastController, 
+        private cdr: ChangeDetectorRef,
+        private editionService: EditionModeService, 
+        private mapManagerService: MapManagerService,
+        private databaseService: DatabaseService) {
         this.view = 'media';
 
         this.OES.importPhotoData = null;
         this.OES.mediaOptions.id = '';
 
-        this.OES.contactList.then(() => {
-            this.init.contactListInit = true;
-        }, () => {
-            this.init.contactListInit = true;
+        this.OES.contactList.then((list) => {
+            this.contactList = list;
+        }, (error) => {
+            console.error("error contactList returned : ", error);
+        })
+
+        this.OES.orientations.then((list) => {
+            this.orientations = list;
+        }, (error) => {
+            console.error("error orientations returned : ", error);
+        })
+
+        this.OES.cotes.then((list) => {
+            this.cotes = list;
+        }, (error) => {
+            console.error("error cotes returned : ", error);
         })
     }
 

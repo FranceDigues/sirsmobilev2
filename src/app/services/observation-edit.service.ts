@@ -75,12 +75,14 @@ export class ObservationEditService {
     initRequests() {
         this.orientations = this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-            endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}]
+            endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}],
+            include_docs: true
         });
 
         this.cotes = this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefCote'],
-            endkey: ['fr.sirs.core.model.RefCote', {}]
+            endkey: ['fr.sirs.core.model.RefCote', {}],
+            include_docs: true
         });
 
         this.contactList = this.localDB.query('Element/byClassAndLinear', {

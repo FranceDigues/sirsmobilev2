@@ -1,5 +1,5 @@
 label {
-    color: #4d4a4a;
+    color: blue;
     font-size: 1rem;
 }
 
@@ -99,4 +99,26 @@ ion-content {
 .observation-form .medias .pics > .pic > .pic-quicklook > img {
     max-width: 100%;
     max-height: 100%;
+}
+
+.photo-button {
+    color: white;
+    --background: #1eaeb5; //ion-button peculiar css property.
+    font-weight: bold;
+}
+
+.position-button {
+    background: #1eaeb5;
+    border-radius: 5px;
+    color: white;
+    margin: 10px;
+    font-size: large;
+}
+
+.bottom-buttons-container {
+    margin-top: 10px;
+}
+
+.btn {
+    color: white;
 }

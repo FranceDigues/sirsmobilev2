@@ -46,7 +46,7 @@ export class DatabaseService {
                 adapter: 'cordova-sqlite'
             });
             // Indicate there is not memory leak in the Fourth Step (10 listeners by default)
-            this.localDB.setMaxListeners(15);
+            this.localDB.setMaxListeners(15); // TODO : Try to rise this limit until I have memory leaks warning. Check : https://pouchdb.com/errors.html
         }
         return this.localDB;
     }

@@ -34,10 +34,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur';
     showTextConfig: string;
 
-    // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
-    init = {
-        contactListInit: false
-    }
+    contactList: Array<any> = [];
     saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
 
@@ -52,10 +49,10 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
 
         this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
-        this.OES.contactList.then(() => {
-            this.init.contactListInit = true;
-        }, () => {
-            this.init.contactListInit = true;
+        this.OES.contactList.then((list) => {
+            this.contactList = list;
+        }, (error) => {
+            console.error("error contactList returned : ", error);
         })
 
         // TODO CHECK inits -> doc.author + mb hidden inits
