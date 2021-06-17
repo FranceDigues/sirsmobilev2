@@ -2,12 +2,6 @@ import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
-import { transform } from 'ol/proj';
-import { register } from 'ol/proj/proj4';
-import { Fill } from 'ol/style';
-import {Circle as CircleStyle, Stroke, Style} from 'ol/style';
-import { Vector as VectorSource } from "ol/source";
-import { Vector as VectorLayer } from "ol/layer";
 import proj4 from 'proj4';
 import { AppVersionsService } from '../../services/app-versions.service';
 import { AuthService } from '../../services/auth.service';
@@ -23,6 +17,17 @@ import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from '../../services/edition-layer.service';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
 
+// OpenLayers
+import { transform, fromLonLat } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
+import { Style, Fill } from 'ol/style';
+import { Vector as VectorSource } from "ol/source";
+import { Vector as VectorLayer } from "ol/layer";
+import Feature from 'ol/Feature';
+import { Circle } from "ol/geom";
+import { env } from 'process';
+import * as olInteraction from 'ol/interaction';
+
 
 @Component({
     selector: 'app-main',
@@ -34,7 +39,7 @@ export class MainPage implements AfterViewInit {
     public connectSubscription;
     public disconnectSubscription;
 
-    constructor(private ol: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
+    constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
                 public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService,
@@ -107,100 +112,159 @@ export class MainPage implements AfterViewInit {
                         message: 'Déploiement de la carte en cours'
                     });
                     loading.present();
-                    this.ol.createMap('map');
-                    this.ol.getMap().setView(this.mapService.currentView);
-                    this.ol.addLayer(this.backLayerService.backLayer);
+                    this.olService.createMap('map');
+                    this.olService.getMap().setView(this.mapService.currentView);
+                    this.olService.addLayer(this.backLayerService.backLayer);
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
-                        this.ol.addLayer(this.mapManagerService.appLayer);
+                        this.olService.addLayer(this.mapManagerService.appLayer);
                     } else {
                         console.warn("mapManagerService.appLayer is not initialized.");
                     }
-                    this.ol.addLayer(this.editionLayerService.editionLayer);
-                    this.ol.addLayer(this.geolocLayer.geolocLayer);
+                    this.olService.addLayer(this.editionLayerService.editionLayer);
+                    this.olService.addLayer(this.geolocLayer.geolocLayer);
 
-                    // START OF CODE ATTEMPT.
+                    // TODO : MOVE ALL CODE RELATED TO LONG CLICK CIRCLE IN A SERVICE.
+                    // STARTS HERE.
 
+                    // Timing management.
+                    let delay; // Store timeout event.
+                    let intervalTask; // Store interval event.
+                    let longpress = 500; // Milliseconds value set to 500ms, if higher I consider it a long click.
 
-                    // var source = new VectorSource();
-                    // var vector = new VectorLayer({
-                    //     source: source,
-                    //     style: new Style({
-                    //         fill: new Fill({
-                    //             color: 'rgba(255, 255, 255, 0.2)',
-                    //         }),
-                    //         stroke: new Stroke({
-                    //             color: '#ffcc33',
-                    //             width: 2,
-                    //         }),
-                    //         image: new CircleStyle({
-                    //             radius: 7,
-                    //             fill: new Fill({
-                    //                 color: '#ffcc33',
-                    //             }),
-                    //         }),
-                    //     }),
-                    // });
-                    // this.ol.getMap().addLayer(vector);
-                    // let delay;
-                    // let intervalTask;
-                    // let longpress = 500;
-                    // this.ol.getMap().on("pointerdown", () => {
-                    //     console.log("pointerdown");
-                    //     delay = setTimeout(longClickEvent, longpress);
+                    // OpenLayers management.
+                    let uniqueLayer; // This layer object should be assigned once at a time otherwise if user press multiple fingers on the screen issues may appear.
+                    let radius = 50; // radius en mètres.
+                    let clickPixel; // Store the coordinates of the click in this variable.
 
-                    //     function longClickEvent() {
-                    //         console.log("waited long enough now this is a longclick.");
-                    //         let radius = 50;
-                    //         intervalTask = setInterval(() => {
-                    //             console.log("++");
-                    //             radius++; // Make the radius bigger every 5 milliseconds;
-                    //             if (radius > 5000) {
-                    //                 clearInterval(intervalTask);
-                    //             }
-                    //         }, 5);
-                    //         let style = new Style({
-                    //             image: new CircleStyle({
-                    //                 radius: radius,
-                    //                 stroke: new Stroke({
-                    //                     color: 'rgba(255, 0, 0, 0.5)',
-                    //                     width: 200,
-                    //                 }),
-                    //             }),
-                    //         });
+                    // On pointerdown event (hold click) a longpress is awaited. If a longpress is detected and uniqueLayer does not exist
+                    // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
+                    this.olService.getMap().on("pointerdown", (evt) => {
+                        delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
+                        clickPixel = evt.coordinates;
 
-                    //         this.layer = new VectorLayer({
-                    //             name: 'interactionCircle',
-                    //             visible: true,
-                    //             source: new VectorSource(),
-                    //             style: style
-                    //         });
-                    //     }
-                    // });
-                    // this.ol.getMap().on("pointerup", () => {
-                    //     console.log("pointerup");
-                    //     clearInterval(intervalTask);
-                    // });
-                    
-                    this.ol.getMap().addInteraction(new LongClickSelect({
-                        circleStyle: new Style({
-                            fill: new Fill({color: [255, 255, 255, 0.5]})
-                        }),
-                        layers: (olLayer) => {
-                            // TODO
-                            console.log("longSelect olLayer : ", olLayer);
-                            return true;
-                        },
-                        endClick: (features) => {
-                            console.log("endClick features : ", features);
-                            // If there is at least one object selected
-                            if (features.length > 0) {
+                        function longClickEvent() { // Draws the circle as long as the click is hold.
+
+                            if (!uniqueLayer) {
+                                var centerLongitudeLatitude = evt.coordinate;
+                                uniqueLayer = new VectorLayer({
+                                    name: 'CircleInteraction',
+                                    source: new VectorSource({
+                                        projection: 'EPSG:4326',
+                                        features: [new Feature(new Circle(centerLongitudeLatitude, radius))]
+                                    }),
+                                    style: [
+                                        new Style({
+                                            fill: new Fill({ color: [255, 255, 255, 0.5] })
+                                        })
+                                    ]
+                                });
+                                evt.map.addLayer(uniqueLayer);
+    
+                                intervalTask = setInterval(() => {
+                                    radius += Math.log(evt.map.getView().getZoom())*15; // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
+                                    uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
+                                }, 1);
+                            }
+                        }
+                    });
+
+                    // TODO : If the click is stopped then everything is cancelled.
+                    this.olService.getMap().on("pointerup", (evt) => {
+                        if (uniqueLayer) {
+                            const extent = uniqueLayer.getSource().getFeatures()[0].getGeometry().getExtent();
+
+                            // Let's try to get all intersections with layers/features.
+                            const circleGeometry = uniqueLayer.getSource().getFeatures()[0].getGeometry();
+                            let featuresIntersection = [];
+                            let layerGroupOfObjects; // Layer containing all user datas on the map.
+
+                            for (let layer of this.olService.getLayers()) {
+                                if (layer.getProperties().name==='Objects') { // name might be : Background / Objects / Edition / Geolocation. Objects is for the layer with added by user representing datas.
+                                    layerGroupOfObjects = layer;
+                                }
+                            }
+
+                            if (layerGroupOfObjects) {
+                                for (let vectorLayer of layerGroupOfObjects.getLayersArray()) {
+                                    if (vectorLayer.getProperties().model && vectorLayer.getProperties().model.selectable===true) {
+                                        if (vectorLayer.getSource().getFeatures() && vectorLayer.getSource().getFeatures().length > 0) {
+                                            for (let feature of vectorLayer.getSource().getFeatures()) {
+                                                if (circleGeometry.intersectsCoordinate(feature.getGeometry().getCoordinates())) {
+                                                    if (feature.getProperties().features) {
+                                                        for (let feat of feature.getProperties().features) { // Features may have features in them... May have to do a recursive loop function to get all features.
+                                                            featuresIntersection.push(feat);
+                                                        }
+                                                    } else {
+                                                        featuresIntersection.push(feature);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            evt.map.removeLayer(uniqueLayer);
+                            uniqueLayer = null;
+
+                            if (featuresIntersection.length > 0) {
                                 this.pathRightSlide = 'objectsSelected';
-                                this.selectedObjectsService.updateFeatures(features);
+                                this.selectedObjectsService.updateFeatures(featuresIntersection);
                                 this.menu.open('right-slider');
                             }
-                            return true;
                         }
-                    }));
+                        clearInterval(intervalTask);
+                        clearTimeout(delay);
+                        radius = 50;
+                        clickPixel = null;
+                    });
+
+                    // If the map is dragged then everything is cancelled.
+                    this.olService.getMap().on('pointerdrag', function (evt) {
+                        if (uniqueLayer) {
+                            evt.map.removeLayer(uniqueLayer);
+                            uniqueLayer = null;
+                        }
+                        clearInterval(intervalTask);
+                        clearTimeout(delay);
+                        radius = 50;
+                        clickPixel = null;
+                    })
+
+                    // If the map is zoomed in or out then everything is cancelled.
+                    this.olService.getMap().on("moveend", (evt) => {
+                        if (uniqueLayer) {
+                            evt.map.removeLayer(uniqueLayer);
+                            uniqueLayer = null;
+                        }
+                        clearInterval(intervalTask);
+                        clearTimeout(delay);
+                        radius = 50;
+                        clickPixel = null;
+                    });
+                    // ENDS HERE.
+                    
+                    // OLD VERSION OF THE LONGCLICKSELECT CIRCLE.
+                    // this.olService.getMap().addInteraction(new LongClickSelect({
+                    //     circleStyle: new Style({
+                    //         fill: new Fill({color: [255, 255, 255, 0.5]})
+                    //     }),
+                    //     layers: (olLayer) => {
+                    //         // TODO
+                    //         console.log("longSelect olLayer : ", olLayer);
+                    //         return true;
+                    //     },
+                    //     endClick: (features) => {
+                    //         console.log("endClick features : ", features);
+                    //         // If there is at least one object selected
+                    //         if (features.length > 0) {
+                    //             this.pathRightSlide = 'objectsSelected';
+                    //             this.selectedObjectsService.updateFeatures(features);
+                    //             this.menu.open('right-slider');
+                    //         }
+                    //         return true;
+                    //     }
+                    // }));
                     
 
                     this.mapManagerService.mapLoadingSubject
@@ -232,7 +296,7 @@ export class MainPage implements AfterViewInit {
             .then(
                 (coordinates) => {
                     if (coordinates) {
-                        const map = this.ol.getMap();
+                        const map = this.olService.getMap();
                         map.getView().setCenter(transform([coordinates.longitude, coordinates.latitude], 'EPSG:4326', 'EPSG:3857'));
                         map.getView().setZoom(18);
                         this.geolocLayer.redrawGeolocLayer(coordinates);
@@ -250,8 +314,8 @@ export class MainPage implements AfterViewInit {
             this.dbService.getCurrentDatabaseSettings().then(
                 (db: DatabaseModel) => {
                     db.context.currentView = {
-                        zoom: this.ol.map.getView().getZoom(),
-                        coords: this.ol.map.getView().getCenter()
+                        zoom: this.olService.map.getView().getZoom(),
+                        coords: this.olService.map.getView().getCenter()
                     };
                     this.dbService.setCurrentDatabaseSettings(db);
                 }
