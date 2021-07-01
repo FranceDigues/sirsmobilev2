@@ -149,3 +149,13 @@ A `builder build` job (withing build stage) is triggered only if a `builder-v<X>
 This will build a new "builder" docker image (cf. docker/builder/Dockerfile for more info) on `docker.geomatys.com`.
 
 In order to change the version of the builder, edit the `BUILDER_VERSION` entry in CI/CD variables.
+
+## 6 - Deployment
+
+Alias name = SIRS-Mobile
+password = *can be found on bitwarden : SirsMobile PlayStore*
+
+command lines :
+1 - ionic cordova build android --release
+2 - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore /home/mehdi/WORK/mobile-projects/SirsMobilesIonic5/sirsmobilev2/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk SIRS-Mobile
+3 - /home/mehdi/Android/Sdk/build-tools/30.0.0/zipalign -v 4 /home/mehdi/WORK/mobile-projects/SirsMobilesIonic5/sirsmobilev2/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk SirsTest5.apk

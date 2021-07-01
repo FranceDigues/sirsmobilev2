@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
-import { LongClickSelect } from '@plugins/LongClickSelect.js';
+import { LongClickSelect } from '@plugins/LongClickSelect.js'; // Just keeping the import to not forget about it. Must be deleted once everything is ok.
 import proj4 from 'proj4';
 import { AppVersionsService } from '../../services/app-versions.service';
 import { AuthService } from '../../services/auth.service';
@@ -18,15 +18,13 @@ import { EditionLayerService } from '../../services/edition-layer.service';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
 
 // OpenLayers
-import { transform, fromLonLat } from 'ol/proj';
+import { transform } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import { Style, Fill } from 'ol/style';
 import { Vector as VectorSource } from "ol/source";
 import { Vector as VectorLayer } from "ol/layer";
 import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
-import { env } from 'process';
-import * as olInteraction from 'ol/interaction';
 
 
 @Component({
@@ -115,13 +113,13 @@ export class MainPage implements AfterViewInit {
                     this.olService.createMap('map');
                     this.olService.getMap().setView(this.mapService.currentView);
                     this.olService.addLayer(this.backLayerService.backLayer);
-                    if (this.mapManagerService.appLayer) { // This "if" actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
-                        this.olService.addLayer(this.mapManagerService.appLayer);
-                    } else {
-                        console.warn("mapManagerService.appLayer is not initialized.");
-                    }
                     this.olService.addLayer(this.editionLayerService.editionLayer);
                     this.olService.addLayer(this.geolocLayer.geolocLayer);
+                    if (this.mapManagerService.appLayer) { // This "if" actually needs to happen. Find a clean way to call this.mapManagerService.init(); if not.
+                        this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
+                    } else {
+                        this.mapManagerService.init();
+                    }
 
                     // TODO : MOVE ALL CODE RELATED TO LONG CLICK CIRCLE IN A SERVICE.
                     // STARTS HERE.
@@ -276,7 +274,6 @@ export class MainPage implements AfterViewInit {
                 }
             );
         this.locateMe();
-        this.mapManagerService.init();
     }
 
     locateMe() {

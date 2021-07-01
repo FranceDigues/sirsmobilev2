@@ -21,14 +21,13 @@ import { SirsDocService } from './sirsdoc.service';
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './local-database.service';
 import { Subject } from 'rxjs';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GeolocLayer {
     geolocLayer: VectorLayer = null;
-
-    // geolocLayer: VectorLayer = this.createGeolocLayer();
 
     init() {
         this.geolocLayer = this.createGeolocLayer();
@@ -109,26 +108,34 @@ export class MapManagerService {
                 private mapService: MapService, 
                 private RealPositionStyle: RealPositionStyle,
                 private DefaultStyle: DefaultStyle, 
-                private appLayersService: AppLayersService) {
-        // Make sur appLayer is initialized as it is heavily used.
-        if (!this.appLayer) {
-            this.init();
-        };
+                private appLayersService: AppLayersService,
+                private olService: OLService,
+                ) {
     }
 
     init() {
-        this.createAppLayer()
-            .then(appLayer => {
-                this.appLayer = appLayer;
-            }, (error) => {
-                console.error(error);
-            });
+        return new Promise((resolve, reject) => {
+            this.createAppLayer()
+                .then((appLayer: any) => {
+                    this.appLayer = appLayer;
+                    if (this.appLayer) {
+                        this.olService.addLayer(this.appLayer);
+                    } else {
+                        console.warn("mapManagerService.appLayer is not initialized. If the app has been opened without any 'couche métier' loaded this is normal.");
+                    }
+                    resolve(appLayer);
+                }, (error) => {
+                    console.error(error);
+                    reject(error);
+                });
+        })
     }
 
-    createAppLayer() {
+    private createAppLayer() {
         return new Promise(resolve => {
             const promises = [];
             let appLayers = this.appLayersService.getFavorites();
+            
             if (appLayers && appLayers.length > 0) {
                 appLayers.forEach((layerModel) => {
                     promises.push(this.createAppLayerInstance(layerModel));
@@ -144,6 +151,7 @@ export class MapManagerService {
                 });
             } else {
                 this.mapLoadingSubject.complete();
+                resolve(null);
             }
         });
     }
@@ -219,8 +227,9 @@ export class MapManagerService {
                 this.setAppLayerFeatures(olLayer).then(response => {
                     resolve(olLayer);
                 });
+            } else {
+                resolve(olLayer);
             }
-            resolve(olLayer);
         });
     }
 
@@ -456,9 +465,9 @@ export class MapManagerService {
 
     syncAllAppLayer() {
         const layers = this.appLayer.getLayers();
-        layers.forEach((layer) => {
+        layers.forEach( async (layer) => {
             const layerModel = layer.get('model');
-            const olLayer = this.getAppLayerInstance(layerModel);
+            const olLayer = <any> await this.getAppLayerInstance(layerModel);
 
             olLayer.setVisible(layerModel.visible);
             olLayer.getSource().clear();
@@ -468,7 +477,10 @@ export class MapManagerService {
         });
     }
 
-    private getAppLayerInstance(layerModel) {
+    private async getAppLayerInstance(layerModel) {
+        if (!this.appLayer) {
+            await this.init();
+        }
         const layers = this.appLayer.getLayers().getArray();
         for (let i = 0; i < layers.length; i++) {
             if (layers[i].get('model') === layerModel) {
@@ -478,8 +490,9 @@ export class MapManagerService {
         return null;
     }
 
-    syncAppLayer(layerModel) {
-        const olLayer = this.getAppLayerInstance(layerModel);
+    async syncAppLayer(layerModel) {
+        const olLayer = <any> await this.getAppLayerInstance(layerModel);
+
         olLayer.setVisible(layerModel.visible);
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
             olLayer.getSource().getSource().clear();
@@ -488,9 +501,10 @@ export class MapManagerService {
         }
         if (layerModel.visible === true) {
             // TODO loading here
-            setTimeout(() => {
-                this.setAppLayerFeatures(olLayer);
-            }, 1000);
+            this.setAppLayerFeatures(olLayer);
+            // setTimeout(() => {
+            //     this.setAppLayerFeatures(olLayer);
+            // }, 1000);
         }
     }
 
@@ -520,15 +534,17 @@ export class MapManagerService {
         collection[to] = tmp;
     }
 
-    addLabelFeatureLayer(layerModel) {
-        const olLayer = this.getAppLayerInstance(layerModel);
+    async addLabelFeatureLayer(layerModel) {
+        const olLayer = <any> await this.getAppLayerInstance(layerModel);
+            
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 
-    reloadLayer(layerModel) {
-        const olLayer = this.getAppLayerInstance(layerModel);
+    async reloadLayer(layerModel) {
+        const olLayer = <any> await this.getAppLayerInstance(layerModel);
+        
         // Load data if necessary.
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
