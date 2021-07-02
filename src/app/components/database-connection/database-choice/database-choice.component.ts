@@ -38,12 +38,12 @@ export class DatabaseChoiceComponent implements OnInit {
           (databases) => {
             this.databases = databases;
             setTimeout(() => {
-              this.statusBar.styleDefault();
+              this.statusBar.styleBlackTranslucent();
               this.splashScreen.hide();
             }, 500);
           },
           (error) => {
-            this.statusBar.styleDefault();
+            this.statusBar.styleBlackTranslucent();
             this.splashScreen.hide();
             console.error('no \'databases\' in HardDisk ' + error);
           }
