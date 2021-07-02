@@ -133,35 +133,39 @@ export class MainPage implements AfterViewInit {
                     let uniqueLayer; // This layer object should be assigned once at a time otherwise if user press multiple fingers on the screen issues may appear.
                     let radius = 50; // radius en mètres.
                     let clickPixel; // Store the coordinates of the click in this variable.
+                    let pointerIsDown: boolean = false; // Flag to limit the number of pointer down to 1.
 
                     // On pointerdown event (hold click) a longpress is awaited. If a longpress is detected and uniqueLayer does not exist
                     // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
                     this.olService.getMap().on("pointerdown", (evt) => {
-                        delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
-                        clickPixel = evt.coordinates;
-
-                        function longClickEvent() { // Draws the circle as long as the click is hold.
-
-                            if (!uniqueLayer) {
-                                var centerLongitudeLatitude = evt.coordinate;
-                                uniqueLayer = new VectorLayer({
-                                    name: 'CircleInteraction',
-                                    source: new VectorSource({
-                                        projection: 'EPSG:4326',
-                                        features: [new Feature(new Circle(centerLongitudeLatitude, radius))]
-                                    }),
-                                    style: [
-                                        new Style({
-                                            fill: new Fill({ color: [255, 255, 255, 0.5] })
-                                        })
-                                    ]
-                                });
-                                evt.map.addLayer(uniqueLayer);
+                        if (!pointerIsDown) { // check that pointerIsDown is false so it does not trigger this event more than once at a time.
+                            pointerIsDown = true;
+                            delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
+                            clickPixel = evt.coordinates;
     
-                                intervalTask = setInterval(() => {
-                                    radius += Math.log(evt.map.getView().getZoom())*15; // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
-                                    uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
-                                }, 1);
+                            function longClickEvent() { // Draws the circle as long as the click is hold.
+    
+                                if (!uniqueLayer) {
+                                    var centerLongitudeLatitude = evt.coordinate;
+                                    uniqueLayer = new VectorLayer({
+                                        name: 'CircleInteraction',
+                                        source: new VectorSource({
+                                            projection: 'EPSG:4326',
+                                            features: [new Feature(new Circle(centerLongitudeLatitude, radius))]
+                                        }),
+                                        style: [
+                                            new Style({
+                                                fill: new Fill({ color: [255, 255, 255, 0.5] })
+                                            })
+                                        ]
+                                    });
+                                    evt.map.addLayer(uniqueLayer);
+        
+                                    intervalTask = setInterval(() => {
+                                        radius += Math.log(evt.map.getView().getZoom())*15; // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
+                                        uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
+                                    }, 1);
+                                }
                             }
                         }
                     });
@@ -211,10 +215,7 @@ export class MainPage implements AfterViewInit {
                                 this.menu.open('right-slider');
                             }
                         }
-                        clearInterval(intervalTask);
-                        clearTimeout(delay);
-                        radius = 50;
-                        clickPixel = null;
+                        resetCircle();
                     });
 
                     // If the map is dragged then everything is cancelled.
@@ -223,11 +224,8 @@ export class MainPage implements AfterViewInit {
                             evt.map.removeLayer(uniqueLayer);
                             uniqueLayer = null;
                         }
-                        clearInterval(intervalTask);
-                        clearTimeout(delay);
-                        radius = 50;
-                        clickPixel = null;
-                    })
+                        resetCircle();
+                    });
 
                     // If the map is zoomed in or out then everything is cancelled.
                     this.olService.getMap().on("moveend", (evt) => {
@@ -235,11 +233,17 @@ export class MainPage implements AfterViewInit {
                             evt.map.removeLayer(uniqueLayer);
                             uniqueLayer = null;
                         }
+                        resetCircle();
+                    });
+
+                    const resetCircle = function() {
                         clearInterval(intervalTask);
                         clearTimeout(delay);
                         radius = 50;
                         clickPixel = null;
-                    });
+                        pointerIsDown = false;
+                    }
+
                     // ENDS HERE.
                     
                     // OLD VERSION OF THE LONGCLICKSELECT CIRCLE.
