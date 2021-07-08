@@ -51,7 +51,7 @@ ionic cordova run android
 ### Reset platform Android
 
 If you must remove the platform android for a reason (modified config.xml, updated plugins, etc.), do NOT manually add it.
-Use run or build android command and let it build it automatically.
+Use run or build android command and let ionic create the platform folder it automatically.
 
 #### Problem: Missing `cordova.variable.grable` file:
 ```

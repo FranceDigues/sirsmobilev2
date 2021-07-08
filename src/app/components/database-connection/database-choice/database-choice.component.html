@@ -7,7 +7,7 @@
             <ul class="collection">
                 <li class="collection-item avatar" *ngFor="let db of databases"
                     [class.selected]="db === selectedDatabase" (click)="selectDB(db)">
-                    <i class="circle pink">{{db.name[0].toUpperCase()}}</i>
+                    <span class="circle pink letter-circle">{{db.name[0].toUpperCase()}}</span>
                     <span class="title">{{db.name}}</span>
                     <p>{{db.url}}</p>
                     <span class="secondary-content db-checked" *ngIf="selectedDatabase === db"><ion-icon
