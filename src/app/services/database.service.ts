@@ -70,8 +70,13 @@ export class DatabaseService {
                         } else {
                             reject('Error, cannot find current db settings');
                         }
+                    },error => {
+                        console.error("error getting databaeses-setting : ", error);
                     }
-                );
+                )
+                .catch(error => {
+                    console.error("error getting databaeses-setting : ", error);
+                })
         });
     }
 

@@ -20,7 +20,7 @@ export class TrackerService {
         // Switch internal status.
         this.status = 'on';
         this.geolocationWatch = this.geolocation.watchPosition()
-            .subscribe((data) => {
+            .subscribe((data: any) => {
                 this.coordinates.push([
                     data.coords.longitude,
                     data.coords.latitude

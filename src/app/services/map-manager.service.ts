@@ -22,6 +22,7 @@ import { DefaultStyle, RealPositionStyle } from './style.service';
 import { LocalDatabase } from './local-database.service';
 import { Subject } from 'rxjs';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { DatabaseService } from './database.service';
 
 @Injectable({
     providedIn: 'root'
@@ -110,6 +111,7 @@ export class MapManagerService {
                 private DefaultStyle: DefaultStyle, 
                 private appLayersService: AppLayersService,
                 private olService: OLService,
+                private databaseSrvc: DatabaseService,
                 ) {
     }
 
@@ -243,7 +245,7 @@ export class MapManagerService {
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 // Get all the favorites tronçons ids
-                const favorites = await this.storageService.getItem('AppTronconsFavorities');
+                const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
                 const keys = [];
                 if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
                     favorites.forEach((key) => {
@@ -259,7 +261,9 @@ export class MapManagerService {
                         (error) => {
                             console.error(error);
                         }
-                    );
+                    ).catch((error) => {
+                        console.error(error);
+                    });
                 } else {
                     if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
                         promise = this.localDB.query('Element/byClassAndLinear', {
@@ -275,9 +279,11 @@ export class MapManagerService {
                             (error) => {
                                 console.error(error);
                             }
-                        );
+                        ).catch((error) => {
+                            console.error(error);
+                        });
                     } else {
-                        promise = new Promise((resolve2) => {
+                        promise = new Promise((resolve2) => { // TODO : should not reach this else or at least do something... 
                             resolve2([]);
                         }).then(
                             () => {
