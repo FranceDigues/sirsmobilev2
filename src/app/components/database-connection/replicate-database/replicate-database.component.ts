@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from 'src/app/components/database-connection/models/database.model';
 import { designDocs, indexedViews } from './couchDB-Vues';
@@ -26,6 +26,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   activeDb: DatabaseModel;
   remoteDB;
   localDB;
+
+  indexPromises = []; // Set as global to be accessed by he html.
 
   constructor(private nativeStorage: NativeStorage, private dbService: DatabaseService,
               private router: Router, private route: ActivatedRoute, private alertCtrl: AlertController,
@@ -65,7 +67,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.remoteDB.info()
     .then(
       (result) => {
-        this.firstStepComplete(result.doc_count);
+        const count = result.doc_del_count ? result.doc_count + result.doc_del_count : result.doc_count;
+        this.firstStepComplete(count);
       },
       (err) => {
         this.firstStepError(err);
@@ -104,30 +107,30 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.percent = 0;
     this.completion = '0/' + docCount;
 
-
-    this.remoteDB.info()
-    .then(
-      (result) => {
-        console.debug("secondStep remoteDb info : ", result)
-      },
-      (err) => {
-        console.debug("secondStep remoteDb error : ", err)
-      }
-    );
-    this.localDB.info()
-    .then(
-      (result) => {
-        console.debug("secondStep localDB info : ", result)
-      },
-      (err) => {
-        console.debug("secondStep localDB error : ", err)
-      }
-    );
+    // usefull for debug
+    // this.remoteDB.info()
+    // .then(
+    //   (result) => {
+    //     console.log("secondStep remoteDb info : ", result)
+    //   },
+    //   (err) => {
+    //     console.log("secondStep remoteDb error : ", err)
+    //   }
+    // );
+    // this.localDB.info()
+    // .then(
+    //   (result) => {
+    //     console.log("secondStep localDB info : ", result)
+    //   },
+    //   (err) => {
+    //     console.log("secondStep localDB error : ", err)
+    //   }
+    // );
 
     const subject = new Subject<any>();
     this.remoteDB.replicate.to(this.localDB, { live: false, retry: true })
     .on('change', (result) => {
-      console.debug('2 - En COURS');
+      console.log('2 - En COURS : ', result);
       const arg = {
         repCount: Math.min(result.docs_written, docCount),
         docCount
@@ -135,14 +138,14 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       subject.next(arg);
     })
     .on('complete', () => {
-      console.debug('2 - COMPLETE');
+      console.log('2 - COMPLETE');
       subject.complete();
     })
     .on('paused', (err) => {
-      console.debug('paused', err);
+      console.log('paused', err);
     })
     .on('denied', (err) => {
-      console.debug('denied', err);
+      console.log('denied', err);
     })
     .on('error', (error) => {
       console.error(error);
@@ -211,8 +214,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         promises.push(promise);
     });
 
-    Promise.all(promises)
-    .then(
+    forkJoin(promises)
+    .subscribe(
       () => {
         this.thirdStepComplete();
       },
@@ -277,15 +280,15 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       promises.push(promise);
     });
 
-    Promise.all(promises)
-    .then(
-      () => {
-        this.fourthStepComplete();
-      },
-      (error) => {
-        this.fourthStepError(error);
-      }
-    );
+    forkJoin(promises)
+      .subscribe(
+        () => {
+          this.fourthStepComplete();
+        },
+        (error) => {
+          this.fourthStepError(error);
+        }
+      );
   }
 
   fourthStepProgress(proceedViews) {

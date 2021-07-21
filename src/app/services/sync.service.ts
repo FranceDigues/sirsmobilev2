@@ -42,55 +42,39 @@ export class SyncService {
         const options = {live: false, retry: true, batch_size: 1, batches_limit: 1};
         this.synch = PouchDB.sync(localDB, remoteDB, options)
             .on('complete', () => {
-                console.log("complete")
                 subject.next(++index);
                 subject.complete();
             })
             .on('error', (error) => {
-                console.log("error")
                 console.error('Error Sync', error);
                 subject.error(error);
             })
             .on('change', (info) => {
-                console.log("change")
                 console.debug('INFO', info);
             })
             .on('paused', async (error) => {
-                const alert = await this.alrtCtrl.create({
-                    header: 'Erreur',
-                    message: 'La synchronisation a été mise en pause. Vérifiez votre connexion pour la reprendre.',
-                    buttons: [
-                      {
-                        text: 'Ok',
-                        role: 'cancel'
-                      }
-                    ]
-                  });
-                  await alert.present();
                 console.debug('paused', error);
             })
             .on('active', () => {
-                console.log("active")
                 console.debug('active');
             })
             .on('denied', (error) => {
-                console.log("denied")
                 console.debug('denied', error);
             });
 
         return new Promise((resolve, rejects) => {
             subject.subscribe({
                 next: (i) => {
-                    console.log("next")
+                    // console.log("next")
                     this.syncProgress(i);
                 },
                 complete: async () => {
-                    console.log("complete")
+                    // console.log("complete")
                     this.syncComplete();
                     resolve('');
                 },
                 error: async (error) => {
-                    console.log("error")
+                    // console.log("error : ", error)
                     this.syncError();
                     rejects(error);
                 }
