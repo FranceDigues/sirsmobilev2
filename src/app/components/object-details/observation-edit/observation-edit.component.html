@@ -7,14 +7,16 @@
             <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
             <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
 
-            <ul #tabs class="tabs">
-              <li class="tab"><a [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</a></li>
-              <li class="tab"><a [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</a></li>
-              <li class="tab"><a [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</a></li>
-              <li class="tab"><a [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</a></li>
-              <li class="tab"><a [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</a></li>
-              <li class="tab"><a [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</a></li>
-            </ul>
+            <div style="width: 100%; background: aliceblue;" fxLayout="row" fxLayoutAlign="space-around">
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</span>
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
+            </div>
+            <div style="width: 100%; background: aliceblue;" fxLayout="row" fxLayoutAlign="space-around">
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</span>
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
+              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</span>
+            </div>
 
               <div class="medias" *ngSwitchCase="'medias'">
                 <div class="pics row" *ngIf="OES.showContent">
