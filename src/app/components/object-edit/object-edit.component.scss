@@ -10,8 +10,15 @@ a {
   padding-right: 10px;
 }
 
-.option-button-edit-object {
-  border: 0.1px solid;
+.option-button-edit {
+  margin-left: 5px;
+  background-color: #00a796;
+  color: white;
+  height: 42px;
+  border-radius: 5px;
+}
+
+.option-button-edit-icon {
   font-size: 25px;
 }
 

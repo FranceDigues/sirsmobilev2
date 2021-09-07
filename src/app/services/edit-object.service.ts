@@ -56,64 +56,68 @@ export class EditObjectService {
     }
 
     init(type, id) {
-        this.resetValues();
-        this.type = type;
-        this.isNew = !id;
-        this.loadingCtrl.create({message: 'Chargement'})
-            .then(
-                (loading) => {
-                    loading.present();
-                    this.objectDocService.getObjectDoc(type, id)
-                        .then(
-                            (objectDoc) => {
-                                // Hack for borne fin data without borneFinId
-                                if (typeof (objectDoc.borne_fin_aval) !== 'undefined' && typeof (objectDoc.borne_fin_distance) !== 'undefined' && !objectDoc.borneFinId) {
-                                    objectDoc.borneFinId = objectDoc.borneDebutId;
-                                    objectDoc.borne_fin_aval = objectDoc.borne_debut_aval;
-                                    objectDoc.borne_fin_distance = objectDoc.borne_debut_distance;
-                                }
-                                this.objectDoc = objectDoc;
-                                this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
-                                this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
-                                this.objectType = this.objectDoc;
-
-                                // Hack for borne fin data without borneFinId
-                                this.editionModeService.getReferenceTypes()
-                                    .then(
-                                        (refs) => {
-                                            const res = {};
-
-                                            for (const ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
-                                                res[ref[0]] = ref[1];
+        return new Promise(async (resolve, reject) => {
+            this.resetValues();
+            this.type = type;
+            this.isNew = !id;
+            await this.loadingCtrl.create({message: 'Chargement'})
+                .then(
+                    (loading) => {
+                        loading.present();
+                        this.objectDocService.getObjectDoc(type, id)
+                            .then(
+                                (objectDoc) => {
+                                    // Hack for borne fin data without borneFinId
+                                    if (typeof (objectDoc.borne_fin_aval) !== 'undefined' && typeof (objectDoc.borne_fin_distance) !== 'undefined' && !objectDoc.borneFinId) {
+                                        objectDoc.borneFinId = objectDoc.borneDebutId;
+                                        objectDoc.borne_fin_aval = objectDoc.borne_debut_aval;
+                                        objectDoc.borne_fin_distance = objectDoc.borne_debut_distance;
+                                    }
+                                    this.objectDoc = objectDoc;
+                                    this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
+                                    this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
+                                    this.objectType = this.objectDoc;
+    
+                                    // Hack for borne fin data without borneFinId
+                                    this.editionModeService.getReferenceTypes()
+                                        .then(
+                                            (refs) => {
+                                                const res = {};
+    
+                                                for (const ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
+                                                    res[ref[0]] = ref[1];
+                                                }
+                                                this.refs = res;
+                                                this.initTronconList();
+                                                this.checkDependance(loading);
+                                                this.getStartPosBorne();
+                                                this.getEndPosBorne();
                                             }
-                                            this.refs = res;
-                                            this.initTronconList();
-                                            this.checkDependance(loading);
-                                            this.getStartPosBorne();
-                                            this.getEndPosBorne();
-                                        }
-                                    );
-                                if (this.isNew) {
-                                    this.isLinear = false;
-                                } else {
-                                    if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
-                                        this.isLinear = false;
-                                    } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
-                                        && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
-                                            || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
-                                            || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
+                                        );
+                                    if (this.isNew) {
                                         this.isLinear = false;
                                     } else {
-                                        this.isLinear = true;
+                                        if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
+                                            this.isLinear = false;
+                                        } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
+                                            && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
+                                                || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
+                                                || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
+                                            this.isLinear = false;
+                                        } else {
+                                            this.isLinear = true;
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    });
+
+            await this.databaseService.getCurrentDatabaseSettings()
+                .then((config: DatabaseModel) => {
+                    this.showTextConfig = config.context.showText;
                 });
 
-        this.databaseService.getCurrentDatabaseSettings()
-            .then((config: DatabaseModel) => {
-                this.showTextConfig = config.context.showText;
-            });
+            resolve(null); // finished everything.
+        })
     }
 
     resetValues() {

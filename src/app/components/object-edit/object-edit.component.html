@@ -57,34 +57,33 @@
                                     </select>
                                 </div>
 
-                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()">
-                                    <span class="sirs-field-title"
-                                          *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position : </span>
-                                    <span class="sirs-field-value"
-                                          *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{ EOS.getStartPos() }}</span>
-                                    <span class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
-                                        Position via la borne : {{ EOS.startPosBorneLabel | async }}
-                                    </span>
+                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row" fxLayoutAlign="space-between none" >
+                                    <div>
+                                        <div class="sirs-field-value"
+                                            *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position : {{
+                                            EOS.getStartPos() }}
+                                        </div>
+                                        <div class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
+                                            Position via la borne : {{ EOS.startPosBorneLabel | async }}
+                                        </div>
+                                    </div>
                                     <div class="edit-position-buttons right"
-                                         *ngIf="!EOS.isLinear && !EOS.isDependance()">
-                                        <a class="nav-item nav-link"
+                                         *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row" fxLayoutAlign="end end">
+                                        <button class="option-button-edit"
                                            (click)="EOS.locateMe()"
                                            *ngIf="EOS.activatedGPSPositionButton()">
-                                            <span><ion-icon class="option-button-edit-object"
-                                                            name="navigate-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                           <ion-icon class="option-button-edit-icon" name="navigate-outline"></ion-icon>
+                                        </button>
+                                        <button class="option-button-edit"
                                            (click)="selectPos()"
                                            *ngIf="EOS.activatedGPSPositionButton()">
-                                            <span><ion-icon class="option-button-edit-object"
-                                                            name="pencil-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                           <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                        </button>
+                                        <button class="option-button-edit"
                                            (click)="selectPosBySR()"
                                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
-                                            <span><ion-icon class="option-button-edit-object"
-                                                            name="options-outline"></ion-icon></span>
-                                        </a>
+                                            <ion-icon class="option-button-edit-icon" name="options-outline"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -102,13 +101,13 @@
                                         <a class="nav-item nav-link"
                                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
                                            *ngIf="EOS.activatedGPSPositionButton()">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="pencil-outline"></ion-icon></span>
                                         </a>
                                         <a class="nav-item nav-link"
                                            (click)="selectPosBySR()"
                                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="options-outline"></ion-icon></span>
                                         </a>
                                     </div>
@@ -132,25 +131,25 @@
                                         <a class="nav-item nav-link"
                                            (click)="EOS.locateMe()"
                                            *ngIf="EOS.objDependanceType === 'point'">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="navigate-outline"></ion-icon></span>
                                         </a>
                                         <a class="nav-item nav-link"
                                            (click)="selectPos()"
                                            *ngIf="EOS.objDependanceType === 'point'">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="pencil-outline"></ion-icon></span>
                                         </a>
                                         <a class="nav-item nav-link"
                                            (click)="selectPosLine()"
                                            *ngIf="EOS.objDependanceType === 'line'">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="pencil-outline"></ion-icon></span>
                                         </a>
                                         <a class="nav-item nav-link"
                                            (click)="drawPolygon()"
                                            *ngIf="EOS.objDependanceType === 'polygon'">
-                                            <span><ion-icon class="option-button-edit-object"
+                                            <span><ion-icon class="option-button-edit-icon"
                                                             name="triangle-outline"></ion-icon></span>
                                         </a>
                                     </div>
@@ -162,8 +161,7 @@
                                     <label for="trancon" class="active edit-label">La liste des Tronçons</label>
                                     <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
                                             name="trancon">
-                                        <option *ngFor="let troncon of EOS.troncons"
-                                                [ngValue]="troncon">{{ troncon.libelle }}</option>
+                                        <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">{{ troncon.libelle }}</option>
                                     </select>
                                 </div>
                             </div>

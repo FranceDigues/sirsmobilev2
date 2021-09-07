@@ -11,11 +11,10 @@ import { Router } from '@angular/router';
 })
 export class CreateObjectComponent implements OnInit {
 
+  selectedLayer = null;
+
   constructor(public appLayersService: AppLayersService, private authService: AuthService,
               private route: Router) { }
-
-  allLayers = Object.assign([], this.appLayersService.getFavorites());
-  selectedLayer = null;
 
   ngOnInit() {
   }

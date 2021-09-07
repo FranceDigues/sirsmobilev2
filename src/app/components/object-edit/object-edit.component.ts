@@ -30,7 +30,9 @@ export class ObjectEditComponent implements OnInit {
     ngOnInit() {
         this.objectType = this.activatedRoute.snapshot.paramMap.get('type');
         const id = this.activatedRoute.snapshot.paramMap.get('id');
-        this.EOS.init(this.objectType, id);
+        this.EOS.init(this.objectType, id).then(() => {
+            console.log("EOS : ", this.EOS);
+        });
         this.activatedRoute.data
             .subscribe((data: {
                 objectDoc: any,
@@ -38,6 +40,7 @@ export class ObjectEditComponent implements OnInit {
                 orientationList: any,
                 coteList: any
             }) => {
+                console.log("data route : ", data);
                 this.objectDoc = data.objectDoc;
                 this.refTypes = data.refTypes;
                 this.orientationList = data.orientationList;

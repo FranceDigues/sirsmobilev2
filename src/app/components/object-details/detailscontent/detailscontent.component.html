@@ -1,4 +1,4 @@
-<div class="full-height" [ngSwitch]="objectType">
+<ion-content class="full-height" [ngSwitch]="objectType">
     <div class="full-height" *ngSwitchCase="'AireStockageDependance'">
         <object-details-content-aire-stockage-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-aire-stockage-dependance>
     </div>
@@ -35,8 +35,9 @@
     <div class="full-height" *ngSwitchCase="'Prestation'">
         <object-details-content-prestation class="full-height" [activeTab]="activeTab" ></object-details-content-prestation>
     </div>
-    <div class="full-height" *ngSwitchCase="'Desordre'">
-        <object-details-content-desordre class="full-height" [activeTab]="activeTab" ></object-details-content-desordre>
+    <!-- THIS HEIGHT PROBLEM IS FOUND EVERYWHERE AND SHOULD BE FIXED ON A BIGGER SCALE !!! -->
+    <div style="height: 88%; overflow: scroll;" *ngSwitchCase="'Desordre'"> <!-- height of 88% as 100% gets out of screen and the list of observations might be very long -->
+        <object-details-content-desordre class="full-height"  [activeTab]="activeTab" ></object-details-content-desordre>
     </div>
     <div class="full-height" *ngSwitchCase="'ReseauHydrauliqueCielOuvert'">
         <object-details-content-reseau-hydraulique-ciel-ouvert class="full-height" [activeTab]="activeTab" ></object-details-content-reseau-hydraulique-ciel-ouvert>
@@ -95,4 +96,4 @@
     <div class="full-height" *ngSwitchCase="'VoieDigue'">
         <object-details-content-voie-digue class="full-height" [activeTab]="activeTab" ></object-details-content-voie-digue>
     </div>
-</div>
+</ion-content>

@@ -29,7 +29,7 @@
                     <ion-icon name="trash-outline"></ion-icon>
                     <span>&nbsp;&nbsp;Supprimer</span>
                 </button>
-                <button mat-raised-button color="warn" [disabled]="!selectedDatabase" (click)="validateDatabase()">
+                <button mat-raised-button [disabled]="!selectedDatabase" (click)="validateDatabase()">
                     <ion-icon name="checkmark-outline"></ion-icon>
                     <span>&nbsp;&nbsp;Valider</span>
                 </button>

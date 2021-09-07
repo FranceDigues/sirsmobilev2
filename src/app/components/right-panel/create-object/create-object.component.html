@@ -9,15 +9,15 @@
             <ion-list>
                 <ion-radio-group>
                     <ion-item
-                            *ngFor="let layer of (this.appLayersService.getFavorites())"> <!--  | filterPipe: { editable: true } TODO : figure out why this pipe here and how to fix it.-->
+                            *ngFor="let layer of (this.appLayersService.getFavorites()|filterPipe:{editable: true})">
                         {{ layer.title }}
-                        <ion-radio color="success" slot="end" (click)="selectLayer(layer)"></ion-radio>
+                        <ion-radio color="secondary" slot="end" (click)="selectLayer(layer)"></ion-radio>
                     </ion-item>
                     <ion-item lines="none"></ion-item>
                 </ion-radio-group>
             </ion-list>
         </ion-content>
-        <ion-button class="button-footer" [disabled]="!selectedLayer && !showAddButtons()" expand="full" color="success"
+        <ion-button class="button-footer" *ngIf="selectedLayer || showAddButtons()" expand="full" color="secondary"
                     (click)="addObject()">Ajouter un objet
         </ion-button>
     </div>

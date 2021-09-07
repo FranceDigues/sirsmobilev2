@@ -1,12 +1,12 @@
 <div *ngIf="objectDetails.detailsType === 'objectDetails'" class="full-height full-width">
-    <ion-header translucent>
+    <div>
         <ion-toolbar class="header-slide" color="secondary">
             <ion-buttons slot="start">
                 <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
             </ion-buttons>
-            <ion-title>Détail de l'object</ion-title>
+            <ion-title>Détail de l'objet</ion-title>
         </ion-toolbar>
-    </ion-header>
+    </div>
 
     <div class="tabs-striped tabs-top" *ngIf="canShowTab()">
         <ul #tabs class="tabs tabs-sirs">
@@ -29,24 +29,19 @@
         </ul>
     </div>
 
-    <details-content class="full-height" [objectType]="objectType" [activeTab]="activeTab"></details-content>
+    <details-content [objectType]="objectType" [activeTab]="activeTab"></details-content>
 
-    <div *ngIf="canShowEditionButtons() && activeTab === 'description'">
-        <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-            <ion-fab-button color="danger" (click)="editObject()">
-                <ion-icon name="pencil-outline"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
-        <ion-fab *ngIf="!document.valid" class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end"
-                 slot="fixed">
-            <ion-fab-button color="danger" (click)="removeObject()">
-                <ion-icon name="trash-outline"></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
+    <div *ngIf="canShowEditionButtons() && activeTab === 'description'" style="position: absolute; bottom: 0; right: 0;">
+        <ion-button color="danger" (click)="editObject()">
+            <ion-icon name="pencil-outline"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="!document.valid" color="danger" (click)="removeObject()">
+            <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
     </div>
 
     <div *ngIf="canAddObservation()">
-        <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
             <ion-fab-button color="danger" (click)="addObservation()">
                 <ion-icon name="add-outline"></ion-icon>
             </ion-fab-button>
