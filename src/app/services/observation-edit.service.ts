@@ -357,9 +357,25 @@ export class ObservationEditService {
             });
     }
 
+    //Index of looking for multiple occurence of a character and returning a list with all the indexes.
+    homemadeIndexOf(myString: string, character: string) {
+        const list: number[] = [];
+        for(let i = 0; i < myString.length; i++){
+            if(myString.charAt(i) == character){
+               list.push(i);
+            }
+        }
+        return list;
+    }
+
     open(photo) {
+        console.log("photo : ", photo);
         const url = this.getPhotoPath(photo, true);
-        this.fileOpener.open(url, 'image/jpeg')
+        console.log("url : ", url);
+        const indexList = this.homemadeIndexOf(url, "/");
+        const finalPath = url.substring(indexList[3]);
+        console.log("finalPath : ", finalPath);
+        this.fileOpener.open(finalPath, 'image/jpeg')
             .then(
                 () => {
                     console.debug('File opened successfully');
