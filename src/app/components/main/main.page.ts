@@ -23,6 +23,8 @@ import { register } from 'ol/proj/proj4';
 import { Style, Fill } from 'ol/style';
 import { Vector as VectorSource } from "ol/source";
 import { Vector as VectorLayer } from "ol/layer";
+import ImageSource from 'ol/source/Image';
+import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
 
@@ -173,38 +175,39 @@ export class MainPage implements AfterViewInit {
                     // TODO : If the click is stopped then everything is cancelled.
                     this.olService.getMap().on("pointerup", (evt) => {
                         if (uniqueLayer) {
-                            const extent = uniqueLayer.getSource().getFeatures()[0].getGeometry().getExtent();
 
-                            // Let's try to get all intersections with layers/features.
                             const circleGeometry = uniqueLayer.getSource().getFeatures()[0].getGeometry();
+                            const circleExtent = circleGeometry.getExtent();
                             let featuresIntersection = [];
-                            let layerGroupOfObjects; // Layer containing all user datas on the map.
+                            function forEachVectorSources(layers, callback) {
+                                layers.forEach((layer) => {
+                                    // This is a group of layers. Call this method recursively.
+                                    if (layer instanceof LayerGroup) {
+                                        forEachVectorSources(layer.getLayers(), callback);
+                                    }
+                                    // This is a single layer. Check if this layer should be included.
+                                    else if (layer instanceof VectorLayer) {
+                                        let source = layer.getSource();
 
-                            for (let layer of this.olService.getLayers()) {
-                                if (layer.getProperties().name==='Objects') { // name might be : Background / Objects / Edition / Geolocation. Objects is for the layer with added by user representing datas.
-                                    layerGroupOfObjects = layer;
-                                }
-                            }
-
-                            if (layerGroupOfObjects) {
-                                for (let vectorLayer of layerGroupOfObjects.getLayersArray()) {
-                                    if (vectorLayer.getProperties().model && vectorLayer.getProperties().model.selectable===true) {
-                                        if (vectorLayer.getSource().getFeatures() && vectorLayer.getSource().getFeatures().length > 0) {
-                                            for (let feature of vectorLayer.getSource().getFeatures()) {
-                                                if (circleGeometry.intersectsCoordinate(feature.getGeometry().getCoordinates())) {
-                                                    if (feature.getProperties().features) {
-                                                        for (let feat of feature.getProperties().features) { // Features may have features in them... May have to do a recursive loop function to get all features.
-                                                            featuresIntersection.push(feat);
-                                                        }
-                                                    } else {
-                                                        featuresIntersection.push(feature);
-                                                    }
-                                                }
-                                            }
+                                        // Ensure that the layer has a vector source.
+                                        if (source instanceof VectorSource) {
+                                            callback.call(this, source);
+                                        } else if (source instanceof ImageSource) {
+                                            callback.call(this, source.getSource());
                                         }
                                     }
-                                }
+                                });
                             }
+                            // Identifies features which have at least one point in the circle.
+                            forEachVectorSources(this.olService.getLayers(), (source) => {
+                                source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
+                                    console.log("copycat 1 feature : ", feature);
+                                    const properties = feature.getProperties();
+                                    if (properties.geometry && properties.id && properties['@class']) {
+                                        featuresIntersection.push(feature);
+                                    }
+                                });
+                            });
 
                             evt.map.removeLayer(uniqueLayer);
                             uniqueLayer = null;
