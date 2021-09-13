@@ -175,6 +175,7 @@ export class MapManagerService {
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 // Get all the favorites tronçons ids
                 const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
+                console.log("favorites : ", favorites);
                 const keys = [];
                 if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
                     favorites.forEach((key) => {
@@ -185,7 +186,7 @@ export class MapManagerService {
                         keys
                     }).then(
                         (results) => {
-                            return results.map(this.createAppFeatureModel);
+                            return results.map(this.createAppFeatureModel.bind(this));
                         },
                         (error) => {
                             console.error(error);
@@ -203,7 +204,7 @@ export class MapManagerService {
                             (results) => {
                                 return results.filter((item) => {
                                     return !item.doc.editMode;
-                                }).map(this.createAppFeatureModel);
+                                }).map(this.createAppFeatureModel.bind(this));
                             },
                             (error) => {
                                 console.error(error);
@@ -225,7 +226,6 @@ export class MapManagerService {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-
                 let tmp = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
@@ -233,25 +233,48 @@ export class MapManagerService {
                     })
                 }).then(
                     (results) => {
-                        return results.map(this.createAppFeatureModel);
+                        return results.map(this.createAppFeatureModel.bind(this));
                     },
                     (error) => {
                         console.error(error);
                     });
-
-                // let tmp = await this.storageService.getItem('AppTronconsFavorities');
-                // if (tmp===null || tmp===null) {
-                //     tmp = [];
-                // }
-                // console.log("in TronconDigue condition : ", tmp);
+            } else {
+                const tmp = await this.storageService.getItem('AppTronconsFavorities');
+                promise = this.localDB.query('getBornesFromTronconID', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                }).then(
+                    (results) => {
+                        return this.localDB.query('getBornesIdsHB', {
+                            keys: results.map((obj) => {
+                                return obj.value;
+                            })
+                        }).then(
+                            (results2) => {
+                                return results2.map(this.createAppFeatureModel.bind(this));
+                            });
+                    },
+                    (error) => {
+                        console.log(error);
+                    });
                 // if (Array.isArray(tmp)) {
-                //     promise = this.localDB.query('TronconDigue/streamLight', {
+                //     promise = this.localDB.query('getBornesFromTronconID', {
                 //         keys: tmp === null ? [] : tmp.map((item) => {
                 //             return item.id;
                 //         })
                 //     }).then(
                 //         (results) => {
-                //             return results.map(this.createAppFeatureModel);
+                //             return this.localDB.query('getBornesIdsHB', {
+                //                     keys: results.map((obj) => {
+                //                         return obj.value;
+                //                     })
+                //                 }
+                //             ).then(
+                //                 (results2) => {
+                //                     return results2.map(this.createAppFeatureModel);
+                //                 }
+                //             );
                 //         },
                 //         (error) => {
                 //             console.error(error);
@@ -259,32 +282,6 @@ export class MapManagerService {
                 // } else {
                 //     console.error('Error type');
                 // }
-            } else {
-                const tmp = await this.storageService.getItem('AppTronconsFavorities');
-                if (Array.isArray(tmp)) {
-                    promise = this.localDB.query('getBornesFromTronconID', {
-                        keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
-                    }).then(
-                        (results) => {
-                            return this.localDB.query('getBornesIdsHB', {
-                                    keys: results.map((obj) => {
-                                        return obj.value;
-                                    })
-                                }
-                            ).then(
-                                (results2) => {
-                                    return results2.map(this.createAppFeatureModel);
-                                }
-                            );
-                        },
-                        (error) => {
-                            console.error(error);
-                        });
-                } else {
-                    console.error('Error type');
-                }
             }
             // Wait for promise resolution or rejection.
             console.log("promise : ", promise);
@@ -301,10 +298,12 @@ export class MapManagerService {
     }
 
     // Arrow function or 'this' is undefined... Seems like there is a scope problem.
-    createAppFeatureModel = async (featureDoc) => {
+    createAppFeatureModel(featureDoc) {
         // depending on 'include_docs' option when querying docs
         featureDoc = featureDoc.doc || featureDoc.value;
         let dataProjection;
+
+        console.log("createAppFeatureModel called and this = ", this);
 
         if (!this.SirsDocService.get()) {
             dataProjection = 'EPSG:2154'
