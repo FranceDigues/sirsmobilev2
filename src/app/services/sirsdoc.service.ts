@@ -11,14 +11,17 @@ export class SirsDocService {
     constructor(private localDB: LocalDatabase) { }
 
     initializeDoc() {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             this.localDB.get('$sirs')
             .then(
                 (result) => {
                     this.doc = result;
                     resolve(this.doc);
                 }
-            );
+            )
+            .catch(error => {
+                reject(error);
+            });
         });
     }
 
@@ -26,15 +29,14 @@ export class SirsDocService {
         if (this.doc) {
             return this.doc;
         } else {
-            this.localDB.get('$sirs')
-            .then(
-                (result) => {
-                    this.doc = result;
-                }
-            )
+            this.initializeDoc()
+            .then((doc) => {
+                return doc;
+            })
             .catch(error => {
-                console.error(error);
-            });
+                console.error("SirsDocService get error : ", error);
+                return null;
+            })
         }
     }
 }

@@ -1,18 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
-import Circle from 'ol/geom/Circle';
 import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
 import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
-import { transform } from 'ol/proj';
 import Cluster from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
-import Fill from 'ol/style/Fill';
-import Icon from 'ol/style/Icon';
-import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import { AppLayersService } from './app-layers.service';
 import { FeatureCache } from './cache.service';
@@ -27,76 +22,6 @@ import { DatabaseService } from './database.service';
 @Injectable({
     providedIn: 'root'
 })
-export class GeolocLayer {
-    geolocLayer: VectorLayer = null;
-
-    init() {
-        this.geolocLayer = this.createGeolocLayer();
-    }
-
-    get getGeolocLayer() {
-        if (!this.geolocLayer) {
-            this.geolocLayer = this.createGeolocLayer();
-            return this.geolocLayer;
-        } else {
-            return this.geolocLayer;
-        }
-    }
-
-    createGeolocLayer(): VectorLayer {
-        return new VectorLayer({
-            name: 'Geolocation',
-            visible: true,
-            source: new VectorSource({useSpatialIndex: false}),
-            style: (feature) => {
-                switch (feature.getGeometry().getType()) {
-                    case 'Circle':
-                        return [
-                            new Style({
-                                fill: new Fill({color: [255, 255, 255, 0.3]}),
-                                stroke: new Stroke({color: [0, 0, 255, 1], width: 1})
-                            })
-                        ];
-                    case 'Point':
-                        return [
-                            new Style({
-                                image: new Icon({
-                                    anchor: [0.5, 1],
-                                    anchorXUnits: 'fraction',
-                                    anchorYUnits: 'fraction',
-                                    src: '../assets/img/pin-icon.png'
-                                })
-                            })
-                        ];
-                    default:
-                        return [];
-                }
-            }
-        });
-    }
-
-    createGeolocFeatureInstances(coords): Array<Feature> {
-        return [
-            new Feature({
-                geometry: new Point(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857')),
-                name: 'Location Pointer'
-            }),
-            new Feature({
-                geometry: new Circle(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'), 40)
-            })
-        ];
-    }
-
-    redrawGeolocLayer(coords) {
-        const geolocLayerSource = this.getGeolocLayer.getSource();
-        geolocLayerSource.clear();
-        geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
 export class MapManagerService {
     appLayer: LayerGroup = null;
     wktFormat = new WKT();
@@ -105,7 +30,7 @@ export class MapManagerService {
     constructor(private featureCache: FeatureCache, 
                 private localDB: LocalDatabase,
                 private storageService: StorageService, 
-                private SirsDoc: SirsDocService,
+                private SirsDocService: SirsDocService,
                 private mapService: MapService, 
                 private RealPositionStyle: RealPositionStyle,
                 private DefaultStyle: DefaultStyle, 
@@ -113,9 +38,11 @@ export class MapManagerService {
                 private olService: OLService,
                 private databaseSrvc: DatabaseService,
                 ) {
+                    console.log("init MapManagerService");
     }
 
     init() {
+        console.log("init")
         return new Promise((resolve, reject) => {
             this.createAppLayer()
                 .then((appLayer: any) => {
@@ -134,6 +61,7 @@ export class MapManagerService {
     }
 
     private createAppLayer() {
+        console.log("createAppLayer")
         return new Promise(resolve => {
             const promises = [];
             let appLayers = this.appLayersService.getFavorites();
@@ -242,6 +170,7 @@ export class MapManagerService {
                 ? olLayer.getSource().getSource() : olLayer.getSource();
             // Try to get the promise of a previous query.
             let promise = null;
+            console.log("layerModel.filterValue : ", layerModel.filterValue);
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 // Get all the favorites tronçons ids
@@ -256,7 +185,7 @@ export class MapManagerService {
                         keys
                     }).then(
                         (results) => {
-                            return results.map(this.createAppFeatureModel.bind(this));
+                            return results.map(this.createAppFeatureModel);
                         },
                         (error) => {
                             console.error(error);
@@ -296,22 +225,40 @@ export class MapManagerService {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                const tmp = await this.storageService.getItem('AppTronconsFavorities');
-                if (Array.isArray(tmp)) {
-                    promise = this.localDB.query('TronconDigue/streamLight', {
-                        keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
-                    }).then(
-                        (results) => {
-                            return results.map(this.createAppFeatureModel);
-                        },
-                        (error) => {
-                            console.error(error);
-                        });
-                } else {
-                    console.error('Error type');
-                }
+
+                let tmp = await this.storageService.getItem('AppTronconsFavorities');
+                promise = this.localDB.query('TronconDigue/streamLight', {
+                    keys: tmp === null ? [] : tmp.map((item) => {
+                        return item.id;
+                    })
+                }).then(
+                    (results) => {
+                        return results.map(this.createAppFeatureModel);
+                    },
+                    (error) => {
+                        console.error(error);
+                    });
+
+                // let tmp = await this.storageService.getItem('AppTronconsFavorities');
+                // if (tmp===null || tmp===null) {
+                //     tmp = [];
+                // }
+                // console.log("in TronconDigue condition : ", tmp);
+                // if (Array.isArray(tmp)) {
+                //     promise = this.localDB.query('TronconDigue/streamLight', {
+                //         keys: tmp === null ? [] : tmp.map((item) => {
+                //             return item.id;
+                //         })
+                //     }).then(
+                //         (results) => {
+                //             return results.map(this.createAppFeatureModel);
+                //         },
+                //         (error) => {
+                //             console.error(error);
+                //         });
+                // } else {
+                //     console.error('Error type');
+                // }
             } else {
                 const tmp = await this.storageService.getItem('AppTronconsFavorities');
                 if (Array.isArray(tmp)) {
@@ -328,7 +275,7 @@ export class MapManagerService {
                                 }
                             ).then(
                                 (results2) => {
-                                    return results2.map(this.createAppFeatureModel.bind(this));
+                                    return results2.map(this.createAppFeatureModel);
                                 }
                             );
                         },
@@ -340,8 +287,8 @@ export class MapManagerService {
                 }
             }
             // Wait for promise resolution or rejection.
-            promise.then(
-                (featureModels) => {
+            console.log("promise : ", promise);
+            promise.then((featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
                     resolve(null);
                     this.mapLoadingSubject.complete();
@@ -353,15 +300,17 @@ export class MapManagerService {
         });
     }
 
-    createAppFeatureModel(featureDoc) {
+    // Arrow function or 'this' is undefined... Seems like there is a scope problem.
+    createAppFeatureModel = async (featureDoc) => {
         // depending on 'include_docs' option when querying docs
         featureDoc = featureDoc.doc || featureDoc.value;
         let dataProjection;
-        if (!this.SirsDoc.get()) {
+
+        if (!this.SirsDocService.get()) {
             dataProjection = 'EPSG:2154'
         } else {
-            if (this.SirsDoc.get().epsgCode) {
-                dataProjection = this.SirsDoc.get().epsgCode;
+            if (this.SirsDocService.get().epsgCode) {
+                dataProjection = this.SirsDocService.get().epsgCode;
             } else {
                 dataProjection = 'EPSG:2154'
             }
@@ -470,6 +419,7 @@ export class MapManagerService {
     }
 
     syncAllAppLayer() {
+        console.log("syncAllAppLayer")
         const layers = this.appLayer.getLayers();
         layers.forEach( async (layer) => {
             const layerModel = layer.get('model');
@@ -497,6 +447,7 @@ export class MapManagerService {
     }
 
     async syncAppLayer(layerModel) {
+        console.log("syncAppLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
@@ -541,6 +492,7 @@ export class MapManagerService {
     }
 
     async addLabelFeatureLayer(layerModel) {
+        console.log("addLabelFeatureLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
             
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
@@ -549,6 +501,7 @@ export class MapManagerService {
     }
 
     async reloadLayer(layerModel) {
+        console.log("reloadLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
         
         // Load data if necessary.

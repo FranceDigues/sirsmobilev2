@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService, GeolocLayer } from '../../services/map-manager.service';
+import { MapManagerService } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
@@ -27,6 +27,7 @@ import ImageSource from 'ol/source/Image';
 import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
+import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
 
 
 @Component({
@@ -40,7 +41,7 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayer, private sirsDocSrvc: SirsDocService,
+                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocSrvc: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
@@ -118,9 +119,11 @@ export class MainPage implements AfterViewInit {
                     this.olService.addLayer(this.editionLayerService.editionLayer);
                     this.olService.addLayer(this.geolocLayer.geolocLayer);
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen sooner or later to add the appLayer to the map (done in the init function of mapManagerService).
+                        console.log("going into if appLayer")
                         this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
                     } else {
-                        this.mapManagerService.init();
+                        console.log("going into else appLayer")
+                        await this.mapManagerService.init();
                     }
 
                     // TODO : MOVE ALL CODE RELATED TO LONG CLICK CIRCLE IN A SERVICE.
@@ -164,6 +167,7 @@ export class MainPage implements AfterViewInit {
                                     evt.map.addLayer(uniqueLayer);
         
                                     intervalTask = setInterval(() => {
+                                        //TODO : Change radius augmentation formula. Right now it looks like it does not take zoom into account.
                                         radius += Math.log(evt.map.getView().getZoom())*15; // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
                                         uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
                                     }, 1);

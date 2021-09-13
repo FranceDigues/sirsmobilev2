@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';
 import { GeolocationService } from './geolocation.service';
-import { GeolocLayer } from './map-manager.service';
 import { transform } from 'ol/proj';
 import VectorLayer from 'ol/layer/Vector';
 import { Style, Stroke, Fill, Circle } from 'ol/style';
 import MultiPoint from 'ol/geom/MultiPoint';
+import { GeolocLayerService } from './geoloc-layer.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class MapEditObjectService {
     defaultVisibleValueArrayLayer = [];
 
     constructor(private olService: OLService, private geoloc: GeolocationService,
-                private geolocLayer: GeolocLayer) {}
+                private geolocLayer: GeolocLayerService) {}
 
     initMap() {
         const arrayLayer = this.olService.getLayers();

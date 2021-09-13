@@ -88,29 +88,70 @@
                                 </div>
 
                                 <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
-                                  <span class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
-                                        Position de début : {{ EOS.getStartPos() }}
-                                      <br>
-                                        Position de fin : {{ EOS.getEndPos() }}
-                                  </span>
-                                    <span class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
-                                          Position de début via la borne : {{ EOS.startPosBorneLabel | async }} <br>
+                                  <div class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
+                                      <div>
+                                          <div>Position de début : {{ EOS.getStartPos() }}</div>
+                                          <div class="edit-position-buttons right">
+                                            <!-- <button class="option-button-edit"
+                                               (click)="EOS.locateMe()"
+                                               *ngIf="EOS.activatedGPSPositionButton()">
+                                               <ion-icon class="option-button-edit-icon" name="navigate-outline"></ion-icon>
+                                            </button> -->
+                                            <button class="option-button-edit"
+                                               (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
+                                               *ngIf="EOS.activatedGPSPositionButton()">
+                                                <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                            <button class="option-button-edit"
+                                               (click)="selectPosBySR()"
+                                               *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                                                <ion-icon class="option-button-edit-icon" name="options-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                      </div>
+                                      <div>
+                                          <div>Position de fin : {{ EOS.getEndPos() }}</div>
+                                          <div class="edit-position-buttons right">
+                                            <!-- <button class="option-button-edit"
+                                               (click)="EOS.locateMe()"
+                                               *ngIf="EOS.activatedGPSPositionButton()">
+                                               <ion-icon class="option-button-edit-icon" name="navigate-outline"></ion-icon>
+                                            </button> -->
+                                            <button class="option-button-edit"
+                                               (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
+                                               *ngIf="EOS.activatedGPSPositionButton()">
+                                                <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                            <button class="option-button-edit"
+                                               (click)="selectPosBySR()"
+                                               *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                                                <ion-icon class="option-button-edit-icon" name="options-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                      </div>
+                                  </div>
+                                    <div class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                                          Position de début via la borne : {{ EOS.startPosBorneLabel | async }} 
+                                          <br>
                                           Position de fin via la borne : {{ EOS.endPosBorneLabel | async }}
-                                    </span>
-                                    <div class="edit-position-buttons right">
-                                        <a class="nav-item nav-link"
+                                    </div>
+                                    <!-- <div class="edit-position-buttons right">
+                                        <button class="option-button-edit"
+                                           (click)="EOS.locateMe()"
+                                           *ngIf="EOS.activatedGPSPositionButton()">
+                                           <ion-icon class="option-button-edit-icon" name="navigate-outline"></ion-icon>
+                                        </button>
+                                        <button class="option-button-edit"
                                            (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = true; selectPosLine()"
                                            *ngIf="EOS.activatedGPSPositionButton()">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="pencil-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                            <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                        </button>
+                                        <button class="option-button-edit"
                                            (click)="selectPosBySR()"
                                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="options-outline"></ion-icon></span>
-                                        </a>
-                                    </div>
+                                            <ion-icon class="option-button-edit-icon" name="options-outline"></ion-icon>
+                                        </button>
+                                    </div> -->
                                 </div>
 
                                 <div class="sirs-field-inline" *ngIf="EOS.isDependance()">
@@ -128,30 +169,26 @@
                                     </span>
 
                                     <div class="edit-position-buttons right">
-                                        <a class="nav-item nav-link"
+                                        <button class="nav-item nav-link"
                                            (click)="EOS.locateMe()"
                                            *ngIf="EOS.objDependanceType === 'point'">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="navigate-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                            <ion-icon class="option-button-edit-icon" name="navigate-outline"></ion-icon>
+                                        </button>
+                                        <button class="nav-item nav-link"
                                            (click)="selectPos()"
                                            *ngIf="EOS.objDependanceType === 'point'">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="pencil-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                            <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                        </button>
+                                        <button class="nav-item nav-link"
                                            (click)="selectPosLine()"
                                            *ngIf="EOS.objDependanceType === 'line'">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="pencil-outline"></ion-icon></span>
-                                        </a>
-                                        <a class="nav-item nav-link"
+                                            <ion-icon class="option-button-edit-icon" name="pencil-outline"></ion-icon>
+                                        </button>
+                                        <button class="nav-item nav-link"
                                            (click)="drawPolygon()"
                                            *ngIf="EOS.objDependanceType === 'polygon'">
-                                            <span><ion-icon class="option-button-edit-icon"
-                                                            name="triangle-outline"></ion-icon></span>
-                                        </a>
+                                            <ion-icon class="option-button-edit-icon" name="triangle-outline"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
