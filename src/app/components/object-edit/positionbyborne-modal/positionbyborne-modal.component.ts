@@ -176,7 +176,7 @@ export class PositionByBorneModalComponent implements OnInit {
   // TODO fix bug when modal 2 times in a row
   init() {
     this.troncon = this.EOS.troncons.find((item) => {
-      return item.id === this.EOS.objectDoc.linearId.id;
+      return item.id === this.EOS.objectDoc.linearId;
     });
     this.loadingCtrl.create({ message: 'Chargement' })
     .then(

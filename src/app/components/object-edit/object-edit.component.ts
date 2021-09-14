@@ -40,7 +40,6 @@ export class ObjectEditComponent implements OnInit {
                 orientationList: any,
                 coteList: any
             }) => {
-                console.log("data route : ", data);
                 this.objectDoc = data.objectDoc;
                 this.refTypes = data.refTypes;
                 this.orientationList = data.orientationList;
