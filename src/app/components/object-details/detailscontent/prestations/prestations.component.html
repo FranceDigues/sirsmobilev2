@@ -3,10 +3,10 @@
     <input type="text" name="prestationList" list="prestationList" [(ngModel)]="detailsObject.tempPrestation.v"/>
     <datalist id="prestationList">
         <select id="prestationList" class="browser-default">
-            <option *ngFor="let p of detailsObject.prestationList"
+            <option *ngFor="let p of prestationList"
                     [value]="detailsObject.prestationMap[p.id]"
                     [selected]="detailsObject.tempPrestation.v === p.id">
-                {{p.id}}
+                {{p.designation}}
             </option>
         </select>
     </datalist>
@@ -24,7 +24,7 @@
     <ion-item *ngFor="let prestationId of detailsObject.selectedObject.prestationIds; let index = index"
               style="display:flex;"
               (click)="detailsObject.openPrestationLink(prestationId)">
-        <span>{{ !detailsObject.prestationList ? prestationId : detailsObject.prestationMap[prestationId] }}</span>
+        <span>{{ !prestationList ? prestationId : detailsObject.prestationMap[prestationId] }}</span>
         <ion-fab horizontal="end">
           <ion-fab-button class="sirs-button-item" color="dark"
               (click)="detailsObject.removePrestation(index);$event.stopPropagation()">

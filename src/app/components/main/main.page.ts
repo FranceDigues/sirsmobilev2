@@ -203,7 +203,6 @@ export class MainPage implements AfterViewInit {
                             // Identifies features which have at least one point in the circle.
                             forEachVectorSources(this.olService.getLayers(), (source) => {
                                 source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
-                                    console.log("copycat 1 feature : ", feature);
                                     const properties = feature.getProperties();
                                     if (properties.geometry && properties.id && properties['@class']) {
                                         featuresIntersection.push(feature);
