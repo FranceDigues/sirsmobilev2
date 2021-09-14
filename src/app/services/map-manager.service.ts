@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
@@ -33,16 +33,14 @@ export class MapManagerService {
                 private SirsDocService: SirsDocService,
                 private mapService: MapService, 
                 private RealPositionStyle: RealPositionStyle,
-                private DefaultStyle: DefaultStyle, 
+                private DefaultStyleService: DefaultStyle, 
                 private appLayersService: AppLayersService,
                 private olService: OLService,
                 private databaseSrvc: DatabaseService,
                 ) {
-                    console.log("init MapManagerService");
     }
 
     init() {
-        console.log("init")
         return new Promise((resolve, reject) => {
             this.createAppLayer()
                 .then((appLayer: any) => {
@@ -61,7 +59,6 @@ export class MapManagerService {
     }
 
     private createAppLayer() {
-        console.log("createAppLayer")
         return new Promise(resolve => {
             const promises = [];
             let appLayers = this.appLayersService.getFavorites();
@@ -170,12 +167,10 @@ export class MapManagerService {
                 ? olLayer.getSource().getSource() : olLayer.getSource();
             // Try to get the promise of a previous query.
             let promise = null;
-            console.log("layerModel.filterValue : ", layerModel.filterValue);
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 // Get all the favorites tronçons ids
                 const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
-                console.log("favorites : ", favorites);
                 const keys = [];
                 if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
                     favorites.forEach((key) => {
@@ -256,35 +251,10 @@ export class MapManagerService {
                             });
                     },
                     (error) => {
-                        console.log(error);
+                        console.error(error);
                     });
-                // if (Array.isArray(tmp)) {
-                //     promise = this.localDB.query('getBornesFromTronconID', {
-                //         keys: tmp === null ? [] : tmp.map((item) => {
-                //             return item.id;
-                //         })
-                //     }).then(
-                //         (results) => {
-                //             return this.localDB.query('getBornesIdsHB', {
-                //                     keys: results.map((obj) => {
-                //                         return obj.value;
-                //                     })
-                //                 }
-                //             ).then(
-                //                 (results2) => {
-                //                     return results2.map(this.createAppFeatureModel);
-                //                 }
-                //             );
-                //         },
-                //         (error) => {
-                //             console.error(error);
-                //         });
-                // } else {
-                //     console.error('Error type');
-                // }
             }
             // Wait for promise resolution or rejection.
-            console.log("promise : ", promise);
             promise.then((featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
                     resolve(null);
@@ -302,8 +272,6 @@ export class MapManagerService {
         // depending on 'include_docs' option when querying docs
         featureDoc = featureDoc.doc || featureDoc.value;
         let dataProjection;
-
-        console.log("createAppFeatureModel called and this = ", this);
 
         if (!this.SirsDocService.get()) {
             dataProjection = 'EPSG:2154'
@@ -380,7 +348,7 @@ export class MapManagerService {
                             feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                     } else {
                         feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(this.DefaultStyle.style(this.mapService.selection,
+                        feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
                             feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
                     }
                     feature.set('id', featureModel.id);
@@ -400,7 +368,7 @@ export class MapManagerService {
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                         } else {
                             feature.setGeometry(featureModel.projGeometry);
-                            feature.setStyle(this.DefaultStyle.style(this.mapService.selection,
+                            feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
                                 feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
                         }
                         feature.set('id', featureModel.id);
@@ -418,7 +386,6 @@ export class MapManagerService {
     }
 
     syncAllAppLayer() {
-        console.log("syncAllAppLayer")
         const layers = this.appLayer.getLayers();
         layers.forEach( async (layer) => {
             const layerModel = layer.get('model');
@@ -446,7 +413,6 @@ export class MapManagerService {
     }
 
     async syncAppLayer(layerModel) {
-        console.log("syncAppLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
@@ -491,7 +457,6 @@ export class MapManagerService {
     }
 
     async addLabelFeatureLayer(layerModel) {
-        console.log("addLabelFeatureLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
             
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
@@ -500,7 +465,6 @@ export class MapManagerService {
     }
 
     async reloadLayer(layerModel) {
-        console.log("reloadLayer")
         const olLayer = <any> await this.getAppLayerInstance(layerModel);
         
         // Load data if necessary.

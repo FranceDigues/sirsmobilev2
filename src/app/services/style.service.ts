@@ -15,12 +15,15 @@ export class DefaultStyle {
     style(selection, feature, color?, type?, featureModel?, layerModel?) {
         switch (type) {
             case 'LineString':
+                return this.createLineStyleFunc(selection, feature, color, featureModel, layerModel);
             case 'MultiLineString':
-                return this.createLineStyle(selection, feature, color, featureModel, layerModel);
+                return this.createLineStyleFunc(selection, feature, color, featureModel, layerModel);
             case 'Point':
+                return this.createPointStyle(selection, feature, color, featureModel, layerModel);
             case 'MultiPoint':
                 return this.createPointStyle(selection, feature, color, featureModel, layerModel);
             case 'Polygon':
+                return this.createPolygonStyle(selection, feature, color, featureModel, layerModel);
             case 'MultiPolygon':
                 return this.createPolygonStyle(selection, feature, color, featureModel, layerModel);
         }
@@ -50,18 +53,38 @@ export class DefaultStyle {
         }
     }
 
-    private createLineStyle(selection, feature, color?, featureModel?, layerModel?) {
-        const styles = [];
-        color[3] = this.handling.opacityHandling(selection, feature);
-        const highlight = this.handling.highlightHandling2(selection, feature);
-        const zIndex = this.handling.zIndexHandling(selection, feature);
-        const strokeColor = color;
-        const strokeWidth = 5;
-        if (highlight) {
-            styles.push(this.getStyle.line([255, 255, 255, color[3]], strokeWidth + 4, [20, 30], zIndex, featureModel, layerModel));
+    private createLineStyleFunc(selection, feature, color, featureModel, layerModel) {
+        return () => {
+            color[3] = this.handling.opacityHandling(selection, feature);
+
+            var styles = [],
+                highlight = this.handling.highlightHandling2(selection, feature),
+                zIndex = this.handling.zIndexHandling(selection, feature),
+                strokeColor = color,
+                strokeWidth = 5;
+            if (highlight) {
+                styles.push(this.createLineStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex, featureModel, layerModel));
+            }
+            styles.push(this.createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel));
+            return styles;
+        };
+    }
+    private createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
+        var stroke = new Stroke({color: strokeColor, width: strokeWidth});
+        if (layerModel) {
+            if (layerModel.featLabels) {
+                //
+                var text = new Text({
+                    font: '12px Verdana',
+                    text: featureModel.title ? featureModel.title : featureModel.designation,
+                    fill: new Fill({color: 'black'}),
+                    stroke: new Stroke({color: 'white', width: 0.5})
+                });
+                return new Style({stroke: stroke, zIndex: zIndex, text: text});
+            }
         }
-        styles.push(this.getStyle.line(strokeColor, strokeWidth + 4, [30, 20], zIndex, featureModel, layerModel));
-        return features;
+
+        return new Style({stroke: stroke, zIndex: zIndex});
     }
 
     private createPolygonStyle(selection, feature, color?, featureModel?, layerModel?) {

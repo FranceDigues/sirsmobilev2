@@ -119,10 +119,8 @@ export class MainPage implements AfterViewInit {
                     this.olService.addLayer(this.editionLayerService.editionLayer);
                     this.olService.addLayer(this.geolocLayer.geolocLayer);
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen sooner or later to add the appLayer to the map (done in the init function of mapManagerService).
-                        console.log("going into if appLayer")
                         this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
                     } else {
-                        console.log("going into else appLayer")
                         await this.mapManagerService.init();
                     }
 
