@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { DatabaseService } from '../../services/database.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 
 @Component({
@@ -17,22 +16,16 @@ export class ObjectEditComponent implements OnInit {
     public refTypes;
     public orientationList;
     public coteList;
-    public objectType;
 
     // * EOS for Edit Object Service -> to have better lisibility
 
     constructor(public EOS: EditObjectService, private router: Router,
                 private alertCtrl: AlertController,
-                private activatedRoute: ActivatedRoute, private databaseService: DatabaseService,
+                private activatedRoute: ActivatedRoute,
                 private modalCtrl: ModalController) {
     }
 
     ngOnInit() {
-        this.objectType = this.activatedRoute.snapshot.paramMap.get('type');
-        const id = this.activatedRoute.snapshot.paramMap.get('id');
-        this.EOS.init(this.objectType, id).then(() => {
-            console.log("EOS : ", this.EOS);
-        });
         this.activatedRoute.data
             .subscribe((data: {
                 objectDoc: any,

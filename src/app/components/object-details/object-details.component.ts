@@ -6,6 +6,7 @@ import { AlertController } from '@ionic/angular';
 import { LocalDatabase } from '../../services/local-database.service';
 import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
 import { EditionLayerService } from '../../services/edition-layer.service';
+import { EditObjectService } from 'src/app/services/edit-object.service';
 
 declare var M: any;
 
@@ -81,7 +82,7 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
   constructor(public objectDetails: ObjectDetails, private authService: AuthService,
               private route: Router, private alertCtrl: AlertController,
               private localDB: LocalDatabase, private editionLayerService: EditionLayerService,
-              private selectedObjectsService: SelectedObjectsService) {
+              private selectedObjectsService: SelectedObjectsService, public EOS: EditObjectService) {
                 this.activeTab = 'description';
                 this.objectDetails.detailsType = 'objectDetails';
                 this.document = this.objectDetails.selectedObject;
@@ -159,7 +160,8 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
     return this.activeTab === 'observations' && this.authService.getValue().role !== 'GUEST';
   }
 
-  editObject() {
+  async editObject() {
+    await this.EOS.init(this.objectType, this.document._id);
     this.route.navigateByUrl('/object/' + this.objectType + '/' + this.document._id);
   }
 
