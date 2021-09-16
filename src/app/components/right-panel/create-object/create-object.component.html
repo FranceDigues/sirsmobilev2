@@ -1,6 +1,6 @@
 <div fxLayout="column" class="full-height">
     <ion-header translucent>
-        <ion-toolbar class="header-slide" color="secondary">
+        <ion-toolbar class="header-slide">
             <ion-title style="text-align: center;">Création d'Objets</ion-title>
         </ion-toolbar>
     </ion-header>
@@ -17,7 +17,7 @@
                 </ion-radio-group>
             </ion-list>
         </ion-content>
-        <ion-button class="button-footer" *ngIf="selectedLayer || showAddButtons()" expand="full" color="secondary"
+        <ion-button class="button-footer" *ngIf="selectedLayer || showAddButtons()" expand="full" color="tertiary"
                     (click)="addObject()">Ajouter un objet
         </ion-button>
     </div>

@@ -26,6 +26,13 @@ export class ObjectEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log("ObjectEditComponent")
+        const id = this.activatedRoute.snapshot.paramMap.get('id');
+        if (!id) {
+            const objectType = this.activatedRoute.snapshot.paramMap.get('type');
+            this.EOS.init(objectType, null);
+        }
+
         this.activatedRoute.data
             .subscribe((data: {
                 objectDoc: any,

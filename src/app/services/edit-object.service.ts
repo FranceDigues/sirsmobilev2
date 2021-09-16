@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { getDistance } from 'ol/sphere';
 import { DatabaseService } from './database.service';
 import { EditionModeService } from './edition-mode.service';
 import { GeolocationService } from './geolocation.service';
-import { MapManagerService } from './map-manager.service';
 import { ObjectDocService } from './object-doc.service';
 import { SirsDocService } from './sirsdoc.service';
 import { UuidUtils as uuid } from '../utils/uuid-utils';
@@ -46,11 +45,14 @@ export class EditObjectService {
     endPosBorneLabel: Promise<string> | string | null = null;
     isClosed;
 
-    constructor(private activeRoute: ActivatedRoute, private objectDocService: ObjectDocService,
-                private databaseService: DatabaseService, private loadingCtrl: LoadingController,
-                private sirsDoc: SirsDocService, private editionModeService: EditionModeService,
-                private route: Router, private mapManagerService: MapManagerService, private toastCtrl: ToastController,
-                private geolocationService: GeolocationService, private alertCtrl: AlertController,
+    constructor(private objectDocService: ObjectDocService,
+                private databaseService: DatabaseService, 
+                private loadingCtrl: LoadingController,
+                private sirsDoc: SirsDocService, 
+                private editionModeService: EditionModeService,
+                private route: Router, 
+                private toastCtrl: ToastController,
+                private geolocationService: GeolocationService,
                 private positionService: PositionService,
                 private storageService: StorageService) {
     }

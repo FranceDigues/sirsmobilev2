@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLayersService } from '../../../services/app-layers.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+// import { EditObjectService } from 'src/app/services/edit-object.service';
 
 @Component({
   selector: 'create-object',
@@ -13,8 +14,11 @@ export class CreateObjectComponent implements OnInit {
 
   selectedLayer = null;
 
-  constructor(public appLayersService: AppLayersService, private authService: AuthService,
-              private route: Router) { }
+  constructor(public appLayersService: AppLayersService, 
+              private authService: AuthService,
+              private route: Router, 
+              // private EOS: EditObjectService
+              ) { }
 
   ngOnInit() {
   }
@@ -23,7 +27,8 @@ export class CreateObjectComponent implements OnInit {
     this.selectedLayer = layer;
   }
 
-  addObject() {
+  async addObject() {
+    console.log("addObject")
     const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
     this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
   }

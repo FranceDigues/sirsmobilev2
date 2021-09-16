@@ -79,10 +79,14 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
   document;
   objectType;
 
-  constructor(public objectDetails: ObjectDetails, private authService: AuthService,
-              private route: Router, private alertCtrl: AlertController,
-              private localDB: LocalDatabase, private editionLayerService: EditionLayerService,
-              private selectedObjectsService: SelectedObjectsService, public EOS: EditObjectService) {
+  constructor(public objectDetails: ObjectDetails, 
+              private authService: AuthService,
+              private route: Router, 
+              private alertCtrl: AlertController,
+              private localDB: LocalDatabase, 
+              private editionLayerService: EditionLayerService,
+              private selectedObjectsService: SelectedObjectsService, 
+              private EOS: EditObjectService) {
                 this.activeTab = 'description';
                 this.objectDetails.detailsType = 'objectDetails';
                 this.document = this.objectDetails.selectedObject;
