@@ -10,16 +10,17 @@ a {
   padding-right: 10px;
 }
 
-.option-button-edit {
-  margin-left: 5px;
+.option-button {
+  margin: 3px;
   background-color: #00a796;
   color: white;
-  height: 42px;
   border-radius: 5px;
+  height: 42px;
+  width: 42px;
 }
 
-.option-button-edit-icon {
-  font-size: 25px;
+.option-button-icon {
+  font-size: large;
 }
 
 .edit-screen {

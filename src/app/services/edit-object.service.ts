@@ -381,10 +381,7 @@ export class EditObjectService {
         this.objectDoc.editedGeoCoordinate = true;
 
         const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
-        let coordinateEnd = null;
-        if (posEnd) {
-            coordinateEnd = transform([posEnd.longitude, posEnd.latitude], 'EPSG:4326', this.dataProjection);
-        }
+
         // Point case
         if (!this.isLinear) {
             this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
@@ -392,22 +389,38 @@ export class EditObjectService {
             this.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
         } else {
             // Linear case
-            // if (this.linearPosEditionHandler.startPoint) {
-            this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            this.watchDocPositionDebut();
-            this.linearPosEditionHandler.startPoint = false;
-            // }
 
-            // if (this.linearPosEditionHandler.endPoint) {
-            this.objectDoc.positionFin = 'POINT(' + coordinateEnd[0] + ' ' + coordinateEnd[1] + ')';
-            this.linearPosEditionHandler.endPoint = false;
-            if (!this.objectDoc.positionDebut && this.objectDoc.positionFin) {
-                this.objectDoc.positionDebut = this.objectDoc.positionFin;
+            if (posEnd) {
+                let coordinateEnd = null;
+                coordinateEnd = transform([posEnd.longitude, posEnd.latitude], 'EPSG:4326', this.dataProjection);
+
+                this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                 this.watchDocPositionDebut();
-            }
-            // }
-        }
+                this.linearPosEditionHandler.startPoint = false;
 
+                this.objectDoc.positionFin = 'POINT(' + coordinateEnd[0] + ' ' + coordinateEnd[1] + ')';
+                this.linearPosEditionHandler.endPoint = false;
+                if (!this.objectDoc.positionDebut && this.objectDoc.positionFin) {
+                    this.objectDoc.positionDebut = this.objectDoc.positionFin;
+                    this.watchDocPositionDebut();
+                }
+            } else {
+                if (this.linearPosEditionHandler.startPoint) {
+                    this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    this.watchDocPositionDebut();
+                    this.linearPosEditionHandler.startPoint = false;
+                }
+    
+                if (this.linearPosEditionHandler.endPoint) {
+                    this.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+                    this.linearPosEditionHandler.endPoint = false;
+                    if (!this.objectDoc.positionDebut && this.objectDoc.positionFin) {
+                        this.objectDoc.positionDebut = this.objectDoc.positionFin;
+                        this.watchDocPositionDebut();
+                    }
+                }
+            }
+        }
     }
 
     handlePosDependance(pos) {
