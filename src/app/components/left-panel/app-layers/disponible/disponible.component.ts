@@ -4,6 +4,7 @@ import { AppLayersService } from 'src/app/services/app-layers.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { DatabaseModel } from 'src/app/components/database-connection/models/database.model';
+import { EditionLayerService } from 'src/app/services/edition-layer.service';
 
 @Component({
   selector: 'left-slide-disponible-layers',
@@ -18,8 +19,11 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
   available = [];
 
   constructor(private appLayersService: AppLayersService,
-              private mapManagerService: MapManagerService, private dbService: DatabaseService,
-              private loadingCtrl: LoadingController) {
+              private mapManagerService: MapManagerService, 
+              private dbService: DatabaseService,
+              private loadingCtrl: LoadingController,
+              private editionLayerService: EditionLayerService,
+              ) {
                 this.loadingCtrl.create({ message: 'Chargement' })
                 .then(
                   (loading) => {
@@ -79,6 +83,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
           // No layer at index.
           console.warn("No layer at index : ", index);
         }
+        this.editionLayerService.updateEditionLayerInstance(this.appLayersService.getFavorites());
       }
     } else {
       this.appLayersService.addFavorite(layer);

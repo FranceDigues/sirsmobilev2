@@ -6,6 +6,7 @@ import { ModalController, NavController } from '@ionic/angular';
 import { ColorModalComponent } from './color-modal/color-modal.component';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
+import { EditionLayerService } from 'src/app/services/edition-layer.service';
 
 @Component({
     selector: 'app-layers',
@@ -23,8 +24,12 @@ export class AppLayersComponent implements OnInit {
     path = 0;
 
     constructor(private appLayersService: AppLayersService,
-                public mapManagerService: MapManagerService, private modalCtrl: ModalController,
-                private navCtrl: NavController, private dbService: DatabaseService) {
+                public mapManagerService: MapManagerService, 
+                private modalCtrl: ModalController,
+                private navCtrl: NavController, 
+                private dbService: DatabaseService,
+                private editionLayerService: EditionLayerService,
+                ) {
     }
 
     goBack() {
@@ -86,6 +91,7 @@ export class AppLayersComponent implements OnInit {
     toggleVisibility(layer) {
         layer.visible = !layer.visible;
         this.mapManagerService.syncAppLayer(layer);
+        this.editionLayerService.updateEditionLayerInstance(this.appLayersService.getFavorites()); // Update Edition layers on map.
     }
 
     togglePosition(layer) {

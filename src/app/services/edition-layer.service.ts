@@ -16,18 +16,22 @@ import { DatabaseModel } from '../components/database-connection/models/database
 })
 export class EditionLayerService {
     editionLayer = null;
+    favorites = [];
 
     wktFormat = new WKT();
 
-    constructor(private localDB: LocalDatabase, private SirsDoc: SirsDocService,
+    constructor(private localDB: LocalDatabase, 
+                private SirsDoc: SirsDocService,
                 private databaseService: DatabaseService,
-                private realPositionService: RealPositionStyle, private mapService: MapService) {
+                private realPositionService: RealPositionStyle, 
+                private mapService: MapService) {
     }
 
     init() {
-        this.editionLayer = this.createEditionLayerInstance();
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
+                this.favorites = config.favorites;
+                this.editionLayer = this.createEditionLayerInstance(this.favorites);
                 this.editionLayer.setVisible(config.context.settings.edition);
             });
     }
@@ -40,25 +44,46 @@ export class EditionLayerService {
         }
     }
 
-    createEditionLayerInstance() {
+    createEditionLayerInstance(favorites?: any[]) {
         const olLayer = new VectorLayer({
             name: 'Edition',
             source: new VectorSource({useSpatialIndex: false})
         });
 
-        this.setEditionLayerFeatures(olLayer); // Set the layer that contains the new objects of the edition mode
+        this.setEditionLayerFeatures(olLayer, favorites); // Set the layer that contains the new objects of the edition mode
         return olLayer;
     }
 
-    setEditionLayerFeatures(olLayer) {
+    updateEditionLayerInstance(favorites?: any[]) {
+        this.editionLayer.getSource().clear();
+        this.setEditionLayerFeatures(this.editionLayer, favorites);
+    }
+
+    setEditionLayerFeatures(olLayer, favorites?: any[]) {
         const olSource = olLayer.getSource();
 
         return this.localDB.query('objetsModeEdition5/objetsModeEdition5', {include_docs: true})
             .then(
                 (results) => {
-                    olSource.clear();
-                    olSource.addFeatures(this.createEditionFeatureInstances(results));
-                    return;
+                    if (favorites && favorites.length>0) {
+                        const visibleFeatures = [];
+                        for (let fav of favorites) {
+                            if (fav.visible) {
+                                for (let obj of results) {
+                                    if (fav.visible && fav.filterValue===obj.value['@class']) {
+                                        visibleFeatures.push(obj);
+                                    }
+                                }
+                            }
+                        }
+                        olSource.clear();
+                        olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
+                        return;
+                    } else {
+                        olSource.clear();
+                        olSource.addFeatures(this.createEditionFeatureInstances(results));
+                        return;
+                    }
                 },
                 (error) => {
                     console.error(error);
@@ -123,10 +148,10 @@ export class EditionLayerService {
         return feature;
     }
 
-    redrawEditionModeLayer(layer) {
+    redrawEditionModeLayer(layer, favorites?: any[]) {
         layer.getSource().clear();
         this.editionLayer = layer;
-        this.setEditionLayerFeatures(this.editionLayer);
+        this.setEditionLayerFeatures(this.editionLayer, favorites);
     }
 
     redrawEditionLayerAfterSynchronization() {

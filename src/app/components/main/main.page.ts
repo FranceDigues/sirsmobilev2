@@ -328,9 +328,9 @@ export class MainPage implements AfterViewInit {
         }
     }
 
-    // refresh() {
-    //     window.location.reload();
-    // }
+    refresh() {
+        this.mapManagerService.clearAll();
+    }
 
     logout() {
         this.authService.logout();

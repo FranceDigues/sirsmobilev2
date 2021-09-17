@@ -10,7 +10,7 @@
     <header>
         <nav class="navbar navbar-custom navbar-expand-sm">
             <div class="collapse navbar-collapse" id="navbarToggler">
-                <a *ngIf="editionLayerService.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
+                <a *ngIf="editionLayerService.editionLayer && editionLayerService.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
                 <div class="gps-infos" fxLayout="column" fxLayoutAlign="center center" *ngIf="geolocationService.lastGPSUpdate">
                     <span class="gps-text">Précision du signal GPS : {{ geolocationService.gpsAccuracy }}&nbsp;m</span>
                     <span class="gps-text">&nbsp;{{ geolocationService.lastGPSUpdate }}</span>
@@ -22,9 +22,9 @@
             <a class="nav-item nav-link header-icon" (click)="zoomToCurrentLocation()">
                 <ion-icon name="flag-outline"></ion-icon>
             </a>
-<!--            <a class="nav-item nav-link header-icon" (click)="refresh()">-->
-<!--                <ion-icon name="refresh-outline"></ion-icon>-->
-<!--            </a>-->
+           <a class="nav-item nav-link header-icon" (click)="refresh()">
+               <ion-icon name="refresh-outline"></ion-icon>
+           </a>
             <a class="nav-item nav-link header-icon" (click)="logout()">
                 <ion-icon name="power-outline"></ion-icon>
             </a>

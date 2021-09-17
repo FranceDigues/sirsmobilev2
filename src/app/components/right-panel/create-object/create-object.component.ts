@@ -28,7 +28,6 @@ export class CreateObjectComponent implements OnInit {
   }
 
   async addObject() {
-    console.log("addObject")
     const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
     this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
   }
