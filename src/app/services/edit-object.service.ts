@@ -577,7 +577,7 @@ export class EditObjectService {
             this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneDebutId},
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                    const res = this.objectDoc.borneDebutId ? 'à ' + this.objectDoc.borne_debut_distance + ' m de la borne : ' +
+                    const res = this.objectDoc.borneDebutId ? 'à ' + Math.round(this.objectDoc.borne_debut_distance) + ' m de la borne : ' +
                         libelle + ' en ' + (this.objectDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir';
                     resolve(res);
                 });
@@ -589,7 +589,7 @@ export class EditObjectService {
             this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneFinId},
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
-                    const res = this.objectDoc.borneFinId ? 'à ' + this.objectDoc.borne_fin_distance + ' m de la borne : ' +
+                    const res = this.objectDoc.borneFinId ? 'à ' + Math.round(this.objectDoc.borne_fin_distance) + ' m de la borne : ' +
                         libelle + ' en ' + (this.objectDoc.borne_fin_aval ? 'amont' : 'aval') : 'à definir';
                     resolve(res);
                 });

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.rdardie.sirsMobile.Test" version="0.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Sirs test 5</name>
+<widget id="com.rdardie.sirsMobile" version="0.3.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>SIRS Mobile</name>
     <description>SIRS Mobile Application</description>
     <author email="contact@geomatys.com" href="https://geomatys.com/">Geomatys</author>
     <content src="index.html" />

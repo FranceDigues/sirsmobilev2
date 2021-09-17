@@ -51,18 +51,19 @@
                                     </select>
                                 </div>
                             
-                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row"
-                                    fxLayoutAlign="space-between center">
-                                    <div class="sirs-field-title"
-                                        *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position :
+                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row" fxLayoutAlign="space-between center">
+                                    <div>
+                                        <div class="sirs-field-title"
+                                            *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">Position :
+                                        </div>
+                                        <div class="sirs-field-value"
+                                            *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{
+                                            EOS.getStartPos() }}</div>
+                                        <div class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
+                                            Position via la borne : {{ EOS.startPosBorneLabel | async }}
+                                        </div>
                                     </div>
-                                    <div class="sirs-field-value"
-                                        *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{
-                                        EOS.getStartPos() }}</div>
-                                    <div class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
-                                        Position via la borne : {{ EOS.startPosBorneLabel | async }}
-                                    </div>
-                                    <div *ngIf="!EOS.isLinear && !EOS.isDependance()">
+                                    <div *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row">
                                         <button class="option-button" (click)="EOS.locateMe()" *ngIf="EOS.activatedGPSPositionButton()">
                                             <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                         </button>
@@ -130,18 +131,20 @@
                                 </div>
                             
                                 <div class="sirs-field-inline" *ngIf="EOS.isDependance()" fxLayout="row" fxLayoutAlign="space-between center">
-                                    <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</div>
-                                    <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'polygon'"></div>
-                            
-                                    <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">Position : </div>
-                                    <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'point'">{{ EOS.getStartPosDependance() }}</div>
-                            
-                                    <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">
-                                        Position de début : {{ EOS.getStartPosDependance() }} <br>
-                                        Position de fin : {{ EOS.getEndPosDependance() }}
-                                    </div>
-                            
                                     <div>
+                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</div>
+                                        <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'polygon'"></div>
+                                
+                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">Position : </div>
+                                        <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'point'">{{ EOS.getStartPosDependance() }}</div>
+                                
+                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">
+                                            Position de début : {{ EOS.getStartPosDependance() }} <br>
+                                            Position de fin : {{ EOS.getEndPosDependance() }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div fxLayout="row">
                                         <button class="option-button" (click)="EOS.locateMe()" *ngIf="EOS.objDependanceType === 'point'">
                                             <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                         </button>

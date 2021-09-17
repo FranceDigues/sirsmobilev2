@@ -90,6 +90,7 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
                 this.activeTab = 'description';
                 this.objectDetails.detailsType = 'objectDetails';
                 this.document = this.objectDetails.selectedObject;
+                console.log("document : ", this.document);
                 this.objectType = this.document['@class'].substring(
                   this.document['@class'].lastIndexOf('.') + 1
                 );
