@@ -61,6 +61,7 @@ export class AuthService {
               this.dbService.getCurrentDatabaseSettings()
                 .then((database: DatabaseModel) => {
                   database.context.authUser = this.user;
+                  this.dbService.activeDB = database;
                   this.dbService.setCurrentDatabaseSettings(database);
                   resolve(database);
                 },
