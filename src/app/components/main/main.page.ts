@@ -16,6 +16,7 @@ import { SirsDocService } from '../../services/sirsdoc.service';
 import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from '../../services/edition-layer.service';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
+import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
 
 // OpenLayers
 import { transform } from 'ol/proj';
@@ -27,7 +28,7 @@ import ImageSource from 'ol/source/Image';
 import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
-import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
+import ScaleLine from 'ol/control/ScaleLine';
 
 
 @Component({
@@ -123,6 +124,8 @@ export class MainPage implements AfterViewInit {
                     } else {
                         await this.mapManagerService.init();
                     }
+
+                    this.olService.getMap().addControl(new ScaleLine());
 
                     // TODO : MOVE ALL CODE RELATED TO LONG CLICK CIRCLE IN A SERVICE.
                     // STARTS HERE.
