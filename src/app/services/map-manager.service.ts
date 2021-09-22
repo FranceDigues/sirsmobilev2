@@ -221,7 +221,7 @@ export class MapManagerService {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                let tmp = await this.storageService.getItem('AppTronconsFavorities');
+                let tmp : any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                         return item.id;
@@ -234,7 +234,7 @@ export class MapManagerService {
                         console.error(error);
                     });
             } else {
-                const tmp = await this.storageService.getItem('AppTronconsFavorities');
+                const tmp : any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                             return item.id;
