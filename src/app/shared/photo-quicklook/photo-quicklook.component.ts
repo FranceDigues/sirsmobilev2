@@ -27,7 +27,9 @@ export class PhotoQuicklookComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadImage(this.photo);
+        if (this.photo) {
+            this.loadImage(this.photo);
+        }
     }
 
     async openPhoto(photo) {

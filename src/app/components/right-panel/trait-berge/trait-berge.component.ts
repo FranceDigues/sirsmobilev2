@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SirsDocService } from '../../../services/sirsdoc.service';
 import { EditionModeService } from '../../../services/edition-mode.service';
-import { noop } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { LocalDatabase } from '../../../services/local-database.service';
 import LineString from 'ol/geom/LineString';
