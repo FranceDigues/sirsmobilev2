@@ -12,6 +12,7 @@ Install **Android SDK** : http://developer.android.com/sdk/installing/index.html
 Define **ANDROID_HOME** env variable in your ~/.bashrc:
 ```bash
 export ANDROID_HOME=<path>/Android/Sdk
+export ANDROID_SDK_ROOT=ANDROID_HOME
 export PATH=${PATH}:$ANDROID_HOME/platform-tools
 export PATH=${PATH}:$ANDROID_HOME/tools
 ```
