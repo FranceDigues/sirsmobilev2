@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+import { PluginUtils } from 'src/app/utils/plugin-utils';
+
 declare function emit (val: any);
 declare function emit (key: any, value: any);
 
@@ -63,7 +65,7 @@ export const designDocs = [
             objetsModeEdition5: {
                 map: function (doc) {
                     if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
-                        || (doc.borneDebutId && doc.borneFinId) || (doc.geometry && doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
+                        || (doc.borneDebutId && doc.borneFinId) || (doc.geometry && PluginUtils.isDependanceClass(doc['@class'])))) {
                         emit(doc._id, {
                             '@class': doc['@class'],
                             'id': doc._id,
