@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { Toast } from '@ionic-native/toast/ngx';
+import { ToastController } from '@ionic/angular';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
 import MultiPoint from 'ol/geom/MultiPoint';
@@ -11,6 +11,7 @@ import VectorSource from 'ol/source/Vector';
 import { Style } from 'ol/style';
 import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
 import { EditObjectService } from '../../../services/edit-object.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 
 @Component({
   selector: 'map-polygon',
@@ -28,8 +29,12 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   snap = null;
   arrayPoints: Array<number> = [];
 
-  constructor(public olService: OLService, public EOS: EditObjectService,
-              private toast: Toast, public mapEditObject: MapEditObjectService) { }
+  constructor(public olService: OLService, 
+              private SirsDocService: SirsDocService,
+              public EOS: EditObjectService,
+              private toastCtrl: ToastController, 
+              public mapEditObject: MapEditObjectService,
+              ) { }
 
 
   ngOnInit() {
@@ -70,9 +75,15 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     });
   }
 
-  closePolygon() {
+  async closePolygon() {
     if (this.arrayPoints.length < 3) {
-      this.toast.showLongTop('Vous devez placer au moins 3 points').subscribe();
+      // this.toast.showLongTop('Vous devez placer au moins 3 points').subscribe();
+      const toast = await this.toastCtrl.create({
+        message: 'Vous devez placer au moins 3 points',
+        duration: 1000,
+        position: 'top'
+      });
+      toast.present();
       return;
     }
     this.source.clear();
@@ -96,18 +107,42 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     this.slidePathChange.emit('form');
   }
 
-  validate() {
+  async validate() {
     if (this.source.getFeatures()[0].getGeometry().getType() !== 'Polygon') {
-      this.toast.showLongTop('Vous devez fermer un polygone').subscribe();
+      // this.toast.showLongTop('Vous devez fermer un polygone').subscribe();
+      const toast = await this.toastCtrl.create({
+        message: 'Vous devez fermer un polygone',
+        duration: 1000,
+        position: 'top'
+      });
+      toast.present();
       return;
     }
     if (!this.source || this.source.getFeatures().length <= 0) {
-      this.toast.showLongTop('Vous devez définir un polygon');
+      // this.toast.showLongTop('Vous devez définir un polygon');
+      const toast = await this.toastCtrl.create({
+        message: 'Vous devez définir un polygon',
+        duration: 1000,
+        position: 'top'
+      });
+      toast.present();
       return;
     }
+
+    let dataProjection
+    if (!this.SirsDocService.get()) {
+      dataProjection = 'EPSG:2154'
+    } else {
+      if (this.SirsDocService.get().epsgCode) {
+        dataProjection = this.SirsDocService.get().epsgCode;
+      } else {
+        dataProjection = 'EPSG:2154'
+      }
+    }
+
     const wktFormat = new WKT();
     const geometry = this.source.getFeatures()[0].getGeometry();
-    this.EOS.objectDoc.geometry = wktFormat.writeGeometry(geometry);
+    this.EOS.objectDoc.geometry = wktFormat.writeGeometry(geometry, {dataProjection: dataProjection, featureProjection: 'EPSG:3857'});
     this.goBack();
     return;
   }

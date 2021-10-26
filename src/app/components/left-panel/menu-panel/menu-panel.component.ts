@@ -37,6 +37,10 @@ export class MenuPanelComponent implements OnInit {
         this.slidePathChange.emit('backMap');
     }
 
+    goSuperficialLayers() {
+        this.slidePathChange.emit('shapeLayerManager');
+    }
+
     goGallery() {
         this.route.navigateByUrl('/gallery');
     }

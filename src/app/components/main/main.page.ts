@@ -29,6 +29,7 @@ import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
 import ScaleLine from 'ol/control/ScaleLine';
+import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';
 
 
 @Component({
@@ -47,7 +48,7 @@ export class MainPage implements AfterViewInit {
                 private menu: MenuController, private appVersionsService: AppVersionsService,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
                 private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
-                public OES: ObservationEditService) {
+                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService) {
         this.appVersionsService.init();
         this.backLayerService.init();
         this.editionLayerService.init();
@@ -124,6 +125,7 @@ export class MainPage implements AfterViewInit {
                     } else {
                         await this.mapManagerService.init();
                     }
+                    this.shapesLayersManagerService.init();
 
                     this.olService.getMap().addControl(new ScaleLine());
 
@@ -145,11 +147,7 @@ export class MainPage implements AfterViewInit {
                     // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
                     this.olService.getMap().on("pointerdown", (evt) => {
                         if (!pointerIsDown) { // check that pointerIsDown is false so it does not trigger this event more than once at a time.
-                            pointerIsDown = true;
-                            delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
-                            clickPixel = evt.coordinates;
-    
-                            function longClickEvent() { // Draws the circle as long as the click is hold.
+                            const longClickEvent = ()  => { // Draws the circle as long as the click is hold.
     
                                 if (!uniqueLayer) {
                                     var centerLongitudeLatitude = evt.coordinate;
@@ -174,17 +172,20 @@ export class MainPage implements AfterViewInit {
                                     }, 1);
                                 }
                             }
+                            pointerIsDown = true;
+                            delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
+                            clickPixel = evt.coordinates;
                         }
                     });
 
-                    // TODO : If the click is stopped then everything is cancelled.
+                    // If the click is stopped then everything is cancelled.
                     this.olService.getMap().on("pointerup", (evt) => {
                         if (uniqueLayer) {
 
                             const circleGeometry = uniqueLayer.getSource().getFeatures()[0].getGeometry();
                             const circleExtent = circleGeometry.getExtent();
                             let featuresIntersection = [];
-                            function forEachVectorSources(layers, callback) {
+                            const forEachVectorSources = (layers, callback) => {
                                 layers.forEach((layer) => {
                                     // This is a group of layers. Call this method recursively.
                                     if (layer instanceof LayerGroup) {
@@ -207,6 +208,7 @@ export class MainPage implements AfterViewInit {
                             forEachVectorSources(this.olService.getLayers(), (source) => {
                                 source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
                                     const properties = feature.getProperties();
+                                    console.log("properties : ", properties);
                                     if (properties.geometry && properties.id && properties['@class']) {
                                         featuresIntersection.push(feature);
                                     }

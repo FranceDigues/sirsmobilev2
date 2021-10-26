@@ -131,34 +131,49 @@
                                 </div>
                             
                                 <div class="sirs-field-inline" *ngIf="EOS.isDependance()" fxLayout="row" fxLayoutAlign="space-between center">
-                                    <div>
-                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">Dessiner un polygone</div>
-                                        <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'polygon'"></div>
-                                
-                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">Position : </div>
-                                        <div class="sirs-field-value" *ngIf="EOS.objDependanceType === 'point'">{{ EOS.getStartPosDependance() }}</div>
-                                
-                                        <div class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">
-                                            Position de début : {{ EOS.getStartPosDependance() }} <br>
-                                            Position de fin : {{ EOS.getEndPosDependance() }}
+                                    <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center" class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">
+                                        <div>
+                                            Dessiner un polygone
                                         </div>
-                                    </div>
-                                    
-                                    <div fxLayout="row">
-                                        <button class="option-button" (click)="EOS.locateMe()" *ngIf="EOS.objDependanceType === 'point'">
-                                            <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
-                                        </button>
-                                        <button class="option-button" (click)="selectPos()" *ngIf="EOS.objDependanceType === 'point'">
-                                            <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
-                                        </button>
-                                        <button class="option-button" (click)="selectPosLine()" *ngIf="EOS.objDependanceType === 'line'">
-                                            <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
-                                        </button>
-                                        <button class="option-button" (click)="drawPolygon()" *ngIf="EOS.objDependanceType === 'polygon'">
+                                        <button class="option-button" (click)="drawPolygon()">
                                             <ion-icon class="option-button-icon" name="triangle-outline"></ion-icon>
                                         </button>
                                     </div>
+                                
+                                    <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center" class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">
+                                        <div>
+                                            Position : {{ EOS.getStartPosDependance() }}
+                                        </div>
+                                        <div>
+                                            <button class="option-button" (click)="EOS.locateMe()" *ngIf="EOS.objDependanceType === 'point'">
+                                                <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                                            </button>
+                                            <button class="option-button" (click)="selectPos()" *ngIf="EOS.objDependanceType === 'point'">
+                                                <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                
+                                    <div style="width: 100%" class="sirs-field-title" *ngIf="EOS.objDependanceType === 'line'">
+                                        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center">
+                                            <div>
+                                                Position de début : {{ EOS.getStartPosDependance() }}
+                                            </div>
+                                            <button class="option-button" (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()" *ngIf="EOS.objDependanceType === 'line'">
+                                                <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center">
+                                            <div>
+                                                Position de fin : {{ EOS.getEndPosDependance() }}
+                                            </div>
+                                            <button class="option-button" (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()" *ngIf="EOS.objDependanceType === 'line'">
+                                                <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
 
                             <div class="row" *ngIf="!EOS.isDependance()">

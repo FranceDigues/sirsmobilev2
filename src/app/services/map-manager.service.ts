@@ -170,7 +170,7 @@ export class MapManagerService {
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
                 // Get all the favorites tronçons ids
-                const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
+                const favorites = await this.storageService.getItem('AppTronconsFavorities');
                 const keys = [];
                 if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
                     favorites.forEach((key) => {
@@ -267,7 +267,6 @@ export class MapManagerService {
         });
     }
 
-    // Arrow function or 'this' is undefined... Seems like there is a scope problem.
     createAppFeatureModel(featureDoc) {
         // depending on 'include_docs' option when querying docs
         featureDoc = featureDoc.doc || featureDoc.value;
@@ -287,11 +286,11 @@ export class MapManagerService {
 
         if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection,
+                dataProjection: dataProjection,
                 featureProjection: 'EPSG:3857'
             });
             realGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection,
+                dataProjection: dataProjection,
                 featureProjection: 'EPSG:3857'
             });
         } else {

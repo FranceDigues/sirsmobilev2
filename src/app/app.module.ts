@@ -48,6 +48,8 @@ import { ObjectEditModule } from './components/object-edit/object-edit.module';
 import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from './services/edition-layer.service';
 import { GeolocLayerService } from './services/geoloc-layer.service';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx'
 
 @NgModule({
     declarations: [AppComponent],
@@ -71,7 +73,7 @@ import { GeolocLayerService } from './services/geoloc-layer.service';
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, CacheMapManager, File, WebView, FileOpener,
-        ObservationEditService, PositionService, Network,
+        ObservationEditService, PositionService, Network, FileChooser, FilePath,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

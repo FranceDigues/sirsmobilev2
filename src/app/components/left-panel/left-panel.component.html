@@ -18,4 +18,10 @@
     <div class="full-height" *ngSwitchCase="'appSettings'">
         <app-settings (slidePathChange)="changeSlidePath($event)"></app-settings>
     </div>
+    <div class="full-height" *ngSwitchCase="'shapeLayerManager'">
+        <app-shapes-layers-manager (slidePathChange)="changeSlidePath($event)"></app-shapes-layers-manager>
+    </div>
+    <div class="full-height" *ngSwitchCase="'addShapeLayer'">
+        <app-add-shapes-layers (slidePathChange)="changeSlidePath($event)"></app-add-shapes-layers>
+    </div>
 </div>

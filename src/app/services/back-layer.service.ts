@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { BackLayerModel, DatabaseModel, ListBackLayer } from '../components/database-connection/models/database.model';
-import { BehaviorSubject } from 'rxjs';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { MapService } from './map.service';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import XYZ from 'ol/source/XYZ';
+import WMTS from 'ol/source/WMTS';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -54,6 +54,7 @@ export class BackLayerService {
     }
 
     createBackLayerInstance(layerModel): TileLayer {
+        console.log("layerModel : ", layerModel);
         let layer = null;
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;
@@ -88,6 +89,8 @@ export class BackLayerService {
             return new TileWMS(layerModel.source);
         } else if (layerModel.source.type === 'XYZ') {
             return new XYZ(layerModel.source);
+        } else if (layerModel.source.type === 'WMTS') {
+            return new WMTS(layerModel.source);
         } else {
             return new OSM({
                 url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'

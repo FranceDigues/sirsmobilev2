@@ -7,15 +7,15 @@
 <div class="has-header" [ngClass]="{'has-fbb-bottom': !tracking && document}" style="padding: 15px;">
     <!-- Tracking actions -->
     <div class="text-center" *ngIf="!tracking && !document">
-        <ion-button size="large" color="medium" (click)="startTracking()">
+        <ion-button size="large" color="tertiary" (click)="startTracking()">
             <span>Commencer</span>
         </ion-button>
     </div>
     <div *ngIf="tracking" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-        <ion-button color="medium" (click)="abortTracking()">
+        <ion-button color="tertiary" (click)="abortTracking()">
             <span>Annuler</span>
         </ion-button>
-        <ion-button color="medium" [disabled]="coordinates.length < 2"
+        <ion-button color="tertiary" [disabled]="coordinates.length < 2"
                     (click)="(coordinates.length > 1) && stopTracking()">
             <span>Terminer</span>
         </ion-button>
@@ -69,10 +69,10 @@
 <div *ngIf="!tracking && document"
      fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
     <!-- Document actions -->
-    <ion-button color="medium" (click)="cancelDocument()">
+    <ion-button color="tertiary" (click)="cancelDocument()">
         <span>Annuler</span>
     </ion-button>
-    <ion-button color="medium" [disabled]="!document.designation || !document.bergeId" (click)="saveDocument()">
+    <ion-button color="tertiary" [disabled]="!document.designation || !document.bergeId" (click)="saveDocument()">
         <span>Valider</span>
     </ion-button>
 </div>

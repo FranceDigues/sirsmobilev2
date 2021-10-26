@@ -168,28 +168,6 @@ export class ObjectEditComponent implements OnInit {
         }
     }
 
-    // ! TODO Decides what to do -> don't know
-    // // Edit Debut
-    // if (this.EOS.objectDoc.systemeRepId && !this.EOS.linearPosEditionHandler.endPoint) {
-    //   return {
-    //     systemeRepId: this.EOS.objectDoc.systemeRepId,
-    //     borne_aval: this.EOS.objectDoc.borne_debut_aval ? 'true' : 'false',
-    //     borne_distance: this.EOS.objectDoc.borne_debut_distance,
-    //     borneId: this.EOS.objectDoc.borneDebutId,
-    //     borneLibelle: this.EOS.objectDoc.borneDebutLibelle || ''
-    //   };
-    // }
-    // // Edit fin
-    // if (this.EOS.objectDoc.systemeRepId && this.EOS.linearPosEditionHandler.endPoint) {
-    //   return {
-    //     systemeRepId: this.EOS.objectDoc.systemeRepId,
-    //     borne_aval: this.EOS.objectDoc.borne_fin_aval ? 'true' : 'false',
-    //     borne_distance: this.EOS.objectDoc.borne_fin_distance,
-    //     borneId: this.EOS.objectDoc.borneFinId,
-    //     borneLibelle: this.EOS.objectDoc.borneFinLibelle || ''
-    //   };
-    // }
-
     async selectPosBySR() {
         const data = this.initData();
         const modal = await this.modalCtrl.create({

@@ -13,6 +13,8 @@ import { LeftSlideDisponibleLayersComponent } from './app-layers/disponible/disp
 import { LeftPanelComponent } from './left-panel.component';
 import { MenuPanelComponent } from './menu-panel/menu-panel.component';
 import { ArraySortPipe, LeftSlideTronconComponent } from './troncon/troncon.component';
+import { ShapesLayersManagerComponent } from './shapes-layers-manager/shapes-layers-manager.component';
+import { AddShapesLayersComponent } from './shapes-layers-manager/add-shapes-layers/add-shapes-layers.component';
 import { GalleryModule } from './gallery/gallery.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +34,8 @@ import { MatIconModule } from '@angular/material/icon';
         MenuPanelComponent,
         AppInfosComponent,
         AppSettingsComponent,
+        ShapesLayersManagerComponent,
+        AddShapesLayersComponent,
         LeftSlideBackmapComponent,
         LeftSlideAddBackLayerComponent,
         LeftSlideEditBackLayerComponent,
