@@ -13,6 +13,7 @@ import { SirsDocService } from './sirsdoc.service';
 import { UuidUtils as uuid } from '../utils/uuid-utils';
 import { PositionService } from './position.service';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
+import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -239,7 +240,7 @@ export class EditObjectService {
     }
 
     isDependance() {
-        return this.objectType['@class'].toLowerCase().indexOf('dependance') > -1;
+        return PluginUtils.isDependanceClass(this.objectType['@class']);
     }
 
     initTronconList() {
