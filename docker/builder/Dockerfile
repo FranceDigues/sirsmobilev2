@@ -38,8 +38,10 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 # Install NodeJS 12 and NPM (to build application)
 RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x | bash -
 RUN apt-get install nodejs -y
+RUN npm link @angular/cli
 RUN echo `node --version`
 RUN echo `npm --version`
+RUN echo `ng version`
 
 # Install android commandline and sdk (to build final APK)
 RUN curl $ANDROID_COMMAND_LINE_TOOLS_URL > file.zip
