@@ -10,6 +10,7 @@ import VectorSource from 'ol/source/Vector';
 import WKT from 'ol/format/WKT';
 import { DatabaseService } from './database.service';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
+import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -96,7 +97,7 @@ export class EditionLayerService {
         const features = [];
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
-                || (featureDoc.doc['@class'].toLowerCase().indexOf('dependance') > -1))) {
+                || PluginUtils.isDependanceClass(featureDoc.doc['@class']))) {
                 features.push(this.createEditionFeatureInstance(featureDoc.doc));
             }
         });
@@ -109,7 +110,7 @@ export class EditionLayerService {
         let geometry = undefined;
         const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
-        if (featureDoc.geometry && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
+        if (featureDoc.geometry && PluginUtils.isDependanceClass(featureDoc['@class'])) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'

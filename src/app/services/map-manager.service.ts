@@ -18,6 +18,7 @@ import { LocalDatabase } from './local-database.service';
 import { Subject } from 'rxjs';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { DatabaseService } from './database.service';
+import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -27,17 +28,17 @@ export class MapManagerService {
     wktFormat = new WKT();
     public mapLoadingSubject = new Subject();
 
-    constructor(private featureCache: FeatureCache, 
-                private localDB: LocalDatabase,
-                private storageService: StorageService, 
-                private SirsDocService: SirsDocService,
-                private mapService: MapService, 
-                private RealPositionStyle: RealPositionStyle,
-                private DefaultStyleService: DefaultStyle, 
-                private appLayersService: AppLayersService,
-                private olService: OLService,
-                private databaseSrvc: DatabaseService,
-                ) {
+    constructor(private featureCache: FeatureCache,
+        private localDB: LocalDatabase,
+        private storageService: StorageService,
+        private SirsDocService: SirsDocService,
+        private mapService: MapService,
+        private RealPositionStyle: RealPositionStyle,
+        private DefaultStyleService: DefaultStyle,
+        private appLayersService: AppLayersService,
+        private olService: OLService,
+        private databaseSrvc: DatabaseService,
+    ) {
     }
 
     init() {
@@ -62,7 +63,7 @@ export class MapManagerService {
         return new Promise(resolve => {
             const promises = [];
             let appLayers = this.appLayersService.getFavorites();
-            
+
             if (appLayers && appLayers.length > 0) {
                 appLayers.forEach((layerModel) => {
                     promises.push(this.createAppLayerInstance(layerModel));
@@ -137,7 +138,7 @@ export class MapManagerService {
                     },
                     source: new Cluster({
                         distance: 24,
-                        source: new VectorSource({useSpatialIndex: true})
+                        source: new VectorSource({ useSpatialIndex: true })
                     })
                 });
 
@@ -146,7 +147,7 @@ export class MapManagerService {
                     name: layerModel.title,
                     visible: layerModel.visible,
                     model: layerModel,
-                    source: new VectorSource({useSpatialIndex: false})
+                    source: new VectorSource({ useSpatialIndex: false })
                 });
             }
 
@@ -169,19 +170,16 @@ export class MapManagerService {
             let promise = null;
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                // Get all the favorites tronçons ids
-                const favorites = await this.storageService.getItem('AppTronconsFavorities');
-                const keys = [];
-                if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
-                    favorites.forEach((key) => {
-                        keys.push([layerModel.filterValue, key.id]);
-                    });
-
-                    promise = this.localDB.query('ElementSpecial3', {
-                        keys
+                if (PluginUtils.isDependanceClass(layerModel.filterValue)) {
+                    promise = this.localDB.query('Element/byClassAndLinear', {
+                        startkey: [layerModel.filterValue],
+                        endkey: [layerModel.filterValue, {}],
+                        include_docs: true
                     }).then(
                         (results) => {
-                            return results.map(this.createAppFeatureModel.bind(this));
+                            return results.filter((item) => {
+                                return !item.doc.editMode;
+                            }).map(this.createAppFeatureModel.bind(this));
                         },
                         (error) => {
                             console.error(error);
@@ -190,16 +188,19 @@ export class MapManagerService {
                         console.error(error);
                     });
                 } else {
-                    if (layerModel.filterValue.toLowerCase().indexOf('dependance') > -1) {
-                        promise = this.localDB.query('Element/byClassAndLinear', {
-                            startkey: [layerModel.filterValue],
-                            endkey: [layerModel.filterValue, {}],
-                            include_docs: true
+                    // Get all the favorites tronçons ids
+                    const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
+                    const keys = [];
+                    if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
+                        favorites.forEach((key) => {
+                            keys.push([layerModel.filterValue, key.id]);
+                        });
+
+                        promise = this.localDB.query('ElementSpecial3', {
+                            keys
                         }).then(
                             (results) => {
-                                return results.filter((item) => {
-                                    return !item.doc.editMode;
-                                }).map(this.createAppFeatureModel.bind(this));
+                                return results.map(this.createAppFeatureModel.bind(this));
                             },
                             (error) => {
                                 console.error(error);
@@ -215,13 +216,13 @@ export class MapManagerService {
                                 return [];
                             }
                         ),
-                        (error) => {
-                            console.error(error);
-                        };
+                            (error) => {
+                                console.error(error);
+                            };
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                let tmp : any = await this.storageService.getItem('AppTronconsFavorities');
+                let tmp: any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                         return item.id;
@@ -234,11 +235,11 @@ export class MapManagerService {
                         console.error(error);
                     });
             } else {
-                const tmp : any = await this.storageService.getItem('AppTronconsFavorities');
+                const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
+                        return item.id;
+                    })
                 }).then(
                     (results) => {
                         return this.localDB.query('getBornesIdsHB', {
@@ -256,10 +257,10 @@ export class MapManagerService {
             }
             // Wait for promise resolution or rejection.
             promise.then((featureModels) => {
-                    olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
-                    resolve(null);
-                    this.mapLoadingSubject.complete();
-                },
+                olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
+                resolve(null);
+                this.mapLoadingSubject.complete();
+            },
                 (error) => {
                     console.error(error);
                 }
@@ -284,7 +285,7 @@ export class MapManagerService {
         let projGeometry;
         let realGeometry;
 
-        if (featureDoc.geometry && featureDoc['@class'] && featureDoc['@class'].toLowerCase().indexOf('dependance') > -1) {
+        if (featureDoc.geometry && featureDoc['@class'] && PluginUtils.isDependanceClass(featureDoc['@class'])) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
                 dataProjection: dataProjection,
                 featureProjection: 'EPSG:3857'
@@ -386,9 +387,9 @@ export class MapManagerService {
 
     syncAllAppLayer() {
         const layers = this.appLayer.getLayers();
-        layers.forEach( async (layer) => {
+        layers.forEach(async (layer) => {
             const layerModel = layer.get('model');
-            const olLayer = <any> await this.getAppLayerInstance(layerModel);
+            const olLayer = <any>await this.getAppLayerInstance(layerModel);
 
             olLayer.setVisible(layerModel.visible);
             olLayer.getSource().clear();
@@ -412,7 +413,7 @@ export class MapManagerService {
     }
 
     async syncAppLayer(layerModel) {
-        const olLayer = <any> await this.getAppLayerInstance(layerModel);
+        const olLayer = <any>await this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
         if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
@@ -456,16 +457,16 @@ export class MapManagerService {
     }
 
     async addLabelFeatureLayer(layerModel) {
-        const olLayer = <any> await this.getAppLayerInstance(layerModel);
-            
+        const olLayer = <any>await this.getAppLayerInstance(layerModel);
+
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 
     async reloadLayer(layerModel) {
-        const olLayer = <any> await this.getAppLayerInstance(layerModel);
-        
+        const olLayer = <any>await this.getAppLayerInstance(layerModel);
+
         // Load data if necessary.
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
