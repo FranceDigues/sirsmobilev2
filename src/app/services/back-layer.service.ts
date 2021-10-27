@@ -6,6 +6,7 @@ import { MapService } from './map.service';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import XYZ from 'ol/source/XYZ';
 import WMTS from 'ol/source/WMTS';
+import WFS from 'ol/format/WFS';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
@@ -89,6 +90,8 @@ export class BackLayerService {
             return new TileWMS(layerModel.source);
         } else if (layerModel.source.type === 'XYZ') {
             return new XYZ(layerModel.source);
+        } else if (layerModel.source.type === 'WFS') {
+            return new WFS().writeGetFeature(layerModel.source);
         } else if (layerModel.source.type === 'WMTS') {
             return new WMTS(layerModel.source);
         } else {
