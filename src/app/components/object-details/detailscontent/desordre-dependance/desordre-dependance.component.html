@@ -1,41 +1,100 @@
 <div [ngSwitch]="activeTab">
-  <!-- Content / Description -->
-  <div *ngSwitchCase="'description'">
-      <div class="sirs-panel">
-          <div class="sirs-field-inline">
-              <span class="sirs-field-title">Numéro de désignation : </span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
-          </div>
-      </div>
-      <div class="sirs-section">
-          <div class="sirs-field">
-              <span class="sirs-field-title">Type</span>
-              <span class="sirs-field-value">Desordre dépendance</span>
-          </div>
-          <div class="sirs-field">
-              <span class="sirs-field-title">Dépendance</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependanceId"></span>
-          </div>
-          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut === detailsObject.selectedObject.positionFin">
-              <span class="sirs-field-title">Position</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
-          </div>
-          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
-              <span class="sirs-field-title">Position de début</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
-          </div>
-          <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
-              <span class="sirs-field-title">Position de fin</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionFin"></span>
-          </div>
-          <div class="sirs-field">
-              <span class="sirs-field-title">Commentaire</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
-          </div>
-      </div>
-  </div>
-  <!-- Content / Observations -->
-  <div *ngSwitchCase="'observations'">
-      <observations-generic></observations-generic>
-  </div>
+    <!-- Content / Description -->
+    <div *ngSwitchCase="'description'">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation : </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Type</span>
+                <span class="sirs-field-value">Desordre dépendance</span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Dépendance</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependanceId"></span>
+            </div>
+            <div class="sirs-field"
+                *ngIf="detailsObject.selectedObject.positionDebut === detailsObject.selectedObject.positionFin">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+            </div>
+            <div class="sirs-field"
+                *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+                <span class="sirs-field-title">Position de début</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+            </div>
+            <div class="sirs-field"
+                *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+                <span class="sirs-field-title">Position de fin</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionFin"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Valide</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Auteur</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Aménagement hydraulique</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydrauliqueId"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Date de fin</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Date de debut</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Date de mise à jour</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dateMaj"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Libellé</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Lieu dit</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.lieuDit"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Côte</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.cote"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Source</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.sourceId"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.positionId"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Catégorie</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.categorieDesordreId"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Type de désordre</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordreId"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Content / Observations -->
+    <div *ngSwitchCase="'observations'">
+        <observations-generic></observations-generic>
+    </div>
+    <!-- Content / Prestations -->
+    <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+        <prestations-generic></prestations-generic>
+    </div>
 </div>

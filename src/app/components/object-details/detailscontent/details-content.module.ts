@@ -40,7 +40,11 @@ import { TalusRisbermeComponent } from './talus-risberme/talus-risberme.componen
 import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
 import { VoieAccesComponent } from './voie-acces/voie-acces.component';
 import { VoieDigueComponent } from './voie-digue/voie-digue.component';
-
+import { AmenagementHydrauliqueComponent } from './amenagement-hydraulique/amenagement-hydraulique.component';
+import { OrganeProtectionCollectiveComponent } from './organe-protection-collective/organe-protection-collective.component';
+import { OuvrageAssocieAmenagementHydrauliqueComponent } from './ouvrage-associe-amenagement-hydraulique/ouvrage-associe-amenagement-hydraulique.component';
+import { PrestationAmenagementHydrauliqueComponent } from './prestation-amenagement-hydraulique/prestation-amenagement-hydraulique.component';
+import { StructureAmenagementHydrauliqueComponent } from './structure-amenagement-hydraulique/structure-amenagement-hydraulique.component';
 
 @NgModule({
   imports: [
@@ -64,7 +68,9 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     PrestationComponent, ReseauHydrauliqueCielOuvertComponent, ReseauHydrauliqueFermeComponent,
     ReseauTelecomEnergieComponent, SommetRisberneComponent, StationPompageComponent,
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
-    VoieDigueComponent
+    VoieDigueComponent, AmenagementHydrauliqueComponent, OrganeProtectionCollectiveComponent,
+    OuvrageAssocieAmenagementHydrauliqueComponent, PrestationAmenagementHydrauliqueComponent,
+    StructureAmenagementHydrauliqueComponent
   ],
   exports: [DetailsContentComponent]
 })
