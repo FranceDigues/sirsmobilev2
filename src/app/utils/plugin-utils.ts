@@ -7,7 +7,7 @@ export class PluginUtils {
     static isDependanceClass(strClass: string) {
         const isDependanceElement = strClass.toLowerCase().indexOf('dependance') > -1;
         const isAmenagementHydrauliqueElement = strClass.toLowerCase().indexOf('amenagementhydraulique') > -1
-        || strClass.toLowerCase() === 'organeprotectioncollective';
+        || strClass.toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective';
         return isDependanceElement || isAmenagementHydrauliqueElement;
     }
 }
