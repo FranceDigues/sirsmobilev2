@@ -14,22 +14,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Dépendance</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependanceId"></span>
-            </div>
-            <div class="sirs-field"
-                *ngIf="detailsObject.selectedObject.positionDebut === detailsObject.selectedObject.positionFin">
-                <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
-            </div>
-            <div class="sirs-field"
-                *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
-                <span class="sirs-field-title">Position de début</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
-            </div>
-            <div class="sirs-field"
-                *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
-                <span class="sirs-field-title">Position de fin</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionFin"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependance"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Commentaire</span>
@@ -37,15 +22,15 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Valide</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Auteur</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Aménagement hydraulique</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydrauliqueId"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Date de fin</span>
@@ -73,19 +58,19 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Source</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.sourceId"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.source"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.positionId"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Catégorie</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.categorieDesordreId"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.categorieDesordre"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type de désordre</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordreId"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordre"></span>
             </div>
         </div>
     </div>

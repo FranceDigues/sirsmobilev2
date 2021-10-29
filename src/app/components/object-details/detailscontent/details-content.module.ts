@@ -45,6 +45,7 @@ import { OrganeProtectionCollectiveComponent } from './organe-protection-collect
 import { OuvrageAssocieAmenagementHydrauliqueComponent } from './ouvrage-associe-amenagement-hydraulique/ouvrage-associe-amenagement-hydraulique.component';
 import { PrestationAmenagementHydrauliqueComponent } from './prestation-amenagement-hydraulique/prestation-amenagement-hydraulique.component';
 import { StructureAmenagementHydrauliqueComponent } from './structure-amenagement-hydraulique/structure-amenagement-hydraulique.component';
+import { TraitAmenagementHydrauliqueComponent } from './trait-amenagement-hydraulique/trait-amenagement-hydraulique.component';
 
 @NgModule({
   imports: [
@@ -70,7 +71,7 @@ import { StructureAmenagementHydrauliqueComponent } from './structure-amenagemen
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, AmenagementHydrauliqueComponent, OrganeProtectionCollectiveComponent,
     OuvrageAssocieAmenagementHydrauliqueComponent, PrestationAmenagementHydrauliqueComponent,
-    StructureAmenagementHydrauliqueComponent
+    StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent
   ],
   exports: [DetailsContentComponent]
 })

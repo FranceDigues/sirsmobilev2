@@ -10,15 +10,15 @@
       <div class="sirs-section">
           <div class="sirs-field">
               <span class="sirs-field-title">Valide</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Auteur</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Aménagement hydraulique</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydrauliqueId"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Date de fin</span>
@@ -42,11 +42,11 @@
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Type</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeId"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.type"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">État</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.abstract.etatId"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.etat"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Côte</span>
@@ -70,11 +70,11 @@
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Ouvrage déversant</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.ouvrageDeversant"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.ouvrageDeversant === true ? 'oui' : 'non'"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Matériau</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiauId"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiau"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Numéro de couche</span>
@@ -82,7 +82,7 @@
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">Source</span>
-            <span class="sirs-field-value" [textContent]="detailsObject.abstract.sourceId"></span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.source"></span>
           </div>
           <div class="sirs-field">
             <span class="sirs-field-title">diamètre</span>

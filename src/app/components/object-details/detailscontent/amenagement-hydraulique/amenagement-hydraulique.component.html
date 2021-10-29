@@ -10,11 +10,11 @@
     <div class="sirs-section">
       <div class="sirs-field">
         <span class="sirs-field-title">Valide</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Auteur</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Date de fin</span>
@@ -50,11 +50,11 @@
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Fonctionnement</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionnementId"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionnement"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Type</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeId"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.type"></span>
       </div>
 
     </div>

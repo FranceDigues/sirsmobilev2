@@ -4,7 +4,7 @@ import { ObjectDetails } from 'src/app/services/object-details.service';
 @Component({
   selector: 'object-details-content-reseau-telecom-energie',
   templateUrl: './reseau-telecom-energie.component.html',
-  styleUrls: ['./reseau-telecom-energie.component.scss'],
+  styleUrls: ['./reseau-telecom-energie.component.scss', '../detailscontent.component.scss'],
 })
 export class ReseauTelecomEnergieComponent {
 

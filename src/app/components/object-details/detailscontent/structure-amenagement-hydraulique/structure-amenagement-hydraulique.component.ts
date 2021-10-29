@@ -2,9 +2,9 @@ import { Component, Input } from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
 
 @Component({
-  selector: 'app-structure-amenagement-hydraulique',
+  selector: 'object-details-content-structure-amenagement-hydraulique',
   templateUrl: './structure-amenagement-hydraulique.component.html',
-  styleUrls: ['./structure-amenagement-hydraulique.component.scss'],
+  styleUrls: ['./structure-amenagement-hydraulique.component.scss', '../detailscontent.component.scss'],
 })
 export class StructureAmenagementHydrauliqueComponent {
 
