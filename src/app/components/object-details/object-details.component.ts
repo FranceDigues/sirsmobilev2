@@ -7,6 +7,7 @@ import { LocalDatabase } from '../../services/local-database.service';
 import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
 import { EditionLayerService } from '../../services/edition-layer.service';
 import { EditObjectService } from 'src/app/services/edit-object.service';
+import { PluginUtils } from 'src/app/utils/plugin-utils';
 
 declare var M: any;
 
@@ -33,7 +34,12 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
     'OuvrageParticulier',
     'Prestation',
     'EchelleLimnimetrique',
-    'DesordreDependance'
+    'DesordreDependance',
+    'PrestationAmenagementHydraulique',
+    'OrganeProtectionCollective',
+    'StructureAmenagementHydraulique',
+    'OuvrageAssocieAmenagementHydraulique',
+    'AmenagementHydraulique'
   ];
   static prestationsObjectType = [
     'StationPompage',
@@ -49,7 +55,9 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
     'OuvrageTelecomEnergie',
     'OuvrageParticulier',
     'EchelleLimnimetrique',
-    'Desordre'
+    'Desordre',
+    'AmenagementHydraulique',
+    'DesordreDependance'
   ];
   static desordreObjectType = [
     'StationPompage',
@@ -65,7 +73,10 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
     'OuvrageTelecomEnergie',
     'OuvrageParticulier',
     'Prestation',
-    'EchelleLimnimetrique'
+    'EchelleLimnimetrique',
+    'PrestationAmenagementHydraulique',
+    'OuvrageAssocieAmenagementHydraulique',
+    'AmenagementHydraulique'
   ];
   static editableDocumentClasses = [
     "fr.sirs.core.model.BorneDigue",
@@ -94,6 +105,8 @@ export class ObjectDetailsComponent implements OnInit, AfterViewInit {
                 this.objectType = this.document['@class'].substring(
                   this.document['@class'].lastIndexOf('.') + 1
                 );
+                //isDependance initialisation must be done before init
+                this.objectDetails.isDependance = PluginUtils.isDependanceClass(this.document['@class']);
                 this.objectDetails.init();
               }
 

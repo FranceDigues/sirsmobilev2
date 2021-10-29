@@ -35,6 +35,9 @@ export class ObjectDetails {
     allDesordreList: Array<any>;
     desordreList: Array<any>;
 
+    // isDependance
+    isDependance: boolean;
+
 
     constructor(private localDB: LocalDatabase, private route: Router,
                 private editionService: EditionModeService, private mapManagerService: MapManagerService,
@@ -62,6 +65,9 @@ export class ObjectDetails {
         this.tempDesordre = { v: null };
         this.allDesordreList = [];
         this.desordreList = [];
+
+        // isDependance
+        this.isDependance = false;
     }
 
     init() {
@@ -72,14 +78,34 @@ export class ObjectDetails {
                 this.localDB.get(value).then(
                     (doc) => {
                         this.abstract[key.substr(0, key.length - 2)] = doc.libelle;
+                    },
+                    (error) => {
+                        console.log('No document found for this ID (' + value + '). ' + error);
+                    }
+                );
+            } else if (key.toLowerCase() === 'author') {
+                const value = this.selectedObject[key];
+                this.localDB.get(value).then(
+                    (doc) => {
+                        this.abstract['author'] = doc.libelle;
+                    },
+                    (error) => {
+                        console.log('No document found for this author ID (' + value + '). ' + error);
                     }
                 );
             }
         }
 
+        let prestationClass: string;
+        if (this.isDependance) {
+            prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+        } else {
+            prestationClass = 'fr.sirs.core.model.Prestation';
+        }
+
         this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.Prestation'],
-            endkey: ['fr.sirs.core.model.Prestation', {}]
+            startkey: [prestationClass],
+            endkey: [prestationClass, {}]
         }).then(
             (response) => {
                 this.prestationMap = {};
@@ -94,9 +120,19 @@ export class ObjectDetails {
             }
         );
 
+        let desordreClass: string;
+        let linearId: string;
+        if (this.isDependance) {
+            desordreClass = 'fr.sirs.core.model.DesordreDependance';
+            linearId = null;
+        } else {
+            desordreClass = 'fr.sirs.core.model.Desordre';
+            linearId = this.selectedObject.linearId;
+        }
+
         this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.Desordre', this.selectedObject.linearId],
-            endkey: ['fr.sirs.core.model.Desordre', this.selectedObject.linearId, {}]
+            startkey: [desordreClass, linearId],
+            endkey: [desordreClass, linearId, {}]
         }).then(
             (response) => {
                 this.desordreMap = {};
