@@ -192,7 +192,7 @@
                                     <select id="dependance" name="dependance" class="browser-default"
                                             [(ngModel)]="EOS.objectDoc.dependanceId">
                                         <option *ngFor="let d of EOS.dependances"
-                                                (change)="EOS.objectDoc.dependaceId = d.id"
+                                                (change)="EOS.objectDoc.dependanceId = d.id"
                                                 [selected]="EOS.objectDoc.dependanceId === d.id"
                                                 [ngValue]="d">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation : d.id)}}</option>
                                     </select>

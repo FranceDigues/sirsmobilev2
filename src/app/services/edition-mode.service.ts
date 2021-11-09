@@ -32,6 +32,7 @@ export class EditionModeService {
         { name: 'RefReferenceHauteur', include_docs: false },
         { name: 'RefRevetement', include_docs: false },
         { name: 'RefSeuil', include_docs: false },
+        { name: 'RefSource', include_docs: false },
         { name: 'RefTypeDesordre', include_docs: true },
         { name: 'RefTypeGlissiere', include_docs: false },
         { name: 'RefReseauHydroCielOuvert', include_docs: false },
@@ -40,7 +41,20 @@ export class EditionModeService {
         { name: 'RefUtilisationConduite', include_docs: false },
         { name: 'RefVoieDigue', include_docs: false },
         { name: 'ReseauHydrauliqueFerme', include_docs: false },
-        { name: 'ReseauTelecomEnergie', include_docs: false }
+        { name: 'ReseauTelecomEnergie', include_docs: false },
+        { name: 'RefFonctionnementAH', include_docs: false },
+        { name: 'RefTypeOrganeProtectionCollective', include_docs: false },
+        { name: 'RefTypeAmenagementHydraulique', include_docs: false },
+        { name: 'RefEtat', include_docs: false },
+        { name: 'RefOuvrageAssocieAH', include_docs: false },
+        { name: 'RefFonctionnementOAAH', include_docs: false },
+        { name: 'DesordreDependance', include_docs: false },
+        { name: 'StructureAmenagementHydraulique', include_docs: false },
+        { name: 'OuvrageAssocieAmenagementHydraulique', include_docs: false },
+        { name: 'Organisme', include_docs: false },
+        { name: 'TronconDigue', include_docs: false },
+        { name: 'PrestationAmenagementHydraulique', include_docs: false },
+        { name: 'Contact', include_docs: false }
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,

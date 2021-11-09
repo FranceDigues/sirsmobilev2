@@ -30,6 +30,7 @@ export class EditObjectService {
     isLinear = false;
     objDependanceType = null;
     dependances = [];
+    amenagementHydrauliques = [];
     linearPosEditionHandler = {
         startPoint: false,
         endPoint: false
@@ -47,15 +48,15 @@ export class EditObjectService {
     isClosed;
 
     constructor(private objectDocService: ObjectDocService,
-                private databaseService: DatabaseService, 
-                private loadingCtrl: LoadingController,
-                private sirsDoc: SirsDocService, 
-                private editionModeService: EditionModeService,
-                private route: Router, 
-                private toastCtrl: ToastController,
-                private geolocationService: GeolocationService,
-                private positionService: PositionService,
-                private storageService: StorageService) {
+        private databaseService: DatabaseService,
+        private loadingCtrl: LoadingController,
+        private sirsDoc: SirsDocService,
+        private editionModeService: EditionModeService,
+        private route: Router,
+        private toastCtrl: ToastController,
+        private geolocationService: GeolocationService,
+        private positionService: PositionService,
+        private storageService: StorageService) {
     }
 
     init(type, id) {
@@ -63,7 +64,7 @@ export class EditObjectService {
             this.resetValues();
             this.type = type;
             this.isNew = !id;
-            await this.loadingCtrl.create({message: 'Chargement'})
+            await this.loadingCtrl.create({ message: 'Chargement' })
                 .then(
                     (loading) => {
                         loading.present();
@@ -80,13 +81,13 @@ export class EditObjectService {
                                     this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
                                     this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
                                     this.objectType = this.objectDoc;
-    
+
                                     // Hack for borne fin data without borneFinId
                                     this.editionModeService.getReferenceTypes()
                                         .then(
                                             (refs) => {
                                                 const res = {};
-    
+
                                                 for (const ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
                                                     res[ref[0]] = ref[1];
                                                 }
@@ -273,14 +274,16 @@ export class EditObjectService {
                 }
             }
 
+            const promises = [];
+            let check = false;
             if (this.objectType['@class'] === 'fr.sirs.core.model.DesordreDependance') {
-                this.objectType.dependanceId = null;
-                const promises = [];
+                //this.objectType.dependanceId = null; // ???
+                check = true;
                 promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                        startkey: ['fr.sirs.core.model.CheminAccesDependance'],
-                        endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
-                        include_docs: true
-                    }),
+                    startkey: ['fr.sirs.core.model.CheminAccesDependance'],
+                    endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
+                    include_docs: true
+                }),
                     this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                         startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
                         endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
@@ -297,21 +300,40 @@ export class EditObjectService {
                         include_docs: true
                     })
                 );
-
-                Promise.all(promises)
-                    .then((results) => {
-                        setTimeout(() => {
+            }
+            if (this.objectType['@class'] === 'fr.sirs.core.model.DesordreDependance' ||
+                this.objectType['@class'] === 'fr.sirs.core.model.PrestationAmenagementHydraulique' ||
+                this.objectType['@class'] === 'fr.sirs.core.model.OuvrageAssocieAmenagementHydraulique' ||
+                this.objectType['@class'] === 'fr.sirs.core.model.StructureAmenagementHydraulique' ||
+                this.objectType['@class'] === 'fr.sirs.core.model.OrganeProtectionCollective') {
+                check = true;
+                promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.AmenagementHydraulique'],
+                    endkey: ['fr.sirs.core.model.AmenagementHydraulique', {}],
+                    include_docs: true
+                }));
+            }
+            Promise.all(promises)
+                .then((results) => {
+                    setTimeout(() => {
+                        if (results.length >= 4) {
                             this.dependances = [];
-                            results.forEach((item) => {
-                                this.dependances = item.rows.map(elt => elt);
-                            });
-                            loading.dismiss();
-                        }, 100);
-                    }).catch((err) => {
+                            this.dependances.push(
+                            ...(results[0].rows.map(elt => elt)),
+                            ...(results[1].rows.map(elt => elt)),
+                            ...(results[2].rows.map(elt => elt)),
+                            ...(results[3].rows.map(elt => elt)));
+                        }
+                        if (results.length === 5) {
+                            this.amenagementHydrauliques = results[4].rows.map(elt => elt);
+                        }
+                        loading.dismiss();
+                    }, 100);
+                }).catch((err) => {
                     console.error(err);
                     loading.dismiss();
                 });
-            } else {
+            if (!check) {
                 loading.dismiss();
             }
         } else {
@@ -413,7 +435,6 @@ export class EditObjectService {
                     this.watchDocPositionDebut();
                     this.linearPosEditionHandler.startPoint = false;
                 }
-    
                 if (this.linearPosEditionHandler.endPoint) {
                     this.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                     this.linearPosEditionHandler.endPoint = false;
@@ -575,7 +596,7 @@ export class EditObjectService {
 
     getStartPosBorne() {
         this.startPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneDebutId},
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneDebutId },
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
                     const res = this.objectDoc.borneDebutId ? 'à ' + Math.round(this.objectDoc.borne_debut_distance) + ' m de la borne : ' +
@@ -587,7 +608,7 @@ export class EditObjectService {
 
     getEndPosBorne() {
         this.endPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneFinId},
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneFinId },
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
                     const res = this.objectDoc.borneFinId ? 'à ' + Math.round(this.objectDoc.borne_fin_distance) + ' m de la borne : ' +

@@ -88,6 +88,10 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     }
     this.source.clear();
 
+    // Complete coordinates with the first entered point
+    let firstPoint = this.arrayPoints[0]
+    this.arrayPoints.push(firstPoint);
+
     const polygonGeometry = new Polygon([this.arrayPoints]);
     const polygonFeature = new Feature({ geometry: polygonGeometry });
 

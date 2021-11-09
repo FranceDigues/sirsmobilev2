@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IonicModule } from '@ionic/angular';
+import { BaseFormComponent } from './base-form/base-form.component';
 import { CoteDigueGenericComponent } from './cote-digue/cote-digue.component';
 import { CreteComponent } from './crete/crete.component';
 import { DesordreComponent, RefSortPipe } from './desordre/desordre.component';
@@ -61,7 +62,8 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     VoieDigueComponent, MateriauIdGenericComponent, PositionDigueGenericComponent,
     CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent,
     FonctionIdGenericComponent, FonctionHautBasIdGenericComponent,
-    NatureHautBasIdGenericComponent, MateriauHautBasIdGenericComponent
+    NatureHautBasIdGenericComponent, MateriauHautBasIdGenericComponent,
+    BaseFormComponent
   ],
   exports: [FormsTemplateComponent]
 })
