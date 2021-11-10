@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SirsDocService } from '../../../services/sirsdoc.service';
 import { EditionModeService } from '../../../services/edition-mode.service';
 import { AuthService } from '../../../services/auth.service';
@@ -6,34 +6,60 @@ import { LocalDatabase } from '../../../services/local-database.service';
 import LineString from 'ol/geom/LineString';
 import WKT from 'ol/format/WKT';
 import { TrackerService } from '../../../services/tracker.service';
+import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 
 @Component({
-    selector: 'trait-berge',
-    templateUrl: './trait-berge.component.html',
-    styleUrls: ['./trait-berge.component.scss'],
+    selector: 'trait',
+    templateUrl: './trait.component.html',
+    styleUrls: ['./trait.component.scss'],
 })
-export class TraitBergeComponent implements OnInit {
+export class TraitComponent implements OnInit {
+
     public dataProjection = this.sirsDoc.get().epsgCode;
     public wktFormat = new WKT();
-    public refs;
     public tracking;
     public document;
     public coordinates = [];
+
+    traitList = [
+      {
+        "class": "TraitBerge",
+        "parent": "Berge",
+        "label": "Trait de berge",
+        "attributeReference": "bergeId"
+      },
+      {
+        "class": "TraitAmenagementHydraulique",
+        "parent": "AmenagementHydraulique",
+        "label": "Trait d'aménagement hydraulique",
+        "attributeReference": "amenagementHydrauliqueId"
+      }
+    ];
+    trait = null;
 
     constructor(private sirsDoc: SirsDocService,
                 private editionModeService: EditionModeService,
                 private trackerService: TrackerService,
                 private authService: AuthService,
-                private localDatabase: LocalDatabase) {
+                private localDatabase: LocalDatabase,
+                private formTemplate: FormsTemplateService) {
     }
 
     ngOnInit() {
-        this.editionModeService.getReferenceTypes()
-            .then((refs) => {
-                this.refs = refs;
-            });
+        for (const t of this.traitList) {
+            this.editionModeService.getReferenceType(t["parent"])
+                .then((values) => {
+                    t["parentValues"] = values;
+                });
+        }
 
         this.tracking = (this.trackerService.getStatus() === 'on');
+        this.trait = this.traitList[0];
+    }
+
+
+    selectTrait(trait) {
+      this.trait = trait;
     }
 
 
@@ -70,17 +96,20 @@ export class TraitBergeComponent implements OnInit {
 
 
     stopTracking() {
+        if (this.coordinates.length <= 1) {
+            console.log("Gps coordinates must contains at least 2 points.");
+            return;
+        }
         this.tracking = false;
         this.document = {
-            '@class': 'fr.sirs.core.model.TraitBerge',
+            '@class': 'fr.sirs.core.model.' + this.trait.class,
             author: this.authService.getValue()._id,
             valid: false,
             geometry: this.serializeCoordinates(),
             date_debut: undefined,
             date_fin: undefined
         };
-        const findIndex = this.refs.findIndex(item => item[0] === 'Berge');
-        this.document.bergeId = this.document.bergeId || this.refs[findIndex][1].id;
+        this.document[this.trait.attributeReference] = undefined;
         this.trackerService.stop();
     }
 
@@ -105,6 +134,10 @@ export class TraitBergeComponent implements OnInit {
     serializeCoordinates() {
         const geometry = (new LineString(this.coordinates)).transform(this.dataProjection, 'EPSG:3857');
         return this.wktFormat.writeGeometry(geometry);
+    }
+
+    toString(doc) {
+        return this.formTemplate.doc2String(doc);
     }
 
 }

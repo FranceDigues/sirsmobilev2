@@ -36,7 +36,7 @@ export class MapService {
                 });
             }
         }
-        // ? missing return here (not need but only to return something if the condition is false)
+        return this.currentView;
     }
 
 

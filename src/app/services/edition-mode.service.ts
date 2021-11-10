@@ -121,6 +121,25 @@ export class EditionModeService {
         }));
     }
 
+    getReferenceType(clazz: string, includeDocs: boolean = false) {
+        const classPath = 'fr.sirs.core.model.' + clazz;
+        return new Promise((resolve, rejects) => {
+            this.localDB.query('byClassAndLinearRef', {
+                startkey: [classPath],
+                endkey: [classPath, {}],
+                include_docs: includeDocs
+            }).then(
+                (results) => {
+                    const values = results.map((item) => { return includeDocs ? item.doc : item.value; });
+                    resolve(values);
+                },
+                (error) => {
+                    rejects(error);
+                }
+            );
+        });
+    }
+
     getReferenceTypes() {
         const promises = [];
 

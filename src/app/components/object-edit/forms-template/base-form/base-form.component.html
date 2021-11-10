@@ -1,15 +1,13 @@
-<div class="row">
-  <div class="sirs-field col col-100">
-    <button  (click)="watch()">watch</button>
-  </div>
-</div>
-
-
 <!--Simple type-->
 <div class="row" *ngFor="let p of primitives">
   <div class="sirs-field col col-100">
     <label [for]="p.name" class="active">{{ p.label }}</label>
-    <input [id]="p.name" [name]="p.name" [type]="p.type" [min]="p.min" [(ngModel)]="EOS.objectDoc[p.name]" />
+    <div *ngIf="p.type === 'checkbox'; else elseBlock">
+      <ion-checkbox [id]="p.name" [name]="p.name" [(ngModel)]="EOS.objectDoc[p.name]" style="--background: white;"></ion-checkbox>
+    </div>
+    <ng-template #elseBlock>
+      <input [id]="p.name" [name]="p.name" [type]="p.type" [min]="p.min" [(ngModel)]="EOS.objectDoc[p.name]" />
+    </ng-template>
   </div>
 </div>
 

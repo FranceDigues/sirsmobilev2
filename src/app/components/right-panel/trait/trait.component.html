@@ -1,22 +1,35 @@
 <ion-header translucent>
     <ion-toolbar class="header-slide">
-        <ion-title style="text-align: center;">Trait de berge</ion-title>
+        <ion-title style="text-align: center;">Trait</ion-title>
     </ion-toolbar>
 </ion-header>
 
+
 <div class="has-header" [ngClass]="{'has-fbb-bottom': !tracking && document}" style="padding: 15px;">
     <!-- Tracking actions -->
-    <div class="text-center" *ngIf="!tracking && !document">
-        <ion-button size="large" color="tertiary" (click)="startTracking()">
-            <span>Commencer</span>
-        </ion-button>
+    <div *ngIf="!tracking && !document">
+        <div>
+            <ion-list>
+                <ion-radio-group [value]="trait.class">
+                    <ion-item class="item-text-wrap" *ngFor="let t of traitList">
+                        <ion-label>{{ t.label }}</ion-label>
+                        <ion-radio [value]="t.class" color="secondary" slot="end" (click)="selectTrait(t)"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
+            </ion-list>
+        </div>
+        <div class="text-center">
+            <ion-button size="large" color="tertiary" (click)="startTracking()">
+                <span>Commencer</span>
+            </ion-button>
+        </div>
     </div>
     <div *ngIf="tracking" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
         <ion-button color="tertiary" (click)="abortTracking()">
             <span>Annuler</span>
         </ion-button>
         <ion-button color="tertiary" [disabled]="coordinates.length < 2"
-                    (click)="(coordinates.length > 1) && stopTracking()">
+            (click)="(coordinates.length > 1) && stopTracking()">
             <span>Terminer</span>
         </ion-button>
     </div>
@@ -32,48 +45,51 @@
             <div>
                 <label for="designation">Désignation</label>
                 <input id="designation" name="designation" type="text" class="validate" required
-                       [(ngModel)]="document.designation"/>
+                    [(ngModel)]="document.designation" />
             </div>
         </div>
         <div>
             <div>
-                <label for="berge" class="active">Berge</label>
-                <select id="berge" name="berge" class="browser-default" required [(ngModel)]="document.bergeId"
-                        ng-options="r.id as r.libelle for r in refs.Berge"></select>
+                <label for="parent" class="active">{{ trait.parent }}</label>
+                <select id="parent" name="parent" class="browser-default" required
+                    [(ngModel)]="document[trait.attributeReference]">
+                    <option *ngFor="let p of trait.parentValues" [value]="p.id">
+                        {{ toString(p) }}
+                    </option>
+                </select>
             </div>
         </div>
         <div>
             <div>
                 <label for="comment">Commentaire</label>
                 <textarea id="comment" name="comment" type="text" class="validate"
-                          [(ngModel)]="document.commentaire"></textarea>
+                    [(ngModel)]="document.commentaire"></textarea>
             </div>
         </div>
         <div>
             <div>
                 <label for="dateBegin" class="active">Date début</label>
                 <input id="dateBegin" name="dateBegin" type="date" class="datepicker validate"
-                       [(ngModel)]="document.date_debut"/>
+                    [(ngModel)]="document.date_debut" />
             </div>
         </div>
         <div>
             <div>
                 <label for="dateEnd" class="active">Date fin</label>
                 <input id="dateEnd" name="dateEnd" type="date" class="datepicker validate"
-                       [(ngModel)]="document.date_fin"/>
+                    [(ngModel)]="document.date_fin" />
             </div>
         </div>
     </form>
 </div>
 
-<div *ngIf="!tracking && document"
-     fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+<div *ngIf="!tracking && document" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
     <!-- Document actions -->
     <ion-button color="tertiary" (click)="cancelDocument()">
         <span>Annuler</span>
     </ion-button>
-    <ion-button color="tertiary" [disabled]="!document.designation || !document.bergeId" (click)="saveDocument()">
+    <ion-button color="tertiary" [disabled]="!document.designation || !document[trait.attributeReference]"
+        (click)="saveDocument()">
         <span>Valider</span>
     </ion-button>
 </div>
-

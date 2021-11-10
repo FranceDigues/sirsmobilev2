@@ -760,4 +760,39 @@ export class FormsTemplateService {
     initFonctionnementOAAH() {
         this.EOS.setupRef('fonctionnementId', this.EOS.refs.RefFonctionnementOAAH[0]);
     }
+
+
+    doc2String(doc) {
+        if (this.EOS.showTextConfig === "fullName") {
+            return doc.libelle ? doc.libelle : "labelle undefined / id:  " + doc.id
+        } else if (this.EOS.showTextConfig === "abstract") {
+            if (doc.abrege) {
+                return doc.abrege;
+            } else {
+                let libelle = doc.libelle ? doc.libelle : "libelle undefined";
+                let designation = doc.designation ? doc.designation : "designation undefined";
+                return designation + " : " + libelle;
+            }
+        } else if (this.EOS.showTextConfig === "both") {
+            let libelle = doc.libelle ? doc.libelle : "libelle undefined";
+            if (doc.abrege) {
+                return doc.abrege + " : " + libelle;
+            } else {
+                let designation = doc.designation ? doc.designation : "designation undefined";
+                return designation + " : " + libelle;
+            }
+        } else {
+            let libelle = doc.libelle ? doc.libelle : "libelle undefined";
+            if (doc.abrege) {
+                return doc.abrege + " : " + libelle;
+            } else {
+                if (!doc.libelle && !doc.designation) {
+                    return "id: " + doc.id;
+                } else {
+                    let designation = doc.designation ? doc.designation : "designation undefined";
+                    return designation + " : " + libelle;
+                }
+            }
+        }
+    }
 }

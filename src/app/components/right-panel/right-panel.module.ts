@@ -14,7 +14,7 @@ import { DirectiveModule } from '../../directives/directive.module';
 import { ObjectDetailsModule } from '../object-details/object-details.module';
 import { DetailsContentModule } from '../object-details/detailscontent/details-content.module';
 import { ObservationEditModule } from '../object-details/observation-edit/observation-edit.module';
-import { TraitBergeComponent } from './trait-berge/trait-berge.component';
+import { TraitComponent } from './trait/trait.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
@@ -36,7 +36,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         CreateObjectComponent,
         FilterPipe,
         SelectedObjectsComponent,
-        TraitBergeComponent
+        TraitComponent
     ],
     exports: [RightPanelComponent]
 })

@@ -53,9 +53,4 @@ export class BaseFormComponent implements OnInit {
       }
     }
   }
-
-  watch() {
-    console.log("here");
-    console.log("here!!!");
-  }
 }

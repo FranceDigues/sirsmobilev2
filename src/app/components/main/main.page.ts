@@ -139,7 +139,7 @@ export class MainPage implements AfterViewInit {
 
                     // OpenLayers management.
                     let uniqueLayer; // This layer object should be assigned once at a time otherwise if user press multiple fingers on the screen issues may appear.
-                    let radius = 50; // radius en mètres.
+                    let radius = this.mapService.getCurrentView().getResolution(); // Radius in meter. Starting value equal to the resolution.
                     let clickPixel; // Store the coordinates of the click in this variable.
                     let pointerIsDown: boolean = false; // Flag to limit the number of pointer down to 1.
 
@@ -166,10 +166,9 @@ export class MainPage implements AfterViewInit {
                                     evt.map.addLayer(uniqueLayer);
         
                                     intervalTask = setInterval(() => {
-                                        //TODO : Change radius augmentation formula. Right now it looks like it does not take zoom into account.
-                                        radius += Math.log(evt.map.getView().getZoom())*15; // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
+                                        radius += evt.map.getView().getResolution(); // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
                                         uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
-                                    }, 1);
+                                    }, 5);
                                 }
                             }
                             pointerIsDown = true;
@@ -388,9 +387,9 @@ export class MainPage implements AfterViewInit {
             .then(
                 (bool) => {
                     if (bool) {
-                        this.pathRightSlide = 'trait-berge';
+                        this.pathRightSlide = 'trait';
                     } else {
-                        this.pathRightSlide = 'trait-berge';
+                        this.pathRightSlide = 'trait';
                         this.menu.open('right-slider');
                     }
                 }
