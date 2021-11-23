@@ -204,9 +204,30 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.debug('SECOND CASE', error, element);
-          if (error.status === 409) { // already done
-            this.thirdStepProgess(i + 1);
-            console.debug('3 - COMPLETE');
+          if (error.status === 409) { // doc already exist
+            // Force update
+            this.localDB.get(element._id).then(
+              (doc) => {
+                return this.localDB.put({
+                  _id: element._id,
+                  _rev: doc._rev,
+                  views: element.views
+                }).then(
+                  () => {
+                    this.thirdStepProgess(i + 1);
+                    console.debug('3 - COMPLETE');
+                  },
+                  (error) => {
+                    console.debug('SECOND CASE', error, element);
+                    this.thirdStepError(error);
+                  }
+                )
+              },
+              (error) => {
+                console.debug('SECOND CASE', error, element);
+                this.thirdStepError(error);
+              }
+            )
           } else {
             this.thirdStepError(error);
           }

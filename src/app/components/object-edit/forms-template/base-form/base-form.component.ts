@@ -1,8 +1,6 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { Inject }  from '@angular/core';
-import { DOCUMENT } from '@angular/common'; 
 
 @Component({
   selector: 'app-base-form',
@@ -13,24 +11,17 @@ export class BaseFormComponent implements OnInit {
 
   primitives = [];
   singleReferences = [];
-  multipleReferences = [];
+  // Not supported yet
+  //multipleReferences = [];
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService, @Inject(DOCUMENT) document) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     let formConf = this.FT.formTemplatePilote[this.EOS.type];
     for (let key in formConf) {
       let value = formConf[key];
       if (value['reference'] === true) {
-        if (value['multiple'] === -1) {
-          if (value['containment'] === false) {
-            // Not supported yet
-            // this.EOS.setupRef(value.name, this.EOS.refs[value.type], true);
-            // this.multipleReferences.push(value);
-          } else {
-            // Not supported yet
-          }
-        } else {
+        if (value['multiple'] === 1) {
           this.EOS.setupRef(value.name, this.EOS.refs[value.type]);
           this.singleReferences.push(value);
         }

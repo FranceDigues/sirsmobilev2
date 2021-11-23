@@ -58,7 +58,7 @@ export class EditionModeService {
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-                private editionLayerService: EditionLayerService) { }
+        private editionLayerService: EditionLayerService) { }
 
     newObject(type) {
         const objectDoc: any = {
@@ -78,18 +78,16 @@ export class EditionModeService {
         return (this.localDB.save(objectDoc)
             .then(
                 () => {
-                    if (objectDoc.positionDebut && objectDoc.positionFin) {
-                        const source = this.editionLayerService.editionLayer.getSource();
-                        const features = source.getFeatures();
-                        let i = features.length;
-                        while (i--) {
-                            if (features[i].get('id') === objectDoc._id) {
-                                features.splice(i, 1);
-                                break;
-                            }
+                    const source = this.editionLayerService.editionLayer.getSource();
+                    const features = source.getFeatures();
+                    let i = features.length;
+                    while (i--) {
+                        if (features[i].get('id') === objectDoc._id) {
+                            features.splice(i, 1);
+                            break;
                         }
-                        source.addFeature(this.editionLayerService.createEditionFeatureInstance(objectDoc));
                     }
+                    source.addFeature(this.editionLayerService.createEditionFeatureInstance(objectDoc));
                     return objectDoc;
                 }
             ));
@@ -97,9 +95,9 @@ export class EditionModeService {
 
     getClosableObjects() {
         return (this.localDB.query('objetsNonClosByBorne/byAuthor', {
-                key: this.authService.user._id,
-                include_docs: true
-            }));
+            key: this.authService.user._id,
+            include_docs: true
+        }));
     }
 
     getClosedObjects() {

@@ -65,7 +65,11 @@ export const designDocs = [
             objetsModeEdition5: {
                 map: function (doc) {
                     if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
-                        || (doc.borneDebutId && doc.borneFinId) || (doc.geometry && PluginUtils.isDependanceClass(doc['@class'])))) {
+                        || (doc.borneDebutId && doc.borneFinId)
+                        || (doc.geometry
+                            && (doc['@class'].toLowerCase().indexOf('dependance') > -1
+                            || doc['@class'].toLowerCase().indexOf('amenagementhydraulique') > -1
+                            || doc['@class'].toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective')))) {
                         emit(doc._id, {
                             '@class': doc['@class'],
                             'id': doc._id,
