@@ -1,7 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
-import { LongClickSelect } from '@plugins/LongClickSelect.js'; // Just keeping the import to not forget about it. Must be deleted once everything is ok.
 import proj4 from 'proj4';
 import { AppVersionsService } from '../../services/app-versions.service';
 import { AuthService } from '../../services/auth.service';
@@ -30,6 +29,7 @@ import Feature from 'ol/Feature';
 import { Circle } from "ol/geom";
 import ScaleLine from 'ol/control/ScaleLine';
 import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -43,12 +43,15 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocSrvc: SirsDocService,
-                private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
-                private menu: MenuController, private appVersionsService: AppVersionsService,
-                private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
-                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
-                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService) {
+        public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
+        private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
+        private menu: MenuController, private appVersionsService: AppVersionsService,
+        private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
+        private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
+        public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
+        private route: ActivatedRoute) {
+        sirsDocService.doc = this.route.snapshot.data.sirsDoc;
+        //console.log(sirsDocService.doc);
         this.appVersionsService.init();
         this.backLayerService.init();
         this.editionLayerService.init();
@@ -99,15 +102,19 @@ export class MainPage implements AfterViewInit {
 
     async ngAfterViewInit() {
         let loading: HTMLIonLoadingElement = null;
-        await this.sirsDocSrvc.initializeDoc()
-            .then(
-                async (sirsDoc: any) => {
-                    proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
-                    register(proj4);
-                    await this.authService.isAuth(); // Init authService user value.
-                    this.OES.preInit(this.sirsDocSrvc); // OES services needs sirsDocSrvc service to be (pre)init.
-                }
-            );
+        proj4.defs(this.sirsDocService.get().epsgCode, this.sirsDocService.get().proj4);
+        register(proj4);
+        await this.authService.isAuth(); // Init authService user value.
+        this.OES.preInit(this.sirsDocService); // OES services needs sirsDocService service to be (pre)init.
+        // await this.sirsDocService.initAndGet()
+        //     .then(
+        //         async (sirsDoc: any) => {
+        //             proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
+        //             register(proj4);
+        //             await this.authService.isAuth(); // Init authService user value.
+        //             this.OES.preInit(this.sirsDocService); // OES services needs sirsDocService service to be (pre)init.
+        //         }
+        //     );
         this.backLayerService.init()
             .then(
                 async () => {
@@ -147,8 +154,8 @@ export class MainPage implements AfterViewInit {
                     // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
                     this.olService.getMap().on("pointerdown", (evt) => {
                         if (!pointerIsDown) { // check that pointerIsDown is false so it does not trigger this event more than once at a time.
-                            const longClickEvent = ()  => { // Draws the circle as long as the click is hold.
-    
+                            const longClickEvent = () => { // Draws the circle as long as the click is hold.
+
                                 if (!uniqueLayer) {
                                     var centerLongitudeLatitude = evt.coordinate;
                                     uniqueLayer = new VectorLayer({
@@ -164,7 +171,7 @@ export class MainPage implements AfterViewInit {
                                         ]
                                     });
                                     evt.map.addLayer(uniqueLayer);
-        
+
                                     intervalTask = setInterval(() => {
                                         radius += evt.map.getView().getResolution(); // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
                                         uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
@@ -244,7 +251,7 @@ export class MainPage implements AfterViewInit {
                         resetCircle();
                     });
 
-                    const resetCircle = function() {
+                    const resetCircle = function () {
                         clearInterval(intervalTask);
                         clearTimeout(delay);
                         radius = 50;
@@ -253,7 +260,7 @@ export class MainPage implements AfterViewInit {
                     }
 
                     // ENDS HERE.
-                    
+
                     // OLD VERSION OF THE LONGCLICKSELECT CIRCLE.
                     // this.olService.getMap().addInteraction(new LongClickSelect({
                     //     circleStyle: new Style({
@@ -275,14 +282,15 @@ export class MainPage implements AfterViewInit {
                     //         return true;
                     //     }
                     // }));
-                    
+
 
                     this.mapManagerService.mapLoadingSubject
                         .subscribe(
-                            {complete: () => {
-                                loading.dismiss();
-                            }
-                        });
+                            {
+                                complete: () => {
+                                    loading.dismiss();
+                                }
+                            });
                 }
             );
         this.locateMe();
