@@ -12,6 +12,7 @@ import { DatabaseSyncComponent } from './components/database-sync/database-sync.
 import { DatabaseSyncModule } from './components/database-sync/database-sync.module';
 import { RightPanelModule } from './components/right-panel/right-panel.module';
 import { ObjectDocResolver } from './resolvers/object-doc-resolver';
+import { SirsDocResolver } from './resolvers/sirs-doc-resolver';
 import { RefTypesResolver } from './resolvers/ref-types-resolver';
 import { OrientationListResolver } from './resolvers/orientation-list-resolver';
 import { CoteListResolver } from './resolvers/cote-list-resolver';
@@ -30,7 +31,10 @@ const routes: Routes = [
     },
     {
         path: 'main',
-        loadChildren: () => import('./components/main/main.module').then(m => m.MainPageModule)
+        loadChildren: () => import('./components/main/main.module').then(m => m.MainPageModule),
+        resolve: {
+            sirsDoc: SirsDocResolver
+        }
     },
     {
         path: 'sync',
