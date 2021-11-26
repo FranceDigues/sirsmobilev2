@@ -8,34 +8,29 @@ export class SirsDocService {
 
     doc = null;
 
-    constructor(private localDB: LocalDatabase) { }
+    constructor(private localDB: LocalDatabase) {}
 
-    initializeDoc() {
-        return new Promise((resolve, reject) => {
-            this.localDB.get('$sirs')
-            .then(
-                (result) => {
-                    this.doc = result;
-                    resolve(this.doc);
-                }
-            )
-            .catch(error => {
-                reject(error);
-            });
-        });
+    get() {
+        return this.doc;
     }
 
-    get(): any {
+    init() {
         if (this.doc) {
-            return this.doc;
-        } else {
-            this.initializeDoc()
-            .then((doc) => {
-                return doc;
+            return new Promise((resolve) => {
+                resolve(this.doc);
             })
-            .catch(error => {
-                console.error("SirsDocService get error : ", error);
-                return null;
+        } else {
+            return new Promise((resolve, reject) => {
+                this.localDB.get('$sirs').then(
+                    (doc) => {
+                        this.doc = doc;
+                        resolve(doc);
+                    },
+                    (error) => {
+                        console.error("SirsDocService get error : ", error);
+                        reject(error);
+                    }
+                )
             })
         }
     }

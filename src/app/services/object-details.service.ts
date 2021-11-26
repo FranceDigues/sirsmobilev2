@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { EditionModeService } from './edition-mode.service';
 import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
+import { FormsTemplateService } from './formstemplate.service';
+import { FormStyle } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
@@ -41,7 +43,7 @@ export class ObjectDetails {
 
     constructor(private localDB: LocalDatabase, private route: Router,
                 private editionService: EditionModeService, private mapManagerService: MapManagerService,
-                private alertCtrl: AlertController) {
+                private alertCtrl: AlertController, private formService: FormsTemplateService) {
         // Paths
         this.photoDir = null;
         this.notesDir = null;
@@ -71,13 +73,14 @@ export class ObjectDetails {
     }
 
     init() {
+        this.abstract = {};
         const regex = new RegExp('.*Id$');
         for (let key in this.selectedObject) {
             if (regex.test(key)) {
                 const value = this.selectedObject[key];
                 this.localDB.get(value).then(
                     (doc) => {
-                        this.abstract[key.substr(0, key.length - 2)] = doc.libelle;
+                        this.abstract[key.substr(0, key.length - 2)] = this.formService.doc2String(doc);
                     },
                     (error) => {
                         console.log('No document found for this ID (' + value + '). ' + error);
@@ -87,7 +90,7 @@ export class ObjectDetails {
                 const value = this.selectedObject[key];
                 this.localDB.get(value).then(
                     (doc) => {
-                        this.abstract['author'] = doc.libelle;
+                        this.abstract['author'] = doc.login;
                     },
                     (error) => {
                         console.log('No document found for this author ID (' + value + '). ' + error);

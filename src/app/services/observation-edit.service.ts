@@ -185,6 +185,11 @@ export class ObservationEditService {
                 newObj['@class'] = 'fr.sirs.core.model.Observation' + this.objectType;
                 return newObj;
             case 'DesordreDependance':
+            case 'AmenagementHydraulique':
+            case 'PrestationAmenagementHydraulique':
+            case 'OrganeProtectionCollective':
+            case 'StructureAmenagementHydraulique':
+            case 'OuvrageAssocieAmenagementHydraulique':
                 newObj['@class'] = 'fr.sirs.core.model.ObservationDependance';
                 return newObj;
             default :
