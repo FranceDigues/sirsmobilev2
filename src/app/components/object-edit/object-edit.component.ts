@@ -205,4 +205,25 @@ export class ObjectEditComponent implements OnInit {
         );
     }
 
+    private isAhObjectType() {
+        return this.EOS.objectType === 'DesordreDependance'
+        || this.EOS.objectType === 'PrestationAmenagementHydraulique'
+        || this.EOS.objectType === 'StructureAmenagementHydraulique'
+        || this.EOS.objectType === 'OuvrageAssocieAmenagementHydraulique'
+        || this.EOS.objectType === 'OrganeProtectionCollective';
+    }
+
+    private itChange(a) {
+        let aid = a.id;
+        let ahid = this.EOS.objectDoc.amenagementHydrauliqueId;
+        return this.EOS.objectDoc.amenagementHydrauliqueId = a.id;
+    }
+
+    private ahSelected(a) {
+        if (this.EOS.objectDoc.amenagementHydrauliqueId === a.id) {
+            console.log("XXX");
+            console.log(a.id);
+        }
+        return this.EOS.objectDoc.amenagementHydrauliqueId === a.id;
+    }
 }

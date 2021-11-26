@@ -188,13 +188,26 @@
 
                             <div class="row" *ngIf="EOS.objectType === 'DesordreDependance'">
                                 <div class="sirs-field col col-100">
-                                    <label for="dependance" class="active edit-label">La liste des Dependances</label>
+                                    <label for="dependance" class="active edit-label">Liste des Dependances</label>
                                     <select id="dependance" name="dependance" class="browser-default"
-                                            [(ngModel)]="EOS.objectDoc.dependanceId">
+                                            [(ngModel)]="EOS.objectDoc['dependanceId']">
                                         <option *ngFor="let d of EOS.dependances"
-                                                (change)="EOS.objectDoc.dependanceId = d.id"
-                                                [selected]="EOS.objectDoc.dependanceId === d.id"
-                                                [ngValue]="d">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation : d.id)}}</option>
+                                        [selected]="EOS.objectDoc.dependanceId === d.id"
+                                        (change)="EOS.objectDoc.dependanceId = d.id"
+                                        [value]="d.id">{{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation : d.id)}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="isAhObjectType()">
+                                <div class="sirs-field col col-100">
+                                    <label for="ah" class="active edit-label">Liste des Aménagaments hydrauliques</label>
+                                    <select id="ah" name="ah" class="browser-default"
+                                            [(ngModel)]="EOS.objectDoc['amenagementHydrauliqueId']">
+                                        <option *ngFor="let a of EOS.amenagementHydrauliques"
+                                                [selected]="ahSelected(a)"
+                                                (change)="itChange(a)"
+                                                [value]="a.id">{{ a.doc.libelle ? a.doc.libelle : (a.doc.designation ? a.doc.designation : a.id)}}</option>
                                     </select>
                                 </div>
                             </div>
