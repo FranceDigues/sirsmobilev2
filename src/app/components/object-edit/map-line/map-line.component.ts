@@ -32,7 +32,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   wktFormat = new WKT();
 
   constructor(public olService: OLService,
-              public EOS: EditObjectService, private sirsDoc: SirsDocService,
+              public EOS: EditObjectService, private sirsDocService: SirsDocService,
               private toast: Toast, public mapEditObject: MapEditObjectService) { }
 
   ngOnInit() {
@@ -57,8 +57,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     } else if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
       let coordsStart = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
       let coordsEnd = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionFin);
-      coordsStart = transform(coordsStart, this.sirsDoc.get().epsgCode, 'EPSG:3857');
-      coordsEnd = transform(coordsEnd, this.sirsDoc.get().epsgCode, 'EPSG:3857');
+      coordsStart = transform(coordsStart, this.sirsDocService.get().epsgCode, 'EPSG:3857');
+      coordsEnd = transform(coordsEnd, this.sirsDocService.get().epsgCode, 'EPSG:3857');
 
       const lineStringGeometry = new LineString([coordsStart, coordsEnd]);
       const lineStringFeature = new Feature({ geometry: lineStringGeometry });

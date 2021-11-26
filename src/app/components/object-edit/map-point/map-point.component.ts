@@ -30,7 +30,7 @@ export class MapPointComponent implements OnInit {
     wktFormat = new WKT();
 
     constructor(public olService: OLService,
-                private EOS: EditObjectService, private sirsDoc: SirsDocService,
+                private EOS: EditObjectService, private sirsDocService: SirsDocService,
                 public mapEditObject: MapEditObjectService) {
     }
 
@@ -52,7 +52,7 @@ export class MapPointComponent implements OnInit {
                 );
             } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
                 let coords = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
-                coords = transform(coords, this.sirsDoc.get().epsgCode, 'EPSG:3857');
+                coords = transform(coords, this.sirsDocService.get().epsgCode, 'EPSG:3857');
                 this.source.addFeatures(
                     [new Feature({
                         geometry: new Point(coords)

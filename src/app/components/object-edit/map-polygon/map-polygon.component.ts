@@ -30,7 +30,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
   arrayPoints: Array<number> = [];
 
   constructor(public olService: OLService, 
-              private SirsDocService: SirsDocService,
+              private sirsDocService: SirsDocService,
               public EOS: EditObjectService,
               private toastCtrl: ToastController, 
               public mapEditObject: MapEditObjectService,
@@ -134,11 +134,11 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
     }
 
     let dataProjection
-    if (!this.SirsDocService.get()) {
+    if (!this.sirsDocService.get()) {
       dataProjection = 'EPSG:2154'
     } else {
-      if (this.SirsDocService.get().epsgCode) {
-        dataProjection = this.SirsDocService.get().epsgCode;
+      if (this.sirsDocService.get().epsgCode) {
+        dataProjection = this.sirsDocService.get().epsgCode;
       } else {
         dataProjection = 'EPSG:2154'
       }
