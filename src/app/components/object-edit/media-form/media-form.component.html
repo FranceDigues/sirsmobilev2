@@ -41,7 +41,7 @@
                         <ion-icon name="location-outline"></ion-icon>
                     </ion-button>
                     <ion-button color="medium"
-                                *ngIf="objectType !== 'DesordreDependance'"
+                                *ngIf="isDependance(objectType)"
                                 (click)="selectPositionByReferralSystem()">
                         <ion-icon name="analytics-outline"></ion-icon>
                     </ion-button>

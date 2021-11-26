@@ -306,7 +306,7 @@ export class MediaFormComponent implements OnInit {
     fillMediaOptions(photoId: string, fileName: string) {
         // Store the photo in the object document.
         this.mediaOptions.id = photoId;
-        this.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
+        this.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.isDependance(this.objectType) ? '.PhotoDependance' : '.Photo');
         this.mediaOptions.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
         this.mediaOptions.chemin = '/' + fileName;
         this.mediaOptions.valid = false;
@@ -329,4 +329,17 @@ export class MediaFormComponent implements OnInit {
         return inBytes;
     }
 
+    private isDependance(clazz) {
+        // Only dependance that have photos
+        return clazz === 'DesordreDependance'
+        || clazz === 'OuvrageVoirieDependance'
+        || clazz === 'AireStockageDependance'
+        || clazz === 'CheminAccesDependance'
+        || clazz === 'AutreDependance'
+        || clazz === 'AmenagementHydraulique'
+        || clazz === 'PrestationAmenagementHydraulique'
+        || clazz === 'StructureAmenagementHydraulique'
+        || clazz === 'OuvrageAssocieAmenagementHydraulique'
+        || clazz === 'OrganeProtectionCollective';
+    }
 }
