@@ -8,6 +8,37 @@ export class FormsTemplateService {
 
     formTemplatePilote = {
         "AmenagementHydraulique": {
+            "libelle": {
+                "name": "libelle",
+                "type": "EString",
+                "label": "Libellé",
+                "reference": false,
+                "min": null
+            },
+            "proprietes": {
+                "name": "proprietes",
+                "type": "ProprieteObjet",
+                "label": "Proprietes",
+                "reference": true,
+                "multiple": -1,
+                "containment": true
+            },
+            "gestions": {
+                "name": "gestions",
+                "type": "GestionObjet",
+                "label": "Gestions",
+                "reference": true,
+                "multiple": -1,
+                "containment": true
+            },
+            "photos": {
+                "name": "photos",
+                "type": "PhotoDependance",
+                "label": "Photos",
+                "reference": true,
+                "multiple": -1,
+                "containment": true
+            },
             "superficie": {
                 "name": "superficie",
                 "type": "EFloat",
@@ -118,6 +149,15 @@ export class FormsTemplateService {
             }
         },
         "PrestationAmenagementHydraulique": {
+            //Not define in specific subcomponent, but listed in object-edit component
+            // "amenagementHydrauliqueId": {
+            //     "name": "amenagementHydrauliqueId",
+            //     "type": "AmenagementHydraulique",
+            //     "label": "Aménagement hydraulique",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
             "libelle": {
                 "name": "libelle",
                 "type": "EString",
@@ -242,6 +282,15 @@ export class FormsTemplateService {
             }
         },
         "StructureAmenagementHydraulique": {
+            //Not define in specific subcomponent, but listed in object-edit component
+            // "amenagementHydrauliqueId": {
+            //     "name": "amenagementHydrauliqueId",
+            //     "type": "AmenagementHydraulique",
+            //     "label": "Aménagement hydraulique",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
             "numCouche": {
                 "name": "numCouche",
                 "type": "EInt",
@@ -306,6 +355,15 @@ export class FormsTemplateService {
             }
         },
         "OrganeProtectionCollective": {
+            //Not define in specific subcomponent, but listed in object-edit component
+            // "amenagementHydrauliqueId": {
+            //     "name": "amenagementHydrauliqueId",
+            //     "type": "AmenagementHydraulique",
+            //     "label": "Aménagement hydraulique",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
             "cote": {
                 "name": "cote",
                 "type": "EFloat",
@@ -347,14 +405,23 @@ export class FormsTemplateService {
             }
         },
         "DesordreDependance": {
-            "dependanceId": {
-                "name": "dependanceId",
-                "type": "AbstractDependance",
-                "label": "Dépendance",
-                "reference": true,
-                "multiple": 1,
-                "containment": false
-            },
+            //Not define in specific subcomponent, but listed in object-edit component
+            // "amenagementHydrauliqueId": {
+            //     "name": "amenagementHydrauliqueId",
+            //     "type": "AmenagementHydraulique",
+            //     "label": "Aménagement hydraulique",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
+            // "dependanceId": {
+            //     "name": "dependanceId",
+            //     "type": "AbstractDependance",
+            //     "label": "Dépendance",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
             "lieuDit": {
                 "name": "lieuDit",
                 "type": "EString",
@@ -443,6 +510,15 @@ export class FormsTemplateService {
             }
         },
         "OuvrageAssocieAmenagementHydraulique": {
+            //Not define in specific subcomponent, but listed in object-edit component
+            // "amenagementHydrauliqueId": {
+            //     "name": "amenagementHydrauliqueId",
+            //     "type": "AmenagementHydraulique",
+            //     "label": "Aménagement hydraulique",
+            //     "reference": true,
+            //     "multiple": 1,
+            //     "containment": false
+            // },
             "superficie": {
                 "name": "superficie",
                 "type": "EFloat",
@@ -764,32 +840,32 @@ export class FormsTemplateService {
 
     doc2String(doc) {
         if (this.EOS.showTextConfig === "fullName") {
-            return doc.libelle ? doc.libelle : "labelle undefined / id:  " + doc.id
+            return doc.libelle ? doc.libelle : "libellé indéterminé / id:  " + doc._id
         } else if (this.EOS.showTextConfig === "abstract") {
             if (doc.abrege) {
                 return doc.abrege;
             } else {
-                let libelle = doc.libelle ? doc.libelle : "libelle undefined";
-                let designation = doc.designation ? doc.designation : "designation undefined";
+                let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
+                let designation = doc.designation ? doc.designation : "designation indéterminée";
                 return designation + " : " + libelle;
             }
         } else if (this.EOS.showTextConfig === "both") {
-            let libelle = doc.libelle ? doc.libelle : "libelle undefined";
+            let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
             if (doc.abrege) {
                 return doc.abrege + " : " + libelle;
             } else {
-                let designation = doc.designation ? doc.designation : "designation undefined";
+                let designation = doc.designation ? doc.designation : "désignation indéterminée";
                 return designation + " : " + libelle;
             }
         } else {
-            let libelle = doc.libelle ? doc.libelle : "libelle undefined";
+            let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
             if (doc.abrege) {
                 return doc.abrege + " : " + libelle;
             } else {
                 if (!doc.libelle && !doc.designation) {
-                    return "id: " + doc.id;
+                    return "id: " + doc._id;
                 } else {
-                    let designation = doc.designation ? doc.designation : "designation undefined";
+                    let designation = doc.designation ? doc.designation : "désignation indéterminée";
                     return designation + " : " + libelle;
                 }
             }
