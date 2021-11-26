@@ -46,7 +46,7 @@
                 <ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon>
               </span>
             </a>
-            <a class="nav-item nav-link position-button" *ngIf="OES.troncons.length > 0 &&  OES.objectType !== 'DesordreDependance'"
+            <a class="nav-item nav-link position-button" *ngIf="OES.troncons.length > 0 && !OES.isDependance()"
               (click)="selectPosBySR()">
               <span>
                 <ion-icon class="option-button-edit-object" name="options-outline"></ion-icon>

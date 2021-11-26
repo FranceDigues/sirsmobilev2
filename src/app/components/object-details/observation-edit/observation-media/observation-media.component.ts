@@ -217,7 +217,7 @@ export class ObservationMediaComponent implements OnInit {
     fillMediaOptions(photoId: string, fileName: string) {
         // Store the photo in the object document.
         this.OES.mediaOptions['id'] = photoId;
-        this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.OES.objectType === 'DesordreDependance' ? '.PhotoDependance' : '.Photo');
+        this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.isDependance(this.OES.objectType) ? '.PhotoDependance' : '.Photo');
         this.OES.mediaOptions['date'] = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
         this.OES.mediaOptions['chemin'] = '/' + fileName;
         this.OES.mediaOptions['valid'] = false;
@@ -271,4 +271,17 @@ export class ObservationMediaComponent implements OnInit {
         this.OES.mediaOptions.photographeId = this.OES.contact;
     }
 
+    private isDependance(clazz) {
+        // Only dependance that have photos
+        return clazz === 'DesordreDependance'
+        || clazz === 'OuvrageVoirieDependance'
+        || clazz === 'AireStockageDependance'
+        || clazz === 'CheminAccesDependance'
+        || clazz === 'AutreDependance'
+        || clazz === 'AmenagementHydraulique'
+        || clazz === 'PrestationAmenagementHydraulique'
+        || clazz === 'StructureAmenagementHydraulique'
+        || clazz === 'OuvrageAssocieAmenagementHydraulique'
+        || clazz === 'OrganeProtectionCollective';
+    }
 }
