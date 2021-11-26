@@ -29,6 +29,7 @@ export class EditionModeService {
         { name: 'RefOuvrageTelecomEnergie', include_docs: false },
         { name: 'RefOuvrageVoirie', include_docs: false },
         { name: 'RefPosition', include_docs: false },
+        { name: 'RefPrestation', include_docs: false },
         { name: 'RefReferenceHauteur', include_docs: false },
         { name: 'RefRevetement', include_docs: false },
         { name: 'RefSeuil', include_docs: false },
@@ -54,7 +55,8 @@ export class EditionModeService {
         { name: 'Organisme', include_docs: false },
         { name: 'TronconDigue', include_docs: false },
         { name: 'PrestationAmenagementHydraulique', include_docs: false },
-        { name: 'Contact', include_docs: false }
+        { name: 'Contact', include_docs: false },
+        { name: 'Marche', include_docs: false }
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
