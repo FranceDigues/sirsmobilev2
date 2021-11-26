@@ -80,7 +80,6 @@ export class EditObjectService {
                                     this.objectDoc = objectDoc;
                                     this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
                                     this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
-                                    this.objectType = this.objectDoc;
 
                                     // Hack for borne fin data without borneFinId
                                     this.editionModeService.getReferenceTypes()
@@ -134,6 +133,7 @@ export class EditObjectService {
         this.isLinear = false;
         this.objDependanceType = null;
         this.dependances = [];
+        this.amenagementHydrauliques = [];
         this.linearPosEditionHandler = {
             startPoint: false,
             endPoint: false
@@ -241,7 +241,7 @@ export class EditObjectService {
     }
 
     isDependance() {
-        return PluginUtils.isDependanceClass(this.objectType['@class']);
+        return PluginUtils.isDependanceClass(this.objectDoc['@class']);
     }
 
     initTronconList() {
@@ -260,14 +260,14 @@ export class EditObjectService {
 
     private checkDependance(loading: HTMLIonLoadingElement) {
         if (this.isDependance()) {
-            delete this.objectType.linearId;
+            delete this.objectDoc.linearId;
 
-            if (!this.objectType.geometry) {
+            if (!this.objectDoc.geometry) {
                 this.objDependanceType = 'point';
             } else {
-                if (this.objectType.geometry.toUpperCase().indexOf('POLYGON') > -1 || this.objectType.geometry.toUpperCase().indexOf('MULTIPOLYGON') > -1) {
+                if (this.objectDoc.geometry.toUpperCase().indexOf('POLYGON') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOLYGON') > -1) {
                     this.objDependanceType = 'polygon';
-                } else if (this.objectType.geometry.toUpperCase().indexOf('POINT') > -1 || this.objectType.geometry.toUpperCase().indexOf('MULTIPOINT') > -1) {
+                } else if (this.objectDoc.geometry.toUpperCase().indexOf('POINT') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOINT') > -1) {
                     this.objDependanceType = 'point';
                 } else {
                     this.objDependanceType = 'line';
@@ -276,8 +276,8 @@ export class EditObjectService {
 
             const promises = [];
             let check = false;
-            if (this.objectType['@class'] === 'fr.sirs.core.model.DesordreDependance') {
-                //this.objectType.dependanceId = null; // ???
+            if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
+                //this.objectDoc.dependanceId = null; // ???
                 check = true;
                 promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.CheminAccesDependance'],
@@ -301,11 +301,11 @@ export class EditObjectService {
                     })
                 );
             }
-            if (this.objectType['@class'] === 'fr.sirs.core.model.DesordreDependance' ||
-                this.objectType['@class'] === 'fr.sirs.core.model.PrestationAmenagementHydraulique' ||
-                this.objectType['@class'] === 'fr.sirs.core.model.OuvrageAssocieAmenagementHydraulique' ||
-                this.objectType['@class'] === 'fr.sirs.core.model.StructureAmenagementHydraulique' ||
-                this.objectType['@class'] === 'fr.sirs.core.model.OrganeProtectionCollective') {
+            if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance' ||
+                this.objectDoc['@class'] === 'fr.sirs.core.model.PrestationAmenagementHydraulique' ||
+                this.objectDoc['@class'] === 'fr.sirs.core.model.OuvrageAssocieAmenagementHydraulique' ||
+                this.objectDoc['@class'] === 'fr.sirs.core.model.StructureAmenagementHydraulique' ||
+                this.objectDoc['@class'] === 'fr.sirs.core.model.OrganeProtectionCollective') {
                 check = true;
                 promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.AmenagementHydraulique'],
@@ -316,8 +316,10 @@ export class EditObjectService {
             Promise.all(promises)
                 .then((results) => {
                     setTimeout(() => {
+                        if (results.length === 1) {
+                            this.amenagementHydrauliques.push(...(results[0].rows.map(elt => elt)));
+                        }
                         if (results.length >= 4) {
-                            this.dependances = [];
                             this.dependances.push(
                             ...(results[0].rows.map(elt => elt)),
                             ...(results[1].rows.map(elt => elt)),
@@ -325,7 +327,7 @@ export class EditObjectService {
                             ...(results[3].rows.map(elt => elt)));
                         }
                         if (results.length === 5) {
-                            this.amenagementHydrauliques = results[4].rows.map(elt => elt);
+                            this.amenagementHydrauliques.push(...(results[4].rows.map(elt => elt)));
                         }
                         loading.dismiss();
                     }, 100);
@@ -342,7 +344,7 @@ export class EditObjectService {
     }
 
     save() {
-        if (!this.isDependance() && !this.objectType.linearId) {
+        if (!this.isDependance() && !this.objectDoc.linearId) {
             this.toastCtrl.create({
                 message: 'Veuillez choisir un tronçon de rattachement pour cet objet',
                 duration: 2000
@@ -517,7 +519,6 @@ export class EditObjectService {
         delete this.objectDoc.latitudeMax;
         delete this.objectDoc.geometryMode;
         this.objectDoc.editedGeoCoordinate = false;
-        this.objectDoc.foreignParentId = this.objectType.linearId;
 
         // Point case
         if (!this.isLinear) {
@@ -655,11 +656,11 @@ export class EditObjectService {
     }
 
     activatedGPSPositionButton() {
-        return this.objectType;
+        return this.objectDoc;
     }
 
     activatedPositionButton() {
-        return this.objectType && (this.objectType.linearId || this.isDependance());
+        return this.objectDoc && (this.objectDoc.linearId || this.isDependance());
     }
 
     handleDrawPolygon(geometry) {
