@@ -44,4 +44,32 @@ export class BaseFormComponent implements OnInit {
       }
     }
   }
+
+  private isSelected(singleReference, eosReference) {
+    if (typeof eosReference._id === 'undefined') {
+      return this.EOS.objectDoc[singleReference.name] === eosReference.id;
+    } else {
+      return this.EOS.objectDoc[singleReference.name] === eosReference._id;
+    }
+  }
+
+  private title(eosReference) {
+    if (this.EOS.showText('fullName')) {
+      return eosReference.libelle ? eosReference.libelle : 'libellé indéterminé / id:  ' + eosReference.id;
+    } else if (this.EOS.showText('abstract')) {
+      return eosReference.abrege ? eosReference.abrege : eosReference.designation + ' : ' + eosReference.libelle
+    } else if (this.EOS.showText('both')) {
+      return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
+    } else {
+      throw "Unexpected behaviour showTextConfig should be defined";
+    }
+  }
+
+  private optionValue(eosReference) {
+    if (typeof eosReference._id === 'undefined') {
+      return eosReference.id;
+    } else {
+      return eosReference._id;
+    }
+  }
 }

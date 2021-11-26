@@ -3,7 +3,8 @@
   <div class="sirs-field col col-100">
     <label [for]="p.name" class="active">{{ p.label }}</label>
     <div *ngIf="p.type === 'checkbox'; else elseBlock">
-      <ion-checkbox [id]="p.name" [name]="p.name" [(ngModel)]="EOS.objectDoc[p.name]" style="--background: white;"></ion-checkbox>
+      <ion-checkbox [id]="p.name" [name]="p.name" [(ngModel)]="EOS.objectDoc[p.name]" style="--background: white;">
+      </ion-checkbox>
     </div>
     <ng-template #elseBlock>
       <input [id]="p.name" [name]="p.name" [type]="p.type" [min]="p.min" [(ngModel)]="EOS.objectDoc[p.name]" />
@@ -15,33 +16,12 @@
 <div class="row" *ngFor="let s of singleReferences">
   <div class="sirs-field col col-100">
     <label [for]="s.name" class="active">{{s.label}}</label>
-    <div *ngIf="EOS.showText('fullName')">
-      <select [id]="s.name" class="browser-default" [name]="s.name"
-        [(ngModel)]="EOS.objectDoc[s.name]">
-        <option *ngFor="let r of EOS.refs[s.type] | refSort: EOS.showText('fullName')" [value]="r.id"
-          [selected]="EOS.objectDoc[s.name] === r.id">
-          {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-        </option>
-      </select>
-    </div>
-    <div *ngIf="EOS.showText('abstract')">
-      <select [id]="s.name" class="browser-default" [name]="s.name"
-        [(ngModel)]="EOS.objectDoc[s.name]">
-        <option *ngFor="let r of EOS.refs[s.type] | refSort: EOS.showText('fullName')" [value]="r.id"
-          [selected]="EOS.objectDoc[s.name] === r.id">
-          {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-        </option>
-      </select>
-    </div>
-    <div *ngIf="EOS.showText('both')">
-      <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
-        <option *ngFor="let r of EOS.refs[s.type] | refSort: EOS.showText('fullName')" [value]="r.id"
-          [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]"
-          [selected]="EOS.objectDoc[s.name] === r.id">
-          {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-        </option>
-      </select>
-    </div>
+    <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
+      <option *ngFor="let r of EOS.refs[s.type] | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+        [selected]="isSelected(s, r)">
+        {{ title(r) }}
+      </option>
+    </select>
   </div>
 </div>
 
