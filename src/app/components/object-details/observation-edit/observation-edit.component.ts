@@ -1,12 +1,9 @@
 import {
-    AfterViewInit,
     Component,
     Directive,
-    ElementRef,
     EventEmitter,
     OnInit,
     Output,
-    ViewChild,
     ChangeDetectorRef,
     Pipe,
     PipeTransform
@@ -25,8 +22,7 @@ declare var M: any;
     templateUrl: './observation-edit.component.html',
     styleUrls: ['./observation-edit.component.scss'],
 })
-export class ObservationEditComponent implements OnInit, AfterViewInit {
-    @ViewChild('tabs') tabsMaterialize: ElementRef;
+export class ObservationEditComponent implements OnInit {
 
     objectId: string;
     obsId: string;
@@ -35,6 +31,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
     showTextConfig: string;
 
     contactList: Array<any> = [];
+    pendingContactList = true;
     saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
 
@@ -50,6 +47,7 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
         this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
         this.OES.contactList.then((list) => {
+            this.pendingContactList = false;
             this.contactList = list;
         }, (error) => {
             console.error("error contactList returned : ", error);
@@ -63,13 +61,6 @@ export class ObservationEditComponent implements OnInit, AfterViewInit {
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
             });
-    }
-
-    ngAfterViewInit() {
-        const elem = this.tabsMaterialize.nativeElement;
-
-        const options = {};
-        new M.Tabs(elem, options); // initialize materialize tabs to show indicator
     }
 
     setView(str: 'form' | 'media') {

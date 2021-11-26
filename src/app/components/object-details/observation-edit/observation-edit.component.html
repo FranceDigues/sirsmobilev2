@@ -115,8 +115,11 @@
                       {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
                     </option>
                   </select>
-                  <div *ngIf="!contactList || contactList.length==0" fxLayout="column" fxLayoutAlign="center center">
+                  <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
                     <ion-spinner name="crescent"></ion-spinner>
+                  </div>
+                  <div *ngIf="!pendingContactList && contactList.length == 0" fxLayout="column" fxLayoutAlign="center center">
+                    <span>Aucun observateur trouvé</span>
                   </div>
                 </div>
               </div>
