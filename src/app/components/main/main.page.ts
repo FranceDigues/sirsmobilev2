@@ -146,7 +146,7 @@ export class MainPage implements AfterViewInit {
 
                     // OpenLayers management.
                     let uniqueLayer; // This layer object should be assigned once at a time otherwise if user press multiple fingers on the screen issues may appear.
-                    let radius = this.mapService.getCurrentView().getResolution(); // Radius in meter. Starting value equal to the resolution.
+                    let radius = 2 * this.mapService.getCurrentView().getResolution(); // Radius in meter. Starting value equal to the double of the resolution.
                     let clickPixel; // Store the coordinates of the click in this variable.
                     let pointerIsDown: boolean = false; // Flag to limit the number of pointer down to 1.
 
@@ -193,19 +193,22 @@ export class MainPage implements AfterViewInit {
                             let featuresIntersection = [];
                             const forEachVectorSources = (layers, callback) => {
                                 layers.forEach((layer) => {
-                                    // This is a group of layers. Call this method recursively.
-                                    if (layer instanceof LayerGroup) {
-                                        forEachVectorSources(layer.getLayers(), callback);
-                                    }
-                                    // This is a single layer. Check if this layer should be included.
-                                    else if (layer instanceof VectorLayer) {
-                                        let source = layer.getSource();
+                                    // Treat only visible layer, specially to filter edition layer when it's off
+                                    if (layer.getVisible()) {
+                                        // This is a group of layers. Call this method recursively.
+                                        if (layer instanceof LayerGroup) {
+                                            forEachVectorSources(layer.getLayers(), callback);
+                                        }
+                                        // This is a single layer. Check if this layer should be included.
+                                        else if (layer instanceof VectorLayer) {
+                                            let source = layer.getSource();
 
-                                        // Ensure that the layer has a vector source.
-                                        if (source instanceof VectorSource) {
-                                            callback.call(this, source);
-                                        } else if (source instanceof ImageSource) {
-                                            callback.call(this, source.getSource());
+                                            // Ensure that the layer has a vector source.
+                                            if (source instanceof VectorSource) {
+                                                callback.call(this, source);
+                                            } else if (source instanceof ImageSource) {
+                                                callback.call(this, source.getSource());
+                                            }
                                         }
                                     }
                                 });
@@ -283,7 +286,7 @@ export class MainPage implements AfterViewInit {
                     //     }
                     // }));
 
-
+                    this.mapManagerService.clearAll();
                     this.mapManagerService.mapLoadingSubject
                         .subscribe(
                             {
