@@ -5,7 +5,6 @@ import { EditionModeService } from './edition-mode.service';
 import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
-import { FormStyle } from '@angular/common';
 import { EditObjectService } from './edit-object.service';
 
 @Injectable({

@@ -41,7 +41,7 @@ describe('CoteDigueGenericComponent', () => {
     };
 
     sirsDocService = TestBed.inject(SirsDocService);
-    sirsDocService.doc = {};
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
 
     fixture = TestBed.createComponent(CoteDigueGenericComponent);
     component = fixture.componentInstance;

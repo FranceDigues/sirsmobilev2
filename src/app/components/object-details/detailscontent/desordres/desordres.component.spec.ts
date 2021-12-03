@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { AppModule } from '../../../../app.module';
 import { DatabaseService } from '../../../../services/database.service';
 import { ObjectDetails } from '../../../../services/object-details.service';
@@ -13,6 +14,7 @@ describe('DesordresGenericComponent', () => {
   let fixture: ComponentFixture<DesordresGenericComponent>;
   let dbService: DatabaseService;
   let detailsObject: ObjectDetails;
+  let sirsDocService: SirsDocService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,6 +22,9 @@ describe('DesordresGenericComponent', () => {
       imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), AppModule, RouterTestingModule],
       providers: []
     }).compileComponents();
+
+    sirsDocService = TestBed.inject(SirsDocService);
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
 
     dbService = TestBed.inject(DatabaseService);
     dbService.activeDB = {

@@ -5,6 +5,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { AppModule } from 'src/app/app.module';
 import { DatabaseService } from 'src/app/services/database.service';
 import { ObjectDetails } from 'src/app/services/object-details.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { ObservationsGenericComponent } from './observations.component';
 
 
@@ -13,6 +14,7 @@ describe('ObservationsGenericComponent', () => {
   let fixture: ComponentFixture<ObservationsGenericComponent>;
   let dbService: DatabaseService;
   let detailsObject: ObjectDetails;
+  let sirsDocService: SirsDocService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,6 +22,9 @@ describe('ObservationsGenericComponent', () => {
       imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), AppModule, RouterTestingModule],
       providers: []
     }).compileComponents();
+
+    sirsDocService = TestBed.inject(SirsDocService);
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
 
     dbService = TestBed.inject(DatabaseService);
     dbService.activeDB = {

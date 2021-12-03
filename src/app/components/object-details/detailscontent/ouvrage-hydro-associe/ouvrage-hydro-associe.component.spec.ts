@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { DatabaseService } from 'src/app/services/database.service';
 import { ObjectDetails } from 'src/app/services/object-details.service';
+import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { AppModule } from '../../../../app.module';
 import { OuvrageHydroAssocieComponent } from './ouvrage-hydro-associe.component';
 
@@ -13,6 +14,7 @@ describe('OuvrageHydroAssocieComponent', () => {
   let fixture: ComponentFixture<OuvrageHydroAssocieComponent>;
   let dbService: DatabaseService;
   let detailsObject: ObjectDetails;
+  let sirsDocService: SirsDocService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,6 +22,9 @@ describe('OuvrageHydroAssocieComponent', () => {
       imports: [IonicModule.forRoot(), IonicStorageModule.forRoot(), AppModule, RouterTestingModule],
       providers: []
     }).compileComponents();
+
+    sirsDocService = TestBed.inject(SirsDocService);
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
 
     dbService = TestBed.inject(DatabaseService);
     dbService.activeDB = {

@@ -41,7 +41,7 @@ describe('FonctionHautBasIdGenericComponent', () => {
     };
 
     sirsDocService = TestBed.inject(SirsDocService);
-    sirsDocService.doc = {};
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
 
     fixture = TestBed.createComponent(FonctionHautBasIdGenericComponent);
     component = fixture.componentInstance;

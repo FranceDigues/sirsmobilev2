@@ -42,7 +42,7 @@ describe('TronconDigueComponent FormTemplate', () => {
     };
 
     sirsDocService = TestBed.inject(SirsDocService);
-    sirsDocService.doc = {};
+    sirsDocService.doc = {"epsgCode": "EPSG:2154"};
     editObjectService = TestBed.inject(EditObjectService);
     editObjectService.refs = {
         RefCategorieDesordre: [],
