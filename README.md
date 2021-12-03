@@ -157,7 +157,10 @@ Alias name = SIRS-Mobile
 password = *can be found on bitwarden : SirsMobile PlayStore*
 
 command lines :
-Recommended - ionic cordova platform rm android
-1 - ionic cordova build android --release
-2 - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore /home/mehdi/WORK/mobile-projects/SirsMobilesIonic5/sirsmobilev2/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk SIRS-Mobile
-3 - /home/mehdi/Android/Sdk/build-tools/30.0.0/zipalign -v 4 /home/mehdi/WORK/mobile-projects/SirsMobilesIonic5/sirsmobilev2/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk SirsTest5.apk
+
+```
+ionic cordova platform rm android
+ionic cordova build android --release
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore sirs-mobile.keystore ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk SIRS-Mobile
+$ANDROID_HOME/build-tools/31.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirs_mobile_<test/prod>_<version>.apk
+```
