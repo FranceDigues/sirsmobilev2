@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-import { PluginUtils } from 'src/app/utils/plugin-utils';
-
 declare function emit (val: any);
 declare function emit (key: any, value: any);
 
