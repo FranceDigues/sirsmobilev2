@@ -37,10 +37,6 @@
         <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
       </div>
       <div class="sirs-field">
-        <span class="sirs-field-title">Libellé</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
-      </div>
-      <div class="sirs-field">
         <span class="sirs-field-title">Type</span>
         <span class="sirs-field-value" [textContent]="detailsObject.abstract.type"></span>
       </div>
@@ -57,13 +53,5 @@
   <!-- Content / Observations -->
   <div *ngSwitchCase="'observations'">
     <observations-generic></observations-generic>
-  </div>
-  <!-- Content / Prestations -->
-  <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
-    <prestations-generic></prestations-generic>
-  </div>
-  <!-- Content / Désordres -->
-  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
-    <desordres-generic></desordres-generic>
   </div>
 </ion-content>

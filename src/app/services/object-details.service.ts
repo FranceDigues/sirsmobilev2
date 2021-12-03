@@ -6,6 +6,7 @@ import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
 import { FormStyle } from '@angular/common';
+import { EditObjectService } from './edit-object.service';
 
 @Injectable({
     providedIn: 'root'
@@ -42,8 +43,9 @@ export class ObjectDetails {
 
 
     constructor(private localDB: LocalDatabase, private route: Router,
-                private editionService: EditionModeService, private mapManagerService: MapManagerService,
-                private alertCtrl: AlertController, private formService: FormsTemplateService) {
+        private editionService: EditionModeService, private mapManagerService: MapManagerService,
+        private alertCtrl: AlertController, private formService: FormsTemplateService,
+        private EOS: EditObjectService) {
         // Paths
         this.photoDir = null;
         this.notesDir = null;
@@ -58,13 +60,13 @@ export class ObjectDetails {
 
         // Prestations
         this.prestationMap = {};
-        this.tempPrestation = { v: null };
+        this.tempPrestation = null;
         this.allPrestationList = [];
         this.prestationList = [];
 
         // Desordres
         this.desordreMap = {};
-        this.tempDesordre = { v: null };
+        this.tempDesordre = null;
         this.allDesordreList = [];
         this.desordreList = [];
 
@@ -117,7 +119,7 @@ export class ObjectDetails {
                     return elt.value;
                 });
                 this.filterPrestationList();
-                this.tempPrestation = { v: null };
+                this.tempPrestation = null;
             }, (err) => {
                 console.error(err);
             }
@@ -144,7 +146,7 @@ export class ObjectDetails {
                     return elt.value;
                 });
                 this.filterDesordreList();
-                this.tempDesordre = { v: null };
+                this.tempDesordre = null;
             }, (err) => {
                 console.error(err);
             }
@@ -160,37 +162,34 @@ export class ObjectDetails {
         this.detailsType = 'objectDetails';
     }
 
-    openDesordreLink(id) {
-        this.route.navigateByUrl('/object/Desordre/' + id);
+    async openDesordreLink(id) {
+        if (this.isDependance) {
+            await this.EOS.init('DesordreDependance', id);
+            this.route.navigateByUrl('/object/DesordreDependance/' + id);
+        } else {
+            await this.EOS.init('Desordre', id);
+            this.route.navigateByUrl('/object/Desordre/' + id);
+        }
     }
 
-    addDesordre(v) {
-        if (!v) {
+    addDesordre() {
+        if (!this.tempDesordre) {
             return;
         }
-
-        let did = Object.keys(this.desordreMap).filter((key) => {
-            return this.desordreMap[key] === v;
-        })[0];
-
         if (!this.selectedObject.desordreIds) {
             this.selectedObject.desordreIds = [];
         }
-        this.selectedObject.desordreIds.push(did);
+        this.selectedObject.desordreIds.push(this.tempDesordre);
+        this.tempDesordre = null;
         this.filterDesordreList();
-
         this.selectedObject.valid = false;
-
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-
         this.selectedObject.editMode = true;
-
         this.editionService.saveObject(this.selectedObject)
-        .then(() => {
-            this.tempDesordre.v = null;
-            this.mapManagerService.syncAllAppLayer();
-            this.mapManagerService.clearAll();
-        });
+            .then(() => {
+                this.mapManagerService.syncAllAppLayer();
+                this.mapManagerService.clearAll();
+            });
     }
 
     async removeDesordre(index) {
@@ -210,20 +209,15 @@ export class ObjectDetails {
                         if (this.selectedObject.desordreIds.length === 0) {
                             delete this.selectedObject.desordreIds;
                         }
-
                         this.selectedObject.valid = false;
-
                         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-
                         this.selectedObject.editMode = true;
-
                         this.filterDesordreList();
-
                         this.editionService.saveObject(this.selectedObject)
-                        .then(() => {
-                            this.mapManagerService.syncAllAppLayer();
-                            this.mapManagerService.clearAll();
-                        });
+                            .then(() => {
+                                this.mapManagerService.syncAllAppLayer();
+                                this.mapManagerService.clearAll();
+                            });
                     }
                 }
             ]
@@ -237,38 +231,34 @@ export class ObjectDetails {
         });
     }
 
-    openPrestationLink(id) {
-        this.route.navigateByUrl('/object/Prestation/' + id);
+    async openPrestationLink(id) {
+        if (this.isDependance) {
+            await this.EOS.init('PrestationAmenagementHydraulique', id);
+            this.route.navigateByUrl('/object/PrestationAmenagementHydraulique/' + id);
+        } else {
+            await this.EOS.init('Prestation', id);
+            this.route.navigateByUrl('/object/Prestation/' + id);
+        }
     }
 
-    addPrestation(v) {
-        if (!v) {
+    addPrestation() {
+        if (!this.tempPrestation) {
             return;
         }
-
-        let pid = Object.keys(this.prestationMap).filter((key) => {
-            return this.prestationMap[key] === v;
-        })[0];
-
         if (!this.selectedObject.prestationIds) {
             this.selectedObject.prestationIds = [];
         }
-        this.selectedObject.prestationIds.push(pid);
+        this.selectedObject.prestationIds.push(this.tempPrestation);
+        this.tempPrestation = null;
         this.filterPrestationList();
-
         this.selectedObject.valid = false;
-
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-
         this.selectedObject.editMode = true;
-
-        this.tempPrestation.v = null;
-
         this.editionService.saveObject(this.selectedObject)
-        .then(() => {
-            this.mapManagerService.syncAllAppLayer();
-            this.mapManagerService.clearAll();
-        });
+            .then(() => {
+                this.mapManagerService.syncAllAppLayer();
+                this.mapManagerService.clearAll();
+            });
     }
 
     async removePrestation(index) {
@@ -288,20 +278,15 @@ export class ObjectDetails {
                         if (this.selectedObject.prestationIds.length === 0) {
                             delete this.selectedObject.prestationIds;
                         }
-
                         this.selectedObject.valid = false;
-
                         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-
                         this.selectedObject.editMode = true;
-
                         this.filterPrestationList();
-
                         this.editionService.saveObject(this.selectedObject)
-                        .then(() => {
-                            this.mapManagerService.syncAllAppLayer();
-                            this.mapManagerService.clearAll();
-                        });
+                            .then(() => {
+                                this.mapManagerService.syncAllAppLayer();
+                                this.mapManagerService.clearAll();
+                            });
                     }
                 }
             ]

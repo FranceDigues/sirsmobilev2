@@ -31,7 +31,7 @@ export class ObservationEditComponent implements OnInit {
     showTextConfig: string;
 
     contactList: Array<any> = [];
-    pendingContactList = true;
+    pendingContactList: boolean;
     saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
 
@@ -43,6 +43,7 @@ export class ObservationEditComponent implements OnInit {
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.view = 'form';
         this.tab = 'medias';
+        this.pendingContactList = true;
 
         this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
@@ -50,6 +51,7 @@ export class ObservationEditComponent implements OnInit {
             this.pendingContactList = false;
             this.contactList = list;
         }, (error) => {
+            this.pendingContactList = false;
             console.error("error contactList returned : ", error);
         })
 

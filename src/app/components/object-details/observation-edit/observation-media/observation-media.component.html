@@ -46,7 +46,7 @@
                 <ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon>
               </span>
             </a>
-            <a class="nav-item nav-link position-button" *ngIf="OES.troncons.length > 0 && !OES.isDependance()"
+            <a class="nav-item nav-link position-button" *ngIf="OES.troncons.length > 0 && !isDependance(OES.objectType)"
               (click)="selectPosBySR()">
               <span>
                 <ion-icon class="option-button-edit-object" name="options-outline"></ion-icon>
@@ -143,8 +143,11 @@
                 {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
               </option>
             </select>
-            <div *ngIf="!contactList || contactList.length==0" fxLayout="column" fxLayoutAlign="center center">
+            <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
               <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div *ngIf="!pendingContactList && contactList.length == 0" fxLayout="column" fxLayoutAlign="center center">
+              <span>Aucun photographe trouvé</span>
             </div>
           </div>
         </div>

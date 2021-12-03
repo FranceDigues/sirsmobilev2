@@ -25,6 +25,7 @@ export class ObservationMediaComponent implements OnInit {
 
     view: 'media' | 'map' | 'note';
     showTextConfig: string;
+    pendingContactList: boolean;
 
     // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
     contactList: Array<any> = [];
@@ -44,13 +45,16 @@ export class ObservationMediaComponent implements OnInit {
         private mapManagerService: MapManagerService,
         private databaseService: DatabaseService) {
         this.view = 'media';
+        this.pendingContactList = true;
 
         this.OES.importPhotoData = null;
         this.OES.mediaOptions.id = '';
 
         this.OES.contactList.then((list) => {
             this.contactList = list;
+            this.pendingContactList = false;
         }, (error) => {
+            this.pendingContactList = false;
             console.error("error contactList returned : ", error);
         })
 
@@ -169,13 +173,15 @@ export class ObservationMediaComponent implements OnInit {
         this.cameraService.takePhoto(options)
             .then(
                 (value: string) => {
-                    const valueTmp = value.replace('data:image/jpeg;base64,', '');
-                    this.file.resolveLocalFilesystemUrl(valueTmp)
-                        .then(
-                            (file: Entry) => {
-                                this.savePicture(file);
-                            }
-                        );
+                    if (value) {
+                        const valueTmp = value.replace('data:image/jpeg;base64,', '');
+                        this.file.resolveLocalFilesystemUrl(valueTmp)
+                            .then(
+                                (file: Entry) => {
+                                    this.savePicture(file);
+                                }
+                            );
+                    }
                 }
             );
     }

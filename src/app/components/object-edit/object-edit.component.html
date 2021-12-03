@@ -26,7 +26,7 @@
                                 </div>
                             
                             
-                                <div *ngIf="!EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
+                                <div *ngIf="(!EOS.isDependance() || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)" class="switch">
                                     <label class="label-edit">
                                         Objet ponctuel
                                         <input type="checkbox" id="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
@@ -36,7 +36,7 @@
                                     </label>
                                 </div>
                             
-                                <div *ngIf="EOS.isDependance() && (EOS.isNew || EOS.isClosed)" class="switch">
+                                <div *ngIf="EOS.isDependance() && EOS.objectType !== 'TraitAmenagementHydraulique' && (EOS.isNew || EOS.isClosed)" class="switch">
                                     <select id="objectType" class="browser-default" [(ngModel)]="EOS.objDependanceType" name="objectType"
                                         (change)="EOS.changeObjectTypeDependance()">
                                         <option [value]="'point'" [selected]="EOS.objDependanceType === 'point'">

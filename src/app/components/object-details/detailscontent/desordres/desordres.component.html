@@ -1,19 +1,15 @@
 <label for="desordreList" class="active">Ajouter un desordre</label>
 <div style="display: flex;">
-    <input type="text" name="desordreList" list="desordreList" [(ngModel)]="detailsObject.tempDesordre.v"/>
-    <datalist id="desordreList">
-        <select id="desordreList" class="browser-default">
+        <select id="desordreList" name="desordreList" class="browser-default" [(ngModel)]="detailsObject.tempDesordre">
             <option *ngFor="let d of detailsObject.desordreList"
-                    [value]="detailsObject.desordreMap[d.id]"
-                    [selected]="detailsObject.tempDesordre.v === d.id">
-                {{ d.id }}
+                    [value]="d.id">
+                {{ d.designation ? d.designation : d.id }}
             </option>
         </select>
-    </datalist>
     <div class="sirs-ion-fab-button">
       <ion-fab slot="fixed">
         <ion-fab-button color="danger"
-            (click)="detailsObject.addDesordre(detailsObject.tempDesordre.v)">
+            (click)="detailsObject.addDesordre()">
             <ion-icon name="add-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
