@@ -172,3 +172,10 @@ Une fois l'APK généré, naviguez jusqu'à la Console Google Play du compte Goo
 Puis naviguez de la manière suivante: 'Toutes les applications' > 'Sirs Mobile Test Ionic 5' > Publier > Tests > Tests internes > 'Créer une release'.
 
 Enfin suivre les indications du formulaire de création de release.
+
+### Partager le lien de l'application (test uniquement)
+
+Une fois l'APK déployée, il vous faut partager avec le client la nouvelle application.
+
+Naviguez de la maniere suivante: Google Play Console > Tests > Tests internes > Testeurs.
+Dans "Comment les testeurs rejoignent votre test" , cliquer sur "Copier le lien", envoyer le au client, il doit l'ouvrir sur un systeme Android, accepter l'invitation, puis cliquer sur "dowload it on Google Play" pour télécharger l'application.
