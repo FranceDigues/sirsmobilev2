@@ -252,7 +252,7 @@ export class EditObjectService {
                         this.troncons = value;
                         this.allTroncons = value;
                     } else {
-                        console.error('Not good type');
+                        console.error('WRONG TYPE: AppTronconsFavorites item from StorageService: ' + JSON.stringify(value));
                     }
                 }
             );
@@ -628,7 +628,8 @@ export class EditObjectService {
     // * Location
 
     locateMe() {
-        this.geolocationService.getCurrentLocation()
+        if (this.geolocationService.isEnabled) {
+            this.geolocationService.getCurrentLocation()
             .then(
                 (position) => {
                     if (this.isDependance()) {
@@ -638,15 +639,18 @@ export class EditObjectService {
                     }
                 }
             );
+        }
     }
 
     locateMeEnd() {
-        this.geolocationService.getCurrentLocation()
+        if (this.geolocationService.isEnabled) {
+            this.geolocationService.getCurrentLocation()
             .then(
                 (position) => {
                     this.handlePosDependanceEnd(position);
                 }
             );
+        }
     }
 
     activatedGPSPositionButton() {

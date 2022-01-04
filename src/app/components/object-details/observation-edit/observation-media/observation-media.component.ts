@@ -134,12 +134,14 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     locateMe() {
-        this.geolocation.getCurrentLocation()
+        if (this.geolocation.isEnabled) {
+            this.geolocation.getCurrentLocation()
             .then(
                 (position) => {
                     this.OES.handlePos(position);
                 }
             );
+        }
     }
 
     getPhotoFromGallery() {
