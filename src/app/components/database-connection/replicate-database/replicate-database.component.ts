@@ -84,6 +84,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   async firstStepError(error) {
+    console.error(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
@@ -171,6 +172,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   }
 
   async secondStepError(error) {
+    console.error(error);
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
