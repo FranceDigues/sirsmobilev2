@@ -397,9 +397,7 @@ export class MapManagerService {
 
     clearAll() {
         this.appLayersService.getFavorites().forEach(
-            (layer) => {
-                this.forceRefresh(layer);
-            }
+            (layer) => this.forceRefresh(layer)
         );
     }
 
