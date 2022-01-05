@@ -280,7 +280,15 @@ export class MainPage implements AfterViewInit {
                             new ToastNotification(
                                 'Accés au GPS impossible. Activer la localisation pour cette application.',
                                 2500,
-                                'top'))
+                                'top')
+                        )
+                    } else if (error.message === "Timeout expired") {
+                        this.toastService.show(
+                            new ToastNotification(
+                                'La requête a expiré.',
+                                2000,
+                                'top')
+                        )
                     }
                 }
             );
@@ -323,9 +331,10 @@ export class MainPage implements AfterViewInit {
 
     private async refresh() {
         let loading: HTMLIonLoadingElement = await this.loadingCtrl.create({
-            message: 'Déploiement de la carte en cours'
+            message: "Déploiement de la carte en cours"
         });
         loading.present();
+        this.backLayerService.syncBackLayer();
         this.mapManagerService.clearAll();
         this.mapManagerService.mapLoadingSubject.subscribe(
             {
