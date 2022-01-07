@@ -221,4 +221,11 @@ export class ObjectEditComponent implements OnInit {
     private ahSelected(a) {
         return this.EOS.objectDoc.amenagementHydrauliqueId === a.id;
     }
+
+    private isActiveTabs() {
+        return this.EOS.type !== 'BorneDigue'
+        && this.EOS.type !== 'Desordre'
+        && this.EOS.type !== 'Berge'
+        && !this.EOS.isDependance()
+    }
 }
