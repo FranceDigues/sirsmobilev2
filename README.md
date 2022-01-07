@@ -29,6 +29,7 @@ Install **Ionic 6.10.1** and **Cordova 9.0.0**:
 ```bash
 npm install -g @ionic/cli@6.12.4
 npm install -g cordova@9.0.0
+npm install -g native-run
 ```
 
 ## 2 - First installation

@@ -1,22 +1,22 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
-import { EditObjectService } from '../../../services/edit-object.service';
-import { CameraService } from '@ionic-lib/lib-camera/camera.service';
-import { DirectoryEntry, Entry, File, Metadata } from '@ionic-native/file/ngx';
-import { Options } from '@ionic-lib/lib-camera/interface.model';
-import { Camera } from '@ionic-native/camera/ngx';
-import { UuidUtils } from '../../../utils/uuid-utils';
-import { ModalController, ToastController } from '@ionic/angular';
-import { formatDate } from '@angular/common';
-import { SirsDocService } from '../../../services/sirsdoc.service';
-import { HttpClient } from '@angular/common/http';
-import { EditionModeService } from '../../../services/edition-mode.service';
-import { GeolocationService } from '../../../services/geolocation.service';
-import { AlertController } from '@ionic/angular';
-import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { PositionService } from '../../../services/position.service';
-import { Coordinates } from '@ionic-native/geolocation/ngx';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AuthService} from '../../../services/auth.service';
+import {EditObjectService} from '../../../services/edit-object.service';
+import {CameraService} from '@ionic-lib/lib-camera/camera.service';
+import {DirectoryEntry, Entry, File, Metadata} from '@ionic-native/file/ngx';
+import {Options} from '@ionic-lib/lib-camera/interface.model';
+import {Camera} from '@ionic-native/camera/ngx';
+import {UuidUtils} from '../../../utils/uuid-utils';
+import {ModalController, ToastController} from '@ionic/angular';
+import {formatDate} from '@angular/common';
+import {SirsDocService} from '../../../services/sirsdoc.service';
+import {HttpClient} from '@angular/common/http';
+import {EditionModeService} from '../../../services/edition-mode.service';
+import {GeolocationService} from '../../../services/geolocation.service';
+import {AlertController} from '@ionic/angular';
+import {PositionByBorneModalComponent} from '../positionbyborne-modal/positionbyborne-modal.component';
+import {WebView} from '@ionic-native/ionic-webview/ngx';
+import {PositionService} from '../../../services/position.service';
+import {Coordinates} from '@ionic-native/geolocation/ngx';
 
 @Component({
     selector: 'app-media-form',
@@ -84,52 +84,34 @@ export class MediaFormComponent implements OnInit {
                 this.objectDoc._attachments = {};
             }
             this.objectDoc.photos.push(this.mediaOptions);
-            if (this.importPhotoData) {
-                // Convert url image to blob
-                this.httpClient.get(this.importPhotoData, {responseType: 'blob'})
-                    .subscribe(
-                        (blob) => {
-                            const reader = new FileReader();
-                            reader.readAsDataURL(blob);
-                            // Convert blob to base64
-                            reader.onloadend = () => {
-                                if (typeof reader.result === 'string') {
-                                    const base64data = reader.result.replace('data:image/jpeg;base64,', '');
-                                    // Save the photo like attachment to the object
-                                    this.objectDoc._attachments[this.mediaOptions.id] = {
-                                        content_type: 'image/jpeg',
-                                        data: base64data
-                                    };
-                                    this.editionService.saveObject(this.objectDoc)
-                                        .then(() => {
-                                            this.changeView.emit('form');
-                                        });
-                                }
-                            };
-                        },
-                        (error) => {
-                            console.error(error);
-                        }
-                    );
-            } else {
-                // var xhr = new XMLHttpRequest();
-                // xhr.onload = function () {
-                //     var reader = new FileReader();
-                //     reader.onloadend = function () {
-                //         // Save the photo like attachment to the object
-                //         $scope.c.doc._attachments[self.mediaOptions.id] = {
-                //             content_type: 'image/jpeg',
-                //             data: reader.result.replace('data:image/jpeg;base64,', '')
-                //         };
-                //     };
-                //
-                //     reader.readAsDataURL(xhr.response);
-                // };
-                // xhr.open('GET', self.getPhotoPath($scope.c.doc.photos[$scope.c.doc.photos.length - 1]));
-                // xhr.responseType = 'blob';
-                // xhr.send();
-                // $scope.c.setView('form');
-            }
+            const url = this.importPhotoData ? this.importPhotoData : this.getPhotoPath(this.objectDoc.photos[this.objectDoc.photos.length - 1]);
+            // Convert url image to blob
+            this.httpClient.get(url, {responseType: 'blob'})
+                .subscribe(
+                    (blob) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(blob);
+                        // Convert blob to base64
+                        reader.onloadend = () => {
+                            if (typeof reader.result === 'string') {
+                                const base64data = reader.result.replace('data:image/jpeg;base64,', '');
+                                // Save the photo like attachment to the object
+                                this.objectDoc._attachments[this.mediaOptions.id] = {
+                                    content_type: 'image/jpeg',
+                                    data: base64data
+                                };
+                                this.changeView.emit('form');
+                                // this.editionService.saveObject(this.objectDoc)
+                                //     .then(() => {
+                                //         this.changeView.emit('form');
+                                //     });
+                            }
+                        };
+                    },
+                    (error) => {
+                        console.error(error);
+                    }
+                );
         } else {
             this.toastCtrl.create({
                 message: 'Formulaire d\'ajout de média incomplet: Veuillez ajouter une photo',
@@ -332,14 +314,14 @@ export class MediaFormComponent implements OnInit {
     private isDependance(clazz) {
         // Only dependance that have photos
         return clazz === 'DesordreDependance'
-        || clazz === 'OuvrageVoirieDependance'
-        || clazz === 'AireStockageDependance'
-        || clazz === 'CheminAccesDependance'
-        || clazz === 'AutreDependance'
-        || clazz === 'AmenagementHydraulique'
-        || clazz === 'PrestationAmenagementHydraulique'
-        || clazz === 'StructureAmenagementHydraulique'
-        || clazz === 'OuvrageAssocieAmenagementHydraulique'
-        || clazz === 'OrganeProtectionCollective';
+            || clazz === 'OuvrageVoirieDependance'
+            || clazz === 'AireStockageDependance'
+            || clazz === 'CheminAccesDependance'
+            || clazz === 'AutreDependance'
+            || clazz === 'AmenagementHydraulique'
+            || clazz === 'PrestationAmenagementHydraulique'
+            || clazz === 'StructureAmenagementHydraulique'
+            || clazz === 'OuvrageAssocieAmenagementHydraulique'
+            || clazz === 'OrganeProtectionCollective';
     }
 }
