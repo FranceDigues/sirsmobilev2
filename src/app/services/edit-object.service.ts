@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StorageService } from '@ionic-lib/lib-storage/storage.service';
-import { LoadingController, ToastController } from '@ionic/angular';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {StorageService} from '@ionic-lib/lib-storage/storage.service';
+import {LoadingController, ToastController} from '@ionic/angular';
 import WKT from 'ol/format/WKT';
-import { transform } from 'ol/proj';
-import { getDistance } from 'ol/sphere';
-import { DatabaseService } from './database.service';
-import { EditionModeService } from './edition-mode.service';
-import { GeolocationService } from './geolocation.service';
-import { ObjectDocService } from './object-doc.service';
-import { SirsDocService } from './sirsdoc.service';
-import { UuidUtils as uuid } from '../utils/uuid-utils';
-import { PositionService } from './position.service';
-import { DatabaseModel } from '../components/database-connection/models/database.model';
-import { PluginUtils } from '../utils/plugin-utils';
+import {transform} from 'ol/proj';
+import {getDistance} from 'ol/sphere';
+import {DatabaseService} from './database.service';
+import {EditionModeService} from './edition-mode.service';
+import {GeolocationService} from './geolocation.service';
+import {ObjectDocService} from './object-doc.service';
+import {SirsDocService} from './sirsdoc.service';
+import {UuidUtils as uuid} from '../utils/uuid-utils';
+import {PositionService} from './position.service';
+import {DatabaseModel} from '../components/database-connection/models/database.model';
+import {PluginUtils} from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -48,15 +48,15 @@ export class EditObjectService {
     isClosed;
 
     constructor(private objectDocService: ObjectDocService,
-        private databaseService: DatabaseService,
-        private loadingCtrl: LoadingController,
-        private sirsDoc: SirsDocService,
-        private editionModeService: EditionModeService,
-        private route: Router,
-        private toastCtrl: ToastController,
-        private geolocationService: GeolocationService,
-        private positionService: PositionService,
-        private storageService: StorageService) {
+                private databaseService: DatabaseService,
+                private loadingCtrl: LoadingController,
+                private sirsDoc: SirsDocService,
+                private editionModeService: EditionModeService,
+                private route: Router,
+                private toastCtrl: ToastController,
+                private geolocationService: GeolocationService,
+                private positionService: PositionService,
+                private storageService: StorageService) {
     }
 
     init(type, id) {
@@ -64,7 +64,7 @@ export class EditObjectService {
             this.resetValues();
             this.type = type;
             this.isNew = !id;
-            await this.loadingCtrl.create({ message: 'Chargement' })
+            await this.loadingCtrl.create({message: 'Chargement'})
                 .then(
                     (loading) => {
                         loading.present();
@@ -280,10 +280,10 @@ export class EditObjectService {
                 //this.objectDoc.dependanceId = null; // ???
                 check = true;
                 promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.CheminAccesDependance'],
-                    endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
-                    include_docs: true
-                }),
+                        startkey: ['fr.sirs.core.model.CheminAccesDependance'],
+                        endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
+                        include_docs: true
+                    }),
                     this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                         startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
                         endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
@@ -321,10 +321,10 @@ export class EditObjectService {
                         }
                         if (results.length >= 4) {
                             this.dependances.push(
-                            ...(results[0].rows.map(elt => elt)),
-                            ...(results[1].rows.map(elt => elt)),
-                            ...(results[2].rows.map(elt => elt)),
-                            ...(results[3].rows.map(elt => elt)));
+                                ...(results[0].rows.map(elt => elt)),
+                                ...(results[1].rows.map(elt => elt)),
+                                ...(results[2].rows.map(elt => elt)),
+                                ...(results[3].rows.map(elt => elt)));
                         }
                         if (results.length === 5) {
                             this.amenagementHydrauliques.push(...(results[4].rows.map(elt => elt)));
@@ -332,9 +332,9 @@ export class EditObjectService {
                         loading.dismiss();
                     }, 100);
                 }).catch((err) => {
-                    console.error(err);
-                    loading.dismiss();
-                });
+                console.error(err);
+                loading.dismiss();
+            });
             if (!check) {
                 loading.dismiss();
             }
@@ -554,20 +554,14 @@ export class EditObjectService {
     }
 
     changeObjectType() {
-        if (this.objDependanceType === 'line') {
+        if (this.isLinear) {
             delete this.objectDoc.positionFin;
             delete this.objectDoc.approximatePositionFin;
-        } else if (this.objDependanceType === 'point') {
+        } else {
             this.objectDoc.positionFin = this.objectDoc.positionDebut;
             this.objectDoc.approximatePositionFin = this.objectDoc.approximatePositionDebut;
-        } else {
-            delete this.objectDoc.positionFin;
-            delete this.objectDoc.positionDebut;
-            this.watchDocPositionDebut();
-            delete this.objectDoc.approximatePositionFin;
-            delete this.objectDoc.approximatePositionDebut;
         }
-        delete this.objectDoc.geometry;
+
     }
 
     changeObjectTypeDependance() { // ! same check here
@@ -597,7 +591,7 @@ export class EditObjectService {
 
     getStartPosBorne() {
         this.startPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneDebutId },
+            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneDebutId},
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
                     const res = this.objectDoc.borneDebutId ? 'à ' + Math.round(this.objectDoc.borne_debut_distance) + ' m de la borne : ' +
@@ -609,7 +603,7 @@ export class EditObjectService {
 
     getEndPosBorne() {
         this.endPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneFinId },
+            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneFinId},
                 (results) => {
                     const libelle = results && results.rows && results.rows.length ? results.rows[0].value.libelle : '';
                     const res = this.objectDoc.borneFinId ? 'à ' + Math.round(this.objectDoc.borne_fin_distance) + ' m de la borne : ' +
