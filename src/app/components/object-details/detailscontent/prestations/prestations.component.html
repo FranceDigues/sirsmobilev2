@@ -4,7 +4,7 @@
         [(ngModel)]="detailsObject.tempPrestation">
         <option *ngFor="let p of detailsObject.prestationList"
             [value]="p.id">
-            {{ p.designation ? p.designation : p.id }}
+            {{ p.designation ? p.designation + ' ' + (p.libelle ? p.libelle : '') : p.id }}
         </option>
     </select>
     <div class="sirs-ion-fab-button">

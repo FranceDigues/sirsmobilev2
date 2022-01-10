@@ -114,7 +114,7 @@ export class ObjectDetails {
             (response) => {
                 this.prestationMap = {};
                 this.allPrestationList = response.map((elt) => {
-                    this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
+                    this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
                     return elt.value;
                 });
                 this.filterPrestationList();
