@@ -62,7 +62,7 @@ export class MapManagerService {
     private createAppLayer() {
         return new Promise(resolve => {
             const promises = [];
-            let appLayers = this.appLayersService.getFavorites();
+            const appLayers = this.appLayersService.getFavorites();
 
             if (appLayers && appLayers.length > 0) {
                 appLayers.forEach((layerModel) => {
@@ -87,69 +87,12 @@ export class MapManagerService {
     createAppLayerInstance(layerModel) {
         return new Promise(resolve => {
             let olLayer: VectorLayer;
-            if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
-                // Change the layer Source to Cluster source
-                olLayer = new VectorLayer({
-                    name: layerModel.title,
-                    visible: layerModel.visible,
-                    model: layerModel,
-                    style: (feature, resolution) => {
-                        const features = feature.get('features');
-                        const styles = [];
-
-                        if (Array.isArray(features) && features.length > 0) {
-                            features.forEach((tmpFeature) => {
-                                let style = tmpFeature.getStyle();
-                                if (typeof style === 'function') {
-                                    style = style.call(tmpFeature, tmpFeature, resolution);
-                                } else if (style instanceof Style) {
-                                    style = [].concat(style);
-                                }
-
-                                if (Array.isArray(style)) {
-                                    style.forEach((tmpStyle) => {
-                                        tmpStyle.setGeometry(tmpFeature.getGeometry());
-                                        if (tmpStyle.getText() !== undefined && tmpStyle.getText() !== null) {
-                                            tmpStyle.getText().setText(undefined);
-                                        }
-                                        styles.push(tmpStyle);
-                                    });
-                                }
-                            });
-
-                            let style = features[0].getStyle();
-                            if (typeof style === 'function') {
-                                style = style.call(feature, feature, resolution);
-                            } else if (style instanceof Style) {
-                                style = [].concat(style);
-                            }
-
-
-                            if (Array.isArray(style)) {
-                                style.forEach((tmpStyle) => {
-                                    styles.push(new Style({
-                                        zIndex: tmpStyle.getZIndex(),
-                                        text: tmpStyle.getText()
-                                    }));
-                                });
-                            }
-                        }
-                        return styles;
-                    },
-                    source: new Cluster({
-                        distance: 24,
-                        source: new VectorSource({ useSpatialIndex: true })
-                    })
-                });
-
-            } else {
-                olLayer = new VectorLayer({
-                    name: layerModel.title,
-                    visible: layerModel.visible,
-                    model: layerModel,
-                    source: new VectorSource({ useSpatialIndex: false })
-                });
-            }
+            olLayer = new VectorLayer({
+                name: layerModel.title,
+                visible: layerModel.visible,
+                model: layerModel,
+                source: new VectorSource({ useSpatialIndex: false })
+            });
 
             if (layerModel.visible === true) {
                 this.setAppLayerFeatures(olLayer).then(response => {
@@ -164,8 +107,7 @@ export class MapManagerService {
     setAppLayerFeatures(olLayer) {
         return new Promise(async resolve => {
             const layerModel = olLayer.get('model');
-            const olSource = layerModel.filterValue === 'fr.sirs.core.model.BorneDigue'
-                ? olLayer.getSource().getSource() : olLayer.getSource();
+            const olSource = olLayer.getSource();
             // Try to get the promise of a previous query.
             let promise = null;
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
@@ -222,7 +164,7 @@ export class MapManagerService {
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                let tmp: any = await this.storageService.getItem('AppTronconsFavorities');
+                const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('TronconDigue/streamLight', {
                     keys: tmp === null ? [] : tmp.map((item) => {
                         return item.id;
@@ -235,6 +177,7 @@ export class MapManagerService {
                         console.error(error);
                     });
             } else {
+                // Case fr.sirs.core.model.BorneDigue
                 const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
                 promise = this.localDB.query('getBornesFromTronconID', {
                     keys: tmp === null ? [] : tmp.map((item) => {
@@ -416,11 +359,7 @@ export class MapManagerService {
         const olLayer = <any>await this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
-        if (layerModel.filterValue === 'fr.sirs.core.model.BorneDigue') {
-            olLayer.getSource().getSource().clear();
-        } else {
-            olLayer.getSource().clear();
-        }
+        olLayer.getSource().clear();
         if (layerModel.visible === true) {
             // TODO loading here
             this.setAppLayerFeatures(olLayer);
