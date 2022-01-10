@@ -1,148 +1,162 @@
 <div class="full-height observation-general" [ngSwitch]="view">
-  <div fxLayout="column" fxLayoutAlign="center">
-    <div class="observation-form" *ngSwitchCase="'form'">
-      <ion-content>
-        <form class="sirs-card" #observationForm="ngForm">
-          <div class="sirs-card-content" [ngSwitch]="tab">
-            <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
-            <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
+    <div fxLayout="column" fxLayoutAlign="center">
+        <div class="observation-form" *ngSwitchCase="'form'">
+            <ion-content>
+                <form class="sirs-card" #observationForm="ngForm">
+                    <div class="sirs-card-content" [ngSwitch]="tab">
+                        <h2 class="sirs-card-title" *ngIf="OES.isNewObject">Nouvelle observation</h2>
+                        <h2 class="sirs-card-title" *ngIf="!OES.isNewObject">Editer une observation</h2>
 
-            <div style="width: 100%; background: aliceblue;" fxLayout="row" fxLayoutAlign="space-around">
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter</span>
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
-            </div>
-            <div style="width: 100%; background: aliceblue;" fxLayout="row" fxLayoutAlign="space-around">
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Evolution</span>
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
-              <span fxFlex="33" class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</span>
-            </div>
 
-              <div class="medias" *ngSwitchCase="'medias'">
-                <div class="pics row" *ngIf="OES.showContent">
-                  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="OES.mediaPath">
-                    <div *ngFor="let photo of OES.photos" (ngInit)="OES.loadImage(photo)">
-                      <div class="progress" *ngIf="!OES.loaded[photo.id]">
-                        <div class="indeterminate"></div>
-                      </div>
-                      <div class="pic-quicklook" *ngIf="OES.loaded[photo.id]">
-                        <img alt="Photo non disponible" (click)="OES.open(photo)" [src]="OES.getPhotoPath(photo)" />
-                      </div>
+                        <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;"
+                             fxLayout="row wrap" fxLayoutAlign="center center">
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'evolution'}"
+                                  (click)="setTab('evolution')">Évolution</span>
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'suite'}"
+                            (click)="setTab('suite')">Suite à apporter</span>
+                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</span>
+                        </div>
+
+                        <div class="medias" *ngSwitchCase="'medias'">
+                            <div class="pics row" *ngIf="OES.showContent">
+                                <div fxLayout="row" fxLayoutAlign="start center" *ngIf="OES.mediaPath">
+                                    <div *ngFor="let photo of OES.photos" (ngInit)="OES.loadImage(photo)">
+                                        <div class="progress" *ngIf="!OES.loaded[photo.id]">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                        <div class="pic-quicklook" *ngIf="OES.loaded[photo.id]">
+                                            <img alt="Photo non disponible" (click)="OES.open(photo)"
+                                                 [src]="OES.getPhotoPath(photo)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-large waves-effect waves-teal"
+                                        (click)="goToMedia()">
+                                    <ion-icon name="images-outline"></ion-icon>
+                                    Ajouter un media
+                                </button>
+                            </div>
+                        </div>
+                        <div class="evolution" *ngSwitchCase="'evolution'">
+                            <div class="sirs-field">
+                                <label for="description" class="active">Description</label>
+                                <textarea id="description" class="materialize-textarea"
+                                          [(ngModel)]="OES.doc.evolution" name="description"></textarea>
+                            </div>
+                        </div>
+                        <div class="urgence" *ngSwitchCase="'urgence'">
+                            <div class="sirs-field" *ngIf="showText('fullName')">
+                                <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                                        [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
+                                    <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
+                                            [value]="urgence.id"
+                                            (ngModelChange)="changeUrgence()"
+                                            [selected]="urgence.id === OES.urgence">
+                                        {{ urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                            </div>
+                            <div class="sirs-field" *ngIf="showText('abstract')">
+                                <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                                        [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
+                                    <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
+                                            [value]="urgence.id"
+                                            (ngModelChange)="changeUrgence()"
+                                            [selected]="OES.urgence === urgence.id">
+                                        {{ urgence.abrege ? urgence.abrege : urgence.designation + ' : ' +
+                                        urgence.libelle }}
+                                    </option>
+                                </select>
+                                <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                            </div>
+                            <div class="sirs-field" *ngIf="showText('both')">
+                                <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
+                                        [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
+                                    <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
+                                            [value]="urgence.id"
+                                            [selected]="OES.urgence === urgence.id">
+                                        {{ urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) :
+                                        (urgence.designation + ' : ' + urgence.libelle) }}
+                                    </option>
+                                </select>
+                                <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nombre" *ngSwitchCase="'nombre'">
+                            <div class="sirs-field">
+                                <label for="nombre_Desordres" class="active">Nombre Desordres</label>
+                                <input type="number" id="nombre_Desordres" class="materialize-textarea"
+                                       [(ngModel)]="OES.doc.nombreDesordres" name="nombre_Desordres"/>
+                            </div>
+                        </div>
+                        <div class="suite" *ngSwitchCase="'suite'">
+                            <div class="sirs-field">
+                                <label for="suite_field" class="active">Suite à apporter</label>
+                                <textarea id="suite_field" class="materialize-textarea"
+                                          [(ngModel)]="OES.doc.suite" name="suite_field"></textarea>
+                            </div>
+                        </div>
+                        <div class="observateur" *ngSwitchCase="'observateur'">
+                            <div class="sirs-field">
+                                <select id="contactList" class="browser-default"
+                                        *ngIf="contactList && contactList.length > 0"
+                                        [(ngModel)]="OES.contact"
+                                        name="contactList"
+                                        (ngModelChange)="changeContact()">
+                                    <option *ngFor="let contact of contactList | sortByDocNom"
+                                            [selected]="contact.id === OES.contact">
+                                        {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
+                                    </option>
+                                </select>
+                                <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                                <div *ngIf="!pendingContactList && contactList.length == 0" fxLayout="column"
+                                     fxLayoutAlign="center center">
+                                    <span>Aucun observateur trouvé</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-                <div class="text-center">
-                  <button type="button" class="btn btn-large waves-effect waves-teal"
-                  (click)="goToMedia()">
-                    <ion-icon name="images-outline"></ion-icon>
-                    Ajouter un media
-                  </button>
-                </div>
-              </div>
-              <div class="evolution" *ngSwitchCase="'evolution'">
-                <div class="sirs-field">
-                  <label for="description" class="active">Description</label>
-                  <textarea id="description" class="materialize-textarea"
-                  [(ngModel)]="OES.doc.evolution" name="description"></textarea>
-                </div>
-              </div>
-              <div class="urgence" *ngSwitchCase="'urgence'">
-                <div class="sirs-field" *ngIf="showText('fullName')">
-                  <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
-                          [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
-                          <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
-                          [value]="urgence.id" 
-                          (ngModelChange)="changeUrgence()"
-                          [selected]="urgence.id === OES.urgence">
-                            {{ urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id }}
-                          </option>
-                  </select>
-                  <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
-                    <ion-spinner name="crescent"></ion-spinner>
-                  </div>
-                </div>
-                <div class="sirs-field" *ngIf="showText('abstract')">
-                    <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
-                    [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
-                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
-                                [value]="urgence.id"
-                                (ngModelChange)="changeUrgence()"
-                                [selected]="OES.urgence === urgence.id">
-                            {{ urgence.abrege ? urgence.abrege : urgence.designation + ' : ' +
-                            urgence.libelle }}
-                        </option>
-                    </select>
-                    <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
-                      <ion-spinner name="crescent"></ion-spinner>
+                    <div class="sirs-card-action">
+                        <a (click)="goMain()" class="margin10 btn-flat waves-effect waves-teal">
+                            <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>
+                            Annuler
+                        </a>
+                        <button type="button" class="margin10 btn pink waves-effect waves-teal right"
+                                (click)="save()">
+                            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
+                            Terminer
+                        </button>
                     </div>
-                </div>
-                <div class="sirs-field" *ngIf="showText('both')">
-                    <select id="urgenceList" class="browser-default" *ngIf="OES.urgenceList"
-                    [(ngModel)]="OES.urgence" name="urgenceList" (ngModelChange)="changeUrgence()">
-                        <option *ngFor="let urgence of OES.urgenceList.sort(compareRef())"
-                                [value]="urgence.id"
-                                [selected]="OES.urgence === urgence.id">
-                            {{ urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) :
-                            (urgence.designation + ' : ' + urgence.libelle) }}
-                        </option>
-                    </select>
-                    <div *ngIf="!OES.urgenceList" fxLayout="column" fxLayoutAlign="center center">
-                      <ion-spinner name="crescent"></ion-spinner>
-                    </div>
-                </div>
-              </div>
-              <div class="nombre" *ngSwitchCase="'nombre'">
-                <div class="sirs-field">
-                  <label for="nombre_Desordres" class="active">Nombre Desordres</label>
-                  <input type="number" id="nombre_Desordres" class="materialize-textarea"
-                  [(ngModel)]="OES.doc.nombreDesordres" name="nombre_Desordres"/>
-                </div>
-              </div>
-              <div class="suite" *ngSwitchCase="'suite'">
-                <div class="sirs-field">
-                  <label for="suite_field" class="active">Suite à apporter</label>
-                  <textarea id="suite_field" class="materialize-textarea"
-                  [(ngModel)]="OES.doc.suite" name="suite_field"></textarea>
-                </div>
-              </div>
-              <div class="observateur" *ngSwitchCase="'observateur'">
-                <div class="sirs-field">
-                  <select id="contactList" class="browser-default" *ngIf="contactList && contactList.length > 0"
-                  [(ngModel)]="OES.contact" 
-                  name="contactList" 
-                  (ngModelChange)="changeContact()">
-                    <option *ngFor="let contact of contactList | sortByDocNom" [selected]="contact.id === OES.contact">
-                      {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
-                    </option>
-                  </select>
-                  <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
-                    <ion-spinner name="crescent"></ion-spinner>
-                  </div>
-                  <div *ngIf="!pendingContactList && contactList.length == 0" fxLayout="column" fxLayoutAlign="center center">
-                    <span>Aucun observateur trouvé</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="sirs-card-action">
-              <a (click)="goMain()" class="margin10 btn-flat waves-effect waves-teal">
-                <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
-              </a>
-              <button type="button" class="margin10 btn pink waves-effect waves-teal right"
-              (click)="save()">
-                <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>Terminer
-              </button>
-            </div>
-          </form>
-        </ion-content>
-      </div>
-    <div class="full-height full-width" *ngSwitchCase="'media'">
-      <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
+                </form>
+            </ion-content>
+        </div>
+        <div class="full-height full-width" *ngSwitchCase="'media'">
+            <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="overlay" *ngIf="saving" fxLayout="column" fxLayoutAlign="center center">
-  <ion-spinner name="crescent"></ion-spinner>
-  <span class="savingStyle">SAUVEGARDE DES MODIFICATIONS EN COURS...</span>
+    <ion-spinner name="crescent"></ion-spinner>
+    <span class="savingStyle">SAUVEGARDE DES MODIFICATIONS EN COURS...</span>
 </div>
