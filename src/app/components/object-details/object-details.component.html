@@ -31,13 +31,14 @@
 
     <details-content [objectType]="objectType" [activeTab]="activeTab"></details-content>
 
-    <div *ngIf="canShowEditionButtons() && activeTab === 'description'" style="position: absolute; bottom: 0; right: 0;">
-        <ion-button color="danger" (click)="editObject()">
+    <div *ngIf="canShowEditionButtons() && activeTab === 'description'"
+         style="position: absolute; bottom: 0; right: 0; display:flex">
+        <ion-fab-button color="danger" (click)="editObject()" style="margin: 8px;">
             <ion-icon name="pencil-outline"></ion-icon>
-        </ion-button>
-        <ion-button *ngIf="!document.valid" color="danger" (click)="removeObject()">
+        </ion-fab-button>
+        <ion-fab-button *ngIf="!document.valid" color="danger" (click)="removeObject()" style="margin: 8px;">
             <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
+        </ion-fab-button>
     </div>
 
     <div *ngIf="canAddObservation()">

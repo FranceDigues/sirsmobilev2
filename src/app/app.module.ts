@@ -49,7 +49,7 @@ import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from './services/edition-layer.service';
 import { GeolocLayerService } from './services/geoloc-layer.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
-import { FilePath } from '@ionic-native/file-path/ngx'
+import { FilePath } from '@ionic-native/file-path/ngx';
 
 @NgModule({
     declarations: [AppComponent],

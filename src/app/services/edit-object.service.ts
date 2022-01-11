@@ -120,7 +120,7 @@ export class EditObjectService {
                 });
 
             resolve(null); // finished everything.
-        })
+        });
     }
 
     resetValues() {

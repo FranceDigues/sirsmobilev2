@@ -3,6 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLayersService } from '../../../services/app-layers.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import {LoadingController} from "@ionic/angular";
 // import { EditObjectService } from 'src/app/services/edit-object.service';
 
 @Component({
@@ -14,9 +15,10 @@ export class CreateObjectComponent implements OnInit {
 
   selectedLayer = null;
 
-  constructor(public appLayersService: AppLayersService, 
+  constructor(public appLayersService: AppLayersService,
               private authService: AuthService,
-              private route: Router, 
+              private route: Router,
+              private loadingCtrl: LoadingController,
               // private EOS: EditObjectService
               ) { }
 
@@ -27,10 +29,15 @@ export class CreateObjectComponent implements OnInit {
     this.selectedLayer = layer;
   }
 
-  async addObject() {
-    const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
-    this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
-  }
+    async addObject() {
+        this.loadingCtrl.create({message: 'Chargement'})
+            .then((loading) => {
+                loading.present();
+                const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
+                this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
+                loading.dismiss();
+            });
+    }
 
   showAddButtons() {
     if (this.selectedLayer) {

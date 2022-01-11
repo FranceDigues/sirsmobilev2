@@ -3,37 +3,37 @@
     <div class="sirs-card">
       <div class="sirs-card-content">
         <h2 class="sirs-card-title">Ajouter un média</h2>
-        <div class="row">
+        <div>
           <label>Prendre une photo ou une note</label>
           <div class="center">
-            <ion-button size="small" class="photo-button" (click)="takePhoto()">
+            <ion-button size="medium" class="photo-button" (click)="takePhoto()">
               <ion-icon class="icon-firsts-button" name="camera-outline"></ion-icon>
               PRENDRE UNE PHOTO
             </ion-button>
-            <ion-button size="small" class="photo-button" (click)="editNote()">
+            <ion-button size="medium" class="photo-button" (click)="editNote()">
               <ion-icon class="icon-firsts-button" name="create-outline"></ion-icon>
               EDITER UNE NOTE
             </ion-button>
-            <ion-button size="small" class="photo-button" (click)="getPhotoFromGallery()">
+            <ion-button size="medium" class="photo-button" (click)="getPhotoFromGallery()">
               <ion-icon class="icon-firsts-button" name="images-outline"></ion-icon>
               IMPORTER UN MEDIA
             </ion-button>
           </div>
         </div>
-        <div class="pics row" *ngIf="OES.mediaOptions.id !== ''">
+        <div class="pics " *ngIf="OES.mediaOptions.id !== ''">
           <div class="pic col col-25">
             <div class="pic-quicklook">
               <ion-img style="height: 100px; width: 100px;" [src]="OES.importPhotoData"></ion-img>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div>
           <label>Depuis un appareil externe</label>
           <div class="center">
             <input [(ngModel)]="OES.mediaOptions.designation" placeholder="Numéro de photo" />
           </div>
         </div>
-        <div class="row">
+        <div>
           <label>Position</label>
           <div class="edit-position-buttons right">
             <a class="nav-item nav-link position-button" (click)="locateMe()">
@@ -70,7 +70,7 @@
           <!-- ORIENTATIONS -->
           <div>
             <label>Orientations :</label>
-            <div class="row">
+            <div>
               <div *ngIf="showText('fullName')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
                   <option *ngFor="let v of orientations" [value]="v.id"
@@ -101,7 +101,7 @@
           <!-- COTES -->
           <div>
             <label>Cotes :</label>
-            <div class="row">
+            <div>
               <div *ngIf="showText('fullName')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
                   <option *ngFor="let v of cotes" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
@@ -129,7 +129,7 @@
         </div>
 
         <!-- USER COMMENT -->
-        <div class="row">
+        <div>
           <input type="text" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
         </div>
 
