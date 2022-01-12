@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import {Injectable} from '@angular/core';
+import {StorageService} from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
 import LineString from 'ol/geom/LineString';
@@ -9,16 +9,17 @@ import VectorLayer from 'ol/layer/Vector';
 import Cluster from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
 import Style from 'ol/style/Style';
-import { AppLayersService } from './app-layers.service';
-import { FeatureCache } from './cache.service';
-import { MapService } from './map.service';
-import { SirsDocService } from './sirsdoc.service';
-import { DefaultStyle, RealPositionStyle } from './style.service';
-import { LocalDatabase } from './local-database.service';
-import { Subject } from 'rxjs';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { DatabaseService } from './database.service';
-import { PluginUtils } from '../utils/plugin-utils';
+import {AppLayersService} from './app-layers.service';
+import {FeatureCache} from './cache.service';
+import {MapService} from './map.service';
+import {SirsDocService} from './sirsdoc.service';
+import {DefaultStyle, RealPositionStyle} from './style.service';
+import {LocalDatabase} from './local-database.service';
+import {Subject} from 'rxjs';
+import {OLService} from '@ionic-lib/lib-map/ol.service';
+import {DatabaseService} from './database.service';
+import {PluginUtils} from '../utils/plugin-utils';
+import {SelectedObjectsService} from "./selected-objects.service";
 
 @Injectable({
     providedIn: 'root'
@@ -29,16 +30,40 @@ export class MapManagerService {
     public mapLoadingSubject = new Subject();
 
     constructor(private featureCache: FeatureCache,
-        private localDB: LocalDatabase,
-        private storageService: StorageService,
-        private SirsDocService: SirsDocService,
-        private mapService: MapService,
-        private RealPositionStyle: RealPositionStyle,
-        private DefaultStyleService: DefaultStyle,
-        private appLayersService: AppLayersService,
-        private olService: OLService,
-        private databaseSrvc: DatabaseService,
+                private localDB: LocalDatabase,
+                private storageService: StorageService,
+                private sirsDocService: SirsDocService,
+                private mapService: MapService,
+                private realPositionStyle: RealPositionStyle,
+                private DefaultStyleService: DefaultStyle,
+                private appLayersService: AppLayersService,
+                private olService: OLService,
+                private databaseService: DatabaseService,
+                private selectedObjectsService: SelectedObjectsService
     ) {
+        // Highlight the selected features
+        this.selectedObjectsService.getFeatures()
+            .subscribe((features) => {
+                    // Update feature properties.
+                    this.mapService.selection.list.forEach((feature) => {
+                        feature.set('selected', false, true);
+                        feature.set('visited', false, true);
+                    });
+                    features.forEach(feature => {
+                        feature.set('selected', true, true);
+                        feature.set('visited', false, true);
+                    });
+
+                    if (this.appLayer) {
+                        this.appLayer.getLayers().forEach((layer) => {
+                            layer.getSource().changed();
+                        });
+                    }
+
+                    this.mapService.selection.list = features;
+                    this.mapService.selection.active = null;
+                }
+            );
     }
 
     init() {
@@ -56,7 +81,7 @@ export class MapManagerService {
                     console.error(error);
                     reject(error);
                 });
-        })
+        });
     }
 
     private createAppLayer() {
@@ -91,7 +116,7 @@ export class MapManagerService {
                 name: layerModel.title,
                 visible: layerModel.visible,
                 model: layerModel,
-                source: new VectorSource({ useSpatialIndex: false })
+                source: new VectorSource({useSpatialIndex: false})
             });
 
             if (layerModel.visible === true) {
@@ -151,7 +176,7 @@ export class MapManagerService {
                             console.error(error);
                         });
                     } else {
-                        promise = new Promise((resolve2) => { // TODO : should not reach this else or at least do something... 
+                        promise = new Promise((resolve2) => { // TODO : should not reach this else or at least do something...
                             resolve2([]);
                         }).then(
                             () => {
@@ -200,10 +225,10 @@ export class MapManagerService {
             }
             // Wait for promise resolution or rejection.
             promise.then((featureModels) => {
-                olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
-                resolve(null);
-                this.mapLoadingSubject.complete();
-            },
+                    olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
+                    resolve(null);
+                    this.mapLoadingSubject.complete();
+                },
                 (error) => {
                     console.error(error);
                 }
@@ -216,13 +241,13 @@ export class MapManagerService {
         featureDoc = featureDoc.doc || featureDoc.value;
         let dataProjection;
 
-        if (!this.SirsDocService.get()) {
-            dataProjection = 'EPSG:2154'
+        if (!this.sirsDocService.get()) {
+            dataProjection = 'EPSG:2154';
         } else {
-            if (this.SirsDocService.get().epsgCode) {
-                dataProjection = this.SirsDocService.get().epsgCode;
+            if (this.sirsDocService.get().epsgCode) {
+                dataProjection = this.sirsDocService.get().epsgCode;
             } else {
-                dataProjection = 'EPSG:2154'
+                dataProjection = 'EPSG:2154';
             }
         }
         let projGeometry;
@@ -287,7 +312,7 @@ export class MapManagerService {
                     const feature = new Feature();
                     if (layerModel.realPosition) {
                         feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(this.RealPositionStyle.style(this.mapService.selection,
+                        feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
                             feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                     } else {
                         feature.setGeometry(featureModel.projGeometry);
@@ -307,7 +332,7 @@ export class MapManagerService {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
                             feature.setGeometry(featureModel.realGeometry);
-                            feature.setStyle(this.RealPositionStyle.style(this.mapService.selection,
+                            feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                         } else {
                             feature.setGeometry(featureModel.projGeometry);

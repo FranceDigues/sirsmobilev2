@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import MultiPoint from 'ol/geom/MultiPoint';
-import { Fill, Stroke, Style, Text } from 'ol/style';
+import {Fill, Stroke, Style, Text} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
-import { features } from 'process';
-import { MapService } from './map.service';
+import {features} from 'process';
+import {MapService} from './map.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DefaultStyle {
 
-    constructor(private handling: HandlingStyle, private getStyle: GetStyle) { }
+    constructor(private handling: HandlingStyle, private getStyle: GetStyle) {
+    }
 
     style(selection, feature, color?, type?, featureModel?, layerModel?) {
         switch (type) {
@@ -19,9 +20,9 @@ export class DefaultStyle {
             case 'MultiLineString':
                 return this.createLineStyleFunc(selection, feature, color, featureModel, layerModel);
             case 'Point':
-                return this.createPointStyle(selection, feature, color, featureModel, layerModel);
+                return this.createPointStyleFunc(selection, feature, color, featureModel, layerModel);
             case 'MultiPoint':
-                return this.createPointStyle(selection, feature, color, featureModel, layerModel);
+                return this.createPointStyleFunc(selection, feature, color, featureModel, layerModel);
             case 'Polygon':
                 return this.createPolygonStyle(selection, feature, color, featureModel, layerModel);
             case 'MultiPolygon':
@@ -30,45 +31,48 @@ export class DefaultStyle {
         return null;
     }
 
-    private createPointStyle(selection, feature, color?, featureModel?, layerModel?) {
-        const selectedIds = this.getAllSelectedFeaturesIds(selection.list);
-
-        color[3] = 1;
-        if (selection.active) {
-            const highlight = this.handling.highlightHandling(selection, feature);
-            const fillColor = highlight ? [255, 0, 0, 1] : [255, 255, 255, color[3]];
-            const strokeColor = highlight ? [0, 0, 255, 1] : color;
-            const strokeWidth = 2;
-            const pointRadius = 6;
-            return [this.getStyle.point(fillColor, strokeColor, strokeWidth, pointRadius,
-                this.handling.zIndexHandling(selection, feature), featureModel, layerModel)];
-        } else {
-            const highlightAll = this.handling.allHighlightHandling(feature, selectedIds);
-            const fillColor = highlightAll ? [255, 0, 0, 1] : [255, 255, 255, color[3]];
-            const strokeColor = highlightAll ? [0, 0, 255, 1] : color;
-            const strokeWidth = 2;
-            const pointRadius = 6;
-            return [this.getStyle.point(fillColor, strokeColor, strokeWidth, pointRadius,
-                this.handling.zIndexHandling(selection, feature), featureModel, layerModel)];
-        }
+    private createPointStyleFunc(selection, feature, color?, featureModel?, layerModel?) {
+        return () => {
+            color[3] = 1;
+            if (selection.active && selection.active === feature) {
+                const fillColor = [255, 0, 0, 1];
+                const strokeColor = [0, 0, 255, 1];
+                const strokeWidth = 2;
+                const pointRadius = 6;
+                return [this.getStyle.point(fillColor, strokeColor, strokeWidth, pointRadius, 3, featureModel, layerModel)];
+            } else if (feature.get('selected')) {
+                const fillColor = color;
+                const strokeColor = [255, 255, 255, color[3]];
+                const strokeWidth = 2;
+                const pointRadius = 6;
+                return [this.getStyle.point(fillColor, strokeColor, strokeWidth, pointRadius, 2, featureModel, layerModel)];
+            } else {
+                const fillColor = [255, 255, 255, color[3]];
+                const strokeColor = color;
+                const strokeWidth = 2;
+                const pointRadius = 6;
+                return [this.getStyle.point(fillColor, strokeColor, strokeWidth, pointRadius, 1, featureModel, layerModel)];
+            }
+        };
     }
 
     private createLineStyleFunc(selection, feature, color, featureModel, layerModel) {
         return () => {
-            color[3] = this.handling.opacityHandling(selection, feature);
+            const styles = [];
+            color[3] = 1;
+            styles.push(this.createLineStyle(color, 5, 2, featureModel, layerModel));
 
-            var styles = [],
-                highlight = this.handling.highlightHandling2(selection, feature),
-                zIndex = this.handling.zIndexHandling(selection, feature),
-                strokeColor = color,
-                strokeWidth = 5;
-            if (highlight) {
-                styles.push(this.createLineStyle([255, 255, 255, color[3]], strokeWidth + 4, zIndex, featureModel, layerModel));
+            if (selection.active && selection.active === feature) {
+                styles.push(this.createLineStyle([0, 0, 255, color[3]], 9, 3, featureModel, layerModel));
+                styles.push(this.createLineStyle([255, 0, 0, color[3]], 5, 4, featureModel, layerModel));
+            } else if (feature.get('selected')) {
+                styles.push(this.createLineStyle([255, 255, 255, color[3]], 9, 1, featureModel, layerModel));
             }
-            styles.push(this.createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel));
+
             return styles;
         };
     }
+
     private createLineStyle(strokeColor, strokeWidth, zIndex, featureModel, layerModel) {
         var stroke = new Stroke({color: strokeColor, width: strokeWidth});
         if (layerModel) {
@@ -102,26 +106,6 @@ export class DefaultStyle {
         return styles;
     }
 
-    private getAllFeaturesIds(arrs) {
-        const ids = [];
-
-        arrs.forEach((arr) => {
-            ids.push(arr.get('id'));
-        });
-        return ids;
-    }
-
-    private getAllSelectedFeaturesIds(arrs) {
-        const ids = [];
-
-        arrs.forEach((arr) => {
-            arr.get('features').forEach((feature) => {
-                ids.push(feature.get('id'));
-            });
-        });
-        return ids;
-    }
-
 }
 
 @Injectable({
@@ -131,7 +115,8 @@ export class RealPositionStyle {
 
     mapService: MapService;
 
-    constructor(private getStyle: GetStyle, private handling: HandlingStyle) { }
+    constructor(private getStyle: GetStyle, private handling: HandlingStyle) {
+    }
 
     style(selection, feature, color?, type?, featureModel?, layerModel?): Array<Style> {
         switch (type) {
@@ -208,7 +193,7 @@ export class HandlingStyle {
 
     highlightHandling2(selection, feature) {
         return selection.list.length && ((!selection.active && feature.get('selected')) ||
-        (selection.active && selection.active === feature));
+            (selection.active && selection.active === feature));
     }
 
     allHighlightHandling(feature, selectedIds) {
@@ -247,9 +232,9 @@ export class HandlingStyle {
 export class GetStyle {
 
     point(fillColor, strokeColor, strokeWidth, circleRadius, zIndex, featureModel?, layerModel?): Style {
-        const fill = new Fill({ color: fillColor });
-        const stroke = new Stroke({ color: strokeColor, width: strokeWidth });
-        const circle = new CircleStyle({ fill, stroke, radius: circleRadius });
+        const fill = new Fill({color: fillColor});
+        const stroke = new Stroke({color: strokeColor, width: strokeWidth});
+        const circle = new CircleStyle({fill, stroke, radius: circleRadius});
 
         if (layerModel) {
             if (layerModel.featLabels) {
@@ -257,17 +242,17 @@ export class GetStyle {
                     font: 'bold 12px sans-serif',
                     text: featureModel.title ? featureModel.title : featureModel.designation,
                     offsetY: -12,
-                    fill: new Fill({ color: 'black' }),
-                    stroke: new Stroke({ color: 'white', width: 0.5 })
+                    fill: new Fill({color: 'black'}),
+                    stroke: new Stroke({color: 'white', width: 0.5})
                 });
-                return new Style({ image: circle, zIndex, text });
+                return new Style({image: circle, zIndex, text});
             }
         }
-        return new Style({ image: circle, zIndex });
+        return new Style({image: circle, zIndex});
     }
 
     line(strokeColor, strokeWidth, lineDash, zIndex, featureModel?, layerModel?): Style {
-        const stroke = new Stroke({ color: strokeColor, width: strokeWidth, lineDash });
+        const stroke = new Stroke({color: strokeColor, width: strokeWidth, lineDash});
 
         if (layerModel) {
             if (layerModel.featLabels) {
@@ -275,17 +260,17 @@ export class GetStyle {
                     font: 'bold 12px sans-serif',
                     text: featureModel.title ? featureModel.title : featureModel.designation,
                     offsetY: -12,
-                    fill: new Fill({ color: 'black' }),
-                    stroke: new Stroke({ color: 'white', width: 0.5 })
+                    fill: new Fill({color: 'black'}),
+                    stroke: new Stroke({color: 'white', width: 0.5})
                 });
-                return new Style({ stroke, zIndex, text });
+                return new Style({stroke, zIndex, text});
             }
         }
-        return new Style({ stroke, zIndex });
+        return new Style({stroke, zIndex});
     }
 
     polygon(strokeColor, strokeWidth, lineDash, zIndex, featureModel?, layerModel?): Style {
-        const stroke = new Stroke({ color: strokeColor, width: strokeWidth, lineDash });
+        const stroke = new Stroke({color: strokeColor, width: strokeWidth, lineDash});
 
         if (layerModel) {
             if (layerModel.featLabels) {
@@ -293,12 +278,12 @@ export class GetStyle {
                     font: 'bold 12px sans-serif',
                     text: featureModel.title ? featureModel.title : featureModel.designation,
                     offsetY: -12,
-                    fill: new Fill({ color: 'black' }),
-                    stroke: new Stroke({ color: 'white', width: 0.5 })
+                    fill: new Fill({color: 'black'}),
+                    stroke: new Stroke({color: 'white', width: 0.5})
                 });
-                return new Style({ stroke, zIndex, text });
+                return new Style({stroke, zIndex, text});
             }
         }
-        return new Style({ stroke, zIndex });
+        return new Style({stroke, zIndex});
     }
 }

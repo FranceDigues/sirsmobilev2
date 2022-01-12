@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
-import { LocalDatabase } from '../../../services/local-database.service';
-import { ObjectDetails } from '../../../services/object-details.service';
-import { Toast } from '@ionic-native/toast/ngx';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
+import {SelectedObjectsService} from 'src/app/services/selected-objects.service';
+import {LocalDatabase} from '../../../services/local-database.service';
+import {ObjectDetails} from '../../../services/object-details.service';
+import {Toast} from '@ionic-native/toast/ngx';
 import Feature from 'ol/Feature';
+import {MapService} from "../../../services/map.service";
 
 @Component({
     selector: 'selected-objects',
@@ -18,7 +19,8 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
                 private localDB: LocalDatabase, private toast: Toast,
-                private objectDetails: ObjectDetails) {
+                private objectDetails: ObjectDetails,
+                private mapService: MapService) {
     }
 
 
@@ -55,9 +57,10 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         return res;
     }
 
-    openDetails(feat) {
-        feat.set('visited', true);
-        this.localDB.get(feat.get('id'))
+    openDetails(feature) {
+        feature.set('visited', true);
+        this.mapService.selection.active = feature;
+        this.localDB.get(feature.get('id'))
             .then(
                 (doc) => {
                     this.openDocumentSuccess(doc);

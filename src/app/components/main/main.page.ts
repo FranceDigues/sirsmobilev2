@@ -1,35 +1,35 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
+import {AfterViewInit, Component} from '@angular/core';
+import {OLService} from '@ionic-lib/lib-map/ol.service';
+import {LoadingController, MenuController, Platform, ToastController} from '@ionic/angular';
 import proj4 from 'proj4';
-import { AppVersionsService } from '../../services/app-versions.service';
-import { AuthService } from '../../services/auth.service';
-import { BackLayerService } from '../../services/back-layer.service';
-import { DatabaseService } from '../../services/database.service';
-import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService } from '../../services/map-manager.service';
-import { MapService } from '../../services/map.service';
-import { DatabaseModel } from '../database-connection/models/database.model';
-import { SelectedObjectsService } from '../../services/selected-objects.service';
-import { SirsDocService } from '../../services/sirsdoc.service';
-import { Network } from '@ionic-native/network/ngx';
-import { EditionLayerService } from '../../services/edition-layer.service';
-import { ObservationEditService } from 'src/app/services/observation-edit.service';
-import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
+import {AppVersionsService} from '../../services/app-versions.service';
+import {AuthService} from '../../services/auth.service';
+import {BackLayerService} from '../../services/back-layer.service';
+import {DatabaseService} from '../../services/database.service';
+import {GeolocationService} from '../../services/geolocation.service';
+import {MapManagerService} from '../../services/map-manager.service';
+import {MapService} from '../../services/map.service';
+import {DatabaseModel} from '../database-connection/models/database.model';
+import {SelectedObjectsService} from '../../services/selected-objects.service';
+import {SirsDocService} from '../../services/sirsdoc.service';
+import {Network} from '@ionic-native/network/ngx';
+import {EditionLayerService} from '../../services/edition-layer.service';
+import {ObservationEditService} from 'src/app/services/observation-edit.service';
+import {GeolocLayerService} from 'src/app/services/geoloc-layer.service';
 
 // OpenLayers
-import { transform } from 'ol/proj';
-import { register } from 'ol/proj/proj4';
-import { Style, Fill } from 'ol/style';
-import { Vector as VectorSource } from "ol/source";
-import { Vector as VectorLayer } from "ol/layer";
+import {transform} from 'ol/proj';
+import {register} from 'ol/proj/proj4';
+import {Style, Fill} from 'ol/style';
+import {Vector as VectorSource} from "ol/source";
+import {Vector as VectorLayer} from "ol/layer";
 import ImageSource from 'ol/source/Image';
 import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
-import { Circle } from "ol/geom";
+import {Circle} from "ol/geom";
 import ScaleLine from 'ol/control/ScaleLine';
-import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';
-import { ActivatedRoute } from '@angular/router';
+import {ShapesLayersManagerService} from 'src/app/services/shapes-layers-manager.service';
+import {ActivatedRoute} from '@angular/router';
 
 
 @Component({
@@ -43,13 +43,13 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-        public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
-        private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
-        private menu: MenuController, private appVersionsService: AppVersionsService,
-        private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
-        private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
-        public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
-        private route: ActivatedRoute) {
+                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
+                private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
+                private menu: MenuController, private appVersionsService: AppVersionsService,
+                private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
+                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
+                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
+                private route: ActivatedRoute) {
         sirsDocService.doc = this.route.snapshot.data.sirsDoc;
         //console.log(sirsDocService.doc);
         this.appVersionsService.init();
@@ -166,7 +166,7 @@ export class MainPage implements AfterViewInit {
                                         }),
                                         style: [
                                             new Style({
-                                                fill: new Fill({ color: [255, 255, 255, 0.5] })
+                                                fill: new Fill({color: [255, 255, 255, 0.5]})
                                             })
                                         ]
                                     });
@@ -190,7 +190,7 @@ export class MainPage implements AfterViewInit {
 
                             const circleGeometry = uniqueLayer.getSource().getFeatures()[0].getGeometry();
                             const circleExtent = circleGeometry.getExtent();
-                            let featuresIntersection = [];
+                            const featuresIntersection = [];
                             const forEachVectorSources = (layers, callback) => {
                                 layers.forEach((layer) => {
                                     // Treat only visible layer, specially to filter edition layer when it's off
@@ -201,7 +201,7 @@ export class MainPage implements AfterViewInit {
                                         }
                                         // This is a single layer. Check if this layer should be included.
                                         else if (layer instanceof VectorLayer) {
-                                            let source = layer.getSource();
+                                            const source = layer.getSource();
 
                                             // Ensure that the layer has a vector source.
                                             if (source instanceof VectorSource) {
@@ -212,12 +212,12 @@ export class MainPage implements AfterViewInit {
                                         }
                                     }
                                 });
-                            }
-                            // Identifies features which have at least one point in the circle.
+                            };
+                            // Identify features which have at least one point in the circle.
                             forEachVectorSources(this.olService.getLayers(), (source) => {
                                 source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
                                     const properties = feature.getProperties();
-                                    console.log("properties : ", properties);
+                                    console.log('properties : ', properties);
                                     if (properties.geometry && properties.id && properties['@class']) {
                                         featuresIntersection.push(feature);
                                     }
@@ -230,7 +230,11 @@ export class MainPage implements AfterViewInit {
                             if (featuresIntersection.length > 0) {
                                 this.pathRightSlide = 'objectsSelected';
                                 this.selectedObjectsService.updateFeatures(featuresIntersection);
+                                this.mapService.selection.list = featuresIntersection;
                                 this.menu.open('right-slider');
+                            } else {
+                                this.selectedObjectsService.updateFeatures([]);
+                                this.menu.close('right-slider');
                             }
                         }
                         resetCircle();
@@ -254,13 +258,13 @@ export class MainPage implements AfterViewInit {
                         resetCircle();
                     });
 
-                    const resetCircle = function () {
+                    const resetCircle = () => {
                         clearInterval(intervalTask);
                         clearTimeout(delay);
                         radius = 50;
                         clickPixel = null;
                         pointerIsDown = false;
-                    }
+                    };
 
                     // ENDS HERE.
 
