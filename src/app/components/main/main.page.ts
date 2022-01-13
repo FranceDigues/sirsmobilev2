@@ -199,7 +199,7 @@ export class MainPage implements AfterViewInit {
                                             forEachVectorSources(layer.getLayers(), callback);
                                         }
                                         // This is a single layer. Check if this layer should be included.
-                                        else if (layer instanceof VectorLayer) {
+                                        else if (layer instanceof VectorLayer && layer.get('model') && layer.get('model').selectable) {
                                             const source = layer.getSource();
 
                                             // Ensure that the layer has a vector source.
