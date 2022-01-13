@@ -374,12 +374,9 @@ export class ObservationEditService {
     }
 
     open(photo) {
-        console.log("photo : ", photo);
         const url = this.getPhotoPath(photo, true);
-        console.log("url : ", url);
-        const indexList = this.homemadeIndexOf(url, "/");
+        const indexList = this.homemadeIndexOf(url, '/');
         const finalPath = url.substring(indexList[3]);
-        console.log("finalPath : ", finalPath);
         this.fileOpener.open(finalPath, 'image/jpeg')
             .then(
                 () => {

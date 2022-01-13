@@ -72,11 +72,8 @@ export class AddShapesLayersComponent implements OnInit {
   importGeoJson() {
     this.fileChooser.open()
     .then(uri => {
-      console.log("uri : ", uri);
-      console.log("this.webview.convertFileSrc(filePath) : ",  this.webview.convertFileSrc(uri));
       this.filePath.resolveNativePath(uri)
         .then(filePath => {
-          console.log("filepath : ", filePath);
           const path = filePath.split('/');
           this.file.readAsText(filePath.replace(path[path.length - 1], ''), path[path.length - 1])
             .then(res => {
@@ -115,13 +112,10 @@ export class AddShapesLayersComponent implements OnInit {
     const featuresArray = [];
     this.fileChooser.open()
     .then(uri => {
-      console.log("uri : ", uri);
-      console.log("this.webview.convertFileSrc(filePath) : ",  this.webview.convertFileSrc(uri));
       this.filePath.resolveNativePath(uri)
         .then(filePath => {
 
           const onceDone = (featuresArray) => { // function called once all features have recursively been added to the array with shapefile.open(...).
-            console.log("featuresArray : ", featuresArray);
             const path = filePath.split('/');
             const fileName = path[path.length - 1].split('.')[0] != '' ? path[path.length - 1].split('.')[0] : 'no name file'; // condition checking that the file has a name and is not just .json, otherwise it would be null.
             const geoJsonObject = {
@@ -132,10 +126,8 @@ export class AddShapesLayersComponent implements OnInit {
           }
 
           const newPathTest = this.webview.convertFileSrc(filePath); // shapefile(to json) api does not accept file:///... path.
-          console.log("newPathTest : ", newPathTest);
           shapefile.open(newPathTest)
             .then(source => {
-              console.log("source : ", source);
               source.read()
                 .then(function log(result) {
                   if (result.value) {

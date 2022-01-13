@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { LocalDatabase } from './local-database.service';
-import { SirsDocService } from './sirsdoc.service';
-import { RealPositionStyle } from './style.service';
-import { MapService } from './map.service';
+import {Injectable} from '@angular/core';
+import {LocalDatabase} from './local-database.service';
+import {SirsDocService} from './sirsdoc.service';
+import {RealPositionStyle} from './style.service';
+import {MapService} from './map.service';
 import VectorLayer from 'ol/layer/Vector';
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import VectorSource from 'ol/source/Vector';
 import WKT from 'ol/format/WKT';
-import { DatabaseService } from './database.service';
-import { DatabaseModel } from '../components/database-connection/models/database.model';
-import { PluginUtils } from '../utils/plugin-utils';
+import {DatabaseService} from './database.service';
+import {DatabaseModel} from '../components/database-connection/models/database.model';
+import {PluginUtils} from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -21,10 +21,10 @@ export class EditionLayerService {
 
     wktFormat = new WKT();
 
-    constructor(private localDB: LocalDatabase, 
+    constructor(private localDB: LocalDatabase,
                 private SirsDoc: SirsDocService,
                 private databaseService: DatabaseService,
-                private realPositionService: RealPositionStyle, 
+                private realPositionService: RealPositionStyle,
                 private mapService: MapService) {
     }
 
@@ -51,7 +51,8 @@ export class EditionLayerService {
             source: new VectorSource({useSpatialIndex: false})
         });
 
-        this.setEditionLayerFeatures(olLayer, favorites); // Set the layer that contains the new objects of the edition mode
+        // Set the layer that contains the new objects of the edition mode
+        this.setEditionLayerFeatures(olLayer, favorites).then();
         return olLayer;
     }
 
@@ -66,13 +67,13 @@ export class EditionLayerService {
         return this.localDB.query('objetsModeEdition5/objetsModeEdition5', {include_docs: true})
             .then(
                 (results) => {
-                    if (favorites && favorites.length>0) {
+                    if (favorites && favorites.length > 0) {
                         const visibleFeatures = [];
-                        for (let fav of favorites) {
-                            if (fav.visible) {
-                                for (let obj of results) {
-                                    if (fav.visible && fav.filterValue===obj.value['@class']) {
-                                        visibleFeatures.push(obj);
+                        for (const favorite of favorites) {
+                            if (favorite.visible) {
+                                for (const result of results) {
+                                    if (favorite.visible && favorite.filterValue === result.value['@class']) {
+                                        visibleFeatures.push(result);
                                     }
                                 }
                             }
@@ -107,7 +108,7 @@ export class EditionLayerService {
     createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
         const SirsDoc = this.SirsDoc;
-        let geometry = undefined;
+        let geometry;
         const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
         if (featureDoc.geometry && PluginUtils.isDependanceClass(featureDoc['@class'])) {

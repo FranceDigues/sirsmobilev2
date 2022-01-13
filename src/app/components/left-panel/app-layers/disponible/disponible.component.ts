@@ -73,29 +73,29 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     return false;
   }
 
-  toggleLayer(layer) {
-    if (this.isActive(layer)) {
-      const index = this.appLayersService.removeFavorite(layer);
+  toggleLayer(layerModel) {
+    if (this.isActive(layerModel)) {
+      const index = this.appLayersService.removeFavorite(layerModel);
       if (this.mapManagerService.appLayer) {
         try {
           this.mapManagerService.appLayer.getLayers().removeAt(index);
         } catch {
           // No layer at index.
-          console.warn("No layer at index : ", index);
+          console.warn('No layer at index : ', index);
         }
         this.editionLayerService.updateEditionLayerInstance(this.appLayersService.getFavorites());
       }
     } else {
-      this.appLayersService.addFavorite(layer);
+      this.appLayersService.addFavorite(layerModel);
       if (this.mapManagerService.appLayer) {
-        const appLayerInstance = this.mapManagerService.createAppLayerInstance(layer);
+        const appLayerInstance = this.mapManagerService.createAppLayerInstance(layerModel);
         appLayerInstance
           .then(layer => {
             this.mapManagerService.appLayer.getLayers().getArray().push(layer);
           })
           .catch(error => {
-            console.warn(layer, " : Could not be added to the appLayer array.");
-          })
+            console.warn(layerModel, ' : Could not be added to the appLayer array.');
+          });
       }
     }
     this.updateFavorites();

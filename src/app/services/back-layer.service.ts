@@ -55,7 +55,6 @@ export class BackLayerService {
     }
 
     createBackLayerInstance(layerModel): TileLayer {
-        console.log("layerModel : ", layerModel);
         let layer = null;
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;

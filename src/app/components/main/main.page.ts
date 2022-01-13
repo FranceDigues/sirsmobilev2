@@ -51,7 +51,6 @@ export class MainPage implements AfterViewInit {
                 public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
                 private route: ActivatedRoute) {
         sirsDocService.doc = this.route.snapshot.data.sirsDoc;
-        //console.log(sirsDocService.doc);
         this.appVersionsService.init();
         this.backLayerService.init();
         this.editionLayerService.init();
@@ -217,7 +216,6 @@ export class MainPage implements AfterViewInit {
                             forEachVectorSources(this.olService.getLayers(), (source) => {
                                 source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
                                     const properties = feature.getProperties();
-                                    console.log('properties : ', properties);
                                     if (properties.geometry && properties.id && properties['@class']) {
                                         featuresIntersection.push(feature);
                                     }

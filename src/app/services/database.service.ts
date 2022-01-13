@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { DatabaseModel } from '../components/database-connection/models/database.model';
+import {Injectable} from '@angular/core';
+import {NativeStorage} from '@ionic-native/native-storage/ngx';
+import {DatabaseModel} from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root',
@@ -45,14 +45,16 @@ export class DatabaseService {
                 androidDatabaseImplementation: 2,
                 adapter: 'cordova-sqlite'
             });
-            // Indicate there is not memory leak in the Fourth Step (10 listeners by default)
-            this.localDB.setMaxListeners(15); // TODO : Try to rise this limit until I have memory leaks warning. Check : https://pouchdb.com/errors.html
+            /* Indicate there is no memory leak in the Fourth Step (10 listeners by default).
+             TODO : Try to rise this limit until I have memory leaks warning. Check : https://pouchdb.com/errors.html
+             */
+            this.localDB.setMaxListeners(15);
         }
         return this.localDB;
     }
 
     saveDatabaseSettings(databases) {
-        this.nativeStorage.setItem('databases-settings', databases);
+        this.nativeStorage.setItem('databases-settings', databases).then();
     }
 
     getDatabaseSettings() {
@@ -70,13 +72,13 @@ export class DatabaseService {
                         } else {
                             reject('Error, cannot find current db settings');
                         }
-                    },error => {
-                        console.error("error getting databaeses-setting : ", error);
+                    }, error => {
+                        console.error('error getting databases-setting : ', error);
                     }
                 )
                 .catch(error => {
-                    console.error("error getting databaeses-setting : ", error);
-                })
+                    console.error('error getting databases-setting : ', error);
+                });
         });
     }
 
@@ -123,6 +125,16 @@ export class DatabaseService {
             .then(
                 (database: DatabaseModel) => {
                     database.context.settings.geolocation = flag;
+                    this.setCurrentDatabaseSettings(database);
+                },
+            );
+    }
+
+    changeFavoritesLayers(favorites) {
+        this.getCurrentDatabaseSettings()
+            .then(
+                (database: DatabaseModel) => {
+                    database.favorites = favorites;
                     this.setCurrentDatabaseSettings(database);
                 },
             );

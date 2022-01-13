@@ -33,7 +33,6 @@ export class DefaultStyle {
 
     private createPointStyleFunc(selection, feature, color?, featureModel?, layerModel?) {
         return () => {
-            color[3] = 1;
             if (selection.active && selection.active === feature) {
                 const fillColor = [255, 0, 0, 1];
                 const strokeColor = [0, 0, 255, 1];
@@ -198,11 +197,7 @@ export class HandlingStyle {
 
     allHighlightHandling(feature, selectedIds) {
         if (feature.get('features') === undefined) {
-            if (selectedIds.indexOf(feature.get('id')) !== -1) {
-                return true;
-            } else {
-                return false;
-            }
+            return selectedIds.indexOf(feature.get('id')) !== -1;
         }
         return false;
     }

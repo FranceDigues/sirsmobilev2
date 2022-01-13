@@ -1,12 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { AppLayersService } from 'src/app/services/app-layers.service';
-import { MapManagerService } from 'src/app/services/map-manager.service';
-import { colorFactory } from 'src/app/utils/color-factory';
-import { ModalController, NavController } from '@ionic/angular';
-import { ColorModalComponent } from './color-modal/color-modal.component';
-import { DatabaseService } from '../../../services/database.service';
-import { DatabaseModel } from '../../database-connection/models/database.model';
-import { EditionLayerService } from 'src/app/services/edition-layer.service';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {AppLayersService} from 'src/app/services/app-layers.service';
+import {MapManagerService} from 'src/app/services/map-manager.service';
+import {colorFactory} from 'src/app/utils/color-factory';
+import {ModalController, NavController} from '@ionic/angular';
+import {ColorModalComponent} from './color-modal/color-modal.component';
+import {DatabaseService} from '../../../services/database.service';
+import {DatabaseModel} from '../../database-connection/models/database.model';
+import {EditionLayerService} from 'src/app/services/edition-layer.service';
 
 @Component({
     selector: 'app-layers',
@@ -24,12 +24,12 @@ export class AppLayersComponent implements OnInit {
     path = 0;
 
     constructor(private appLayersService: AppLayersService,
-                public mapManagerService: MapManagerService, 
+                public mapManagerService: MapManagerService,
                 private modalCtrl: ModalController,
-                private navCtrl: NavController, 
+                private navCtrl: NavController,
                 private dbService: DatabaseService,
                 private editionLayerService: EditionLayerService,
-                ) {
+    ) {
     }
 
     goBack() {
@@ -107,7 +107,7 @@ export class AppLayersComponent implements OnInit {
         this.mapManagerService.addLabelFeatureLayer(layer);
     }
 
-    async openModal(layer) {
+    async openColorModal(layer) {
         const modal = await this.modalCtrl.create({
             component: ColorModalComponent,
             animated: true,
@@ -120,8 +120,9 @@ export class AppLayersComponent implements OnInit {
                     if (color.data) {
                         layer.color = color.data;
                         setTimeout(() => {
-                            // this.mapManagerService.reloadLayer(layer): // TODO verify you can reactive this
-                        }, 1000);
+                            this.mapManagerService.reloadLayer(layer);
+                            this.appLayersService.setFavorites(this.appLayersService.favorites);
+                        }, 500);
                     }
                 }
             );

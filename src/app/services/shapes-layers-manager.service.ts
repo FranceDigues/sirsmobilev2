@@ -181,12 +181,12 @@ export class ShapesLayersManagerService {
 
   wfsRequest(url: string) {
     return new Promise((resolve, reject) => {
-      this.http.get(url, {reportProgress: true, observe: "events"}).subscribe((geojsonEvent: any) => {    
-        if (geojsonEvent.type === HttpEventType.DownloadProgress) {
-          console.log("download progress: ", geojsonEvent); // TODO : A small window somewhere on the screen showing the download progress.
+      this.http.get(url, {reportProgress: true, observe: 'events'}).subscribe((geoJsonEvent: any) => {
+        if (geoJsonEvent.type === HttpEventType.DownloadProgress) {
+          console.log('download progress: ', geoJsonEvent); // TODO : A small window somewhere on the screen showing the download progress.
         }
-        if (geojsonEvent.type === HttpEventType.Response) {
-          resolve(geojsonEvent.body);
+        if (geoJsonEvent.type === HttpEventType.Response) {
+          resolve(geoJsonEvent.body);
         }
       }, error => {
         reject(error);

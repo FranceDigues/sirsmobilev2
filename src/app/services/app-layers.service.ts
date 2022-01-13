@@ -9,10 +9,10 @@ import { Random } from '../utils/uuid-utils';
 export class AppLayersService {
 
     constructor(private localDB: LocalDatabase,
-                private databaseSrvc: DatabaseService) {
+                private databaseService: DatabaseService) {
     }
 
-    favorites = this.databaseSrvc.activeDB.favorites;
+    favorites = this.databaseService.activeDB.favorites;
 
     cachedDescriptions = null;
 
@@ -84,6 +84,7 @@ export class AppLayersService {
 
     setFavorites(newFavorites) {
         this.favorites = newFavorites;
+        this.databaseService.changeFavoritesLayers(newFavorites);
     }
 
     addFavorite(layer) {
