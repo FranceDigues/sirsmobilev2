@@ -20,6 +20,7 @@ import {OLService} from '@ionic-lib/lib-map/ol.service';
 import {DatabaseService} from './database.service';
 import {PluginUtils} from '../utils/plugin-utils';
 import {SelectedObjectsService} from "./selected-objects.service";
+import {EditionLayerService} from "./edition-layer.service";
 
 @Injectable({
     providedIn: 'root'

@@ -111,7 +111,6 @@ export class DefaultStyle {
     providedIn: 'root'
 })
 export class RealPositionStyle {
-
     mapService: MapService;
 
     constructor(private getStyle: GetStyle, private handling: HandlingStyle) {
@@ -180,6 +179,88 @@ export class RealPositionStyle {
         }
         styles.push(this.getStyle.polygon(lineStrokeColor, lineStrokeWidth, [30, 20], zIndex, featureModel, layerModel));
         return styles;
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class EditionLayerStyle {
+    mapService: MapService;
+    EDITION_LAYER_COLOR_1 = [255, 255, 255, .3];
+    EDITION_LAYER_COLOR_2 = [0, 0, 255, .3];
+    EDITION_LAYER_STROKE_WIDTH = 3;
+    EDITION_LAYER_CIRCLE_RADIUS = 6;
+
+    constructor(private getStyle: GetStyle) {
+    }
+
+    style(selection, feature, type?, featureModel?, layerModel?) {
+        switch (type) {
+            case 'LineString':
+                return this.createLineStyleFunc(featureModel, layerModel,
+                    feature.get('selected'), selection.active && selection.active === feature);
+            case 'Point':
+                return this.createPointStyleFunc(featureModel, layerModel,
+                    feature.get('selected'), selection.active && selection.active === feature);
+            case 'Polygon':
+                return this.createPolygonStyleFunc(featureModel, layerModel,
+                    feature.get('selected'), selection.active && selection.active === feature);
+        }
+    }
+
+    private createPointStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
+        return () => {
+            if (active) {
+                return [this.getStyle.point(
+                    [255, 0, 0, 0.3],
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    1, featureModel, layerModel)];
+            } else if (selected) {
+                return [this.getStyle.point(
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_COLOR_1,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    1, featureModel, layerModel)];
+            } else {
+                return [this.getStyle.point(
+                    this.EDITION_LAYER_COLOR_1,
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    1, featureModel, layerModel)];
+            }
+        };
+    }
+
+    private createLineStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
+        return () => {
+            const styles = [];
+            styles.push(this.getStyle.line(this.EDITION_LAYER_COLOR_2, this.EDITION_LAYER_STROKE_WIDTH,
+                [30, 20], 1, featureModel, layerModel));
+            const pointStyle = this.getStyle.point(this.EDITION_LAYER_COLOR_1,
+                this.EDITION_LAYER_COLOR_2,
+                this.EDITION_LAYER_STROKE_WIDTH,
+                this.EDITION_LAYER_CIRCLE_RADIUS,
+                2, featureModel, layerModel);
+            pointStyle.setGeometry(
+                (featureGeo) => {
+                    return new MultiPoint(featureGeo.getGeometry().getCoordinates());
+                }
+            );
+            styles.push(pointStyle);
+            return styles;
+        };
+    }
+
+    private createPolygonStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
+        return () => {
+            return [this.getStyle.polygon(this.EDITION_LAYER_COLOR_2, this.EDITION_LAYER_STROKE_WIDTH,
+                [30, 20], 1, featureModel, layerModel)];
+        };
     }
 }
 

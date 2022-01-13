@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {LocalDatabase} from './local-database.service';
 import {SirsDocService} from './sirsdoc.service';
-import {RealPositionStyle} from './style.service';
+import {EditionLayerStyle, RealPositionStyle} from './style.service';
 import {MapService} from './map.service';
 import VectorLayer from 'ol/layer/Vector';
 import Feature from 'ol/Feature';
@@ -24,7 +24,7 @@ export class EditionLayerService {
     constructor(private localDB: LocalDatabase,
                 private SirsDoc: SirsDocService,
                 private databaseService: DatabaseService,
-                private realPositionService: RealPositionStyle,
+                private editionLayerStyle: EditionLayerStyle,
                 private mapService: MapService) {
     }
 
@@ -117,29 +117,32 @@ export class EditionLayerService {
                 featureProjection: 'EPSG:3857'
             });
         } else {
-            geometry = this.wktFormat.readGeometry(
-                featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
-                {
-                    dataProjection,
-                    featureProjection: 'EPSG:3857'
+            if (featureDoc.positionDebut || featureDoc.approximatePositionDebut) {
+                geometry = this.wktFormat.readGeometry(
+                    featureDoc.positionDebut ? featureDoc.positionDebut : featureDoc.approximatePositionDebut,
+                    {
+                        dataProjection,
+                        featureProjection: 'EPSG:3857'
+                    }
+                );
+                if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
+                    || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
+                    geometry = new LineString([
+                        geometry.getFirstCoordinate(),
+                        this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
+                            {
+                                dataProjection,
+                                featureProjection: 'EPSG:3857'
+                            }
+                        ).getFirstCoordinate()
+                    ]);
                 }
-            );
-            if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
-                || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
-                geometry = new LineString([
-                    geometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
-                        {
-                            dataProjection,
-                            featureProjection: 'EPSG:3857'
-                        }
-                    ).getFirstCoordinate()
-                ]);
             }
+
         }
 
         const feature = new Feature({geometry});
-        feature.setStyle(this.realPositionService.style(this.mapService.selection, feature, [0, 0, 255, 1], geometry.getType()));
+        feature.setStyle(this.editionLayerStyle.style(this.mapService.selection, feature, geometry.getType()));
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);
