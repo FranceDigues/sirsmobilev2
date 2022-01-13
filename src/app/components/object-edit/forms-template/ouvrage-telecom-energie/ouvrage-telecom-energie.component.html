@@ -1,36 +1,35 @@
 <div class="row">
   <div class="sirs-field col col-50">
     <label for="label" class="active">Libellé</label>
-    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle"/>
+    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle" />
   </div>
   <div class="sirs-field col col-50">
     <label for="damSide" class="active">Type d'ouvrage</label>
     <div *ngIf="EOS.showText('fullName')">
-        <select id="damSide" class="browser-default"
-                name="damSide" [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
-                <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')"
-                  [ngValue]="r.id"
-                  [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
-                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                </option>
-        </select>
+      <select id="damSide" class="browser-default" name="damSide"
+        [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
+        <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')" [ngValue]="r.id"
+          [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
+          {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+        </option>
+      </select>
     </div>
     <div *ngIf="EOS.showText('abstract')">
-        <select id="damSide" class="browser-default" name="damSide" [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
-            <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')"
-                    [ngValue]="r.id"
-                    [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
-                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-            </option>
-        </select>
+      <select id="damSide" class="browser-default" name="damSide"
+        [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
+        <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')" [ngValue]="r.id"
+          [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
+          {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+        </option>
+      </select>
     </div>
     <div *ngIf="EOS.showText('both')">
-      <select id="damSide" class="browser-default" name="damSide" [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
-          <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')"
-                  [ngValue]="r.id"
-                  [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
-                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-          </option>
+      <select id="damSide" class="browser-default" name="damSide"
+        [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
+        <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName')" [ngValue]="r.id"
+          [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
+          {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+        </option>
       </select>
     </div>
   </div>
@@ -40,53 +39,68 @@
   <div class="row sirs-field-multi" *ngFor="let v of EOS.objectDoc.reseauTelecomEnergieIds; index as index">
     <div class="col col-75">
       <div *ngIf="EOS.showText('fullName')">
-        <select class="browser-default"
-                name="" [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
-                <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie"
-                  [ngValue]="r.id"
-                  [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
-                      {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                </option>
+        <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
+          <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie" [ngValue]="r.id"
+            [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
+            {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+          </option>
         </select>
       </div>
       <div *ngIf="EOS.showText('abstract')">
-          <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
-              <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie"
-                      [ngValue]="r.id"
-                      [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
-                  {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-              </option>
-          </select>
+        <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
+          <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie" [ngValue]="r.id"
+            [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
+            {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+          </option>
+        </select>
       </div>
       <div *ngIf="EOS.showText('both')">
         <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
-          <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie"
-                  [ngValue]="r.id"
-                  [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
-              <span *ngIf="!r.abrege">
-                {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-              </span>
+          <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie" [ngValue]="r.id"
+            [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
+            <span *ngIf="!r.abrege">
+              {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+            </span>
           </option>
         </select>
       </div>
     </div>
     <div class="col col-25">
       <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.reseauTelecomEnergieIds.length === 1"
-              (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index, 1)">
-          <ion-icon name="remove-outline"></ion-icon>
+        (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index, 1)">
+        <ion-icon name="remove-outline"></ion-icon>
       </button>
       <button class="btn pink waves-effect waves-teal"
-              (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index + 1, 0, EOS.refs.ReseauTelecomEnergie[0].id)">
-          <ion-icon name="add-outline"></ion-icon>
+        (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index + 1, 0, EOS.refs.ReseauTelecomEnergie[0].id)">
+        <ion-icon name="add-outline"></ion-icon>
       </button>
     </div>
   </div>
 </div>
 <div class="row">
   <div class="sirs-field col col-50">
-      <form-template-position-digue></form-template-position-digue>
+    <form-template-position-digue></form-template-position-digue>
   </div>
   <div class="sirs-field col col-50">
     <form-template-cote-digue></form-template-cote-digue>
   </div>
+</div>
+<div class="sirs-field">
+  <label class="active">Sécurité</label>
+  <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
+    <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
+      [selected]="EOS.objectDoc.securiteId === r.id">
+      {{ EOS.title(r) }}
+    </option>
+  </select>
+</div>
+<div class="sirs-field">
+  <label for="dimensionVerticale" class="active">Dimension vertical/diamètre (mm)</label>
+  <input id="dimensionVerticale" name="dimensionVerticale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionVerticale" />
+</div>
+<div class="sirs-field">
+  <label for="dimensionHorizontale" class="active">Dimension horizontale (mm)</label>
+  <input id="dimensionHorizontale" name="dimensionHorizontale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionHorizontale" />
 </div>

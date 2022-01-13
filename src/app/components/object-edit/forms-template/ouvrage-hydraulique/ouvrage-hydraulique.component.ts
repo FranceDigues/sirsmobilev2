@@ -14,6 +14,7 @@ export class OuvrageHydrauliqueComponent implements OnInit {
   ngOnInit() {
     this.initTypeOuvrageHydroAssocieID();
     this.initReadeauHydrauliqueFerme();
+    this.initSecuriteId();
     this.FT.initPosition();
     this.FT.initCote();
   }
@@ -26,4 +27,7 @@ export class OuvrageHydrauliqueComponent implements OnInit {
     this.EOS.setupRef('reseauHydrauliqueFermeIds', this.EOS.refs.ReseauHydrauliqueFerme[0], true);
   }
 
+  initSecuriteId() {
+    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
+  }
 }

@@ -14,8 +14,9 @@ export class ReseauTelecomEnergieComponent implements OnInit {
   ngOnInit() {
     this.initNetworkType();
     this.initImplantation();
-    this.FT.initHeight();
     this.initOuvrageTelecomEnergie();
+    this.initSecuriteId();
+    this.FT.initHeight();
     this.FT.initPosition();
     this.FT.initCote();
   }
@@ -32,4 +33,7 @@ export class ReseauTelecomEnergieComponent implements OnInit {
     this.EOS.setupRef('ouvrageTelecomEnergieIds', this.EOS.refs.OuvrageTelecomEnergie[0], true);
   }
 
+  initSecuriteId() {
+    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
+  }
 }

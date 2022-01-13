@@ -18,6 +18,7 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
     this.initImplantation();
     this.initNetworkType();
     this.initUtilisation();
+    this.initSecuriteId();
     this.FT.initPosition();
     this.FT.initCote();
   }
@@ -46,4 +47,7 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
     this.EOS.setupRef('utilisationConduiteId', this.EOS.refs.RefUtilisationConduite[0]);
   }
 
+  initSecuriteId() {
+    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
+  }
 }

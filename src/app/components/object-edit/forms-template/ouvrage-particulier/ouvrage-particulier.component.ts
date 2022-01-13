@@ -13,6 +13,7 @@ export class OuvrageParticulierComponent implements OnInit {
 
   ngOnInit() {
     this.initTypeOuvrageParticulier();
+    this.initSecuriteId();
     this.FT.initDamPosition();
     this.FT.initDamSide();
   }
@@ -21,4 +22,7 @@ export class OuvrageParticulierComponent implements OnInit {
     this.EOS.setupRef('typeOuvrageParticulierId', this.EOS.refs.RefOuvrageParticulier[0]);
   }
 
+  initSecuriteId() {
+    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
+  }
 }

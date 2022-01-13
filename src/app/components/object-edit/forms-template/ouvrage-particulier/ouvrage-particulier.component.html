@@ -45,3 +45,22 @@
     <form-template-cote-digue></form-template-cote-digue>
   </div>
 </div>
+<div class="sirs-field">
+  <label class="active">Sécurité</label>
+  <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
+    <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
+      [selected]="EOS.objectDoc.securiteId === r.id">
+      {{ EOS.title(r) }}
+    </option>
+  </select>
+</div>
+<div class="sirs-field">
+  <label for="dimensionVerticale" class="active">Dimension vertical/diamètre (mm)</label>
+  <input id="dimensionVerticale" name="dimensionVerticale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionVerticale" />
+</div>
+<div class="sirs-field">
+  <label for="dimensionHorizontale" class="active">Dimension horizontale (mm)</label>
+  <input id="dimensionHorizontale" name="dimensionHorizontale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionHorizontale" />
+</div>

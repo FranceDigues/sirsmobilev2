@@ -49,6 +49,7 @@ export class EditionModeService {
         { name: 'RefEtat', include_docs: false },
         { name: 'RefOuvrageAssocieAH', include_docs: false },
         { name: 'RefFonctionnementOAAH', include_docs: false },
+        { name: 'RefSecurite', include_docs: false },
         { name: 'DesordreDependance', include_docs: false },
         { name: 'StructureAmenagementHydraulique', include_docs: false },
         { name: 'OuvrageAssocieAmenagementHydraulique', include_docs: false },

@@ -681,4 +681,16 @@ export class EditObjectService {
 
         return comparison;
     }
+
+    title(eosReference) {
+        if (this.showText('fullName')) {
+          return eosReference.libelle ? eosReference.libelle : 'libellé indéterminé / id:  ' + eosReference.id;
+        } else if (this.showText('abstract')) {
+          return eosReference.abrege ? eosReference.abrege : eosReference.designation + ' : ' + eosReference.libelle
+        } else if (this.showText('both')) {
+          return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
+        } else {
+          throw "Unexpected behaviour showTextConfig should be defined";
+        }
+      }
 }

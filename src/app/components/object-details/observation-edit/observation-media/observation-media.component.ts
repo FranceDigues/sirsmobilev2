@@ -183,7 +183,8 @@ export class ObservationMediaComponent implements OnInit {
                             );
                     }
                 }
-            );
+            )
+            .catch(err => console.error("Error while taking a photo: " + err));
     }
 
     savePicture(file: Entry) {
