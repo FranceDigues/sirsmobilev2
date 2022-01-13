@@ -8,32 +8,24 @@
         </ion-toolbar>
     </div>
 
-    <div class="tabs-striped tabs-top" *ngIf="canShowTab()">
-        <ul #tabs class="tabs sirs-nav-tabs" style="display: flex;align-content: center;justify-content: start;">
-            <li class="tab sirs-tab">
-                <a [ngClass]="{active: activeTab === 'description'}"
-                   style="padding: 0 10px;"
-                   (click)="setActiveTab('description')">
-                    Description
-                </a></li>
-            <li class="tab sirs-tab" *ngIf="canShowObservationsTab()">
-                <a [ngClass]="{active: activeTab === 'observations'}"
-                   style="padding: 0 10px;"
-                   (click)="setActiveTab('observations')">
-                    Observations
-                </a></li>
-            <li class="tab sirs-tab" *ngIf="canShowPrestationsTab()">
-                <a [ngClass]="{active: activeTab === 'prestations'}"
-                   style="padding: 0 10px;"
-                   (click)="setActiveTab('prestations')">
-                    Prestations
-                </a></li>
-            <li class="tab sirs-tab" *ngIf="canShowDesordresTab()">
-                <a [ngClass]="{active: activeTab === 'desordres'}"
-                   style="padding: 0 10px;"
-                   (click)="setActiveTab('desordres')">
-                    Désordres
-                </a></li>
+    <div class="tabs-striped tabs-top">
+        <ul #tabs class="tabs tabs-sirs">
+            <li class="tab"><a [ngClass]="{active: activeTab === 'description'}"
+                               (click)="setActiveTab('description')">
+                Description
+            </a></li>
+            <li class="tab" *ngIf="canShowObservationsTab()"><a [ngClass]="{active: activeTab === 'observations'}"
+                                                                (click)="setActiveTab('observations')">
+                Observations
+            </a></li>
+            <li class="tab" *ngIf="canShowPrestationsTab()"><a [ngClass]="{active: activeTab === 'prestations'}"
+                                                               (click)="setActiveTab('prestations')">
+                Prestations
+            </a></li>
+            <li class="tab" *ngIf="canShowDesordresTab()"><a [ngClass]="{active: activeTab === 'desordres'}"
+                                                             (click)="setActiveTab('desordres')">
+                Désordres
+            </a></li>
         </ul>
     </div>
 
