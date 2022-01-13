@@ -165,7 +165,12 @@ export class EditionLayerService {
     }
 
     isEnabled() {
-        return this.editionLayer && this.editionLayer.getVisible();
+        return new Promise((resolve, reject) => {
+            this.databaseService.getCurrentDatabaseSettings()
+                .then((config: DatabaseModel) => {
+                    resolve(config.context.settings.edition);
+                });
+        });
     }
 
     changeVisibility(flag: boolean) {

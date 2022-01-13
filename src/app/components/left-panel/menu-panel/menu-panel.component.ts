@@ -1,10 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { MapManagerService } from 'src/app/services/map-manager.service';
-import { MapService } from 'src/app/services/map.service';
-import { EditionLayerService } from '../../../services/edition-layer.service';
-import { DatabaseService } from '../../../services/database.service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Router} from '@angular/router';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {MapManagerService} from 'src/app/services/map-manager.service';
+import {MapService} from 'src/app/services/map.service';
+import {EditionLayerService} from '../../../services/edition-layer.service';
+import {DatabaseService} from '../../../services/database.service';
 
 @Component({
     selector: 'menu-panel',
@@ -22,7 +22,9 @@ export class MenuPanelComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.editionFlag = this.editionLayerService.isEnabled();
+        this.editionLayerService.isEnabled().then(state => {
+            this.editionFlag = state;
+        });
     }
 
     goCraftLayers() {
