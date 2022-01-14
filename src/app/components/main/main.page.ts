@@ -1,38 +1,32 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { LoadingController, MenuController, Platform } from '@ionic/angular';
-import proj4 from 'proj4';
-import {AppVersionsService} from '../../services/app-versions.service';
-import {AuthService} from '../../services/auth.service';
-import {BackLayerService} from '../../services/back-layer.service';
-import {DatabaseService} from '../../services/database.service';
-import {GeolocationService} from '../../services/geolocation.service';
-import {MapManagerService} from '../../services/map-manager.service';
-import {MapService} from '../../services/map.service';
-import {DatabaseModel} from '../database-connection/models/database.model';
-import {SelectedObjectsService} from '../../services/selected-objects.service';
-import {SirsDocService} from '../../services/sirsdoc.service';
-import {Network} from '@ionic-native/network/ngx';
-import {EditionLayerService} from '../../services/edition-layer.service';
-import {ObservationEditService} from 'src/app/services/observation-edit.service';
-import {GeolocLayerService} from 'src/app/services/geoloc-layer.service';
+import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
+import { AuthService } from '../../services/auth.service';
+import { BackLayerService } from '../../services/back-layer.service';
+import { DatabaseService } from '../../services/database.service';
+import { GeolocationService } from '../../services/geolocation.service';
+import { MapManagerService } from '../../services/map-manager.service';
+import { MapService } from '../../services/map.service';
+import { DatabaseModel } from '../database-connection/models/database.model';
+import { SelectedObjectsService } from '../../services/selected-objects.service';
+import { Network } from '@ionic-native/network/ngx';
+import { EditionLayerService } from '../../services/edition-layer.service';
+import { ObservationEditService } from 'src/app/services/observation-edit.service';
+import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
 
 // OpenLayers
-import {transform} from 'ol/proj';
-import {register} from 'ol/proj/proj4';
-import {Style, Fill} from 'ol/style';
-import {Vector as VectorSource} from "ol/source";
-import {Vector as VectorLayer} from "ol/layer";
+import { transform } from 'ol/proj';
+import { Style, Fill } from 'ol/style';
+import { Vector as VectorSource } from 'ol/source';
+import { Vector as VectorLayer } from 'ol/layer';
 import ImageSource from 'ol/source/Image';
 import LayerGroup from 'ol/layer/Group';
 import Feature from 'ol/Feature';
-import {Circle} from "ol/geom";
+import { Circle } from 'ol/geom';
 import ScaleLine from 'ol/control/ScaleLine';
 import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';
-import { ActivatedRoute } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToastNotification } from '../../shared/models/toast-notification.model';
-
 
 @Component({
     selector: 'app-main',
@@ -45,22 +39,12 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-        public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
-        private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
-        private menu: MenuController, private appVersionsService: AppVersionsService,
-        private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
-        private selectedObjectsService: SelectedObjectsService, private network: Network, private toastService: ToastService,
-        public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
-        private route: ActivatedRoute) {
-            this.init();
-    }
-
-    private init() {
-        this.sirsDocService.doc = this.route.snapshot.data.sirsDoc;
-        this.appVersionsService.init();
-        this.backLayerService.init();
-        this.editionLayerService.init();
-        this.geolocLayer.init();
+                public editionLayerService: EditionLayerService, private geoLocLayer: GeolocLayerService,
+                private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
+                private menu: MenuController, private loadingCtrl: LoadingController,
+                private platform: Platform, private dbService: DatabaseService,
+                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
+                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService, private toastService: ToastService) {
 
         this.platform.pause.subscribe(
             () => {
@@ -87,25 +71,21 @@ export class MainPage implements AfterViewInit {
         this.connectSubscription = this.network.onConnect()
             .subscribe(async () => {
                 // don't forget to show
-                this.toastService.show(new ToastNotification('Connexion établie avec succès',2000,'top'))
+                this.toastService.show(new ToastNotification('Connexion établie avec succès', 2000, 'top'));
             });
         // watch network for a disconnection
         this.disconnectSubscription = this.network.onDisconnect()
             .subscribe(async () => {
                 // don't forget to show
-                this.toastService.show(new ToastNotification('Laconnexion a échoué',2000,'top'))
+                this.toastService.show(new ToastNotification('Laconnexion a échoué', 2000, 'top'));
             });
     }
 
     async ngAfterViewInit() {
         let loading: HTMLIonLoadingElement = null;
-        proj4.defs(this.sirsDocService.get().epsgCode, this.sirsDocService.get().proj4);
-        register(proj4);
-        await this.authService.isAuth(); // Init authService user value.
-        this.OES.preInit(this.sirsDocService); // OES services needs sirsDocService service to be (pre)init.
+
         this.backLayerService.init()
-            .then(
-                async () => {
+            .then(async () => {
                     loading = await this.loadingCtrl.create({
                         message: 'Déploiement de la carte en cours'
                     });
@@ -114,7 +94,7 @@ export class MainPage implements AfterViewInit {
                     this.olService.getMap().setView(this.mapService.currentView);
                     this.olService.addLayer(this.backLayerService.backLayer);
                     this.olService.addLayer(this.editionLayerService.editionLayer);
-                    this.olService.addLayer(this.geolocLayer.geolocLayer);
+                    this.olService.addLayer(this.geoLocLayer.geolocLayer);
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen sooner or later to add the appLayer to the map (done in the init function of mapManagerService).
                         this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
                     } else {
@@ -228,7 +208,7 @@ export class MainPage implements AfterViewInit {
                     });
 
                     // If the map is dragged then everything is cancelled.
-                    this.olService.getMap().on('pointerdrag', function (evt) {
+                    this.olService.getMap().on('pointerdrag', (evt) => {
                         if (uniqueLayer) {
                             evt.map.removeLayer(uniqueLayer);
                             uniqueLayer = null;
@@ -256,11 +236,13 @@ export class MainPage implements AfterViewInit {
                     // ENDS HERE.
 
                     this.mapManagerService.clearAll();
-                    this.mapManagerService.mapLoadingSubject.subscribe(
-                        {
-                            complete: () => loading.dismiss()
-                        }
-                    );
+                    this.mapManagerService.mapLoadingSubject
+                        .subscribe(
+                            {
+                                complete: () => {
+                                    loading.dismiss();
+                                }
+                            });
                 }
             );
         this.locateMe();
@@ -269,48 +251,48 @@ export class MainPage implements AfterViewInit {
     locateMe() {
         if (this.geolocationService.isEnabled) {
             this.geolocationService.getCurrentLocation()
-            .then(
-                (coordinates) => {
-                    this.geolocLayer.redrawGeolocLayer(coordinates);
-                },
-                (error) => {
-                    console.error('Error getting location', error);
-                    if (error.message === "Illegal Access") {
-                        this.toastService.show(
-                            new ToastNotification(
-                                'Accés au GPS impossible. Activer la localisation pour cette application.',
-                                2500,
-                                'top')
-                        )
-                    } else if (error.message === "Timeout expired") {
-                        this.toastService.show(
-                            new ToastNotification(
-                                'La requête a expiré.',
-                                2000,
-                                'top')
-                        )
+                .then(
+                    (coordinates) => {
+                        this.geoLocLayer.redrawGeolocLayer(coordinates);
+                    },
+                    (error) => {
+                        console.error('Error getting location', error);
+                        if (error.message === 'Illegal Access') {
+                            this.toastService.show(
+                                new ToastNotification(
+                                    'Accés au GPS impossible. Activer la localisation pour cette application.',
+                                    2500,
+                                    'top')
+                            );
+                        } else if (error.message === 'Timeout expired') {
+                            this.toastService.show(
+                                new ToastNotification(
+                                    'La requête a expiré.',
+                                    2000,
+                                    'top')
+                            );
+                        }
                     }
-                }
-            );
+                );
         }
     }
 
     zoomToCurrentLocation() {
         if (this.geolocationService.isEnabled) {
             this.geolocationService.getCurrentLocation()
-            .then(
-                (coordinates) => {
-                    if (coordinates) {
-                        const map = this.olService.getMap();
-                        map.getView().setCenter(transform([coordinates.longitude, coordinates.latitude], 'EPSG:4326', 'EPSG:3857'));
-                        map.getView().setZoom(18);
-                        this.geolocLayer.redrawGeolocLayer(coordinates);
+                .then(
+                    (coordinates) => {
+                        if (coordinates) {
+                            const map = this.olService.getMap();
+                            map.getView().setCenter(transform([coordinates.longitude, coordinates.latitude], 'EPSG:4326', 'EPSG:3857'));
+                            map.getView().setZoom(18);
+                            this.geoLocLayer.redrawGeolocLayer(coordinates);
+                        }
+                    },
+                    (error) => {
+                        console.error('Error getting location', error);
                     }
-                },
-                (error) => {
-                    console.error('Error getting location', error);
-                }
-            );
+                );
         }
     }
 
@@ -330,8 +312,8 @@ export class MainPage implements AfterViewInit {
     }
 
     private async refresh() {
-        let loading: HTMLIonLoadingElement = await this.loadingCtrl.create({
-            message: "Déploiement de la carte en cours"
+        const loading: HTMLIonLoadingElement = await this.loadingCtrl.create({
+            message: 'Déploiement de la carte en cours'
         });
         loading.present();
         this.backLayerService.syncBackLayer();

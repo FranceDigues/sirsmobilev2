@@ -18,8 +18,8 @@
         </ion-item>
         <ion-item>
             Mode Edition
-            <ion-toggle slot="end" [checked]="editionFlag"
-                        (ionChange)="changeEditionMode()"></ion-toggle>
+            <ion-toggle slot="end" [checked]="databaseService.activeDB.context.settings.edition"
+                        (ionChange)="changeEditionMode($event)"></ion-toggle>
         </ion-item>
         <ion-item>
             Afficher les objets archivés

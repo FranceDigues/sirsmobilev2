@@ -8,7 +8,6 @@ import {Camera} from '@ionic-native/camera/ngx';
 import {UuidUtils} from '../../../utils/uuid-utils';
 import {ModalController, ToastController} from '@ionic/angular';
 import {formatDate} from '@angular/common';
-import {SirsDocService} from '../../../services/sirsdoc.service';
 import {HttpClient} from '@angular/common/http';
 import {EditionModeService} from '../../../services/edition-mode.service';
 import {GeolocationService} from '../../../services/geolocation.service';
@@ -17,6 +16,7 @@ import {PositionByBorneModalComponent} from '../positionbyborne-modal/positionby
 import {WebView} from '@ionic-native/ionic-webview/ngx';
 import {PositionService} from '../../../services/position.service';
 import {Coordinates} from '@ionic-native/geolocation/ngx';
+import {SirsDataService} from '../../../services/sirs-data.service';
 
 @Component({
     selector: 'app-media-form',
@@ -42,7 +42,7 @@ export class MediaFormComponent implements OnInit {
                 private webview: WebView,
                 private toastCtrl: ToastController,
                 public EOS: EditObjectService,
-                private sirsDoc: SirsDocService,
+                private sirsDataService: SirsDataService,
                 private cdr: ChangeDetectorRef,
                 private httpClient: HttpClient,
                 private geolocation: GeolocationService,
@@ -53,7 +53,7 @@ export class MediaFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.dataProjection = this.sirsDoc.get().epsgCode;
+        this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.mediaOptions = {
             id: '',
             chemin: '',

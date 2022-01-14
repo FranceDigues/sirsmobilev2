@@ -14,7 +14,6 @@ import { EditionModeService } from '../../services/edition-mode.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SirsDocService } from '../../services/sirsdoc.service';
 import { LeftPanelModule } from '../left-panel/left-panel.module';
 import { RightPanelModule } from '../right-panel/right-panel.module';
 
@@ -33,8 +32,7 @@ import { RightPanelModule } from '../right-panel/right-panel.module';
     Geolocation,
     GeolocationService,
     RealPositionStyle,
-    EditionModeService,
-    SirsDocService,
+    EditionModeService
   ],
   declarations: [MainPage]
 })

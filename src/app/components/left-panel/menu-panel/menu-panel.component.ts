@@ -1,10 +1,10 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Router} from '@angular/router';
-import {GeolocationService} from 'src/app/services/geolocation.service';
-import {MapManagerService} from 'src/app/services/map-manager.service';
-import {MapService} from 'src/app/services/map.service';
-import {EditionLayerService} from '../../../services/edition-layer.service';
-import {DatabaseService} from '../../../services/database.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { GeolocationService } from 'src/app/services/geolocation.service';
+import { MapManagerService } from 'src/app/services/map-manager.service';
+import { MapService } from 'src/app/services/map.service';
+import { EditionLayerService } from '../../../services/edition-layer.service';
+import { DatabaseService } from '../../../services/database.service';
 
 @Component({
     selector: 'menu-panel',
@@ -12,7 +12,6 @@ import {DatabaseService} from '../../../services/database.service';
     styleUrls: ['./menu-panel.component.scss'],
 })
 export class MenuPanelComponent implements OnInit {
-    public editionFlag;
 
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
@@ -22,9 +21,6 @@ export class MenuPanelComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.editionLayerService.isEnabled().then(state => {
-            this.editionFlag = state;
-        });
     }
 
     goCraftLayers() {
@@ -51,11 +47,13 @@ export class MenuPanelComponent implements OnInit {
         this.route.navigateByUrl('/sync');
     }
 
-    changeEditionMode() {
-        this.editionFlag = !this.editionFlag;
+    changeEditionMode(evt) {
+        this.databaseService.activeDB.context.settings.edition = evt.detail.checked;
         // Hide or show the edition layer
-        this.editionLayerService.changeVisibility(this.editionFlag);
-        this.databaseService.changeEditionModeFlag(this.editionFlag);
+        this.editionLayerService
+            .changeVisibility(evt.detail.checked);
+        // Change database settings
+        this.databaseService.updateActiveDatabaseSettings();
     }
 
     changeLocationGPS() {

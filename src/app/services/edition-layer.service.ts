@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {LocalDatabase} from './local-database.service';
-import {SirsDocService} from './sirsdoc.service';
-import {EditionLayerStyle, RealPositionStyle} from './style.service';
-import {MapService} from './map.service';
+import { Injectable } from '@angular/core';
+import { LocalDatabase } from './local-database.service';
+import { EditionLayerStyle } from './style.service';
+import { MapService } from './map.service';
 import VectorLayer from 'ol/layer/Vector';
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import VectorSource from 'ol/source/Vector';
 import WKT from 'ol/format/WKT';
-import {DatabaseService} from './database.service';
-import {DatabaseModel} from '../components/database-connection/models/database.model';
-import {PluginUtils} from '../utils/plugin-utils';
+import { DatabaseService } from './database.service';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
+import { PluginUtils } from '../utils/plugin-utils';
+import { SirsDataService } from './sirs-data.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,31 +18,19 @@ import {PluginUtils} from '../utils/plugin-utils';
 export class EditionLayerService {
     editionLayer = null;
     favorites = [];
-
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase,
-                private SirsDoc: SirsDocService,
+                private sirsDataService: SirsDataService,
                 private databaseService: DatabaseService,
                 private editionLayerStyle: EditionLayerStyle,
                 private mapService: MapService) {
-    }
-
-    init() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.favorites = config.favorites;
                 this.editionLayer = this.createEditionLayerInstance(this.favorites);
                 this.editionLayer.setVisible(config.context.settings.edition);
             });
-    }
-
-    get getEditionLayer() {
-        if (!this.editionLayer) {
-            this.createEditionLayerInstance();
-        } else {
-            return this.editionLayer;
-        }
     }
 
     createEditionLayerInstance(favorites?: any[]) {
@@ -109,9 +97,9 @@ export class EditionLayerService {
 
     createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
-        const SirsDoc = this.SirsDoc;
+        const SirsDoc = this.sirsDataService;
         let geometry;
-        const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
+        const dataProjection = (SirsDoc && SirsDoc.sirsDoc && SirsDoc.sirsDoc.epsgCode) ? SirsDoc.sirsDoc.epsgCode : 'EPSG:2154';
 
         if (featureDoc.geometry && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {

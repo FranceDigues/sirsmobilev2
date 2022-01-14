@@ -7,17 +7,22 @@ import { AppVersionsService } from 'src/app/services/app-versions.service';
     styleUrls: ['./app-infos.component.scss'],
 })
 export class AppInfosComponent implements OnInit {
-
-    versionsObject = {};
+    versionsObject;
 
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
-    constructor(private appVersions: AppVersionsService) {
+    constructor(private appVersionsService: AppVersionsService) {
     }
 
     ngOnInit() {
-        this.versionsObject = this.appVersions.getVersions();
+        this.appVersionsService.getVersions()
+            .then((versions) => {
+                this.versionsObject = versions;
+            }, (err) => {
+                console.error(err);
+            });
     }
+
 
     goBack() {
         this.slidePathChange.emit('menu');

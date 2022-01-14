@@ -73,7 +73,7 @@
             <div>
               <div *ngIf="showText('fullName')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
-                  <option *ngFor="let v of orientations" [value]="v.id"
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
                     [selected]="OES.mediaOptions.orientationPhoto === v.id">
                     {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
                   </option>
@@ -81,7 +81,7 @@
               </div>
               <div *ngIf="showText('abstract')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
-                  <option *ngFor="let v of orientations" [value]="v.id"
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
                     [selected]="OES.mediaOptions.orientationPhoto === v.id">
                     {{ v.doc.abrege ? v.doc.abrege : 'abrégé indéfini / id: ' + v.id }}
                   </option>
@@ -89,7 +89,7 @@
               </div>
               <div *ngIf="showText('both')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
-                  <option *ngFor="let v of orientations" [value]="v.id"
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
                     [selected]="OES.mediaOptions.orientationPhoto === v.id">
                     {{ v.doc.abrege ? v.doc.abrege + ' : ' + v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
                   </option>
@@ -104,21 +104,21 @@
             <div>
               <div *ngIf="showText('fullName')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
-                  <option *ngFor="let v of cotes" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
                     {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
                   </option>
                 </select>
               </div>
               <div *ngIf="showText('abstract')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
-                  <option *ngFor="let v of cotes" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
                     {{ v.doc.abrege ? v.doc.abrege : 'abrégé indéfini / id: ' + v.id }}
                   </option>
                 </select>
               </div>
               <div *ngIf="showText('both')">
                 <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
-                  <option *ngFor="let v of cotes" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
                     {{ v.doc.abrege ? v.doc.abrege + ' : ' + v.value.libelle : 'abrege indéfini / id: ' + v.id }}
                   </option>
                 </select>

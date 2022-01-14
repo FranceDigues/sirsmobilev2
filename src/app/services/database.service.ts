@@ -1,12 +1,11 @@
-import {Injectable} from '@angular/core';
-import {NativeStorage} from '@ionic-native/native-storage/ngx';
-import {DatabaseModel} from '../components/database-connection/models/database.model';
+import { Injectable } from '@angular/core';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DatabaseService {
-
     remoteDB = null;
     localDB = null;
     activeDB: DatabaseModel;
@@ -55,6 +54,21 @@ export class DatabaseService {
 
     saveDatabaseSettings(databases) {
         this.nativeStorage.setItem('databases-settings', databases);
+    }
+
+    updateActiveDatabaseSettings() {
+        this.nativeStorage.getItem('databases-settings')
+            .then((databases) => {
+                    databases.forEach((database, i) => {
+                        if (database.name === this.activeDB.name) {
+                            databases[i] = this.activeDB;
+                            this.nativeStorage.setItem('databases-settings', databases);
+                        }
+                    });
+                },
+                (err) => {
+                    console.error(err);
+                });
     }
 
     getDatabaseSettings() {

@@ -9,11 +9,11 @@ import {DatabaseService} from './database.service';
 import {EditionModeService} from './edition-mode.service';
 import {GeolocationService} from './geolocation.service';
 import {ObjectDocService} from './object-doc.service';
-import {SirsDocService} from './sirsdoc.service';
 import {UuidUtils as uuid} from '../utils/uuid-utils';
 import {PositionService} from './position.service';
 import {DatabaseModel} from '../components/database-connection/models/database.model';
 import {PluginUtils} from '../utils/plugin-utils';
+import {SirsDataService} from './sirs-data.service';
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +42,7 @@ export class EditObjectService {
     refs = null;
     dateWrapper = null;
     objectType = null;
-    dataProjection = this.sirsDoc.get().epsgCode;
+    dataProjection = this.sirsDataService.sirsDoc.epsgCode;
     startPosBorneLabel: Promise<string> | string | null = null;
     endPosBorneLabel: Promise<string> | string | null = null;
     isClosed;
@@ -50,7 +50,7 @@ export class EditObjectService {
     constructor(private objectDocService: ObjectDocService,
                 private databaseService: DatabaseService,
                 private loadingCtrl: LoadingController,
-                private sirsDoc: SirsDocService,
+                private sirsDataService: SirsDataService,
                 private editionModeService: EditionModeService,
                 private route: Router,
                 private toastCtrl: ToastController,
@@ -60,7 +60,7 @@ export class EditObjectService {
     }
 
     init(type, id) {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             this.resetValues();
             this.type = type;
             this.isNew = !id;
@@ -145,7 +145,7 @@ export class EditObjectService {
         this.refs = null;
         this.dateWrapper = null;
         this.objectType = null;
-        this.dataProjection = this.sirsDoc.get().epsgCode;
+        this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.startPosBorneLabel = null;
         this.endPosBorneLabel = null;
     }
@@ -187,7 +187,7 @@ export class EditObjectService {
         const nearTronconList = [];
         // geomatryPosition is instance of ol.geom.Point
         const geomatryPosition = new WKT().readGeometry(point, {
-            dataProjection: this.sirsDoc.get().epsgCode,
+            dataProjection: this.sirsDataService.sirsDoc.epsgCode,
             featureProjection: 'EPSG:3857'
         });
 
@@ -198,7 +198,7 @@ export class EditObjectService {
         list.forEach((elt) => {
             try {
                 geom = new WKT().readGeometry(elt.geometry, {
-                    dataProjection: this.sirsDoc.get().epsgCode,
+                    dataProjection: this.sirsDataService.sirsDoc.epsgCode,
                     featureProjection: 'EPSG:3857'
                 });
             } catch (e) {

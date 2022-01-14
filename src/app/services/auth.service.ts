@@ -27,10 +27,10 @@ export class AuthService {
         }
       )
       .catch(error => {
-        console.error("getCurrentDatabaseSettings error : ", error);
+        console.error('getCurrentDatabaseSettings error : ', error);
         reject(error);
       });
-    })
+    });
   }
 
   getValue() {

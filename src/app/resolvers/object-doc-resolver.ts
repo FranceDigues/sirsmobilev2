@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
-import { LocalDatabase } from "../services/local-database.service";
-import { EditionModeService } from "../services/edition-mode.service";
-import { Observable } from "rxjs";
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { LocalDatabase } from '../services/local-database.service';
+import { EditionModeService } from '../services/edition-mode.service';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ObjectDocResolver implements Resolve<any> {
@@ -10,10 +10,7 @@ export class ObjectDocResolver implements Resolve<any> {
                 private editionService: EditionModeService) {
     }
 
-    resolve(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Observable<any> | Promise<any> | any {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
         const id = route.paramMap.get('id');
         const type = route.paramMap.get('type');
         if (id && id !== '') {

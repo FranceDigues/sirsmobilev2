@@ -8,6 +8,7 @@ import {SelectedObjectsService} from 'src/app/services/selected-objects.service'
 import {EditionLayerService} from '../../services/edition-layer.service';
 import {EditObjectService} from 'src/app/services/edit-object.service';
 import {PluginUtils} from 'src/app/utils/plugin-utils';
+import {AppLayersService} from "../../services/app-layers.service";
 
 declare var M: any;
 
@@ -98,7 +99,8 @@ export class ObjectDetailsComponent implements OnInit {
                 private localDB: LocalDatabase,
                 private editionLayerService: EditionLayerService,
                 private selectedObjectsService: SelectedObjectsService,
-                private EOS: EditObjectService) {
+                private EOS: EditObjectService,
+                private appLayersService: AppLayersService) {
         this.activeTab = 'description';
         this.objectDetails.detailsType = 'objectDetails';
         this.document = this.objectDetails.selectedObject;
@@ -139,6 +141,11 @@ export class ObjectDetailsComponent implements OnInit {
 
     canShowDesordresTab() {
         return ObjectDetailsComponent.desordreObjectType.indexOf(this.objectType) !== -1;
+    }
+
+    isEditableLayer() {
+        return this.appLayersService.getLayerModel(this.document['@class'])
+            && this.appLayersService.getLayerModel(this.document['@class']).editable;
     }
 
     canShowEditionButtons() {

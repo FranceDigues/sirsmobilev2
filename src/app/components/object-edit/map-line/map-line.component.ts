@@ -3,7 +3,6 @@ import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import { transform } from 'ol/proj';
-import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { EditObjectService } from '../../../services/edit-object.service';
 import DragPan from 'ol/interaction/DragPan';
 import Feature from 'ol/Feature';
@@ -13,6 +12,7 @@ import LineString from 'ol/geom/LineString';
 import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
 import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
+import {SirsDataService} from "../../../services/sirs-data.service";
 
 @Component({
   selector: 'map-line',
@@ -32,7 +32,7 @@ export class MapLineComponent implements OnInit, AfterViewInit {
   wktFormat = new WKT();
 
   constructor(public olService: OLService,
-              public EOS: EditObjectService, private sirsDocService: SirsDocService,
+              public EOS: EditObjectService, private sirsDataService: SirsDataService,
               private toast: Toast, public mapEditObject: MapEditObjectService) { }
 
   ngOnInit() {
@@ -57,8 +57,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     } else if (this.EOS.objectDoc.positionDebut && this.EOS.objectDoc.positionFin) { // If line already exists
       let coordsStart = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
       let coordsEnd = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionFin);
-      coordsStart = transform(coordsStart, this.sirsDocService.get().epsgCode, 'EPSG:3857');
-      coordsEnd = transform(coordsEnd, this.sirsDocService.get().epsgCode, 'EPSG:3857');
+      coordsStart = transform(coordsStart, this.sirsDataService.sirsDoc.epsgCode, 'EPSG:3857');
+      coordsEnd = transform(coordsEnd, this.sirsDataService.sirsDoc.epsgCode, 'EPSG:3857');
 
       const lineStringGeometry = new LineString([coordsStart, coordsEnd]);
       const lineStringFeature = new Feature({ geometry: lineStringGeometry });

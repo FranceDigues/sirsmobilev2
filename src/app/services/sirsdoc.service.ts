@@ -6,6 +6,10 @@ import { LocalDatabase } from './local-database.service';
 })
 export class SirsDocService {
 
+    /*
+    Ce service est deprecated
+     */
+
     doc = null;
 
     constructor(private localDB: LocalDatabase) {}
@@ -18,7 +22,7 @@ export class SirsDocService {
         if (this.doc) {
             return new Promise((resolve) => {
                 resolve(this.doc);
-            })
+            });
         } else {
             return new Promise((resolve, reject) => {
                 this.localDB.get('$sirs').then(
@@ -27,11 +31,11 @@ export class SirsDocService {
                         resolve(doc);
                     },
                     (error) => {
-                        console.error("SirsDocService get error : ", error);
+                        console.error('SirsDocService get error : ', error);
                         reject(error);
                     }
-                )
-            })
+                );
+            });
         }
     }
 }

@@ -3,7 +3,6 @@ import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';
 import VectorSource from 'ol/source/Vector';
 import { transform } from 'ol/proj';
-import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { EditObjectService } from 'src/app/services/edit-object.service';
 import DragPan from 'ol/interaction/DragPan';
 import Point from 'ol/geom/Point';
@@ -11,6 +10,7 @@ import Feature from 'ol/Feature';
 import { Style } from 'ol/style';
 import WKT from 'ol/format/WKT';
 import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
+import {SirsDataService} from "../../../services/sirs-data.service";
 
 @Component({
     selector: 'map-point',
@@ -30,7 +30,7 @@ export class MapPointComponent implements OnInit {
     wktFormat = new WKT();
 
     constructor(public olService: OLService,
-                private EOS: EditObjectService, private sirsDocService: SirsDocService,
+                private EOS: EditObjectService, private sirsDataService: SirsDataService,
                 public mapEditObject: MapEditObjectService) {
     }
 
@@ -52,7 +52,7 @@ export class MapPointComponent implements OnInit {
                 );
             } else if (this.EOS.objectDoc.positionDebut) { // If point already exists
                 let coords = this.mapEditObject.getCoordsPointAndLine(this.EOS.objectDoc.positionDebut);
-                coords = transform(coords, this.sirsDocService.get().epsgCode, 'EPSG:3857');
+                coords = transform(coords, this.sirsDataService.sirsDoc.epsgCode, 'EPSG:3857');
                 this.source.addFeatures(
                     [new Feature({
                         geometry: new Point(coords)

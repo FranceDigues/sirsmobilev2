@@ -35,7 +35,6 @@ import { MapEditObjectService } from './services/map-edit-object.service';
 import { ObjectDetails } from './services/object-details.service';
 import { ObjectDocService } from './services/object-doc.service';
 import { SelectedObjectsService } from './services/selected-objects.service';
-import { SirsDocService } from './services/sirsdoc.service';
 import { ToastService } from './services/toast.service';
 import { FilterPipe } from './components/right-panel/create-object/create-object.component';
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './services/style.service';
@@ -44,13 +43,13 @@ import { AppTronconsService, DigueController, SystemeEndiguement, TronconControl
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { ObservationEditService } from './services/observation-edit.service';
 import { DirectiveModule } from './directives/directive.module';
-import { PositionService } from './services/position.service';
 import { ObjectEditModule } from './components/object-edit/object-edit.module';
 import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from './services/edition-layer.service';
 import { GeolocLayerService } from './services/geoloc-layer.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
+import { SirsDataService } from './services/sirs-data.service';
 
 @NgModule({
     declarations: [AppComponent],
@@ -69,13 +68,13 @@ import { FilePath } from '@ionic-native/file-path/ngx';
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         MapManagerService, GeolocLayerService, EditionLayerService,
         SyncService, DatabaseService, AuthService,
-        AppVersionsService, SirsDocService, BackLayerService,
+        AppVersionsService, BackLayerService,
         SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
-        ObservationEditService, PositionService, Network, FileChooser, FilePath,
-        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+        ObservationEditService, Network, FileChooser, FilePath,
+        SirsDataService, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]
 })

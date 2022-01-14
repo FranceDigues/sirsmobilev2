@@ -14,6 +14,10 @@ import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
+import { SirsDataService } from '../../../services/sirs-data.service';
+import { UuidUtils } from '../../../utils/uuid-utils';
+import { formatDate } from '@angular/common';
+import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
 
 declare var M: any;
@@ -24,39 +28,86 @@ declare var M: any;
     styleUrls: ['./observation-edit.component.scss'],
 })
 export class ObservationEditComponent implements OnInit {
-
+    observation;
     objectId: string;
     obsId: string;
+    objectType: string;
+    objectDoc: any;
+    isNewObject: boolean;
     view: 'form' | 'media';
     tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
-    | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
-    | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom';
+        | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
+        | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom';
     showTextConfig: string;
+    refUrgence;
+    contactList;
+    refSuiteApporter;
+    saving = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
-    contactList: Array<any> = [];
+    // Todo remove it
     etatOuvAccGCList: Array<any> = [];
     manoeuvreOuvrageList: Array<any> = [];
-    pendingContactList: boolean;
     pendingEtatOuvAccGCList: boolean;
     pendingManoeuvreOuvrageList: boolean;
-    saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
-
-    constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
-        private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
-        private route: Router, private editionService: EditionModeService,
-        private mapManagerService: MapManagerService) {
+    constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
+                private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
+                private route: Router, private editionService: EditionModeService, private objectDetails: ObjectDetails,
+                private mapManagerService: MapManagerService, private sirsDataService: SirsDataService) {
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
+        this.isNewObject = !this.obsId;
+        this.objectDoc = this.objectDetails.selectedObject;
         this.view = 'form';
         this.tab = 'medias';
-        this.pendingContactList = true;
+        this.objectType = this.objectDoc['@class']
+            .substring(this.objectDoc['@class'].lastIndexOf('.') + 1);
+
+        // Todo remove it
         this.pendingEtatOuvAccGCList = true;
         this.pendingManoeuvreOuvrageList = true;
 
-        this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
+        // Not optimized at all. Look for a way to init this properly or at the right time.
+        this.observationEditService.init(this.objectId, this.obsId);
 
-        this.initList();
+        this.sirsDataService.getContactList().then((list) => {
+            this.contactList = list;
+        }, (error) => {
+            console.error('error contactList returned : ', error);
+        });
+
+        this.sirsDataService.getRefUrgence().then((list) => {
+            this.refUrgence = list;
+        }, (error) => {
+            console.error('error ref urgence returned : ', error);
+        });
+
+        this.sirsDataService.getRefSuiteApporter().then((list) => {
+            this.refSuiteApporter = list;
+        }, (error) => {
+            console.error('error ref suite apporter returned : ', error);
+        });
+
+        // TODO... remove it
+        this.observationEditService.etatOuvAccGCList.then((list) => {
+            this.pendingEtatOuvAccGCList = false;
+            this.etatOuvAccGCList = list.map(item => {
+                return item.value;
+            });
+        }, (error) => {
+            this.pendingEtatOuvAccGCList = false;
+            console.error('error etatOuvAccGCList returned : ', error);
+        });
+        this.observationEditService.manoeuvreOuvrageList.then((list) => {
+            this.pendingManoeuvreOuvrageList = false;
+            this.manoeuvreOuvrageList = list.map(item => {
+                return item.value;
+            });
+        }, (error) => {
+            this.pendingManoeuvreOuvrageList = false;
+            console.error('error manoeuvreOuvrageList returned : ', error);
+        });
+
         // TODO CHECK inits -> doc.author + mb hidden inits
     }
 
@@ -65,6 +116,61 @@ export class ObservationEditComponent implements OnInit {
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
             });
+
+        this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
+
+
+    }
+
+    createNewObservation() {
+        const observation = {
+            id: UuidUtils.generateUuid(),
+            date: formatDate(Date.now(), 'yyyy-MM-dd', 'en-US'),
+            photos: [],
+            valid: false
+        };
+
+        switch (this.objectType) {
+            case 'StationPompage':
+            case 'ReseauHydrauliqueFerme':
+            case 'OuvrageHydrauliqueAssocie':
+            case 'ReseauHydrauliqueCielOuvert':
+            case 'VoieAcces':
+            case 'OuvrageFranchissement':
+            case 'OuvertureBatardable':
+            case 'VoieDigue':
+            case 'OuvrageVoirie':
+            case 'ReseauTelecomEnergie':
+            case 'OuvrageTelecomEnergie':
+            case 'OuvrageParticulier':
+            case 'EchelleLimnimetrique':
+            case 'Prestation':
+                observation['@class'] = 'fr.sirs.core.model.Observation' + this.objectType;
+                return observation;
+            case 'DesordreDependance':
+            case 'AmenagementHydraulique':
+            case 'PrestationAmenagementHydraulique':
+            case 'OrganeProtectionCollective':
+            case 'StructureAmenagementHydraulique':
+            case 'OuvrageAssocieAmenagementHydraulique':
+                observation['@class'] = 'fr.sirs.core.model.ObservationDependance';
+                return observation;
+            default :
+                observation['@class'] = 'fr.sirs.core.model.Observation';
+                observation['urgenceId'] = 'RefUrgence:1';
+                observation['nombreDesordres'] = 0;
+                return observation;
+        }
+    }
+
+    getObservationToEdit() {
+        const find = this.objectDoc.observations
+            .find(elt => elt.id === this.obsId);
+        if (find) {
+            return find;
+        } else {
+            throw new Error(`No observation found with id : ${this.obsId}`);
+        }
     }
 
     setView(str: 'form' | 'media') {
@@ -72,9 +178,10 @@ export class ObservationEditComponent implements OnInit {
         this.cdr.detectChanges();
     }
 
+    // Todo make enum
     setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
-    | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
-    | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom') {
+        | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
+        | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom') {
         this.tab = str;
     }
 
@@ -92,95 +199,68 @@ export class ObservationEditComponent implements OnInit {
 
     save() {
         this.saving = true;
-        if (this.OES.isNewObject) {
-            if (this.OES.objectDoc.observations === undefined) {
-                this.OES.objectDoc.observations = [];
+        if (this.isNewObject) {
+            if (!this.objectDoc.observations) {
+                this.objectDoc.observations = [];
             }
 
-            // Push the new observation.
-            const tmpDoc = Object.assign({}, this.OES.doc);
-            this.OES.objectDoc.observations.push(tmpDoc);
-        } else {
-            // Apply modifications on target observation.
-            const observation = this.OES.getTargetObservation();
-            Object.assign(observation, this.OES.doc);
+            // Add the new observation to observation list.
+            this.objectDoc.observations.push(this.observation);
         }
-        this.OES.objectDoc.valid = false;
-        this.OES.objectDoc.editMode = true;
-        this.OES.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+        this.objectDoc.valid = false;
+        this.objectDoc.editMode = true;
+        this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+        // check what is this flags with Sirs desktop
+        delete this.objectDoc.prDebut;
+        delete this.objectDoc.prFin;
 
-        delete this.OES.objectDoc.prDebut;
-        delete this.OES.objectDoc.prFin;
+        // Save document.
+        this.editionService.saveObject(this.objectDoc).then(() => {
+            this.saving = false;
+            this.mapManagerService.syncAllAppLayer();
+            this.route.navigateByUrl('/main');
+        });
+    }
 
-        if (this.OES.objectDoc.borneDebutId) {
-            delete this.OES.objectDoc.positionDebut;
-            delete this.OES.objectDoc.positionFin;
-            delete this.OES.objectDoc.geometry;
-
-            /**
-             * Hack to calculate the approximate position when the object is aligned with bornes
-             */
-            if (!this.OES.objectDoc.approximatePositionDebut) {
-                this.OES.getApproximatePosition(this.OES.objectDoc.borneDebutId,
-                    this.OES.objectDoc.borne_debut_aval,
-                    this.OES.objectDoc.borne_debut_distance, 'approximatePositionDebut')
-                    .then(() => {
-                        if (this.OES.objectDoc.borneFinId && !this.OES.objectDoc.approximatePositionFin) {
-                            this.OES.getApproximatePosition(this.OES.objectDoc.borneFinId,
-                                this.OES.objectDoc.borne_fin_aval,
-                                this.OES.objectDoc.borne_fin_distance, 'approximatePositionFin')
-                                .then(() => {
-                                    // Save document.
-                                    this.editionService.saveObject(this.OES.objectDoc).then(() => {
-                                        this.saving = false;
-                                        this.mapManagerService.syncAllAppLayer();
-                                        this.route.navigateByUrl('/main');
-                                    });
-                                });
-                        }
-                    });
-            } else {
-                this.editionService.saveObject(this.OES.objectDoc).then(() => {
-                    this.saving = false;
-                    this.mapManagerService.syncAllAppLayer();
-                    this.route.navigateByUrl('/main');
-                });
-            }
-        } else {
-            this.editionService.saveObject(this.OES.objectDoc).then(() => {
-                this.saving = false;
-                this.mapManagerService.syncAllAppLayer();
-                this.route.navigateByUrl('/main');
-            });
+    parseUrgenceText(urgence) {
+        switch (this.showTextConfig) {
+            case 'fullName':
+                return urgence.libelle ? urgence.libelle : 'libelle undefined / id: ' + urgence.id;
+            case 'abstract':
+                return urgence.abrege ? urgence.abrege : urgence.designation + ' : ' + urgence.libelle;
+            case 'both':
+                return urgence.abrege ? (urgence.abrege + ' : ' + urgence.libelle) : (urgence.designation + ' : ' + urgence.libelle);
+            default:
+                return '';
         }
     }
 
-    changeUrgence() {
-        this.OES.doc.urgenceId = 'RefUrgence:' + this.OES.urgence;
+    parseContactName(observateur) {
+        return `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}`;
+    }
+
+    parseSuiteApportertext(suiteApporter) {
+        return suiteApporter.libelle ? suiteApporter.libelle : 'libelle undefined / id: ' + suiteApporter.id;
     }
 
     changeSuiteApporter() {
-        this.OES.doc.suiteApporterId = this.OES.suiteApporter;
-    }
-
-    changeContact() {
-        this.OES.doc.observateurId = this.OES.contact;
+        this.observation.suiteApporterId = this.observationEditService.suiteApporter;
     }
 
     changeEtatOuvrage() {
-        this.OES.doc.etatOuvrageId = this.OES.etatOuvrage;
+        this.observationEditService.doc.etatOuvrageId = this.observationEditService.etatOuvrage;
     }
 
     changeEtatAccessoire() {
-        this.OES.doc.etatAccessoireId = this.OES.etatAccessoire;
+        this.observationEditService.doc.etatAccessoireId = this.observationEditService.etatAccessoire;
     }
 
     changeEtatGenieCivil() {
-        this.OES.doc.etatGenieCivilId = this.OES.etatGenieCivil;
+        this.observationEditService.doc.etatGenieCivilId = this.observationEditService.etatGenieCivil;
     }
 
     changeManoeuvreOuvrage() {
-        this.OES.doc.etatManoeuvreOuvrageId = this.OES.manoeuvreOuvrage;
+        this.observationEditService.doc.etatManoeuvreOuvrageId = this.observationEditService.manoeuvreOuvrage;
     }
 
     compareRef() {
@@ -205,33 +285,10 @@ export class ObservationEditComponent implements OnInit {
         }
     }
 
-    private initList() {
-        this.OES.contactList.then((list) => {
-            this.pendingContactList = false;
-            this.contactList = list;
-        }, (error) => {
-            this.pendingContactList = false;
-            console.error("error contactList returned : ", error);
-        })
-        this.OES.etatOuvAccGCList.then((list) => {
-            this.pendingEtatOuvAccGCList = false;
-            this.etatOuvAccGCList = list.map(item => {return item.value;});;
-        }, (error) => {
-            this.pendingEtatOuvAccGCList = false;
-            console.error("error etatOuvAccGCList returned : ", error);
-        })
-        this.OES.manoeuvreOuvrageList.then((list) => {
-            this.pendingManoeuvreOuvrageList = false;
-            this.manoeuvreOuvrageList = list.map(item => {return item.value;});;
-        }, (error) => {
-            this.pendingManoeuvreOuvrageList = false;
-            console.error("error manoeuvreOuvrageList returned : ", error);
-        })
+    private isReseauEtOuvrage() {
+        PluginUtils.isReseauOuvrageDoc(this.observationEditService.objectDoc);
     }
 
-    private isReseauEtOuvrage() {
-        PluginUtils.isReseauOuvrageDoc(this.OES.objectDoc);
-    }
 }
 
 @Directive({

@@ -1,18 +1,19 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ObservationEditService } from 'src/app/services/observation-edit.service';
-import { ModalController, ToastController } from '@ionic/angular';
-import { PositionByBorneModal2Component } from './positionbyborne-modal2/positionbyborne-modal2.component';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { CameraService } from '@ionic-lib/lib-camera/camera.service';
-import { Options } from '@ionic-lib/lib-camera/interface.model';
-import { Camera } from '@ionic-native/camera/ngx';
-import { File, Entry, Metadata, DirectoryEntry } from '@ionic-native/file/ngx';
-import { UuidUtils } from 'src/app/utils/uuid-utils';
-import { formatDate } from '@angular/common';
-import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { MapManagerService } from 'src/app/services/map-manager.service';
-import { DatabaseService } from '../../../../services/database.service';
-import { DatabaseModel } from '../../../database-connection/models/database.model';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ObservationEditService} from 'src/app/services/observation-edit.service';
+import {ModalController, ToastController} from '@ionic/angular';
+import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionbyborne-modal2.component';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {CameraService} from '@ionic-lib/lib-camera/camera.service';
+import {Options} from '@ionic-lib/lib-camera/interface.model';
+import {Camera} from '@ionic-native/camera/ngx';
+import {File, Entry, Metadata, DirectoryEntry} from '@ionic-native/file/ngx';
+import {UuidUtils} from 'src/app/utils/uuid-utils';
+import {formatDate} from '@angular/common';
+import {EditionModeService} from 'src/app/services/edition-mode.service';
+import {MapManagerService} from 'src/app/services/map-manager.service';
+import {DatabaseService} from '../../../../services/database.service';
+import {DatabaseModel} from '../../../database-connection/models/database.model';
+import {SirsDataService} from "../../../../services/sirs-data.service";
 
 @Component({
     selector: 'observation-media',
@@ -28,47 +29,41 @@ export class ObservationMediaComponent implements OnInit {
     pendingContactList: boolean;
 
     // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
-    contactList: Array<any> = [];
-    orientations: Array<any> = [];
-    cotes: Array<any> = [];
+    contactList;
+    refOrientationPhoto;
+    refCote;
 
     constructor(
-        public OES: ObservationEditService, 
-        private modalCtrl: ModalController,
-        private geolocation: GeolocationService, 
-        private cameraService: CameraService,
-        private camera: Camera, 
-        private file: File,
-        private toastCtrl: ToastController, 
-        private cdr: ChangeDetectorRef,
-        private editionService: EditionModeService, 
-        private mapManagerService: MapManagerService,
-        private databaseService: DatabaseService) {
+        public OES: ObservationEditService, private modalCtrl: ModalController, private geolocation: GeolocationService,
+        private cameraService: CameraService, private camera: Camera, private file: File,
+        private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
+        private editionService: EditionModeService, private mapManagerService: MapManagerService,
+        private databaseService: DatabaseService, private sirsDataService: SirsDataService) {
         this.view = 'media';
         this.pendingContactList = true;
 
         this.OES.importPhotoData = null;
         this.OES.mediaOptions.id = '';
 
-        this.OES.contactList.then((list) => {
+        this.sirsDataService.getContactList().then((list) => {
             this.contactList = list;
             this.pendingContactList = false;
         }, (error) => {
             this.pendingContactList = false;
-            console.error("error contactList returned : ", error);
-        })
+            console.error('error contactList returned : ', error);
+        });
 
-        this.OES.orientations.then((list) => {
-            this.orientations = list;
+        this.sirsDataService.getRefOrientationPhoto().then((list) => {
+            this.refOrientationPhoto = list;
         }, (error) => {
-            console.error("error orientations returned : ", error);
-        })
+            console.error('error refOrientationPhoto returned : ', error);
+        });
 
-        this.OES.cotes.then((list) => {
-            this.cotes = list;
+        this.sirsDataService.getRefCote().then((list) => {
+            this.refCote = list;
         }, (error) => {
-            console.error("error cotes returned : ", error);
-        })
+            console.error('error cotes returned : ', error);
+        });
     }
 
     ngOnInit() {
@@ -283,14 +278,14 @@ export class ObservationMediaComponent implements OnInit {
     private isDependance(clazz) {
         // Only dependance that have photos
         return clazz === 'DesordreDependance'
-        || clazz === 'OuvrageVoirieDependance'
-        || clazz === 'AireStockageDependance'
-        || clazz === 'CheminAccesDependance'
-        || clazz === 'AutreDependance'
-        || clazz === 'AmenagementHydraulique'
-        || clazz === 'PrestationAmenagementHydraulique'
-        || clazz === 'StructureAmenagementHydraulique'
-        || clazz === 'OuvrageAssocieAmenagementHydraulique'
-        || clazz === 'OrganeProtectionCollective';
+            || clazz === 'OuvrageVoirieDependance'
+            || clazz === 'AireStockageDependance'
+            || clazz === 'CheminAccesDependance'
+            || clazz === 'AutreDependance'
+            || clazz === 'AmenagementHydraulique'
+            || clazz === 'PrestationAmenagementHydraulique'
+            || clazz === 'StructureAmenagementHydraulique'
+            || clazz === 'OuvrageAssocieAmenagementHydraulique'
+            || clazz === 'OrganeProtectionCollective';
     }
 }

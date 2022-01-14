@@ -12,7 +12,6 @@ import Style from 'ol/style/Style';
 import {AppLayersService} from './app-layers.service';
 import {FeatureCache} from './cache.service';
 import {MapService} from './map.service';
-import {SirsDocService} from './sirsdoc.service';
 import {DefaultStyle, RealPositionStyle} from './style.service';
 import {LocalDatabase} from './local-database.service';
 import {Subject} from 'rxjs';
@@ -21,6 +20,7 @@ import {DatabaseService} from './database.service';
 import {PluginUtils} from '../utils/plugin-utils';
 import {SelectedObjectsService} from "./selected-objects.service";
 import {EditionLayerService} from "./edition-layer.service";
+import {SirsDataService} from "./sirs-data.service";
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +33,7 @@ export class MapManagerService {
     constructor(private featureCache: FeatureCache,
                 private localDB: LocalDatabase,
                 private storageService: StorageService,
-                private sirsDocService: SirsDocService,
+                private sirsDataService: SirsDataService,
                 private mapService: MapService,
                 private realPositionStyle: RealPositionStyle,
                 private DefaultStyleService: DefaultStyle,
@@ -242,11 +242,11 @@ export class MapManagerService {
         featureDoc = featureDoc.doc || featureDoc.value;
         let dataProjection;
 
-        if (!this.sirsDocService.get()) {
+        if (!this.sirsDataService.sirsDoc) {
             dataProjection = 'EPSG:2154';
         } else {
-            if (this.sirsDocService.get().epsgCode) {
-                dataProjection = this.sirsDocService.get().epsgCode;
+            if (this.sirsDataService.sirsDoc.epsgCode) {
+                dataProjection = this.sirsDataService.sirsDoc.epsgCode;
             } else {
                 dataProjection = 'EPSG:2154';
             }
@@ -256,11 +256,11 @@ export class MapManagerService {
 
         if (featureDoc.geometry && featureDoc['@class'] && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             });
             realGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
-                dataProjection: dataProjection,
+                dataProjection,
                 featureProjection: 'EPSG:3857'
             });
         } else {

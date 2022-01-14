@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { EditObjectService } from 'src/app/services/edit-object.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
+import { SirsDataService } from '../../services/sirs-data.service';
 
 @Component({
     selector: 'app-editobjects',
@@ -22,7 +23,8 @@ export class ObjectEditComponent implements OnInit {
     constructor(public EOS: EditObjectService, private router: Router,
                 private alertCtrl: AlertController,
                 private activatedRoute: ActivatedRoute,
-                private modalCtrl: ModalController) {
+                private modalCtrl: ModalController,
+                private sirsDataService: SirsDataService) {
     }
 
     ngOnInit() {
@@ -34,16 +36,13 @@ export class ObjectEditComponent implements OnInit {
 
         this.activatedRoute.data
             .subscribe((data: {
-                objectDoc: any,
-                refTypes: any,
-                orientationList: any,
-                coteList: any
+                objectDoc: any
             }) => {
                 this.objectDoc = data.objectDoc;
-                this.refTypes = data.refTypes;
-                this.orientationList = data.orientationList;
-                this.coteList = data.coteList;
             });
+        this.refTypes = this.sirsDataService.refTypes;
+        this.orientationList = this.sirsDataService.refOrientationPhoto;
+        this.coteList = this.sirsDataService.refCote;
     }
 
     backToMain() {
@@ -207,11 +206,11 @@ export class ObjectEditComponent implements OnInit {
 
     private isAhObjectType() {
         return this.EOS.objectType === 'DesordreDependance'
-        || this.EOS.objectType === 'PrestationAmenagementHydraulique'
-        || this.EOS.objectType === 'StructureAmenagementHydraulique'
-        || this.EOS.objectType === 'OuvrageAssocieAmenagementHydraulique'
-        || this.EOS.objectType === 'OrganeProtectionCollective'
-        || this.EOS.objectType === 'TraitAmenagementHydraulique';
+            || this.EOS.objectType === 'PrestationAmenagementHydraulique'
+            || this.EOS.objectType === 'StructureAmenagementHydraulique'
+            || this.EOS.objectType === 'OuvrageAssocieAmenagementHydraulique'
+            || this.EOS.objectType === 'OrganeProtectionCollective'
+            || this.EOS.objectType === 'TraitAmenagementHydraulique';
     }
 
     private itChange(a) {
@@ -224,8 +223,8 @@ export class ObjectEditComponent implements OnInit {
 
     private isActiveTabs() {
         return this.EOS.type !== 'BorneDigue'
-        && this.EOS.type !== 'Desordre'
-        && this.EOS.type !== 'Berge'
-        && !this.EOS.isDependance()
+            && this.EOS.type !== 'Desordre'
+            && this.EOS.type !== 'Berge'
+            && !this.EOS.isDependance()
     }
 }

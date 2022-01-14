@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { DatabaseService } from './database.service';
-import { LocalDatabase } from './local-database.service';
-import { Random } from '../utils/uuid-utils';
+import {Injectable} from '@angular/core';
+import {DatabaseService} from './database.service';
+import {LocalDatabase} from './local-database.service';
+import {Random} from '../utils/uuid-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -80,6 +80,10 @@ export class AppLayersService {
 
     getFavorites() {
         return this.favorites;
+    }
+
+    getLayerModel(layerClass) {
+        return this.favorites.find(item => item.filterValue === layerClass);
     }
 
     setFavorites(newFavorites) {

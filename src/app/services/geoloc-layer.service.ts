@@ -17,7 +17,7 @@ import Circle from 'ol/geom/Circle';
 export class GeolocLayerService {
     geolocLayer: VectorLayer = null;
 
-    init() {
+    constructor() {
         this.geolocLayer = this.createGeolocLayer();
     }
 

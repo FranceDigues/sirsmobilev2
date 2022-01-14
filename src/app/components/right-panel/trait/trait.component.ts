@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { SirsDocService } from '../../../services/sirsdoc.service';
+import { Component, OnInit } from '@angular/core';
 import { EditionModeService } from '../../../services/edition-mode.service';
 import { AuthService } from '../../../services/auth.service';
 import { LocalDatabase } from '../../../services/local-database.service';
@@ -7,6 +6,7 @@ import LineString from 'ol/geom/LineString';
 import WKT from 'ol/format/WKT';
 import { TrackerService } from '../../../services/tracker.service';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
+import {SirsDataService} from "../../../services/sirs-data.service";
 
 @Component({
     selector: 'trait',
@@ -15,7 +15,7 @@ import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 })
 export class TraitComponent implements OnInit {
 
-    public dataProjection = this.sirsDoc.get().epsgCode;
+    public dataProjection = this.sirsDataService.sirsDoc.epsgCode;
     public wktFormat = new WKT();
     public tracking;
     public document;
@@ -37,7 +37,7 @@ export class TraitComponent implements OnInit {
     ];
     trait = null;
 
-    constructor(private sirsDoc: SirsDocService,
+    constructor(private sirsDataService: SirsDataService,
                 private editionModeService: EditionModeService,
                 private trackerService: TrackerService,
                 private authService: AuthService,
@@ -47,9 +47,9 @@ export class TraitComponent implements OnInit {
 
     ngOnInit() {
         for (const t of this.traitList) {
-            this.editionModeService.getReferenceType(t["parent"])
+            this.editionModeService.getReferenceType(t.parent)
                 .then((values) => {
-                    t["parentValues"] = values;
+                    t['parentValues'] = values;
                 });
         }
 

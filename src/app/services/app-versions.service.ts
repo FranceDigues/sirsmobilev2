@@ -6,36 +6,27 @@ import { Platform } from '@ionic/angular';
     providedIn: 'root'
 })
 export class AppVersionsService {
-
     versions = null;
 
-    constructor(private http: HttpClient, private platform: Platform) { }
-
-    init() {
-        if (this.platform.is('android')) {
-            this.http.get('../assets/android-versions.json')
-            .subscribe(
-                (data) => {
-                    this.versions = data;
-                },
-                (err) => {
-                    console.error('init err', err);
-                }
-            );
-        } else {
-            this.http.get('../assets/ios-versions.json')
-            .subscribe(
-                (data) => {
-                    this.versions = data;
-                },
-                (err) => {
-                    console.error('init err', err);
-                }
-            );
-        }
+    constructor(private http: HttpClient, private platform: Platform) {
     }
 
     getVersions() {
-        return this.versions;
+        return new Promise((resolve, reject) => {
+            if (this.versions) {
+                resolve(this.versions);
+            } else {
+                this.http.get(this.platform.is('android') ? '../assets/android-versions.json' : '../assets/ios-versions.json')
+                    .subscribe(
+                        (data) => {
+                            this.versions = data;
+                            resolve(this.versions);
+                        },
+                        (err) => {
+                            reject(err);
+                        }
+                    );
+            }
+        });
     }
 }

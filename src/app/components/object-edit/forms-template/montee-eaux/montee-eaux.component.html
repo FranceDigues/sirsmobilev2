@@ -15,7 +15,7 @@
       <div *ngIf="EOS.showText('fullName')">
             <select id="width" class="browser-default"
                   name="width" [(ngModel)]="m.referenceHauteurId">
-                <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName')" [value]="r.id"
+                <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="m.referenceHauteurId === r.id">
                     {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
@@ -24,7 +24,7 @@
       <div *ngIf="EOS.showText('abstract')">
           <select id="width" class="browser-default"
                 name="width" [(ngModel)]="m.referenceHauteurId">
-                <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
+                <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
                         [value]="r.id"
                         [selected]="m.referenceHauteurId === r.id">
                     {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
@@ -33,7 +33,7 @@
       </div>
       <div *ngIf="EOS.showText('both')">
           <select id="width" class="browser-default" name="" [(ngModel)]="m.referenceHauteurId">
-              <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
+              <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
                       [value]="r.id"
                       name="width" [(ngModel)]="m.referenceHauteurId"
                       [selected]="m.referenceHauteurId === r.id">
@@ -63,7 +63,7 @@
       <div *ngIf="EOS.showText('fullName')">
             <select id="scale" class="browser-default"
                   name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-                <option *ngFor="let r of EOS.refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')" [value]="r.id"
+                <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
                     {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
                 </option>
@@ -72,7 +72,7 @@
       <div *ngIf="EOS.showText('abstract')">
           <select id="scale" class="browser-default"
                 name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-                <option *ngFor="let r of EOS.refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
+                <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
                         [value]="r.id"
                         [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
                     {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
@@ -81,7 +81,7 @@
       </div>
       <div *ngIf="EOS.showText('both')">
           <select id="scale" class="browser-default" name="" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-              <option *ngFor="let r of EOS.refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
+              <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
                       [value]="r.id"
                       name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId"
                       [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">

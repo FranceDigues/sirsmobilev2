@@ -7,14 +7,16 @@ import { File, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
 import { formatDate } from '@angular/common';
 import { UuidUtils } from '../utils/uuid-utils';
 import { AuthService } from './auth.service';
-import { SirsDocService } from './sirsdoc.service';
 import { transform } from 'ol/proj';
-import { StorageService } from '../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
+import {
+    StorageService
+} from '../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { DatabaseService } from './database.service';
 import WKT from 'ol/format/WKT';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { SirsDataService } from './sirs-data.service';
 import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
@@ -36,7 +38,7 @@ export class ObservationEditService {
     mediaOptions;
     importPhotoData;
     dataProjection;
-    orientations;
+    refOrientationPhoto;
     cotes;
     contact;
     contactList;
@@ -54,16 +56,16 @@ export class ObservationEditService {
     manoeuvreOuvrageList;
 
     constructor(private objectDetails: ObjectDetails,
-        private localDB: LocalDatabase, private file: File, private http: HttpClient,
-        private fileOpener: FileOpener, private authService: AuthService,
-        private sirsDoc: SirsDocService, private storageService: StorageService,
-        private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
-        private ref: ApplicationRef) {
+                private localDB: LocalDatabase, private file: File, private http: HttpClient,
+                private fileOpener: FileOpener, private authService: AuthService,
+                private sirsDataService: SirsDataService, private storageService: StorageService,
+                private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
+                private ref: ApplicationRef) {
     }
 
     // pre init method exists as the init methods are called from other components and services.
-    async preInit(sirsDocSrvc: SirsDocService) {
-        this.dataProjection = sirsDocSrvc.get().epsgCode;
+    async preInit(sirsDataService: SirsDataService) {
+        this.dataProjection = sirsDataService.sirsDoc.epsgCode;
         this.mediaPath = `${this.file.dataDirectory}medias`;
         this.showContent = true;
         this.loaded = {};
@@ -83,51 +85,54 @@ export class ObservationEditService {
         this.initRequests();
     }
 
-    initRequests() {
-        this.orientations = this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-            endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}],
-            include_docs: true
-        });
+    async initRequests() {
+        // this.refOrientationPhoto = this.localDB.query('Element/byClassAndLinear', {
+        //     startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
+        //     endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}],
+        //     include_docs: true
+        // });
+        //
+        // this.cotes = this.localDB.query('Element/byClassAndLinear', {
+        //     startkey: ['fr.sirs.core.model.RefCote'],
+        //     endkey: ['fr.sirs.core.model.RefCote', {}],
+        //     include_docs: true
+        // });
+        //
+        // this.contactList = this.localDB.query('Element/byClassAndLinear', {
+        //     startkey: ['fr.sirs.core.model.Contact'],
+        //     endkey: ['fr.sirs.core.model.Contact', {}],
+        //     include_docs: true
+        // });
+        //
+        // this.localDB.query('Element/byClassAndLinear', {
+        //     startkey: ['fr.sirs.core.model.RefUrgence'],
+        //     endkey: ['fr.sirs.core.model.RefUrgence', {}],
+        //     include_docs: true
+        // }).then(
+        //     (urgenceList) => {
+        //         this.urgenceList = urgenceList.map(item => {
+        //             item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
+        //             if (item.doc && item.doc.abrege) {
+        //                 item.value.abrege = item.doc.abrege;
+        //             }
+        //             return item.value;
+        //         });
+        //     }
+        // );
+        //
+        // this.localDB.query('Element/byClassAndLinear', {
+        //     startkey: ['fr.sirs.core.model.RefSuiteApporter'],
+        //     endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
+        //     include_docs: true
+        // }).then(
+        //     (suiteApporterList) => {
+        //         this.suiteApporterList = suiteApporterList.map(item => {
+        //             return item.value;
+        //         });
+        //     }
+        // );
 
-        this.cotes = this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefCote'],
-            endkey: ['fr.sirs.core.model.RefCote', {}],
-            include_docs: true
-        });
-
-        this.contactList = this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.Contact'],
-            endkey: ['fr.sirs.core.model.Contact', {}],
-            include_docs: true
-        });
-
-        this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefUrgence'],
-            endkey: ['fr.sirs.core.model.RefUrgence', {}],
-            include_docs: true
-        }).then(
-            (urgenceList) => {
-                this.urgenceList = urgenceList.map(item => {
-                    item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
-                    if (item.doc && item.doc.abrege) {
-                        item.value.abrege = item.doc.abrege;
-                    }
-                    return item.value;
-                });
-            }
-        );
-
-        this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefSuiteApporter'],
-            endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
-            include_docs: true
-        }).then(
-            (suiteApporterList) => {
-                this.suiteApporterList = suiteApporterList.map(item => { return item.value; });
-            }
-        );
-
+        // Todo... add this to sirsdata service
         // SPECIFICATION RESEAU ET OUVRAGE
         this.etatOuvAccGCList = this.localDB.query('Element/byClassAndLinear', {
             startkey: ['fr.sirs.core.model.RefEtatOuvAccGC'],
@@ -155,7 +160,7 @@ export class ObservationEditService {
                         this.troncons = [];
                     }
                 }
-            )
+            );
         this.objectDoc = this.objectDetails.selectedObject;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
@@ -171,7 +176,7 @@ export class ObservationEditService {
             this.urgence = parseInt(this.doc.urgenceId.substring(this.doc.urgenceId.lastIndexOf(':') + 1), 10);
         }
         if (this.doc.suiteApporterId) {
-            this.suiteApporter = this.doc.suiteApporterId
+            this.suiteApporter = this.doc.suiteApporterId;
         }
         if (this.doc.etatOuvrageId) {
             this.etatOuvrage = this.doc.etatOuvrageId;
@@ -188,7 +193,7 @@ export class ObservationEditService {
     }
 
     setValuesToDefault() {
-        this.dataProjection = this.sirsDoc.get().epsgCode;
+        this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.mediaOptions = {
             id: '',
             chemin: '',
@@ -238,13 +243,12 @@ export class ObservationEditService {
             case 'OuvrageAssocieAmenagementHydraulique':
                 newObj['@class'] = 'fr.sirs.core.model.ObservationDependance';
                 return newObj;
-            default:
+            default :
                 newObj['@class'] = 'fr.sirs.core.model.Observation';
                 newObj['urgenceId'] = 'RefUrgence:1';
                 newObj['nombreDesordres'] = 0;
                 return newObj;
         }
-        ;
     }
 
     getTargetObservation() {
@@ -331,7 +335,7 @@ export class ObservationEditService {
     }
 
     getImage(imageUrl: string): Observable<Blob> {
-        return this.http.get(imageUrl, { responseType: 'blob' });
+        return this.http.get(imageUrl, {responseType: 'blob'});
     }
 
     loadImage(photo, details?) {
@@ -354,44 +358,44 @@ export class ObservationEditService {
                     if (objAttachment) {
                         this.localDB.getAttachment(this.objectDoc._id, keyAttachment)
                             .then((blob) => {
-                                let blobImage = blob;
-                                let fileName;
-                                if (keyAttachment.indexOf('.') != -1) {
-                                    fileName = keyAttachment;
-                                } else {
-                                    let ext;
-                                    switch (objAttachment.content_type) {
-                                        case 'image/jpeg':
-                                            ext = '.jpg';
-                                            break;
-                                        case 'image/png':
-                                            ext = '.png';
-                                            break;
-                                        case 'image/gif':
-                                            ext = '.gif';
-                                            break;
-                                        case 'image/tiff':
-                                            ext = '.tif';
-                                            break;
+                                    let blobImage = blob;
+                                    let fileName;
+                                    if (keyAttachment.indexOf('.') !== -1) {
+                                        fileName = keyAttachment;
+                                    } else {
+                                        let ext;
+                                        switch (objAttachment.content_type) {
+                                            case 'image/jpeg':
+                                                ext = '.jpg';
+                                                break;
+                                            case 'image/png':
+                                                ext = '.png';
+                                                break;
+                                            case 'image/gif':
+                                                ext = '.gif';
+                                                break;
+                                            case 'image/tiff':
+                                                ext = '.tif';
+                                                break;
+                                        }
+                                        fileName = keyAttachment + ext;
                                     }
-                                    fileName = keyAttachment + ext;
-                                }
-                                this.file.resolveDirectoryUrl(this.mediaPath)
-                                    .then((targetDir: DirectoryEntry) => {
-                                        targetDir.getFile(fileName, { create: true }, (file: FileEntry) => {
-                                            file.createWriter((fileWriter) => {
-                                                fileWriter.write(blobImage);
-                                                setTimeout(() => {
+                                    this.file.resolveDirectoryUrl(this.mediaPath)
+                                        .then((targetDir: DirectoryEntry) => {
+                                            targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
+                                                file.createWriter((fileWriter) => {
+                                                    fileWriter.write(blobImage);
+                                                    setTimeout(() => {
+                                                        this.loaded[photo.id] = true;
+                                                        this.ref.tick(); // Force Ionic to detect changes
+                                                    }, 100); // Add Delay to be sure the src image is working (writing file is finished)
+                                                }, () => {
                                                     this.loaded[photo.id] = true;
                                                     this.ref.tick(); // Force Ionic to detect changes
-                                                }, 100); // Add Delay to be sure the src image is working (writing file is finished)
-                                            }, () => {
-                                                this.loaded[photo.id] = true;
-                                                this.ref.tick(); // Force Ionic to detect changes
+                                                });
                                             });
                                         });
-                                    });
-                            },
+                                },
                                 (err) => {
                                     this.loaded[photo.id] = true;
                                     this.ref.tick(); // Force Ionic to detect changes
@@ -412,7 +416,7 @@ export class ObservationEditService {
     homemadeIndexOf(myString: string, character: string) {
         const list: number[] = [];
         for (let i = 0; i < myString.length; i++) {
-            if (myString.charAt(i) == character) {
+            if (myString.charAt(i) === character) {
                 list.push(i);
             }
         }
