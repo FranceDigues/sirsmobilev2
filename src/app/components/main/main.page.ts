@@ -43,7 +43,8 @@ export class MainPage implements AfterViewInit {
     public disconnectSubscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-                public editionLayerService: EditionLayerService, private geolocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
+                public editionLayerService: EditionLayerService,
+                private geoLocLayer: GeolocLayerService, private sirsDocService: SirsDocService,
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private appVersionsService: AppVersionsService,
                 private loadingCtrl: LoadingController, private platform: Platform, private dbService: DatabaseService,
@@ -54,7 +55,7 @@ export class MainPage implements AfterViewInit {
         this.appVersionsService.init();
         this.backLayerService.init();
         this.editionLayerService.init();
-        this.geolocLayer.init();
+        this.geoLocLayer.init();
 
         this.platform.pause.subscribe(
             () => {
@@ -125,7 +126,7 @@ export class MainPage implements AfterViewInit {
                     this.olService.getMap().setView(this.mapService.currentView);
                     this.olService.addLayer(this.backLayerService.backLayer);
                     this.olService.addLayer(this.editionLayerService.editionLayer);
-                    this.olService.addLayer(this.geolocLayer.geolocLayer);
+                    this.olService.addLayer(this.geoLocLayer.geolocLayer);
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen sooner or later to add the appLayer to the map (done in the init function of mapManagerService).
                         this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
                     } else {
@@ -305,7 +306,7 @@ export class MainPage implements AfterViewInit {
         this.geolocationService.getCurrentLocation()
             .then(
                 (coordinates) => {
-                    this.geolocLayer.redrawGeolocLayer(coordinates);
+                    this.geoLocLayer.redrawGeolocLayer(coordinates);
                 },
                 (error) => {
                     console.error('Error getting location', error);
@@ -321,7 +322,7 @@ export class MainPage implements AfterViewInit {
                         const map = this.olService.getMap();
                         map.getView().setCenter(transform([coordinates.longitude, coordinates.latitude], 'EPSG:4326', 'EPSG:3857'));
                         map.getView().setZoom(18);
-                        this.geolocLayer.redrawGeolocLayer(coordinates);
+                        this.geoLocLayer.redrawGeolocLayer(coordinates);
                     }
                 },
                 (error) => {
@@ -346,6 +347,7 @@ export class MainPage implements AfterViewInit {
     }
 
     refresh() {
+        // window.location.reload();
         this.mapManagerService.clearAll();
     }
 

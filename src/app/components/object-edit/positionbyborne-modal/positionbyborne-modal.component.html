@@ -53,21 +53,7 @@
           </option>
         </select>
       </div>
-    
-      <div *ngIf="systemeReperage && !EOS.isLinear">
-        <label for="distance" class="active">Distance à la borne (en mètre): </label>
-        <input id="distance" type="number" class="validate" [(ngModel)]="data.borne_debut_distance" name="distance"
-          placeholder="" />
-      </div>
-      <div *ngIf="systemeReperage && EOS.isLinear">
-        <label for="distanceDebut" class="active">Distance à la borne début (en mètre): </label>
-        <input id="distanceDebut" type="number" class="validate" [(ngModel)]="data.borne_debut_distance"
-          name="distanceDebut" placeholder="" />
-        <label for="distanceFin" class="active">Distance à la borne fin (en mètre): </label>
-        <input id="distanceFin" type="number" class="validate" [(ngModel)]="data.borne_fin_distance" name="distanceFin"
-          placeholder="" />
-      </div>
-    
+
       <div *ngIf="systemeReperage && !EOS.isLinear">
         <label for="pos" class="active">Position : </label>
         <select id="pos" class="browser-default" [(ngModel)]="data.borne_debut_aval" name="pos">
@@ -98,6 +84,20 @@
             Amont
           </option>
         </select>
+      </div>
+    
+      <div *ngIf="systemeReperage && !EOS.isLinear">
+        <label for="distance" class="active">Distance à la borne (en mètre): </label>
+        <input id="distance" type="number" class="validate" [(ngModel)]="data.borne_debut_distance" name="distance"
+          placeholder="" />
+      </div>
+      <div *ngIf="systemeReperage && EOS.isLinear">
+        <label for="distanceDebut" class="active">Distance à la borne début (en mètre): </label>
+        <input id="distanceDebut" type="number" class="validate" [(ngModel)]="data.borne_debut_distance"
+          name="distanceDebut" placeholder="" />
+        <label for="distanceFin" class="active">Distance à la borne fin (en mètre): </label>
+        <input id="distanceFin" type="number" class="validate" [(ngModel)]="data.borne_fin_distance" name="distanceFin"
+          placeholder="" />
       </div>
     </div>
   </div>

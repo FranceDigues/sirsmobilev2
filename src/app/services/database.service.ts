@@ -36,8 +36,8 @@ export class DatabaseService {
     }
 
     getLocalDB() {
-        if (this.localDB == null) {
-            if (this.activeDB == null) {
+        if (this.localDB === null) {
+            if (this.activeDB === null) {
                 console.error('ERROR');
             }
             this.localDB = new PouchDB(this.activeDB.name, {

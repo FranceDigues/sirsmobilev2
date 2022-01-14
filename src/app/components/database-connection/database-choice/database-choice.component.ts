@@ -117,11 +117,12 @@ export class DatabaseChoiceComponent implements OnInit {
   validateDatabase() {
     if (this.selectedDatabase.replicated === false) {
       this.status = 3;
-    } else if (this.selectedDatabase.replicated && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
+    } else if (this.selectedDatabase.replicated
+        && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
       this.status = 4;
     } else {
       this.authService.user = this.dbService.activeDB.context.authUser;
-      this.router.navigateByUrl('/main');
+      this.router.navigateByUrl('/main').then();
     }
   }
 

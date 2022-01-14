@@ -79,8 +79,9 @@ export class ObjectDetailsComponent implements OnInit {
         'AmenagementHydraulique'
     ];
     static editableDocumentClasses = [
-        "fr.sirs.core.model.BorneDigue",
-        "fr.sirs.core.model.TronconDigue"
+        'fr.sirs.core.model.BorneDigue',
+        'fr.sirs.core.model.TronconDigue',
+        'fr.sirs.core.model.AmenagementHydraulique'
     ];
 
     @Output() readonly statusChange = new EventEmitter<string>();
