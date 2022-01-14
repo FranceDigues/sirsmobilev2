@@ -6,13 +6,14 @@
                 <form class="sirs-card" #objectForm="ngForm" style="overflow-x: hidden;">
                     <div class="sirs-card-content">
                         <h2 *ngIf="EOS.isNew" class="sirs-card-title">Nouveau/Nouvelle {{ displayName(EOS.type) }}</h2>
-                        <h2 *ngIf="!EOS.isNew && EOS.isClosed" class="sirs-card-title">Détail d'un(e) {{ EOS.type }}</h2>
+                        <h2 *ngIf="!EOS.isNew && EOS.isClosed" class="sirs-card-title">Détail
+                            d'un(e) {{ EOS.type }}</h2>
                         <!-- Tabs -->
                         <div class="sirs-nav-tabs" *ngIf="isActiveTabs()">
                             <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'fields'}"
-                                (click)="setTab('fields')">Attributs</span>
+                                  (click)="setTab('fields')">Attributs</span>
                             <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}"
-                                (click)="setTab('medias')">Medias</span>
+                                  (click)="setTab('medias')">Medias</span>
                         </div>
                         <!-- Fields Part -->
                         <div class="full-height full-width" *ngIf="tab === 'fields'">
@@ -20,26 +21,26 @@
                                 <div class="sirs-field">
                                     <label for="designation" class="active label-edit">Désignation</label>
                                     <input id="designation" type="text" class="validate"
-                                        [(ngModel)]="EOS.objectDoc.designation" name="designation"
-                                        placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation." />
+                                           [(ngModel)]="EOS.objectDoc.designation" name="designation"
+                                           placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
                                 </div>
 
 
                                 <div *ngIf="(!EOS.isDependance() || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
-                                    class="switch">
+                                     class="switch">
                                     <label class="label-edit">
                                         Objet ponctuel
                                         <input type="checkbox" id="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
-                                            (ngModelChange)="EOS.changeObjectType()" />
+                                               (ngModelChange)="EOS.changeObjectType()"/>
                                         <span class="lever"></span>
                                         Objet linéaire
                                     </label>
                                 </div>
 
                                 <div *ngIf="EOS.isDependance() && EOS.objectType !== 'TraitAmenagementHydraulique' && (EOS.isNew || EOS.isClosed)"
-                                    class="switch">
+                                     class="switch">
                                     <select id="objectType" class="browser-default" [(ngModel)]="EOS.objDependanceType"
-                                        name="objectType" (change)="EOS.changeObjectTypeDependance()">
+                                            name="objectType" (change)="EOS.changeObjectTypeDependance()">
                                         <option [value]="'point'" [selected]="EOS.objDependanceType === 'point'">
                                             Objet ponctuel
                                         </option>
@@ -53,30 +54,31 @@
                                 </div>
 
                                 <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()"
-                                    fxLayout="row" fxLayoutAlign="space-between center">
+                                     fxLayout="row" fxLayoutAlign="space-between center">
                                     <div>
                                         <div class="sirs-field-title"
-                                            *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">
+                                             *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">
                                             Position :
                                         </div>
                                         <div class="sirs-field-value"
-                                            *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{
+                                             *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{
                                             EOS.getStartPos() }}</div>
-                                        <div class="sirs-field-title" *ngIf="!EOS.objectDoc.editedGeoCoordinate">
-                                            Position via la borne : {{ EOS.startPosBorneLabel | async }}
+                                        <div class="sirs-field-title"
+                                             *ngIf="!EOS.objectDoc.editedGeoCoordinate && !EOS.objectDoc.positionDebut">
+                                            Position : {{ EOS.startPosBorneLabel | async }}
                                         </div>
                                     </div>
                                     <div *ngIf="!EOS.isLinear && !EOS.isDependance()" fxLayout="row">
                                         <button class="option-button" (click)="EOS.locateMe()"
-                                            *ngIf="EOS.activatedGPSPositionButton()">
+                                                *ngIf="EOS.activatedGPSPositionButton()">
                                             <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                         </button>
                                         <button class="option-button" (click)="selectPos()"
-                                            *ngIf="EOS.activatedGPSPositionButton()">
+                                                *ngIf="EOS.activatedGPSPositionButton()">
                                             <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                         </button>
                                         <button class="option-button" (click)="selectPosBySR()"
-                                            *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                                                *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
                                             <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
                                         </button>
                                     </div>
@@ -88,22 +90,22 @@
                                             Position de début : {{ EOS.getStartPos() }}
                                         </div>
                                         <div class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
-                                            Position de début via la borne : {{ EOS.startPosBorneLabel | async }}
+                                            Position de début : {{ EOS.startPosBorneLabel | async }}
                                         </div>
                                         <div>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; EOS.locateMe()"
-                                                *ngIf="EOS.activatedGPSPositionButton()">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; EOS.locateMe()"
+                                                    *ngIf="EOS.activatedGPSPositionButton()">
                                                 <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                             </button>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
-                                                *ngIf="EOS.activatedGPSPositionButton()">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
+                                                    *ngIf="EOS.activatedGPSPositionButton()">
                                                 <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                             </button>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPosBySR()"
-                                                *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPosBySR()"
+                                                    *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
                                                 <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
                                             </button>
                                         </div>
@@ -113,22 +115,22 @@
                                             Position de fin : {{ EOS.getEndPos() }}
                                         </div>
                                         <div class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
-                                            Position de fin via la borne : {{ EOS.endPosBorneLabel | async }}
+                                            Position de fin : {{ EOS.endPosBorneLabel | async }}
                                         </div>
                                         <div>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.locateMe()"
-                                                *ngIf="EOS.activatedGPSPositionButton()">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.locateMe()"
+                                                    *ngIf="EOS.activatedGPSPositionButton()">
                                                 <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                             </button>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
-                                                *ngIf="EOS.activatedGPSPositionButton()">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                                                    *ngIf="EOS.activatedGPSPositionButton()">
                                                 <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                             </button>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPosBySR()"
-                                                *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPosBySR()"
+                                                    *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
                                                 <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
                                             </button>
                                         </div>
@@ -136,9 +138,9 @@
                                 </div>
 
                                 <div class="sirs-field-inline" *ngIf="EOS.isDependance()" fxLayout="row"
-                                    fxLayoutAlign="space-between center">
+                                     fxLayoutAlign="space-between center">
                                     <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
-                                        class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">
+                                         class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">
                                         <div>
                                             Dessiner un polygone
                                         </div>
@@ -148,31 +150,31 @@
                                     </div>
 
                                     <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
-                                        class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">
+                                         class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">
                                         <div>
                                             Position : {{ EOS.getStartPosDependance() }}
                                         </div>
                                         <div>
                                             <button class="option-button" (click)="EOS.locateMe()"
-                                                *ngIf="EOS.objDependanceType === 'point'">
+                                                    *ngIf="EOS.objDependanceType === 'point'">
                                                 <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
                                             </button>
                                             <button class="option-button" (click)="selectPos()"
-                                                *ngIf="EOS.objDependanceType === 'point'">
+                                                    *ngIf="EOS.objDependanceType === 'point'">
                                                 <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                             </button>
                                         </div>
                                     </div>
 
                                     <div style="width: 100%" class="sirs-field-title"
-                                        *ngIf="EOS.objDependanceType === 'line'">
+                                         *ngIf="EOS.objDependanceType === 'line'">
                                         <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center">
                                             <div>
                                                 Position de début : {{ EOS.getStartPosDependance() }}
                                             </div>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
-                                                *ngIf="EOS.objDependanceType === 'line'">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
+                                                    *ngIf="EOS.objDependanceType === 'line'">
                                                 <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                             </button>
                                         </div>
@@ -181,8 +183,8 @@
                                                 Position de fin : {{ EOS.getEndPosDependance() }}
                                             </div>
                                             <button class="option-button"
-                                                (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
-                                                *ngIf="EOS.objDependanceType === 'line'">
+                                                    (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                                                    *ngIf="EOS.objDependanceType === 'line'">
                                                 <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
                                             </button>
                                         </div>
@@ -195,7 +197,7 @@
                                 <div class="sirs-field col col-100">
                                     <label for="trancon" class="active edit-label">La liste des Tronçons</label>
                                     <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
-                                        name="trancon">
+                                            name="trancon">
                                         <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
                                             {{ troncon.libelle }}</option>
                                     </select>
@@ -206,10 +208,10 @@
                                 <div class="sirs-field col col-100">
                                     <label for="dependance" class="active edit-label">Liste des Dependances</label>
                                     <select id="dependance" name="dependance" class="browser-default"
-                                        [(ngModel)]="EOS.objectDoc['dependanceId']">
+                                            [(ngModel)]="EOS.objectDoc['dependanceId']">
                                         <option *ngFor="let d of EOS.dependances"
-                                            [selected]="EOS.objectDoc.dependanceId === d.id"
-                                            (change)="EOS.objectDoc.dependanceId = d.id" [value]="d.id">
+                                                [selected]="EOS.objectDoc.dependanceId === d.id"
+                                                (change)="EOS.objectDoc.dependanceId = d.id" [value]="d.id">
                                             {{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation : d.id)}}
                                         </option>
                                     </select>
@@ -221,9 +223,9 @@
                                     <label for="ah" class="active edit-label">Liste des Aménagaments
                                         hydrauliques</label>
                                     <select id="ah" name="ah" class="browser-default"
-                                        [(ngModel)]="EOS.objectDoc['amenagementHydrauliqueId']">
+                                            [(ngModel)]="EOS.objectDoc['amenagementHydrauliqueId']">
                                         <option *ngFor="let a of EOS.amenagementHydrauliques" [selected]="ahSelected(a)"
-                                            (change)="itChange(a)" [value]="a.id">
+                                                (change)="itChange(a)" [value]="a.id">
                                             {{ a.doc.libelle ? a.doc.libelle : (a.doc.designation ? a.doc.designation : a.id)}}
                                         </option>
                                     </select>
@@ -234,7 +236,7 @@
                                 <div class="sirs-field col col-100">
                                     <label for="date_fin" class="active edit-label">La date de Fin</label>
                                     <input id="date_fin" type="date" [(ngModel)]="EOS.dateWrapper" name="date_fin"
-                                        (change)="EOS.formatDate()" />
+                                           (change)="EOS.formatDate()"/>
                                 </div>
                             </div>
 
@@ -243,14 +245,14 @@
                             <div class="sirs-field">
                                 <label for="commentaire" class="active edit-label">Commentaire</label>
                                 <textarea id="commentaire" class="materialize-textarea" name="commentaire"
-                                    [(ngModel)]="EOS.objectDoc.commentaire"></textarea>
+                                          [(ngModel)]="EOS.objectDoc.commentaire"></textarea>
                             </div>
 
                         </div>
                         <!-- Medias Part -->
                         <div class="full-height full-width" *ngIf="tab === 'medias'">
                             <app-media-details [photos]="EOS.objectDoc.photos" [objectDoc]="objectDoc"
-                                (changeView)="setView($event)"></app-media-details>
+                                               (changeView)="setView($event)"></app-media-details>
                         </div>
                     </div>
                     <div class="sirs-card-action">
@@ -279,5 +281,5 @@
 </div>
 <div class="full-height" *ngIf="view === 'media'">
     <app-media-form [coteList]="coteList" [orientationList]="orientationList" [objectType]="objectType"
-        [objectDoc]="objectDoc" (changeView)="setView($event)"></app-media-form>
+                    [objectDoc]="objectDoc" (changeView)="setView($event)"></app-media-form>
 </div>
