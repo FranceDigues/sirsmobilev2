@@ -41,6 +41,8 @@ export class ObservationEditService {
     contactList;
     urgenceList;
     urgence;
+    suiteApporterList;
+    suiteApporter;
 
     constructor(private objectDetails: ObjectDetails,
                 private localDB: LocalDatabase, private file: File, private http: HttpClient,
@@ -106,6 +108,16 @@ export class ObservationEditService {
                 });
             }
         );
+
+        this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefSuiteApporter'],
+            endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
+            include_docs: true
+        }).then(
+            (suiteApporterList) => {
+                this.suiteApporterList = suiteApporterList.map(item => {return item.value;});
+            }
+        );
     }
 
     init(objectId: string, obsId: string) {
@@ -138,6 +150,9 @@ export class ObservationEditService {
 
         if (this.doc.urgenceId) {
             this.urgence = parseInt(this.doc.urgenceId.substring(this.doc.urgenceId.lastIndexOf(':') + 1), 10);
+        }
+        if (this.doc.suiteApporterId) {
+            this.suiteApporter = this.doc.suiteApporterId
         }
     }
 

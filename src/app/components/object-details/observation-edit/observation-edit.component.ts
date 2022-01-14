@@ -27,7 +27,7 @@ export class ObservationEditComponent implements OnInit {
     objectId: string;
     obsId: string;
     view: 'form' | 'media';
-    tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur';
+    tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter';
     showTextConfig: string;
 
     contactList: Array<any> = [];
@@ -70,7 +70,7 @@ export class ObservationEditComponent implements OnInit {
         this.cdr.detectChanges();
     }
 
-    setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur') {
+    setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter') {
         this.tab = str;
     }
 
@@ -153,6 +153,10 @@ export class ObservationEditComponent implements OnInit {
 
     changeUrgence() {
         this.OES.doc.urgenceId = 'RefUrgence:' + this.OES.urgence;
+    }
+
+    changeSuiteApporter() {
+        this.OES.doc.suiteApporterId = this.OES.suiteApporter;
     }
 
     changeContact() {

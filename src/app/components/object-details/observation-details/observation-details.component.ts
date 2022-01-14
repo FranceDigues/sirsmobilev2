@@ -25,6 +25,7 @@ export class ObservationDetailsComponent implements OnInit {
 
     doc;
     urgencyLabel;
+    suiteApporterLabel;
     objectDoc;
     showContent: boolean;
     photos: Array<any>;
@@ -52,10 +53,9 @@ export class ObservationDetailsComponent implements OnInit {
                 this.urgencyLabel = result.libelle;
             });
         }
-        if (this.doc.urgenceId) {
-            // Acquire label for urgency identifier.
-            this.localDB.get(this.doc.urgenceId).then((result) => {
-                this.doc.urgencyLabel = result.libelle;
+        if (this.doc.suiteApporterId) {
+            this.localDB.get(this.doc.suiteApporterId).then((result) => {
+                this.suiteApporterLabel = result.libelle;
             });
         }
     }

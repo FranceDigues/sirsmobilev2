@@ -10,20 +10,21 @@
 
                         <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;"
                              fxLayout="row wrap" fxLayoutAlign="center center">
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                   [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                   [ngClass]="{active: tab === 'evolution'}"
                                   (click)="setTab('evolution')">Évolution</span>
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                   [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                   [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
-                                  [ngClass]="{active: tab === 'suite'}"
-                            (click)="setTab('suite')">Suite à apporter</span>
-                            <span fxFlex="25" class="sirs-tab waves-effect waves-teal"
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                   [ngClass]="{active: tab === 'observateur'}" (click)="setTab('observateur')">Observateur</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab('suiteApporter')">Suite à apporter</span>
+                            <span fxFlex="70" class="sirs-tab waves-effect waves-teal"
+                                  [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter (complément)</span>
                         </div>
 
                         <div class="medias" *ngSwitchCase="'medias'">
@@ -107,9 +108,25 @@
                                        [(ngModel)]="OES.doc.nombreDesordres" name="nombre_Desordres"/>
                             </div>
                         </div>
+                        <div class="suite" *ngSwitchCase="'suiteApporter'">
+                            <div class="sirs-field">
+                                <select id="suiteApporterList" class="browser-default" *ngIf="OES.suiteApporterList"
+                                        [(ngModel)]="OES.suiteApporter" name="suiteApporterList" (ngModelChange)="changeSuiteApporter()">
+                                    <option *ngFor="let suiteApporter of OES.suiteApporterList.sort(compareRef())"
+                                            [value]="suiteApporter.id"
+                                            (ngModelChange)="changeSuiteApporter()"
+                                            [selected]="suiteApporter.id === OES.suiteApporter">
+                                        {{ suiteApporter.libelle ? suiteApporter.libelle : 'libelle undefined / id: ' + suiteApporter.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="!OES.suiteApporterList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                            </div>
+                        </div>
                         <div class="suite" *ngSwitchCase="'suite'">
                             <div class="sirs-field">
-                                <label for="suite_field" class="active">Suite à apporter</label>
+                                <label for="suite_field" class="active">Suite à apporter (complément)</label>
                                 <textarea id="suite_field" class="materialize-textarea"
                                           [(ngModel)]="OES.doc.suite" name="suite_field"></textarea>
                             </div>
