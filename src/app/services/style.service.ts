@@ -187,8 +187,8 @@ export class RealPositionStyle {
 })
 export class EditionLayerStyle {
     mapService: MapService;
-    EDITION_LAYER_COLOR_1 = [255, 255, 255, .3];
-    EDITION_LAYER_COLOR_2 = [0, 0, 255, .3];
+    EDITION_LAYER_COLOR_1 = [255, 255, 255, .5];
+    EDITION_LAYER_COLOR_2 = [0, 0, 255, .5];
     EDITION_LAYER_STROKE_WIDTH = 3;
     EDITION_LAYER_CIRCLE_RADIUS = 6;
 

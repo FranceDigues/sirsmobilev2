@@ -48,6 +48,8 @@ export class EditionLayerService {
     createEditionLayerInstance(favorites?: any[]) {
         const olLayer = new VectorLayer({
             name: 'Edition',
+            model: {selectable: true},
+            zIndex: 1000,
             source: new VectorSource({useSpatialIndex: false})
         });
 
