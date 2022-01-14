@@ -54,7 +54,7 @@ export class DatabaseService {
     }
 
     saveDatabaseSettings(databases) {
-        this.nativeStorage.setItem('databases-settings', databases).then();
+        this.nativeStorage.setItem('databases-settings', databases);
     }
 
     getDatabaseSettings() {
