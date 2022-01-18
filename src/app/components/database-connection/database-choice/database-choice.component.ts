@@ -122,7 +122,7 @@ export class DatabaseChoiceComponent implements OnInit {
       this.status = 4;
     } else {
       this.authService.user = this.dbService.activeDB.context.authUser;
-      this.router.navigateByUrl('/main').then();
+      this.router.navigateByUrl('/main');
     }
   }
 
