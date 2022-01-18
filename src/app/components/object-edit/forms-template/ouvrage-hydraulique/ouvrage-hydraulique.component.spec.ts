@@ -75,7 +75,8 @@ describe('OuvrageHydrauliqueComponent FormTemplate', () => {
         OuvrageTelecomEnergie: [],
         RefOuvrageParticulier: [],
         RefOuvrageVoirie: [],
-        RefTypeDesordre: []
+        RefTypeDesordre: [],
+        RefSecurite: []
     };
     editObjectService.objectDoc = {};
 

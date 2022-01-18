@@ -75,7 +75,8 @@ describe('ReseauHydrauliqueFermeComponent FormTemplate', () => {
         OuvrageTelecomEnergie: [],
         RefOuvrageParticulier: [],
         RefOuvrageVoirie: [],
-        RefTypeDesordre: []
+        RefTypeDesordre: [],
+        RefSecurite: []
     };
     editObjectService.objectDoc = {};
 
