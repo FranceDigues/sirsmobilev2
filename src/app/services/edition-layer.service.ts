@@ -100,7 +100,7 @@ export class EditionLayerService {
         const features = [];
         featureDocs.forEach((featureDoc) => {
             if (featureDoc.doc && (featureDoc.doc.positionDebut || featureDoc.doc.approximatePositionDebut
-                || PluginUtils.isDependanceClass(featureDoc.doc['@class']))) {
+                || PluginUtils.isDependanceAhClass(featureDoc.doc['@class']))) {
                 features.push(this.createEditionFeatureInstance(featureDoc.doc));
             }
         });
@@ -113,7 +113,7 @@ export class EditionLayerService {
         let geometry;
         const dataProjection = (SirsDoc && SirsDoc.get() && SirsDoc.get().epsgCode) ? SirsDoc.get().epsgCode : 'EPSG:2154';
 
-        if (featureDoc.geometry && PluginUtils.isDependanceClass(featureDoc['@class'])) {
+        if (featureDoc.geometry && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'

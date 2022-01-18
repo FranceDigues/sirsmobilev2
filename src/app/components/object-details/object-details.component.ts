@@ -102,11 +102,7 @@ export class ObjectDetailsComponent implements OnInit {
         this.activeTab = 'description';
         this.objectDetails.detailsType = 'objectDetails';
         this.document = this.objectDetails.selectedObject;
-        this.objectType = this.document['@class'].substring(
-            this.document['@class'].lastIndexOf('.') + 1
-        );
-        // isDependance initialisation must be done before init
-        this.objectDetails.isDependance = PluginUtils.isDependanceClass(this.document['@class']);
+        this.objectType = PluginUtils.doc2Class(this.document);
         this.objectDetails.init();
     }
 
@@ -211,6 +207,4 @@ export class ObjectDetailsComponent implements OnInit {
     addObservation() {
         this.route.navigateByUrl('/observation/' + this.document._id.toString() + '/');
     }
-
-
 }

@@ -13,6 +13,7 @@ import { formatDate } from '@angular/common';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { File } from '@ionic-native/file/ngx';
+import { PluginUtils } from 'src/app/utils/plugin-utils';
 
 @Component({
     selector: 'observation-details',
@@ -26,6 +27,7 @@ export class ObservationDetailsComponent implements OnInit {
     doc;
     urgencyLabel;
     suiteApporterLabel;
+    specificationReseauOuvrage = [];
     objectDoc;
     showContent: boolean;
     photos: Array<any>;
@@ -57,6 +59,11 @@ export class ObservationDetailsComponent implements OnInit {
             this.localDB.get(this.doc.suiteApporterId).then((result) => {
                 this.suiteApporterLabel = result.libelle;
             });
+        }
+
+        // Must be done after this.objectDoc initialization
+        if (this.isReseauEtOuvrage()) {
+            this.initSpecificationReseauOuvrage();
         }
     }
 
@@ -239,4 +246,65 @@ export class ObservationDetailsComponent implements OnInit {
         return (base64StringLength / 4) * 3 - padding;
     }
 
+    isReseauEtOuvrage() {
+        return PluginUtils.isReseauOuvrageDoc(this.objectDoc);
+    }
+
+    private initSpecificationReseauOuvrage() {
+        // SPECIFICATION RESEAU ET OUVRAGE
+        this.specificationReseauOuvrage = [
+            {
+                label: "Etat de l'ouvrage",
+                value: "Non définie"
+            },
+            {
+                label: "Etat de l'ouvrage - Commentaire",
+                value: this.doc.etatOuvrageCom || "Non définie"
+            },
+            {
+                label: "Etat des accessoires",
+                value: "Non définie"
+            },
+            {
+                label: "Etat des accessoires - Commentaire",
+                value: this.doc.etatAccessoireCom || "Non définie"
+            },
+            {
+                label: "Etat du génie civil",
+                value: "Non définie"
+            },
+            {
+                label: "Etat du génie civil - Commentaire",
+                value: this.doc.etatGenieCivilCom || "Non définie"
+            },
+            {
+                label: "Manoeuvre de l'ouvrage",
+                value: "Non définie"
+            },
+            {
+                label: "Manoeuvre de l'ouvrage - Commentaire",
+                value: this.doc.manoeuvreOuvrageCom || "Non définie"
+            },
+        ]
+        if (this.doc.etatOuvrageId) {
+            this.localDB.get(this.doc.etatOuvrageId).then((result) => {
+                this.specificationReseauOuvrage[0].value = result.libelle;
+            });
+        }
+        if (this.doc.etatAccessoireId) {
+            this.localDB.get(this.doc.etatAccessoireId).then((result) => {
+                this.specificationReseauOuvrage[2].value = result.libelle;
+            });
+        }
+        if (this.doc.etatGenieCivilId) {
+            this.localDB.get(this.doc.etatGenieCivilId).then((result) => {
+                this.specificationReseauOuvrage[4].value = result.libelle;
+            });
+        }
+        if (this.doc.manoeuvreOuvrageId) {
+            this.localDB.get(this.doc.manoeuvreOuvrageId).then((result) => {
+                this.specificationReseauOuvrage[6].value = result.libelle;
+            });
+        }
+    }
 }

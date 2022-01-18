@@ -14,6 +14,7 @@ import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
+import { PluginUtils } from 'src/app/utils/plugin-utils';
 
 declare var M: any;
 
@@ -27,34 +28,35 @@ export class ObservationEditComponent implements OnInit {
     objectId: string;
     obsId: string;
     view: 'form' | 'media';
-    tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter';
+    tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
+    | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
+    | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom';
     showTextConfig: string;
 
     contactList: Array<any> = [];
+    etatOuvAccGCList: Array<any> = [];
+    manoeuvreOuvrageList: Array<any> = [];
     pendingContactList: boolean;
+    pendingEtatOuvAccGCList: boolean;
+    pendingManoeuvreOuvrageList: boolean;
     saving: boolean = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
 
 
     constructor(private activeRoute: ActivatedRoute, public OES: ObservationEditService,
-                private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
-                private route: Router, private editionService: EditionModeService,
-                private mapManagerService: MapManagerService) {
+        private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
+        private route: Router, private editionService: EditionModeService,
+        private mapManagerService: MapManagerService) {
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.view = 'form';
         this.tab = 'medias';
         this.pendingContactList = true;
+        this.pendingEtatOuvAccGCList = true;
+        this.pendingManoeuvreOuvrageList = true;
 
         this.OES.init(this.objectId, this.obsId); // Not optimized at all. Look for a way to init this properly or at the right time.
 
-        this.OES.contactList.then((list) => {
-            this.pendingContactList = false;
-            this.contactList = list;
-        }, (error) => {
-            this.pendingContactList = false;
-            console.error("error contactList returned : ", error);
-        })
-
+        this.initList();
         // TODO CHECK inits -> doc.author + mb hidden inits
     }
 
@@ -70,7 +72,9 @@ export class ObservationEditComponent implements OnInit {
         this.cdr.detectChanges();
     }
 
-    setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter') {
+    setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
+    | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
+    | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom') {
         this.tab = str;
     }
 
@@ -163,6 +167,22 @@ export class ObservationEditComponent implements OnInit {
         this.OES.doc.observateurId = this.OES.contact;
     }
 
+    changeEtatOuvrage() {
+        this.OES.doc.etatOuvrageId = this.OES.etatOuvrage;
+    }
+
+    changeEtatAccessoire() {
+        this.OES.doc.etatAccessoireId = this.OES.etatAccessoire;
+    }
+
+    changeEtatGenieCivil() {
+        this.OES.doc.etatGenieCivilId = this.OES.etatGenieCivil;
+    }
+
+    changeManoeuvreOuvrage() {
+        this.OES.doc.etatManoeuvreOuvrageId = this.OES.manoeuvreOuvrage;
+    }
+
     compareRef() {
         return (obj1, obj2) => {
             let a, b, comparison;
@@ -185,6 +205,33 @@ export class ObservationEditComponent implements OnInit {
         }
     }
 
+    private initList() {
+        this.OES.contactList.then((list) => {
+            this.pendingContactList = false;
+            this.contactList = list;
+        }, (error) => {
+            this.pendingContactList = false;
+            console.error("error contactList returned : ", error);
+        })
+        this.OES.etatOuvAccGCList.then((list) => {
+            this.pendingEtatOuvAccGCList = false;
+            this.etatOuvAccGCList = list.map(item => {return item.value;});;
+        }, (error) => {
+            this.pendingEtatOuvAccGCList = false;
+            console.error("error etatOuvAccGCList returned : ", error);
+        })
+        this.OES.manoeuvreOuvrageList.then((list) => {
+            this.pendingManoeuvreOuvrageList = false;
+            this.manoeuvreOuvrageList = list.map(item => {return item.value;});;
+        }, (error) => {
+            this.pendingManoeuvreOuvrageList = false;
+            console.error("error manoeuvreOuvrageList returned : ", error);
+        })
+    }
+
+    private isReseauEtOuvrage() {
+        PluginUtils.isReseauOuvrageDoc(this.OES.objectDoc);
+    }
 }
 
 @Directive({

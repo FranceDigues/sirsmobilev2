@@ -138,7 +138,7 @@ export class MapManagerService {
             let promise = null;
             if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
                 layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                if (PluginUtils.isDependanceClass(layerModel.filterValue)) {
+                if (PluginUtils.isDependanceAhClass(layerModel.filterValue)) {
                     promise = this.localDB.query('Element/byClassAndLinear', {
                         startkey: [layerModel.filterValue],
                         endkey: [layerModel.filterValue, {}],
@@ -254,7 +254,7 @@ export class MapManagerService {
         let projGeometry;
         let realGeometry;
 
-        if (featureDoc.geometry && featureDoc['@class'] && PluginUtils.isDependanceClass(featureDoc['@class'])) {
+        if (featureDoc.geometry && featureDoc['@class'] && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
             projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
                 dataProjection: dataProjection,
                 featureProjection: 'EPSG:3857'

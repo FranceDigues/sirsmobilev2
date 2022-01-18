@@ -6,6 +6,7 @@ import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
 import { EditObjectService } from './edit-object.service';
+import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -74,82 +75,87 @@ export class ObjectDetails {
     }
 
     init() {
-        this.abstract = {};
-        const regex = new RegExp('.*Id$');
-        for (let key in this.selectedObject) {
-            if (regex.test(key)) {
-                const value = this.selectedObject[key];
-                this.localDB.get(value).then(
-                    (doc) => {
-                        this.abstract[key.substr(0, key.length - 2)] = this.formService.doc2String(doc);
-                    },
-                    (error) => {
-                        console.log('No document found for this ID (' + value + '). ' + error);
-                    }
-                );
-            } else if (key.toLowerCase() === 'author') {
-                const value = this.selectedObject[key];
-                this.localDB.get(value).then(
-                    (doc) => {
-                        this.abstract['author'] = doc.login;
-                    },
-                    (error) => {
-                        console.log('No document found for this author ID (' + value + '). ' + error);
-                    }
-                );
+        if (this.selectedObject) {
+            this.isDependance = PluginUtils.isDependanceAhDoc(this.selectedObject);
+            this.abstract = {};
+            const regex = new RegExp('.*Id$');
+            for (let key in this.selectedObject) {
+                if (regex.test(key)) {
+                    const value = this.selectedObject[key];
+                    this.localDB.get(value).then(
+                        (doc) => {
+                            this.abstract[key.substr(0, key.length - 2)] = this.formService.doc2String(doc);
+                        },
+                        (error) => {
+                            console.log('No document found for this ID (' + value + '). ' + error);
+                        }
+                    );
+                } else if (key.toLowerCase() === 'author') {
+                    const value = this.selectedObject[key];
+                    this.localDB.get(value).then(
+                        (doc) => {
+                            this.abstract['author'] = doc.login;
+                        },
+                        (error) => {
+                            console.log('No document found for this author ID (' + value + '). ' + error);
+                        }
+                    );
+                }
             }
-        }
 
-        let prestationClass: string;
-        if (this.isDependance) {
-            prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+            let prestationClass: string;
+            if (this.isDependance) {
+                prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+            } else {
+                prestationClass = 'fr.sirs.core.model.Prestation';
+            }
+
+            this.localDB.query('Element/byClassAndLinear', {
+                startkey: [prestationClass],
+                endkey: [prestationClass, {}]
+            }).then(
+                (response) => {
+                    this.prestationMap = {};
+                    this.allPrestationList = response.map((elt) => {
+                        this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                        return elt.value;
+                    });
+                    this.filterPrestationList();
+                    this.tempPrestation = null;
+                }, (err) => {
+                    console.error(err);
+                }
+            );
+
+            let desordreClass: string;
+            let linearId: string;
+            if (this.isDependance) {
+                desordreClass = 'fr.sirs.core.model.DesordreDependance';
+                linearId = null;
+            } else {
+                desordreClass = 'fr.sirs.core.model.Desordre';
+                linearId = this.selectedObject.linearId;
+            }
+
+            this.localDB.query('Element/byClassAndLinear', {
+                startkey: [desordreClass, linearId],
+                endkey: [desordreClass, linearId, {}]
+            }).then(
+                (response) => {
+                    this.desordreMap = {};
+                    this.allDesordreList = response.map((elt) => {
+                        this.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
+                        return elt.value;
+                    });
+                    this.filterDesordreList();
+                    this.tempDesordre = null;
+                }, (err) => {
+                    console.error(err);
+                }
+            );
         } else {
-            prestationClass = 'fr.sirs.core.model.Prestation';
+            console.warn("object-details.service: you must define selectedObject before init.");
         }
-
-        this.localDB.query('Element/byClassAndLinear', {
-            startkey: [prestationClass],
-            endkey: [prestationClass, {}]
-        }).then(
-            (response) => {
-                this.prestationMap = {};
-                this.allPrestationList = response.map((elt) => {
-                    this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
-                    return elt.value;
-                });
-                this.filterPrestationList();
-                this.tempPrestation = null;
-            }, (err) => {
-                console.error(err);
-            }
-        );
-
-        let desordreClass: string;
-        let linearId: string;
-        if (this.isDependance) {
-            desordreClass = 'fr.sirs.core.model.DesordreDependance';
-            linearId = null;
-        } else {
-            desordreClass = 'fr.sirs.core.model.Desordre';
-            linearId = this.selectedObject.linearId;
-        }
-
-        this.localDB.query('Element/byClassAndLinear', {
-            startkey: [desordreClass, linearId],
-            endkey: [desordreClass, linearId, {}]
-        }).then(
-            (response) => {
-                this.desordreMap = {};
-                this.allDesordreList = response.map((elt) => {
-                    this.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
-                    return elt.value;
-                });
-                this.filterDesordreList();
-                this.tempDesordre = null;
-            }, (err) => {
-                console.error(err);
-            }
-        );
     }
 
     openObservationDetails(observation) {

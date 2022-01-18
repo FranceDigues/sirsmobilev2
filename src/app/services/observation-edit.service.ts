@@ -15,6 +15,7 @@ import { DatabaseService } from './database.service';
 import WKT from 'ol/format/WKT';
 import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { PluginUtils } from '../utils/plugin-utils';
 
 @Injectable({
     providedIn: 'root'
@@ -44,12 +45,20 @@ export class ObservationEditService {
     suiteApporterList;
     suiteApporter;
 
+    // SEPCIFICATION RESEAU ET OUVRAGE
+    etatOuvrage;
+    etatAccessoire;
+    etatGenieCivil;
+    etatOuvAccGCList;
+    manoeuvreOuvrage;
+    manoeuvreOuvrageList;
+
     constructor(private objectDetails: ObjectDetails,
-                private localDB: LocalDatabase, private file: File, private http: HttpClient,
-                private fileOpener: FileOpener, private authService: AuthService,
-                private sirsDoc: SirsDocService, private storageService: StorageService,
-                private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
-                private ref: ApplicationRef) {
+        private localDB: LocalDatabase, private file: File, private http: HttpClient,
+        private fileOpener: FileOpener, private authService: AuthService,
+        private sirsDoc: SirsDocService, private storageService: StorageService,
+        private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
+        private ref: ApplicationRef) {
     }
 
     // pre init method exists as the init methods are called from other components and services.
@@ -115,9 +124,21 @@ export class ObservationEditService {
             include_docs: true
         }).then(
             (suiteApporterList) => {
-                this.suiteApporterList = suiteApporterList.map(item => {return item.value;});
+                this.suiteApporterList = suiteApporterList.map(item => { return item.value; });
             }
         );
+
+        // SPECIFICATION RESEAU ET OUVRAGE
+        this.etatOuvAccGCList = this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefEtatOuvAccGC'],
+            endkey: ['fr.sirs.core.model.RefEtatOuvAccGC', {}],
+            include_docs: true
+        });
+        this.manoeuvreOuvrageList = this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefManoeuvre'],
+            endkey: ['fr.sirs.core.model.RefManoeuvre', {}],
+            include_docs: true
+        });
     }
 
     init(objectId: string, obsId: string) {
@@ -136,9 +157,7 @@ export class ObservationEditService {
                 }
             )
         this.objectDoc = this.objectDetails.selectedObject;
-        const lastIndexOfClass = this.objectDoc['@class'].lastIndexOf('.');
-        this.objectType = this.objectDoc['@class']
-            .substring(lastIndexOfClass + 1);
+        this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
         this.objectId = objectId;
         this.obsId = obsId;
@@ -153,6 +172,18 @@ export class ObservationEditService {
         }
         if (this.doc.suiteApporterId) {
             this.suiteApporter = this.doc.suiteApporterId
+        }
+        if (this.doc.etatOuvrageId) {
+            this.etatOuvrage = this.doc.etatOuvrageId;
+        }
+        if (this.doc.etatAccessoireId) {
+            this.etatAccessoire = this.doc.etatAccessoireId;
+        }
+        if (this.doc.etatGenieCivilId) {
+            this.etatGenieCivil = this.doc.etatGenieCivilId;
+        }
+        if (this.doc.manoeuvreOuvrageId) {
+            this.manoeuvreOuvrage = this.doc.manoeuvreOuvrageId;
         }
     }
 
@@ -185,8 +216,8 @@ export class ObservationEditService {
         switch (this.objectType) {
             case 'StationPompage':
             case 'ReseauHydrauliqueFerme':
-            case  'OuvrageHydrauliqueAssocie':
-            case  'ReseauHydrauliqueCielOuvert':
+            case 'OuvrageHydrauliqueAssocie':
+            case 'ReseauHydrauliqueCielOuvert':
             case 'VoieAcces':
             case 'OuvrageFranchissement':
             case 'OuvertureBatardable':
@@ -207,7 +238,7 @@ export class ObservationEditService {
             case 'OuvrageAssocieAmenagementHydraulique':
                 newObj['@class'] = 'fr.sirs.core.model.ObservationDependance';
                 return newObj;
-            default :
+            default:
                 newObj['@class'] = 'fr.sirs.core.model.Observation';
                 newObj['urgenceId'] = 'RefUrgence:1';
                 newObj['nombreDesordres'] = 0;
@@ -300,7 +331,7 @@ export class ObservationEditService {
     }
 
     getImage(imageUrl: string): Observable<Blob> {
-        return this.http.get(imageUrl, {responseType: 'blob'});
+        return this.http.get(imageUrl, { responseType: 'blob' });
     }
 
     loadImage(photo, details?) {
@@ -323,44 +354,44 @@ export class ObservationEditService {
                     if (objAttachment) {
                         this.localDB.getAttachment(this.objectDoc._id, keyAttachment)
                             .then((blob) => {
-                                    let blobImage = blob;
-                                    let fileName;
-                                    if (keyAttachment.indexOf('.') != -1) {
-                                        fileName = keyAttachment;
-                                    } else {
-                                        let ext;
-                                        switch (objAttachment.content_type) {
-                                            case 'image/jpeg':
-                                                ext = '.jpg';
-                                                break;
-                                            case 'image/png':
-                                                ext = '.png';
-                                                break;
-                                            case 'image/gif':
-                                                ext = '.gif';
-                                                break;
-                                            case 'image/tiff':
-                                                ext = '.tif';
-                                                break;
-                                        }
-                                        fileName = keyAttachment + ext;
+                                let blobImage = blob;
+                                let fileName;
+                                if (keyAttachment.indexOf('.') != -1) {
+                                    fileName = keyAttachment;
+                                } else {
+                                    let ext;
+                                    switch (objAttachment.content_type) {
+                                        case 'image/jpeg':
+                                            ext = '.jpg';
+                                            break;
+                                        case 'image/png':
+                                            ext = '.png';
+                                            break;
+                                        case 'image/gif':
+                                            ext = '.gif';
+                                            break;
+                                        case 'image/tiff':
+                                            ext = '.tif';
+                                            break;
                                     }
-                                    this.file.resolveDirectoryUrl(this.mediaPath)
-                                        .then((targetDir: DirectoryEntry) => {
-                                            targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
-                                                file.createWriter((fileWriter) => {
-                                                    fileWriter.write(blobImage);
-                                                    setTimeout(() => {
-                                                        this.loaded[photo.id] = true;
-                                                        this.ref.tick(); // Force Ionic to detect changes
-                                                    }, 100); // Add Delay to be sure the src image is working (writing file is finished)
-                                                }, () => {
+                                    fileName = keyAttachment + ext;
+                                }
+                                this.file.resolveDirectoryUrl(this.mediaPath)
+                                    .then((targetDir: DirectoryEntry) => {
+                                        targetDir.getFile(fileName, { create: true }, (file: FileEntry) => {
+                                            file.createWriter((fileWriter) => {
+                                                fileWriter.write(blobImage);
+                                                setTimeout(() => {
                                                     this.loaded[photo.id] = true;
                                                     this.ref.tick(); // Force Ionic to detect changes
-                                                });
+                                                }, 100); // Add Delay to be sure the src image is working (writing file is finished)
+                                            }, () => {
+                                                this.loaded[photo.id] = true;
+                                                this.ref.tick(); // Force Ionic to detect changes
                                             });
                                         });
-                                },
+                                    });
+                            },
                                 (err) => {
                                     this.loaded[photo.id] = true;
                                     this.ref.tick(); // Force Ionic to detect changes
@@ -380,9 +411,9 @@ export class ObservationEditService {
     //Index of looking for multiple occurence of a character and returning a list with all the indexes.
     homemadeIndexOf(myString: string, character: string) {
         const list: number[] = [];
-        for(let i = 0; i < myString.length; i++){
-            if(myString.charAt(i) == character){
-               list.push(i);
+        for (let i = 0; i < myString.length; i++) {
+            if (myString.charAt(i) == character) {
+                list.push(i);
             }
         }
         return list;
@@ -424,4 +455,7 @@ export class ObservationEditService {
         this.mediaOptions.borneDebutLibelle = data.borneLibelle;
     };
 
+    isReseauEtOuvrageType() {
+        return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
 }

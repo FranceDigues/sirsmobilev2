@@ -78,7 +78,7 @@ export class EditObjectService {
                                         objectDoc.borne_fin_distance = objectDoc.borne_debut_distance;
                                     }
                                     this.objectDoc = objectDoc;
-                                    this.objectType = objectDoc['@class'].substring(objectDoc['@class'].lastIndexOf('.') + 1);
+                                    this.objectType =PluginUtils.doc2Class(objectDoc);
                                     this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
 
                                     // Hack for borne fin data without borneFinId
@@ -241,7 +241,7 @@ export class EditObjectService {
     }
 
     isDependance() {
-        return PluginUtils.isDependanceClass(this.objectDoc['@class']);
+        return PluginUtils.isDependanceAhClass(this.objectDoc['@class']);
     }
 
     initTronconList() {
