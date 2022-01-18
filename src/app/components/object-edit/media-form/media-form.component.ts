@@ -155,12 +155,14 @@ export class MediaFormComponent implements OnInit {
     }
 
     locateMe() {
-        this.geolocation.getCurrentLocation()
+        if (this.geolocation.isEnabled) {
+            this.geolocation.getCurrentLocation()
             .then(
                 (position: Coordinates) => {
                     this.positionService.getWKTFromLatLong(position);
                 }
             );
+        }
     }
 
     async selectPosition() {

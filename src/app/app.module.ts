@@ -36,6 +36,7 @@ import { ObjectDetails } from './services/object-details.service';
 import { ObjectDocService } from './services/object-doc.service';
 import { SelectedObjectsService } from './services/selected-objects.service';
 import { SirsDocService } from './services/sirsdoc.service';
+import { ToastService } from './services/toast.service';
 import { FilterPipe } from './components/right-panel/create-object/create-object.component';
 import { DefaultStyle, GetStyle, HandlingStyle, RealPositionStyle } from './services/style.service';
 import { SyncService } from './services/sync.service';
@@ -72,7 +73,7 @@ import { FilePath } from '@ionic-native/file-path/ngx';
         SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, ObjectDocService, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
-        FormsTemplateService, CacheMapManager, File, WebView, FileOpener,
+        FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
         ObservationEditService, PositionService, Network, FileChooser, FilePath,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],

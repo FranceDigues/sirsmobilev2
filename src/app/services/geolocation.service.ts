@@ -17,12 +17,6 @@ export class GeolocationService {
     constructor(private geolocation: Geolocation,
                 private loadingCtrl: LoadingController,
                 private databaseService: DatabaseService) {
-        this.databaseService.getCurrentDatabaseSettings()
-            .then(
-                (config: DatabaseModel) => {
-                    this.enabled = config.context.settings.geolocation;
-                }
-            );
     }
 
     getCoords() {
@@ -70,6 +64,6 @@ export class GeolocationService {
     }
 
     set isEnabled(flag: boolean) {
-        this.databaseService.changeGeolocationFlag(flag);
+        this.enabled = flag;
     }
 }

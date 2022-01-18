@@ -92,12 +92,14 @@ export class MapEditObjectService {
     }
 
     locateMe() {
+      if (this.geoloc.isEnabled) {
         this.geoloc.getCurrentLocation()
         .then(
             () => {
                 this.zoomToMe();
             }
         );
+      }
     }
 
     zoomToMe() {

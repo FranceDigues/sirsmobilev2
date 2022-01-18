@@ -36,9 +36,9 @@ export class DatabaseService {
     }
 
     getLocalDB() {
-        if (this.localDB === null) {
-            if (this.activeDB === null) {
-                console.error('ERROR');
+        if (this.localDB == null) {
+            if (this.activeDB == null) {
+                console.error('Unexpected behavior: active database is null');
             }
             this.localDB = new PouchDB(this.activeDB.name, {
                 iosDatabaseLocation: 'Library',
