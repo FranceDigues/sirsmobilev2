@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import MultiPoint from 'ol/geom/MultiPoint';
-import {Fill, Stroke, Style, Text} from 'ol/style';
+import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
-import {MapService} from './map.service';
+import { MapService } from './map.service';
 
 @Injectable({
     providedIn: 'root'
@@ -200,24 +200,23 @@ export class EditionLayerStyle {
                 return this.createLineStyleFunc(featureModel, layerModel,
                     feature.get('selected'), selection.active && selection.active === feature);
             case 'Point':
-                return this.createPointStyleFunc(featureModel, layerModel,
-                    feature.get('selected'), selection.active && selection.active === feature);
+                return this.createPointStyleFunc(selection, feature, featureModel, layerModel);
             case 'Polygon':
                 return this.createPolygonStyleFunc(featureModel, layerModel,
                     feature.get('selected'), selection.active && selection.active === feature);
         }
     }
 
-    private createPointStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
+    private createPointStyleFunc(selection, feature, featureModel?, layerModel?) {
         return () => {
-            if (active) {
+            if (selection.active && selection.active === feature) {
                 return [this.getStyle.point(
                     [255, 0, 0, 0.3],
                     this.EDITION_LAYER_COLOR_2,
                     this.EDITION_LAYER_STROKE_WIDTH,
                     this.EDITION_LAYER_CIRCLE_RADIUS,
                     1, featureModel, layerModel)];
-            } else if (selected) {
+            } else if (feature.get('selected')) {
                 return [this.getStyle.point(
                     this.EDITION_LAYER_COLOR_2,
                     this.EDITION_LAYER_COLOR_1,

@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {StorageService} from '@ionic-lib/lib-storage/storage.service';
+import { Injectable } from '@angular/core';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
 import WKT from 'ol/format/WKT';
 import LineString from 'ol/geom/LineString';
@@ -9,18 +9,18 @@ import VectorLayer from 'ol/layer/Vector';
 import Cluster from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
 import Style from 'ol/style/Style';
-import {AppLayersService} from './app-layers.service';
-import {FeatureCache} from './cache.service';
-import {MapService} from './map.service';
-import {DefaultStyle, RealPositionStyle} from './style.service';
-import {LocalDatabase} from './local-database.service';
-import {Subject} from 'rxjs';
-import {OLService} from '@ionic-lib/lib-map/ol.service';
-import {DatabaseService} from './database.service';
-import {PluginUtils} from '../utils/plugin-utils';
-import {SelectedObjectsService} from "./selected-objects.service";
-import {EditionLayerService} from "./edition-layer.service";
-import {SirsDataService} from "./sirs-data.service";
+import { AppLayersService } from './app-layers.service';
+import { FeatureCache } from './cache.service';
+import { MapService } from './map.service';
+import { DefaultStyle, RealPositionStyle } from './style.service';
+import { LocalDatabase } from './local-database.service';
+import { Subject } from 'rxjs';
+import { OLService } from '@ionic-lib/lib-map/ol.service';
+import { DatabaseService } from './database.service';
+import { PluginUtils } from '../utils/plugin-utils';
+import { SelectedObjectsService } from "./selected-objects.service";
+import { EditionLayerService } from "./edition-layer.service";
+import { SirsDataService } from "./sirs-data.service";
 
 @Injectable({
     providedIn: 'root'
@@ -40,7 +40,8 @@ export class MapManagerService {
                 private appLayersService: AppLayersService,
                 private olService: OLService,
                 private databaseService: DatabaseService,
-                private selectedObjectsService: SelectedObjectsService
+                private selectedObjectsService: SelectedObjectsService,
+                private editionLayerService: EditionLayerService
     ) {
         // Highlight the selected features
         this.selectedObjectsService.getFeatures()
@@ -63,6 +64,9 @@ export class MapManagerService {
 
                     this.mapService.selection.list = features;
                     this.mapService.selection.active = null;
+                    if (this.editionLayerService.editionLayer) {
+                        this.editionLayerService.editionLayer.getSource().dispatchEvent('change');
+                    }
                 }
             );
     }
@@ -184,8 +188,8 @@ export class MapManagerService {
                                 return [];
                             }
                         ), (error) => {
-                                console.error(error);
-                            };
+                            console.error(error);
+                        };
                     }
                 }
             } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
