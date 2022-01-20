@@ -183,8 +183,7 @@ export class MapManagerService {
                             () => {
                                 return [];
                             }
-                        ),
-                            (error) => {
+                        ), (error) => {
                                 console.error(error);
                             };
                     }

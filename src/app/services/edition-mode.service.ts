@@ -9,59 +9,60 @@ import { EditionLayerService } from './edition-layer.service';
 export class EditionModeService {
 
     refTypes = [
-        { name: 'Berge', include_docs: false },
-        { name: 'EchelleLimnimetrique', include_docs: false },
-        { name: 'OuvrageRevanche', include_docs: false },
-        { name: 'OuvrageTelecomEnergie', include_docs: false },
-        { name: 'RefCote', include_docs: false },
-        { name: 'RefCategorieDesordre', include_docs: false },
-        { name: 'RefConduiteFermee', include_docs: false },
-        { name: 'RefEcoulement', include_docs: false },
-        { name: 'RefFonction', include_docs: false },
-        { name: 'RefImplantation', include_docs: false },
-        { name: 'RefLargeurFrancBord', include_docs: false },
-        { name: 'RefMateriau', include_docs: false },
-        { name: 'RefNature', include_docs: false },
-        { name: 'RefOuvrageFranchissement', include_docs: false },
-        { name: 'RefOuvrageParticulier', include_docs: false },
-        { name: 'RefOrientationOuvrage', include_docs: false },
-        { name: 'RefOuvrageHydrauliqueAssocie', include_docs: false },
-        { name: 'RefOuvrageTelecomEnergie', include_docs: false },
-        { name: 'RefOuvrageVoirie', include_docs: false },
-        { name: 'RefPosition', include_docs: false },
-        { name: 'RefPrestation', include_docs: false },
-        { name: 'RefReferenceHauteur', include_docs: false },
-        { name: 'RefRevetement', include_docs: false },
-        { name: 'RefSeuil', include_docs: false },
-        { name: 'RefSource', include_docs: false },
-        { name: 'RefTypeDesordre', include_docs: true },
-        { name: 'RefTypeGlissiere', include_docs: false },
-        { name: 'RefReseauHydroCielOuvert', include_docs: false },
-        { name: 'RefReseauTelecomEnergie', include_docs: false },
-        { name: 'RefUsageVoie', include_docs: false },
-        { name: 'RefUtilisationConduite', include_docs: false },
-        { name: 'RefVoieDigue', include_docs: false },
-        { name: 'ReseauHydrauliqueFerme', include_docs: false },
-        { name: 'ReseauTelecomEnergie', include_docs: false },
-        { name: 'RefFonctionnementAH', include_docs: false },
-        { name: 'RefTypeOrganeProtectionCollective', include_docs: false },
-        { name: 'RefTypeAmenagementHydraulique', include_docs: false },
-        { name: 'RefEtat', include_docs: false },
-        { name: 'RefOuvrageAssocieAH', include_docs: false },
-        { name: 'RefFonctionnementOAAH', include_docs: false },
-        { name: 'RefSecurite', include_docs: false },
-        { name: 'DesordreDependance', include_docs: false },
-        { name: 'StructureAmenagementHydraulique', include_docs: false },
-        { name: 'OuvrageAssocieAmenagementHydraulique', include_docs: false },
-        { name: 'Organisme', include_docs: false },
-        { name: 'TronconDigue', include_docs: false },
-        { name: 'PrestationAmenagementHydraulique', include_docs: false },
-        { name: 'Contact', include_docs: false },
-        { name: 'Marche', include_docs: false }
+        {name: 'Berge', include_docs: false},
+        {name: 'EchelleLimnimetrique', include_docs: false},
+        {name: 'OuvrageRevanche', include_docs: false},
+        {name: 'OuvrageTelecomEnergie', include_docs: false},
+        {name: 'RefCote', include_docs: false},
+        {name: 'RefCategorieDesordre', include_docs: false},
+        {name: 'RefConduiteFermee', include_docs: false},
+        {name: 'RefEcoulement', include_docs: false},
+        {name: 'RefFonction', include_docs: false},
+        {name: 'RefImplantation', include_docs: false},
+        {name: 'RefLargeurFrancBord', include_docs: false},
+        {name: 'RefMateriau', include_docs: false},
+        {name: 'RefNature', include_docs: false},
+        {name: 'RefOuvrageFranchissement', include_docs: false},
+        {name: 'RefOuvrageParticulier', include_docs: false},
+        {name: 'RefOrientationOuvrage', include_docs: false},
+        {name: 'RefOuvrageHydrauliqueAssocie', include_docs: false},
+        {name: 'RefOuvrageTelecomEnergie', include_docs: false},
+        {name: 'RefOuvrageVoirie', include_docs: false},
+        {name: 'RefPosition', include_docs: false},
+        {name: 'RefPrestation', include_docs: false},
+        {name: 'RefReferenceHauteur', include_docs: false},
+        {name: 'RefRevetement', include_docs: false},
+        {name: 'RefSeuil', include_docs: false},
+        {name: 'RefSource', include_docs: false},
+        {name: 'RefTypeDesordre', include_docs: true},
+        {name: 'RefTypeGlissiere', include_docs: false},
+        {name: 'RefReseauHydroCielOuvert', include_docs: false},
+        {name: 'RefReseauTelecomEnergie', include_docs: false},
+        {name: 'RefUsageVoie', include_docs: false},
+        {name: 'RefUtilisationConduite', include_docs: false},
+        {name: 'RefVoieDigue', include_docs: false},
+        {name: 'ReseauHydrauliqueFerme', include_docs: false},
+        {name: 'ReseauTelecomEnergie', include_docs: false},
+        {name: 'RefFonctionnementAH', include_docs: false},
+        {name: 'RefTypeOrganeProtectionCollective', include_docs: false},
+        {name: 'RefTypeAmenagementHydraulique', include_docs: false},
+        {name: 'RefEtat', include_docs: false},
+        {name: 'RefOuvrageAssocieAH', include_docs: false},
+        {name: 'RefFonctionnementOAAH', include_docs: false},
+        {name: 'RefSecurite', include_docs: false},
+        {name: 'DesordreDependance', include_docs: false},
+        {name: 'StructureAmenagementHydraulique', include_docs: false},
+        {name: 'OuvrageAssocieAmenagementHydraulique', include_docs: false},
+        {name: 'Organisme', include_docs: false},
+        {name: 'TronconDigue', include_docs: false},
+        {name: 'PrestationAmenagementHydraulique', include_docs: false},
+        {name: 'Contact', include_docs: false},
+        {name: 'Marche', include_docs: false}
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-        private editionLayerService: EditionLayerService) { }
+                private editionLayerService: EditionLayerService) {
+    }
 
     newObject(type) {
         const objectDoc: any = {
@@ -131,7 +132,9 @@ export class EditionModeService {
                 include_docs: includeDocs
             }).then(
                 (results) => {
-                    const values = results.map((item) => { return includeDocs ? item.doc : item.value; });
+                    const values = results.map((item) => {
+                        return includeDocs ? item.doc : item.value;
+                    });
                     resolve(values);
                 },
                 (error) => {
@@ -154,7 +157,9 @@ export class EditionModeService {
                     include_docs: refType.include_docs
                 }).then(
                     (results) => {
-                        const values = results.map((item) => { return refType.include_docs ? item.doc : item.value; });
+                        const values = results.map((item) => {
+                            return refType.include_docs ? item.doc : item.value;
+                        });
                         resolve([refType.name, values]);
                     },
                     (error) => {

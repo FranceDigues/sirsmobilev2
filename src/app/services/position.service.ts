@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { Coordinates } from '@ionic-native/geolocation/ngx';
-import {SirsDataService} from './sirs-data.service';
+import { SirsDataService } from './sirs-data.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,10 @@ export class PositionService {
     public dataProjection;
 
     constructor(private sirsDataService: SirsDataService) {
-        this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
+        this.sirsDataService.getSirsDoc().then((sirsDoc) => {
+                this.dataProjection = sirsDoc.epsgCode;
+            },
+            (err) => console.error(err));
     }
 
     getLatLongFromWKT(wktGeometry, lastPositionFlag?: boolean) {

@@ -97,9 +97,8 @@ export class EditionLayerService {
 
     createEditionFeatureInstance(featureDoc): Feature {
         // Compute geometry.
-        const SirsDoc = this.sirsDataService;
         let geometry;
-        const dataProjection = (SirsDoc && SirsDoc.sirsDoc && SirsDoc.sirsDoc.epsgCode) ? SirsDoc.sirsDoc.epsgCode : 'EPSG:2154';
+        const dataProjection = this.sirsDataService.sirsDoc.epsgCode;
 
         if (featureDoc.geometry && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
@@ -116,7 +115,8 @@ export class EditionLayerService {
                     }
                 );
                 if (geometry && ((featureDoc.positionFin && (featureDoc.positionFin !== featureDoc.positionDebut))
-                    || (featureDoc.approximatePositionFin && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
+                    || (featureDoc.approximatePositionFin
+                        && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                     geometry = new LineString([
                         geometry.getFirstCoordinate(),
                         this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
@@ -127,6 +127,8 @@ export class EditionLayerService {
                         ).getFirstCoordinate()
                     ]);
                 }
+            } else {
+                // Calculate approximate position for objects without position
             }
 
         }

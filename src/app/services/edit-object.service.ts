@@ -379,13 +379,6 @@ export class EditObjectService {
 
         delete this.objectDoc.prFin;
 
-        if (this.objectDoc.borneDebutId) {
-            delete this.objectDoc.positionDebut;
-            this.watchDocPositionDebut();
-            delete this.objectDoc.positionFin;
-            delete this.objectDoc.geometry;
-        }
-
         this.editionModeService.saveObject(this.objectDoc).then(
             () => {
                 this.route.navigateByUrl('/main');
