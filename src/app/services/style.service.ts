@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import MultiPoint from 'ol/geom/MultiPoint';
 import {Fill, Stroke, Style, Text} from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
-import {features} from 'process';
 import {MapService} from './map.service';
 
 @Injectable({

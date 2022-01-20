@@ -44,7 +44,8 @@ export class MainPage implements AfterViewInit {
                 private menu: MenuController, private loadingCtrl: LoadingController,
                 private platform: Platform, private dbService: DatabaseService,
                 private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
-                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService, private toastService: ToastService) {
+                public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
+                private toastService: ToastService) {
 
         this.platform.pause.subscribe(
             () => {
@@ -110,22 +111,28 @@ export class MainPage implements AfterViewInit {
                     // Timing management.
                     let delay; // Store timeout event.
                     let intervalTask; // Store interval event.
-                    let longpress = 500; // Milliseconds value set to 500ms, if higher I consider it a long click.
+                    const longPress = 500; // Milliseconds value set to 500ms, if higher I consider it a long click.
 
                     // OpenLayers management.
-                    let uniqueLayer; // This layer object should be assigned once at a time otherwise if user press multiple fingers on the screen issues may appear.
-                    let radius = 2 * this.mapService.getCurrentView().getResolution(); // Radius in meter. Starting value equal to the double of the resolution.
-                    let clickPixel; // Store the coordinates of the click in this variable.
-                    let pointerIsDown: boolean = false; // Flag to limit the number of pointer down to 1.
+                    /* This layer object should be assigned once at a time,
+                     otherwise if user press multiple fingers on the screen issues may appear.
+                     */
+                    let uniqueLayer;
+                    // Radius in meter. Starting value equal to the double of the resolution.
+                    let radius = 2 * this.mapService.getCurrentView().getResolution();
+                    // Store the coordinates of the click in this variable.
+                    let clickPixel;
+                    let pointerIsDown = false; // Flag to limit the number of pointer down to 1.
 
-                    // On pointerdown event (hold click) a longpress is awaited. If a longpress is detected and uniqueLayer does not exist
+                    // On pointerdown event (hold click) a long press is awaited. If a longpress is detected and uniqueLayer does not exist
                     // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
-                    this.olService.getMap().on("pointerdown", (evt) => {
-                        if (!pointerIsDown) { // check that pointerIsDown is false so it does not trigger this event more than once at a time.
+                    this.olService.getMap().on('pointerdown', (evt) => {
+                        // check that pointerIsDown is false, so it does not trigger this event more than once at a time.
+                        if (!pointerIsDown) {
                             const longClickEvent = () => { // Draws the circle as long as the click is hold.
 
                                 if (!uniqueLayer) {
-                                    var centerLongitudeLatitude = evt.coordinate;
+                                    const centerLongitudeLatitude = evt.coordinate;
                                     uniqueLayer = new VectorLayer({
                                         name: 'CircleInteraction',
                                         source: new VectorSource({
@@ -141,19 +148,23 @@ export class MainPage implements AfterViewInit {
                                     evt.map.addLayer(uniqueLayer);
 
                                     intervalTask = setInterval(() => {
-                                        radius += evt.map.getView().getResolution(); // Make the radius bigger every 5 milliseconds. zoomLevel ratio to make it grow bigger if you're zoomed out.
+                                        /* Make the radius bigger every 5 milliseconds.
+                                        zoomLevel ratio to make it grow bigger if you're zoomed out.
+                                         */
+                                        radius += evt.map.getView().getResolution();
                                         uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
                                     }, 5);
                                 }
-                            }
+                            };
                             pointerIsDown = true;
-                            delay = setTimeout(longClickEvent, longpress); // Wait 'longpress' milliseconds before firing longClickEvent.
+                            // Wait 'longPress' milliseconds before firing longClickEvent.
+                            delay = setTimeout(longClickEvent, longPress);
                             clickPixel = evt.coordinates;
                         }
                     });
 
                     // If the click is stopped then everything is cancelled.
-                    this.olService.getMap().on("pointerup", (evt) => {
+                    this.olService.getMap().on('pointerup', (evt) => {
                         if (uniqueLayer) {
 
                             const circleGeometry = uniqueLayer.getSource().getFeatures()[0].getGeometry();
@@ -217,7 +228,7 @@ export class MainPage implements AfterViewInit {
                     });
 
                     // If the map is zoomed in or out then everything is cancelled.
-                    this.olService.getMap().on("moveend", (evt) => {
+                    this.olService.getMap().on('moveend', (evt) => {
                         if (uniqueLayer) {
                             evt.map.removeLayer(uniqueLayer);
                             uniqueLayer = null;
