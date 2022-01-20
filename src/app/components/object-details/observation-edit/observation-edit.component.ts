@@ -20,7 +20,24 @@ import { formatDate } from '@angular/common';
 import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
 
-declare var M: any;
+enum ObservationEditTabs {
+    medias = 'medias',
+    evolution = 'evolution',
+    urgence = 'urgence',
+    nombre = 'nombre',
+    suite = 'suite',
+    observateur = 'observateur',
+    suiteApporter = 'suiteApporter',
+    etatOuvrageId = 'etatOuvrageId',
+    etatOuvrageCom = 'etatOuvrageCom',
+    etatAccessoireId = 'etatAccessoireId',
+    etatAccessoireCom = 'etatAccessoireCom',
+    etatGenieCivilId = 'etatGenieCivilId',
+    etatGenieCivilCom = 'etatGenieCivilCom',
+    manoeuvreOuvrageId = 'manoeuvreOuvrageId',
+    manoeuvreOuvrageCom = 'manoeuvreOuvrageCom'
+}
+
 
 @Component({
     selector: 'app-observation-edit',
@@ -35,37 +52,26 @@ export class ObservationEditComponent implements OnInit {
     objectDoc: any;
     isNewObject: boolean;
     view: 'form' | 'media';
-    tab: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
-        | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
-        | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom';
+    tab: ObservationEditTabs;
     showTextConfig: string;
     refUrgence;
     contactList;
     refSuiteApporter;
     saving = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
-
-    // Todo remove it
-    etatOuvAccGCList: Array<any> = [];
-    manoeuvreOuvrageList: Array<any> = [];
-    pendingEtatOuvAccGCList: boolean;
-    pendingManoeuvreOuvrageList: boolean;
+    etatOuvAccGCList;
+    manoeuvreOuvrageList;
 
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
                 private route: Router, private editionService: EditionModeService, private objectDetails: ObjectDetails,
-                private mapManagerService: MapManagerService, private sirsDataService: SirsDataService) {
+                private mapManagerService: MapManagerService, public sirsDataService: SirsDataService) {
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.isNewObject = !this.obsId;
         this.objectDoc = this.objectDetails.selectedObject;
         this.view = 'form';
-        this.tab = 'medias';
-        this.objectType = this.objectDoc['@class']
-            .substring(this.objectDoc['@class'].lastIndexOf('.') + 1);
-
-        // Todo remove it
-        this.pendingEtatOuvAccGCList = true;
-        this.pendingManoeuvreOuvrageList = true;
+        this.tab = ObservationEditTabs.medias;
+        this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
         // Not optimized at all. Look for a way to init this properly or at the right time.
         this.observationEditService.init(this.objectId, this.obsId);
@@ -88,27 +94,17 @@ export class ObservationEditComponent implements OnInit {
             console.error('error ref suite apporter returned : ', error);
         });
 
-        // TODO... remove it
-        this.observationEditService.etatOuvAccGCList.then((list) => {
-            this.pendingEtatOuvAccGCList = false;
-            this.etatOuvAccGCList = list.map(item => {
-                return item.value;
-            });
+        this.sirsDataService.getEtatOuvAccGCList().then((list) => {
+            this.etatOuvAccGCList = list;
         }, (error) => {
-            this.pendingEtatOuvAccGCList = false;
-            console.error('error etatOuvAccGCList returned : ', error);
-        });
-        this.observationEditService.manoeuvreOuvrageList.then((list) => {
-            this.pendingManoeuvreOuvrageList = false;
-            this.manoeuvreOuvrageList = list.map(item => {
-                return item.value;
-            });
-        }, (error) => {
-            this.pendingManoeuvreOuvrageList = false;
-            console.error('error manoeuvreOuvrageList returned : ', error);
+            console.error('error etat ouverage returned : ', error);
         });
 
-        // TODO CHECK inits -> doc.author + mb hidden inits
+        this.sirsDataService.getManoeuvreOuvrageList().then((list) => {
+            this.manoeuvreOuvrageList = list;
+        }, (error) => {
+            console.error('error manoeuvre ouverage returned : ', error);
+        });
     }
 
     ngOnInit() {
@@ -179,10 +175,8 @@ export class ObservationEditComponent implements OnInit {
     }
 
     // Todo make enum
-    setTab(str: 'medias' | 'evolution' | 'urgence' | 'nombre' | 'suite' | 'observateur' | 'suiteApporter'
-        | 'etatOuvrageId' | 'etatOuvrageCom' | 'etatAccessoireId' | 'etatAccessoireCom' | 'etatGenieCivilId'
-        | 'etatGenieCivilCom' | 'manoeuvreOuvrageId' | 'manoeuvreOuvrageCom') {
-        this.tab = str;
+    setTab(tab: ObservationEditTabs) {
+        this.tab = tab;
     }
 
     goToMedia() {

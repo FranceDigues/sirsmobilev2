@@ -16,6 +16,8 @@ export class SirsDataService {
     refCote;
     refUrgence;
     refSuiteApporter;
+    etatOuvAccGCList;
+    manoeuvreOuvrageList;
     mediaPath: string;
     refTypes = [
         {name: 'Berge', include_docs: false},
@@ -193,6 +195,48 @@ export class SirsDataService {
         });
     }
 
+    getEtatOuvAccGCList() {
+        return new Promise((resolve, reject) => {
+            if (!this.etatOuvAccGCList) {
+                this.localDB.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefEtatOuvAccGC'],
+                    endkey: ['fr.sirs.core.model.RefEtatOuvAccGC', {}],
+                    include_docs: true
+                }).then((list) => {
+                    this.etatOuvAccGCList = list.map(item => {
+                        return item.value;
+                    });
+                    resolve(this.etatOuvAccGCList);
+                }, (error) => {
+                    reject(error);
+                });
+            } else {
+                resolve(this.etatOuvAccGCList);
+            }
+        });
+    }
+
+    getManoeuvreOuvrageList() {
+        return new Promise((resolve, reject) => {
+            if (!this.manoeuvreOuvrageList) {
+                this.localDB.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.RefManoeuvre'],
+                    endkey: ['fr.sirs.core.model.RefManoeuvre', {}],
+                    include_docs: true
+                }).then((list) => {
+                    this.manoeuvreOuvrageList = list.map(item => {
+                        return item.value;
+                    });
+                    resolve(this.manoeuvreOuvrageList);
+                }, (error) => {
+                    reject(error);
+                });
+            } else {
+                resolve(this.manoeuvreOuvrageList);
+            }
+        });
+    }
+
     async loadDataFromDB() {
         const sirsDoc = await this.getSirsDoc();
         proj4.defs(sirsDoc.epsgCode, sirsDoc.proj4);
@@ -202,6 +246,8 @@ export class SirsDataService {
         await this.getContactList();
         await this.getRefUrgence();
         await this.getRefSuiteApporter();
+        await this.getEtatOuvAccGCList();
+        await this.getManoeuvreOuvrageList();
     }
 
 }

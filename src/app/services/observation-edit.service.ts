@@ -86,64 +86,7 @@ export class ObservationEditService {
     }
 
     async initRequests() {
-        // this.refOrientationPhoto = this.localDB.query('Element/byClassAndLinear', {
-        //     startkey: ['fr.sirs.core.model.RefOrientationPhoto'],
-        //     endkey: ['fr.sirs.core.model.RefOrientationPhoto', {}],
-        //     include_docs: true
-        // });
-        //
-        // this.cotes = this.localDB.query('Element/byClassAndLinear', {
-        //     startkey: ['fr.sirs.core.model.RefCote'],
-        //     endkey: ['fr.sirs.core.model.RefCote', {}],
-        //     include_docs: true
-        // });
-        //
-        // this.contactList = this.localDB.query('Element/byClassAndLinear', {
-        //     startkey: ['fr.sirs.core.model.Contact'],
-        //     endkey: ['fr.sirs.core.model.Contact', {}],
-        //     include_docs: true
-        // });
-        //
-        // this.localDB.query('Element/byClassAndLinear', {
-        //     startkey: ['fr.sirs.core.model.RefUrgence'],
-        //     endkey: ['fr.sirs.core.model.RefUrgence', {}],
-        //     include_docs: true
-        // }).then(
-        //     (urgenceList) => {
-        //         this.urgenceList = urgenceList.map(item => {
-        //             item.value.id = parseInt(item.value.id.substring(item.value.id.lastIndexOf(":") + 1), 10);
-        //             if (item.doc && item.doc.abrege) {
-        //                 item.value.abrege = item.doc.abrege;
-        //             }
-        //             return item.value;
-        //         });
-        //     }
-        // );
-        //
-        // this.localDB.query('Element/byClassAndLinear', {
-        //     startkey: ['fr.sirs.core.model.RefSuiteApporter'],
-        //     endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
-        //     include_docs: true
-        // }).then(
-        //     (suiteApporterList) => {
-        //         this.suiteApporterList = suiteApporterList.map(item => {
-        //             return item.value;
-        //         });
-        //     }
-        // );
 
-        // Todo... add this to sirsdata service
-        // SPECIFICATION RESEAU ET OUVRAGE
-        this.etatOuvAccGCList = this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefEtatOuvAccGC'],
-            endkey: ['fr.sirs.core.model.RefEtatOuvAccGC', {}],
-            include_docs: true
-        });
-        this.manoeuvreOuvrageList = this.localDB.query('Element/byClassAndLinear', {
-            startkey: ['fr.sirs.core.model.RefManoeuvre'],
-            endkey: ['fr.sirs.core.model.RefManoeuvre', {}],
-            include_docs: true
-        });
     }
 
     init(objectId: string, obsId: string) {
@@ -211,11 +154,11 @@ export class ObservationEditService {
     }
 
     createNewObservation() {
-        let newObj = {
-            'id': UuidUtils.generateUuid(),
-            'date': formatDate(Date.now(), 'yyyy-MM-dd', 'en-US'),
-            'photos': [],
-            'valid': false
+        const newObj = {
+            id: UuidUtils.generateUuid(),
+            date: formatDate(Date.now(), 'yyyy-MM-dd', 'en-US'),
+            photos: [],
+            valid: false
         };
 
         switch (this.objectType) {
@@ -262,16 +205,16 @@ export class ObservationEditService {
     }
 
     getApproximatePosition(borneId, borneAval, borneDistance, flag) {
-        let wktFormat = new WKT();
+        const wktFormat = new WKT();
         return new Promise((resolve) => {
-            let troncon = this.troncons.find((item) => {
+            const troncon = this.troncons.find((item) => {
                 return item.id === this.objectDoc.linearId;
             });
 
             this.db.getLocalDB().query('byId', {
                 key: troncon.systemeRepDefautId
             }).then((results) => {
-                let systemeReperage = results.rows.filter((item) => {
+                const systemeReperage = results.rows.filter((item) => {
                     return item.id === this.objectDoc.systemeRepId;
                 })[0];
 
@@ -290,14 +233,14 @@ export class ObservationEditService {
                         });
                     });
 
-                    let index = systemeReperage.value.systemeReperageBornes.findIndex((item) => {
+                    const index = systemeReperage.value.systemeReperageBornes.findIndex((item) => {
                         return item.borneId === borneId;
                     });
 
-                    let srb = systemeReperage.value.systemeReperageBornes[index];
+                    const srb = systemeReperage.value.systemeReperageBornes[index];
 
                     // Calculate approximate position
-                    let x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                    const x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
                     let y;
 
                     if (borneAval) {
@@ -310,13 +253,13 @@ export class ObservationEditService {
                             : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
                     }
 
-                    let v = glMatrix.vec2.sub([], y, x);
+                    const v = glMatrix.vec2.sub([], y, x);
 
-                    let vn = glMatrix.vec2.normalize(v, v);
+                    const vn = glMatrix.vec2.normalize(v, v);
 
-                    let vs = glMatrix.vec2.scale(vn, vn, borneDistance);
+                    const vs = glMatrix.vec2.scale(vn, vn, borneDistance);
 
-                    let o = glMatrix.vec2.add([], x, vs);
+                    const o = glMatrix.vec2.add([], x, vs);
 
                     this.objectDoc[flag] = 'POINT(' + o[0] + ' ' + o[1] + ')';
                     resolve(this.objectDoc);
@@ -339,7 +282,7 @@ export class ObservationEditService {
     }
 
     loadImage(photo, details?) {
-        let imageUrl = this.getPhotoPath(photo, details);
+        const imageUrl = this.getPhotoPath(photo, details);
         this.http.head(imageUrl, {}).subscribe(
             () => {
                 this.loaded[photo.id] = true;
@@ -358,7 +301,6 @@ export class ObservationEditService {
                     if (objAttachment) {
                         this.localDB.getAttachment(this.objectDoc._id, keyAttachment)
                             .then((blob) => {
-                                    let blobImage = blob;
                                     let fileName;
                                     if (keyAttachment.indexOf('.') !== -1) {
                                         fileName = keyAttachment;
@@ -384,11 +326,11 @@ export class ObservationEditService {
                                         .then((targetDir: DirectoryEntry) => {
                                             targetDir.getFile(fileName, {create: true}, (file: FileEntry) => {
                                                 file.createWriter((fileWriter) => {
-                                                    fileWriter.write(blobImage);
+                                                    fileWriter.write(blob);
                                                     setTimeout(() => {
                                                         this.loaded[photo.id] = true;
                                                         this.ref.tick(); // Force Ionic to detect changes
-                                                    }, 100); // Add Delay to be sure the src image is working (writing file is finished)
+                                                    }, 100); // Add Delay being sure the src image is working (writing file is finished)
                                                 }, () => {
                                                     this.loaded[photo.id] = true;
                                                     this.ref.tick(); // Force Ionic to detect changes
@@ -412,7 +354,7 @@ export class ObservationEditService {
             });
     }
 
-    //Index of looking for multiple occurence of a character and returning a list with all the indexes.
+    // Index of looking for multiple occurrence of a character and returning a list with all the indexes.
     homemadeIndexOf(myString: string, character: string) {
         const list: number[] = [];
         for (let i = 0; i < myString.length; i++) {
@@ -457,7 +399,7 @@ export class ObservationEditService {
         this.mediaOptions.borne_debut_distance = data.borne_distance;
         this.mediaOptions.borneDebutId = data.borneId;
         this.mediaOptions.borneDebutLibelle = data.borneLibelle;
-    };
+    }
 
     isReseauEtOuvrageType() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
