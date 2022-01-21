@@ -328,6 +328,8 @@ export class MainPage implements AfterViewInit {
         });
         loading.present();
         this.backLayerService.syncBackLayer();
+        let f = this.editionLayerService.favorites
+        this.editionLayerService.updateEditionLayerInstance(f);
         this.mapManagerService.clearAll();
         this.mapManagerService.mapLoadingSubject.subscribe(
             {
