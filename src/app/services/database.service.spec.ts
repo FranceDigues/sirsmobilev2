@@ -3,7 +3,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseService } from './database.service';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
 
-describe('Testing Database Service', () => {
+// describe('Testing Database Service', () => {
     // let databaseService: DatabaseService;
     // let nativeStorage: NativeStorage;
     //
@@ -180,4 +180,4 @@ describe('Testing Database Service', () => {
     //     expect(databaseService.localDB).toBeNull();
     //     expect(databaseService.activeDB).toBeNull();
     // });
-});
+// });

@@ -8,7 +8,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { TronconDigueComponent } from './troncon-digue.component';
 
-describe('TronconDigueComponent FormTemplate', () => {
+// describe('TronconDigueComponent FormTemplate', () => {
   // let component: TronconDigueComponent;
   // let fixture: ComponentFixture<TronconDigueComponent>;
   // let dbService: DatabaseService;
@@ -87,4 +87,4 @@ describe('TronconDigueComponent FormTemplate', () => {
   // it('should create', () => {
   //   expect(component).toBeTruthy();
   // });
-});
+// });

@@ -8,7 +8,7 @@ import { DatabaseService } from 'src/app/services/database.service';
 import { SirsDocService } from 'src/app/services/sirsdoc.service';
 import { CreteComponent } from './crete.component';
 
-describe('CreteComponent FormTemplate', () => {
+// describe('CreteComponent FormTemplate', () => {
   // let component: CreteComponent;
   // let fixture: ComponentFixture<CreteComponent>;
   // let dbService: DatabaseService;
@@ -87,4 +87,4 @@ describe('CreteComponent FormTemplate', () => {
   // it('should create', () => {
   //   expect(component).toBeTruthy();
   // });
-});
+// });
