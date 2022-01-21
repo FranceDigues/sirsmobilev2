@@ -94,17 +94,21 @@ export class ObservationEditComponent implements OnInit {
             console.error('error ref suite apporter returned : ', error);
         });
 
-        this.sirsDataService.getEtatOuvAccGCList().then((list) => {
-            this.etatOuvAccGCList = list;
-        }, (error) => {
-            console.error('error etat ouverage returned : ', error);
-        });
+        // SPECIFICATION RESEAU ET OUVRAGE
+        // must appear after objecType initialization
+        if (this.isReseauEtOuvrage()) {
+            this.sirsDataService.getEtatOuvAccGCList().then((list) => {
+                this.etatOuvAccGCList = list;
+            }, (error) => {
+                console.error('error etat ouverage returned : ', error);
+            });
 
-        this.sirsDataService.getManoeuvreOuvrageList().then((list) => {
-            this.manoeuvreOuvrageList = list;
-        }, (error) => {
-            console.error('error manoeuvre ouverage returned : ', error);
-        });
+            this.sirsDataService.getManoeuvreOuvrageList().then((list) => {
+                this.manoeuvreOuvrageList = list;
+            }, (error) => {
+                console.error('error manoeuvre ouverage returned : ', error);
+            });
+        }
     }
 
     ngOnInit() {
@@ -237,26 +241,6 @@ export class ObservationEditComponent implements OnInit {
         return suiteApporter.libelle ? suiteApporter.libelle : 'libelle undefined / id: ' + suiteApporter.id;
     }
 
-    changeSuiteApporter() {
-        this.observation.suiteApporterId = this.observationEditService.suiteApporter;
-    }
-
-    changeEtatOuvrage() {
-        this.observationEditService.doc.etatOuvrageId = this.observationEditService.etatOuvrage;
-    }
-
-    changeEtatAccessoire() {
-        this.observationEditService.doc.etatAccessoireId = this.observationEditService.etatAccessoire;
-    }
-
-    changeEtatGenieCivil() {
-        this.observationEditService.doc.etatGenieCivilId = this.observationEditService.etatGenieCivil;
-    }
-
-    changeManoeuvreOuvrage() {
-        this.observationEditService.doc.etatManoeuvreOuvrageId = this.observationEditService.manoeuvreOuvrage;
-    }
-
     compareRef() {
         return (obj1, obj2) => {
             let a, b, comparison;
@@ -280,9 +264,8 @@ export class ObservationEditComponent implements OnInit {
     }
 
     private isReseauEtOuvrage() {
-        PluginUtils.isReseauOuvrageDoc(this.observationEditService.objectDoc);
+        return PluginUtils.isReseauOuvrageClass(this.objectType);
     }
-
 }
 
 @Directive({

@@ -167,11 +167,10 @@
                             <div class="sirs-field">
                                 <select id="etatOuvrageList" class="browser-default"
                                         *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
-                                        [(ngModel)]="OES.etatOuvrage" name="etatOuvrageList"
-                                        (ngModelChange)="changeEtatOuvrage()">
+                                        [(ngModel)]="observation.etatOuvrageId" name="etatOuvrageList">
                                     <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())"
-                                            [value]="etat.id" (ngModelChange)="changeEtatOuvrage()"
-                                            [selected]="etat.id === OES.etatOuvrage">
+                                            [value]="etat.id"
+                                            [selected]="etat.id === observation.etatOuvrageId">
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
@@ -188,11 +187,10 @@
                             <div class="sirs-field">
                                 <select id="etatAccessoireList" class="browser-default"
                                         *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
-                                        [(ngModel)]="OES.etatAccessoire" name="etatAccessoireList"
-                                        (ngModelChange)="changeEtatAccessoire()">
+                                        [(ngModel)]="observation.etatAccessoireId" name="etatAccessoireList">
                                     <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())"
-                                            [value]="etat.id" (ngModelChange)="changeEtatAccessoire()"
-                                            [selected]="etat.id === OES.etatAccessoire">
+                                            [value]="etat.id"
+                                            [selected]="etat.id === observation.etatAccessoireId">
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
@@ -209,11 +207,10 @@
                             <div class="sirs-field">
                                 <select id="etatGenieCivilList" class="browser-default"
                                         *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
-                                        [(ngModel)]="OES.etatGenieCivil" name="etatGenieCivilList"
-                                        (ngModelChange)="changeEtatGenieCivil()">
+                                        [(ngModel)]="observation.etatGenieCivilId" name="etatGenieCivilList">
                                     <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())"
-                                            [value]="etat.id" (ngModelChange)="changeEtatGenieCivil()"
-                                            [selected]="etat.id === OES.etatGenieCivil">
+                                            [value]="etat.id"
+                                            [selected]="etat.id === observation.etatGenieCivilId">
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
@@ -230,11 +227,10 @@
                             <div class="sirs-field">
                                 <select id="manoeuvreOuvrageList" class="browser-default"
                                         *ngIf="manoeuvreOuvrageList && manoeuvreOuvrageList.length > 0"
-                                        [(ngModel)]="OES.manoeuvreOuvrage" name="manoeuvreOuvrageList"
-                                        (ngModelChange)="changeManoeuvreOuvrage()">
+                                        [(ngModel)]="observation.manoeuvreOuvrageId" name="manoeuvreOuvrageList">
                                     <option *ngFor="let manoeuvreOuvrage of manoeuvreOuvrageList.sort(compareRef())"
-                                            [value]="manoeuvreOuvrage.id" (ngModelChange)="changeManoeuvreOuvrage()"
-                                            [selected]="manoeuvreOuvrage.id === OES.manoeuvreOuvrage">
+                                            [value]="manoeuvreOuvrage.id"
+                                            [selected]="manoeuvreOuvrage.id === observation.manoeuvreOuvrageId">
                                         {{ manoeuvreOuvrage.libelle ? manoeuvreOuvrage.libelle : 'libelle undefined / id: ' + manoeuvreOuvrage.id }}
                                     </option>
                                 </select>
