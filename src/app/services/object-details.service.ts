@@ -104,15 +104,21 @@ export class ObjectDetails {
             }
 
             let prestationClass: string;
+            let desordreClass: string;
+            let linearId: string;
             if (this.isDependance) {
+                desordreClass = 'fr.sirs.core.model.DesordreDependance';
                 prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+                linearId = null;
             } else {
+                desordreClass = 'fr.sirs.core.model.Desordre';
                 prestationClass = 'fr.sirs.core.model.Prestation';
+                linearId = this.selectedObject.linearId;
             }
 
             this.localDB.query('Element/byClassAndLinear', {
-                startkey: [prestationClass],
-                endkey: [prestationClass, {}]
+                startkey: [prestationClass, linearId],
+                endkey: [prestationClass, linearId, {}]
             }).then(
                 (response) => {
                     this.prestationMap = {};
@@ -126,17 +132,6 @@ export class ObjectDetails {
                     console.error(err);
                 }
             );
-
-            let desordreClass: string;
-            let linearId: string;
-            if (this.isDependance) {
-                desordreClass = 'fr.sirs.core.model.DesordreDependance';
-                linearId = null;
-            } else {
-                desordreClass = 'fr.sirs.core.model.Desordre';
-                linearId = this.selectedObject.linearId;
-            }
-
             this.localDB.query('Element/byClassAndLinear', {
                 startkey: [desordreClass, linearId],
                 endkey: [desordreClass, linearId, {}]
