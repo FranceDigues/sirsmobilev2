@@ -28,14 +28,13 @@ enum ObservationEditTabs {
     suite = 'suite',
     observateur = 'observateur',
     suiteApporter = 'suiteApporter',
+}
+
+enum SpecificationTabs {
     etatOuvrageId = 'etatOuvrageId',
-    etatOuvrageCom = 'etatOuvrageCom',
     etatAccessoireId = 'etatAccessoireId',
-    etatAccessoireCom = 'etatAccessoireCom',
     etatGenieCivilId = 'etatGenieCivilId',
-    etatGenieCivilCom = 'etatGenieCivilCom',
     manoeuvreOuvrageId = 'manoeuvreOuvrageId',
-    manoeuvreOuvrageCom = 'manoeuvreOuvrageCom'
 }
 
 
@@ -53,6 +52,7 @@ export class ObservationEditComponent implements OnInit {
     isNewObject: boolean;
     view: 'form' | 'media';
     tab: ObservationEditTabs;
+    tabSpecification: SpecificationTabs;
     showTextConfig: string;
     refUrgence;
     contactList;
@@ -71,6 +71,7 @@ export class ObservationEditComponent implements OnInit {
         this.objectDoc = this.objectDetails.selectedObject;
         this.view = 'form';
         this.tab = ObservationEditTabs.medias;
+        this.tabSpecification = SpecificationTabs.etatOuvrageId;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
         // Not optimized at all. Look for a way to init this properly or at the right time.
@@ -181,6 +182,10 @@ export class ObservationEditComponent implements OnInit {
     // Todo make enum
     setTab(tab: ObservationEditTabs) {
         this.tab = tab;
+    }
+
+    setTabSpecification(tab: SpecificationTabs) {
+        this.tabSpecification = tab;
     }
 
     goToMedia() {
