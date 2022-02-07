@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EditObjectService } from './edit-object.service';
+import { formTemplatePilote } from 'src/app/utils/form-template-pilote';
 
 @Injectable({
     providedIn: 'root'
@@ -203,5 +204,15 @@ export class FormsTemplateService {
                 }
             }
         }
+    }
+
+    attributeNameOfObjectFromClass(objectType, clazz) {
+        for (let key in formTemplatePilote[objectType]) {
+            let value = formTemplatePilote[objectType][key];
+            if (value.type === clazz) {
+                return value.name;
+            }
+        }
+        return null;
     }
 }

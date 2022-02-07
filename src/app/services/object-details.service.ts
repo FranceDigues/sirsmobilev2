@@ -249,7 +249,6 @@ export class ObjectDetails {
             this.selectedObject.prestationIds = [];
         }
         this.selectedObject.prestationIds.push(this.tempPrestation);
-        this.tempPrestation = null;
         this.filterPrestationList();
         this.selectedObject.valid = false;
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
@@ -259,6 +258,22 @@ export class ObjectDetails {
                 this.mapManagerService.syncAllAppLayer();
                 this.mapManagerService.clearAll();
             });
+
+        // Reciproque ajout dans l'objet prestation
+        let clazz = PluginUtils.doc2Class(this.selectedObject);
+        let attribute;
+        if (this.isDependance) {
+            attribute = this.formService.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
+        } else {
+            attribute = this.formService.attributeNameOfObjectFromClass("Prestation", clazz);
+        }
+        const regex = new RegExp('.*Ids$');
+        if (regex.test(attribute)) {
+            this.addObjectId(this.tempPrestation, this.selectedObject["_id"], attribute);
+        }
+
+        // reset temporary prestation
+        this.tempPrestation = null;
     }
 
     async removePrestation(index) {
@@ -274,7 +289,7 @@ export class ObjectDetails {
                 {
                     text: 'OK',
                     handler: () => {
-                        this.selectedObject.prestationIds.splice(index, 1);
+                        let removedIds = this.selectedObject.prestationIds.splice(index, 1);
                         if (this.selectedObject.prestationIds.length === 0) {
                             delete this.selectedObject.prestationIds;
                         }
@@ -287,6 +302,21 @@ export class ObjectDetails {
                                 this.mapManagerService.syncAllAppLayer();
                                 this.mapManagerService.clearAll();
                             });
+
+                        // Reciproque suppression dans l'objet prestation
+                        if (removedIds && removedIds.length == 1) {
+                            let clazz = PluginUtils.doc2Class(this.selectedObject);
+                            let attribute;
+                            if (this.isDependance) {
+                                attribute = this.formService.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
+                            } else {
+                                attribute = this.formService.attributeNameOfObjectFromClass("Prestation", clazz);
+                            }
+                            const regex = new RegExp('.*Ids$');
+                            if (regex.test(attribute)) {
+                                this.removeObjectId(removedIds[0], this.selectedObject["_id"], attribute);
+                            }
+                        }
                     }
                 }
             ]
@@ -300,4 +330,57 @@ export class ObjectDetails {
         });
     }
 
+    private addObjectId(receiverId, idToAdd, attribute) {
+        this.localDB.get(receiverId)
+            .then(
+                (doc) => {
+                    if (doc) {
+                        if (doc[attribute]) {
+                            doc[attribute].push(idToAdd);
+                        } else {
+                            doc[attribute] = [idToAdd];
+                        }
+                        doc.valid = false;
+                        doc.dateMaj = new Date().toISOString().split('T')[0];
+                        doc.editMode = true;
+                        this.editionService.saveObject(doc)
+                            .then(() => {
+                                this.mapManagerService.syncAllAppLayer();
+                                this.mapManagerService.clearAll();
+                            });
+                    } else {
+                        console.error("Document (" + receiverId + ") not found.");
+                    }
+                },
+                (err) => {
+                    throw new Error(err);
+                }
+            );
+    }
+
+    private removeObjectId(receiverId, idToRemove, attribute) {
+        this.localDB.get(receiverId)
+            .then(
+                (doc) => {
+                    if (doc) {
+                        if (doc[attribute] && Array.isArray(doc[attribute]) && doc[attribute].indexOf(idToRemove) != -1) {
+                            doc[attribute].splice(doc[attribute].indexOf(idToRemove), 1);
+                        }
+                        doc.valid = false;
+                        doc.dateMaj = new Date().toISOString().split('T')[0];
+                        doc.editMode = true;
+                        this.editionService.saveObject(doc)
+                            .then(() => {
+                                this.mapManagerService.syncAllAppLayer();
+                                this.mapManagerService.clearAll();
+                            });
+                    } else {
+                        console.error("Document (" + receiverId + ") not found.");
+                    }
+                },
+                (err) => {
+                    throw new Error(err);
+                }
+            );
+    }
 }
