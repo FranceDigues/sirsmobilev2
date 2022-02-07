@@ -8,666 +8,6 @@
  * at the root of the desktop project.
  */
 export const formTemplatePilote = {
-    "AmenagementHydraulique": {
-        "libelle": {
-            "name": "libelle",
-            "type": "EString",
-            "label": "Libellé",
-            "reference": false,
-            "min": null
-        },
-        "proprietes": {
-            "name": "proprietes",
-            "type": "ProprieteObjet",
-            "label": "Proprietes",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "gestions": {
-            "name": "gestions",
-            "type": "GestionObjet",
-            "label": "Gestions",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "photos": {
-            "name": "photos",
-            "type": "PhotoDependance",
-            "label": "Photos",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "superficie": {
-            "name": "superficie",
-            "type": "EFloat",
-            "label": "Superficie (m²)",
-            "reference": false,
-            "min": 0
-        },
-        "capaciteStockage": {
-            "name": "capaciteStockage",
-            "type": "EFloat",
-            "label": "Capacité de stockage (m³)",
-            "reference": false,
-            "min": 0
-        },
-        "organismeId": {
-            "name": "organismeId",
-            "type": "Organisme",
-            "label": "Collectivité compétente",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "profondeurMoyenne": {
-            "name": "profondeurMoyenne",
-            "type": "EFloat",
-            "label": "Profondeur moyenne (m)",
-            "reference": false,
-            "min": 0
-        },
-        "desordreIds": {
-            "name": "desordreIds",
-            "type": "DesordreDependance",
-            "label": "Désordres",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "structureIds": {
-            "name": "structureIds",
-            "type": "StructureAmenagementHydraulique",
-            "label": "Structures",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "ouvrageAssocieIds": {
-            "name": "ouvrageAssocieIds",
-            "type": "OuvrageAssocieAmenagementHydraulique",
-            "label": "Ouvrages associés",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "gestionnaireIds": {
-            "name": "gestionnaireIds",
-            "type": "Organisme",
-            "label": "Gestionnaires",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "fonctionnementId": {
-            "name": "fonctionnementId",
-            "type": "RefFonctionnementAH",
-            "label": "Fonctionnement",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "typeId": {
-            "name": "typeId",
-            "type": "RefTypeAmenagementHydraulique",
-            "label": "Type",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "tronconIds": {
-            "name": "tronconIds",
-            "type": "TronconDigue",
-            "label": "Tronçons",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "prestationIds": {
-            "name": "prestationIds",
-            "type": "PrestationAmenagementHydraulique",
-            "label": "Prestations",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "proprietaireIds": {
-            "name": "proprietaireIds",
-            "type": "Contact",
-            "label": "Proprietaires",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        }
-    },
-    "PrestationAmenagementHydraulique": {
-        "amenagementHydrauliqueId": {
-            "name": "amenagementHydrauliqueId",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagement hydraulique",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "libelle": {
-            "name": "libelle",
-            "type": "EString",
-            "label": "Libellé",
-            "reference": false,
-            "min": null
-        },
-        "coutMetre": {
-            "name": "coutMetre",
-            "type": "EFloat",
-            "label": "Coût au mètre (euros HT)",
-            "reference": false,
-            "min": 0
-        },
-        "coutGlobal": {
-            "name": "coutGlobal",
-            "type": "EFloat",
-            "label": "Coût global (euros HT)",
-            "reference": false,
-            "min": 0
-        },
-        "realisationInterne": {
-            "name": "realisationInterne",
-            "type": "EBoolean",
-            "label": "Réalisation Interne",
-            "reference": false,
-            "min": null
-        },
-        "cote": {
-            "name": "cote",
-            "type": "EFloat",
-            "label": "Coté",
-            "reference": false,
-            "min": 0
-        },
-        "sourceId": {
-            "name": "sourceId",
-            "type": "RefSource",
-            "label": "Source",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "mesureDiverse": {
-            "name": "mesureDiverse",
-            "type": "EFloat",
-            "label": "Mesure Diverse",
-            "reference": false,
-            "min": 0
-        },
-        "typePrestationId": {
-            "name": "typePrestationId",
-            "type": "RefPrestation",
-            "label": "type de prestation",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "marcheId": {
-            "name": "marcheId",
-            "type": "Marche",
-            "label": "Marché",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "desordreIds": {
-            "name": "desordreIds",
-            "type": "DesordreDependance",
-            "label": "Désordres",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "ouvrageAssocieAmenagementHydrauliqueIds": {
-            "name": "ouvrageAssocieAmenagementHydrauliqueIds",
-            "type": "OuvrageAssocieAmenagementHydraulique",
-            "label": "Ouvrages associés",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "photos": {
-            "name": "photos",
-            "type": "PhotoDependance",
-            "label": "Photos",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "intervenantIds": {
-            "name": "intervenantIds",
-            "type": "Contact",
-            "label": "Intervenants",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "rapportEtudeIds": {
-            "name": "rapportEtudeIds",
-            "type": "RapportEtude",
-            "label": "Rapport d'études",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "evenementHydrauliqueIds": {
-            "name": "evenementHydrauliqueIds",
-            "type": "EvenementHydraulique",
-            "label": "Événements hydrauliques",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        }
-    },
-    "StructureAmenagementHydraulique": {
-        "amenagementHydrauliqueId": {
-            "name": "amenagementHydrauliqueId",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagement hydraulique",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "numCouche": {
-            "name": "numCouche",
-            "type": "EInt",
-            "label": "Numéro de couche",
-            "reference": false,
-            "min": 0
-        },
-        "materiauId": {
-            "name": "materiauId",
-            "type": "RefMateriau",
-            "label": "Materiau",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "sourceId": {
-            "name": "sourceId",
-            "type": "RefSource",
-            "label": "Source",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "photos": {
-            "name": "photos",
-            "type": "PhotoDependance",
-            "label": "Photos",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "epaisseur": {
-            "name": "epaisseur",
-            "type": "EFloat",
-            "label": "Épaisseur",
-            "reference": false,
-            "min": 0
-        },
-        "fonctionId": {
-            "name": "fonctionId",
-            "type": "RefFonction",
-            "label": "Fonction",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "natureId": {
-            "name": "natureId",
-            "type": "RefNature",
-            "label": "Nature",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        }
-    },
-    "OrganeProtectionCollective": {
-        "amenagementHydrauliqueId": {
-            "name": "amenagementHydrauliqueId",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagement hydraulique",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "cote": {
-            "name": "cote",
-            "type": "EFloat",
-            "label": "Côte",
-            "reference": false,
-            "min": 0
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "typeId": {
-            "name": "typeId",
-            "type": "RefTypeOrganeProtectionCollective",
-            "label": "Type",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "photos": {
-            "name": "photos",
-            "type": "PhotoDependance",
-            "label": "Photos",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "etatId": {
-            "name": "etatId",
-            "type": "RefEtat",
-            "label": "État",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        }
-    },
-    "DesordreDependance": {
-        "amenagementHydrauliqueId": {
-            "name": "amenagementHydrauliqueId",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagement hydraulique",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "dependanceId": {
-            "name": "dependanceId",
-            "type": "AbstractDependance",
-            "label": "Dépendance",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "lieuDit": {
-            "name": "lieuDit",
-            "type": "EString",
-            "label": "Lieu dit",
-            "reference": false,
-            "min": null
-        },
-        "cote": {
-            "name": "cote",
-            "type": "EFloat",
-            "label": "Côte",
-            "reference": false,
-            "min": 0
-        },
-        "sourceId": {
-            "name": "sourceId",
-            "type": "RefSource",
-            "label": "Source",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "positionId": {
-            "name": "positionId",
-            "type": "RefPosition",
-            "label": "Position",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "categorieDesordreId": {
-            "name": "categorieDesordreId",
-            "type": "RefCategorieDesordre",
-            "label": "Catégorie de désordre",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "typeDesordreId": {
-            "name": "typeDesordreId",
-            "type": "RefTypeDesordre",
-            "label": "Type de désordre",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "evenementHydrauliqueIds": {
-            "name": "evenementHydrauliqueIds",
-            "type": "EvenementHydraulique",
-            "label": "Evènements hydrauliques",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "ouvrageAssocieIds": {
-            "name": "ouvrageAssocieIds",
-            "type": "OuvrageAssocieAmenagementHydraulique",
-            "label": "Ouvrages associés",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "prestationIds": {
-            "name": "prestationIds",
-            "type": "PrestationAmenagementHydraulique",
-            "label": "Prestations",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "articleIds": {
-            "name": "articleIds",
-            "type": "ArticleJournal",
-            "label": "Articles",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        }
-    },
-    "OuvrageAssocieAmenagementHydraulique": {
-        "amenagementHydrauliqueId": {
-            "name": "amenagementHydrauliqueId",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagement hydraulique",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "superficie": {
-            "name": "superficie",
-            "type": "EFloat",
-            "label": "Superficie",
-            "reference": false,
-            "min": 0
-        },
-        "hauteur": {
-            "name": "hauteur",
-            "type": "EFloat",
-            "label": "Hauteur",
-            "reference": false,
-            "min": 0
-        },
-        "profondeur": {
-            "name": "profondeur",
-            "type": "EFloat",
-            "label": "Profondeur",
-            "reference": false,
-            "min": 0
-        },
-        "nombre": {
-            "name": "nombre",
-            "type": "EInt",
-            "label": "Nombre",
-            "reference": false,
-            "min": 0
-        },
-        "typeId": {
-            "name": "typeId",
-            "type": "RefOuvrageAssocieAH",
-            "label": "Type d'ouvrage",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "ouvrageDeversant": {
-            "name": "ouvrageDeversant",
-            "type": "EBoolean",
-            "label": "Ouvrage Deversant",
-            "reference": false,
-            "min": null
-        },
-        "materiauId": {
-            "name": "materiauId",
-            "type": "RefMateriau",
-            "label": "Materiau",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "amenagementHydrauliqueAssocieIds": {
-            "name": "amenagementHydrauliqueAssocieIds",
-            "type": "AmenagementHydraulique",
-            "label": "Aménagements hydrauliques",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "desordreDependanceAssocieIds": {
-            "name": "desordreDependanceAssocieIds",
-            "type": "DesordreDependance",
-            "label": "Désordres",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "proprietaireIds": {
-            "name": "proprietaireIds",
-            "type": "Contact",
-            "label": "Proprietaires",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "gestionnaireIds": {
-            "name": "gestionnaireIds",
-            "type": "Organisme",
-            "label": "Gestionnaires",
-            "reference": true,
-            "multiple": -1,
-            "containment": false
-        },
-        "observations": {
-            "name": "observations",
-            "type": "ObservationDependance",
-            "label": "Observations",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "photos": {
-            "name": "photos",
-            "type": "PhotoDependance",
-            "label": "Photos",
-            "reference": true,
-            "multiple": -1,
-            "containment": true
-        },
-        "numCouche": {
-            "name": "numCouche",
-            "type": "EInt",
-            "label": "Numéro de couche",
-            "reference": false,
-            "min": 0
-        },
-        "sourceId": {
-            "name": "sourceId",
-            "type": "RefSource",
-            "label": "Source",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "diametre": {
-            "name": "diametre",
-            "type": "EFloat",
-            "label": "Diamètre",
-            "reference": false,
-            "min": 0
-        },
-        "cote": {
-            "name": "cote",
-            "type": "EFloat",
-            "label": "Côte",
-            "reference": false,
-            "min": 0
-        },
-        "section": {
-            "name": "section",
-            "type": "EFloat",
-            "label": "Section",
-            "reference": false,
-            "min": 0
-        },
-        "etatId": {
-            "name": "etatId",
-            "type": "RefEtat",
-            "label": "État",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        },
-        "fonctionnementId": {
-            "name": "fonctionnementId",
-            "type": "RefFonctionnementOAAH",
-            "label": "Fonctionnement",
-            "reference": true,
-            "multiple": 1,
-            "containment": false
-        }
-    },
     "Prestation": {
         "borneDebutId": {
             "name": "borneDebutId",
@@ -886,7 +226,7 @@ export const formTemplatePilote = {
         "evenementHydrauliqueIds": {
             "name": "evenementHydrauliqueIds",
             "type": "EvenementHydraulique",
-            "label": "évènements hydrauliques",
+            "label": "Événements hydrauliques",
             "reference": true,
             "multiple": -1,
             "containment": false
@@ -918,7 +258,7 @@ export const formTemplatePilote = {
         "observations": {
             "name": "observations",
             "type": "ObservationPrestation",
-            "label": "observations",
+            "label": "Observations",
             "reference": true,
             "multiple": -1,
             "containment": true
@@ -1033,6 +373,662 @@ export const formTemplatePilote = {
             "label": "Prestations Globales",
             "reference": true,
             "multiple": -1,
+            "containment": false
+        }
+    },
+    "OuvrageAssocieAmenagementHydraulique": {
+        "amenagementHydrauliqueId": {
+            "name": "amenagementHydrauliqueId",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagement hydraulique",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "superficie": {
+            "name": "superficie",
+            "type": "EFloat",
+            "label": "Superficie",
+            "reference": false,
+            "min": 0
+        },
+        "hauteur": {
+            "name": "hauteur",
+            "type": "EFloat",
+            "label": "Hauteur",
+            "reference": false,
+            "min": 0
+        },
+        "profondeur": {
+            "name": "profondeur",
+            "type": "EFloat",
+            "label": "Profondeur",
+            "reference": false,
+            "min": 0
+        },
+        "nombre": {
+            "name": "nombre",
+            "type": "EInt",
+            "label": "Nombre",
+            "reference": false,
+            "min": 0
+        },
+        "typeId": {
+            "name": "typeId",
+            "type": "RefOuvrageAssocieAH",
+            "label": "Type d'ouvrage",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "ouvrageDeversant": {
+            "name": "ouvrageDeversant",
+            "type": "EBoolean",
+            "label": "Ouvrage Deversant",
+            "reference": false,
+            "min": null
+        },
+        "materiauId": {
+            "name": "materiauId",
+            "type": "RefMateriau",
+            "label": "Materiau",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "amenagementHydrauliqueAssocieIds": {
+            "name": "amenagementHydrauliqueAssocieIds",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagements hydrauliques",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "desordreDependanceAssocieIds": {
+            "name": "desordreDependanceAssocieIds",
+            "type": "DesordreDependance",
+            "label": "Désordres",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "proprietaireIds": {
+            "name": "proprietaireIds",
+            "type": "Contact",
+            "label": "Proprietaires",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "gestionnaireIds": {
+            "name": "gestionnaireIds",
+            "type": "Organisme",
+            "label": "Gestionnaires",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "photos": {
+            "name": "photos",
+            "type": "PhotoDependance",
+            "label": "Photos",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "numCouche": {
+            "name": "numCouche",
+            "type": "EInt",
+            "label": "Numéro de couche",
+            "reference": false,
+            "min": 0
+        },
+        "sourceId": {
+            "name": "sourceId",
+            "type": "RefSource",
+            "label": "Source",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "diametre": {
+            "name": "diametre",
+            "type": "EFloat",
+            "label": "Diamètre",
+            "reference": false,
+            "min": 0
+        },
+        "cote": {
+            "name": "cote",
+            "type": "EFloat",
+            "label": "Côte",
+            "reference": false,
+            "min": 0
+        },
+        "section": {
+            "name": "section",
+            "type": "EFloat",
+            "label": "Section",
+            "reference": false,
+            "min": 0
+        },
+        "etatId": {
+            "name": "etatId",
+            "type": "RefEtat",
+            "label": "État",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "fonctionnementId": {
+            "name": "fonctionnementId",
+            "type": "RefFonctionnementOAAH",
+            "label": "Fonctionnement",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        }
+    },
+    "PrestationAmenagementHydraulique": {
+        "amenagementHydrauliqueId": {
+            "name": "amenagementHydrauliqueId",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagement hydraulique",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "coutMetre": {
+            "name": "coutMetre",
+            "type": "EFloat",
+            "label": "Coût au mètre (euros HT)",
+            "reference": false,
+            "min": 0
+        },
+        "coutGlobal": {
+            "name": "coutGlobal",
+            "type": "EFloat",
+            "label": "Coût global (euros HT)",
+            "reference": false,
+            "min": 0
+        },
+        "realisationInterne": {
+            "name": "realisationInterne",
+            "type": "EBoolean",
+            "label": "Réalisation Interne",
+            "reference": false,
+            "min": null
+        },
+        "cote": {
+            "name": "cote",
+            "type": "EFloat",
+            "label": "Côte",
+            "reference": false,
+            "min": 0
+        },
+        "sourceId": {
+            "name": "sourceId",
+            "type": "RefSource",
+            "label": "Source",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "mesureDiverse": {
+            "name": "mesureDiverse",
+            "type": "EFloat",
+            "label": "Mesure Diverse",
+            "reference": false,
+            "min": 0
+        },
+        "typePrestationId": {
+            "name": "typePrestationId",
+            "type": "RefPrestation",
+            "label": "Type de prestation",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "marcheId": {
+            "name": "marcheId",
+            "type": "Marche",
+            "label": "Marché",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "desordreIds": {
+            "name": "desordreIds",
+            "type": "DesordreDependance",
+            "label": "Désordres",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "ouvrageAssocieAmenagementHydrauliqueIds": {
+            "name": "ouvrageAssocieAmenagementHydrauliqueIds",
+            "type": "OuvrageAssocieAmenagementHydraulique",
+            "label": "Ouvrages associés",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "photos": {
+            "name": "photos",
+            "type": "PhotoDependance",
+            "label": "Photos",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "intervenantIds": {
+            "name": "intervenantIds",
+            "type": "Contact",
+            "label": "Intervenants",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "rapportEtudeIds": {
+            "name": "rapportEtudeIds",
+            "type": "RapportEtude",
+            "label": "Rapport d'études",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "evenementHydrauliqueIds": {
+            "name": "evenementHydrauliqueIds",
+            "type": "EvenementHydraulique",
+            "label": "Événements hydrauliques",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        }
+    },
+    "AmenagementHydraulique": {
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "proprietes": {
+            "name": "proprietes",
+            "type": "ProprieteObjet",
+            "label": "Proprietes",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "gestions": {
+            "name": "gestions",
+            "type": "GestionObjet",
+            "label": "Gestions",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "photos": {
+            "name": "photos",
+            "type": "PhotoDependance",
+            "label": "Photos",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "superficie": {
+            "name": "superficie",
+            "type": "EFloat",
+            "label": "Superficie (m²)",
+            "reference": false,
+            "min": 0
+        },
+        "capaciteStockage": {
+            "name": "capaciteStockage",
+            "type": "EFloat",
+            "label": "Capacité de stockage (m³)",
+            "reference": false,
+            "min": 0
+        },
+        "profondeurMoyenne": {
+            "name": "profondeurMoyenne",
+            "type": "EFloat",
+            "label": "Profondeur moyenne (m)",
+            "reference": false,
+            "min": 0
+        },
+        "gestionnaireIds": {
+            "name": "gestionnaireIds",
+            "type": "Organisme",
+            "label": "Gestionnaires",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "fonctionnementId": {
+            "name": "fonctionnementId",
+            "type": "RefFonctionnementAH",
+            "label": "Fonctionnement",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "typeId": {
+            "name": "typeId",
+            "type": "RefTypeAmenagementHydraulique",
+            "label": "Type",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "tronconIds": {
+            "name": "tronconIds",
+            "type": "TronconDigue",
+            "label": "Tronçons",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "proprietaireIds": {
+            "name": "proprietaireIds",
+            "type": "Contact",
+            "label": "Proprietaires",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "organismeId": {
+            "name": "organismeId",
+            "type": "Organisme",
+            "label": "Collectivité compétente",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        }
+    },
+    "DesordreDependance": {
+        "amenagementHydrauliqueId": {
+            "name": "amenagementHydrauliqueId",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagement hydraulique",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "dependanceId": {
+            "name": "dependanceId",
+            "type": "AbstractDependance",
+            "label": "Dépendance",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "lieuDit": {
+            "name": "lieuDit",
+            "type": "EString",
+            "label": "Lieu dit",
+            "reference": false,
+            "min": null
+        },
+        "cote": {
+            "name": "cote",
+            "type": "EFloat",
+            "label": "Côte",
+            "reference": false,
+            "min": 0
+        },
+        "sourceId": {
+            "name": "sourceId",
+            "type": "RefSource",
+            "label": "Source",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "positionId": {
+            "name": "positionId",
+            "type": "RefPosition",
+            "label": "Position",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "categorieDesordreId": {
+            "name": "categorieDesordreId",
+            "type": "RefCategorieDesordre",
+            "label": "Catégorie de désordre",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "typeDesordreId": {
+            "name": "typeDesordreId",
+            "type": "RefTypeDesordre",
+            "label": "Type de désordre",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "evenementHydrauliqueIds": {
+            "name": "evenementHydrauliqueIds",
+            "type": "EvenementHydraulique",
+            "label": "Evènements hydrauliques",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "ouvrageAssocieIds": {
+            "name": "ouvrageAssocieIds",
+            "type": "OuvrageAssocieAmenagementHydraulique",
+            "label": "Ouvrages associés",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "prestationIds": {
+            "name": "prestationIds",
+            "type": "PrestationAmenagementHydraulique",
+            "label": "Prestations",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        },
+        "articleIds": {
+            "name": "articleIds",
+            "type": "ArticleJournal",
+            "label": "Articles",
+            "reference": true,
+            "multiple": -1,
+            "containment": false
+        }
+    },
+    "StructureAmenagementHydraulique": {
+        "amenagementHydrauliqueId": {
+            "name": "amenagementHydrauliqueId",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagement hydraulique",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "numCouche": {
+            "name": "numCouche",
+            "type": "EInt",
+            "label": "Numéro de couche",
+            "reference": false,
+            "min": 0
+        },
+        "materiauId": {
+            "name": "materiauId",
+            "type": "RefMateriau",
+            "label": "Materiau",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "sourceId": {
+            "name": "sourceId",
+            "type": "RefSource",
+            "label": "Source",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "photos": {
+            "name": "photos",
+            "type": "PhotoDependance",
+            "label": "Photos",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "epaisseur": {
+            "name": "epaisseur",
+            "type": "EFloat",
+            "label": "Épaisseur (m)",
+            "reference": false,
+            "min": 0
+        },
+        "fonctionId": {
+            "name": "fonctionId",
+            "type": "RefFonction",
+            "label": "Fonction",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "natureId": {
+            "name": "natureId",
+            "type": "RefNature",
+            "label": "Nature",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        }
+    },
+    "OrganeProtectionCollective": {
+        "amenagementHydrauliqueId": {
+            "name": "amenagementHydrauliqueId",
+            "type": "AmenagementHydraulique",
+            "label": "Aménagement hydraulique",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "libelle": {
+            "name": "libelle",
+            "type": "EString",
+            "label": "Libellé",
+            "reference": false,
+            "min": null
+        },
+        "cote": {
+            "name": "cote",
+            "type": "EFloat",
+            "label": "Côte",
+            "reference": false,
+            "min": 0
+        },
+        "observations": {
+            "name": "observations",
+            "type": "ObservationDependance",
+            "label": "Observations",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "typeId": {
+            "name": "typeId",
+            "type": "RefTypeOrganeProtectionCollective",
+            "label": "Type",
+            "reference": true,
+            "multiple": 1,
+            "containment": false
+        },
+        "photos": {
+            "name": "photos",
+            "type": "PhotoDependance",
+            "label": "Photos",
+            "reference": true,
+            "multiple": -1,
+            "containment": true
+        },
+        "etatId": {
+            "name": "etatId",
+            "type": "RefEtat",
+            "label": "État",
+            "reference": true,
+            "multiple": 1,
             "containment": false
         }
     }
