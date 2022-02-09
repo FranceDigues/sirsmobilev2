@@ -17,7 +17,7 @@
   <div class="sirs-field col col-100">
     <label [for]="s.name" class="active">{{s.label}}</label>
     <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
-      <option *ngFor="let r of EOS.refs[s.type] | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+      <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
         [selected]="isSelected(s, r)">
         {{ title(r) }}
       </option>
