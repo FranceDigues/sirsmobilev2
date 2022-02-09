@@ -220,7 +220,6 @@ export class ObservationEditComponent implements OnInit {
         // Save document.
         this.editionService.saveObject(this.objectDoc).then(() => {
             this.saving = false;
-            this.mapManagerService.syncAllAppLayer();
             this.route.navigateByUrl('/main');
         });
     }
