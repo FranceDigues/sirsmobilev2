@@ -97,7 +97,7 @@ export class DatabaseService {
     }
 
     setCurrentDatabaseSettings(updatedDatabase) {
-        this.getDatabaseSettings()
+        return (this.getDatabaseSettings()
             .then(
                 (databases) => {
                     databases.forEach((database, i) => {
@@ -107,7 +107,7 @@ export class DatabaseService {
                         }
                     });
                 }
-            );
+            ));
     }
 
     changeDatabase() {

@@ -40,13 +40,13 @@ export class AuthService {
   logout() {
     this.user = null;
     this.dbService.getCurrentDatabaseSettings()
-    .then(
-      (database: DatabaseModel) => {
-        database.context.authUser = null;
-        this.dbService.setCurrentDatabaseSettings(database);
-        this.route.navigateByUrl('/');
-      }
-    );
+      .then(
+        (database: DatabaseModel) => {
+          database.context.authUser = null;
+          this.dbService.setCurrentDatabaseSettings(database)
+            .then(() => this.route.navigateByUrl('/'));
+        }
+      );
   }
 
   login(login, password) {
