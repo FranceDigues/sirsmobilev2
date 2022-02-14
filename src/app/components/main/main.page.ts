@@ -47,6 +47,9 @@ export class MainPage implements AfterViewInit {
                 public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
                 private toastService: ToastService) {
 
+        //Force the creation of the geoloc layer, to fix latency problems.
+        geoLocLayer.init();
+
         this.platform.pause.subscribe(
             () => {
                 this.saveCurrentView();
@@ -95,7 +98,7 @@ export class MainPage implements AfterViewInit {
                     this.olService.getMap().setView(this.mapService.currentView);
                     this.olService.addLayer(this.backLayerService.backLayer);
                     this.olService.addLayer(this.editionLayerService.editionLayer);
-                    this.olService.addLayer(this.geoLocLayer.geolocLayer);
+                    this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
                     if (this.mapManagerService.appLayer) { // This "if" actually needs to happen sooner or later to add the appLayer to the map (done in the init function of mapManagerService).
                         this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
                     } else {

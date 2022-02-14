@@ -18,10 +18,14 @@ export class GeolocLayerService {
     geolocLayer: VectorLayer = null;
 
     constructor() {
+        this.init();
+    }
+
+    init() {
         this.geolocLayer = this.createGeolocLayer();
     }
 
-    get getGeolocLayer() {
+    getGeolocLayer() {
         if (!this.geolocLayer) {
             this.geolocLayer = this.createGeolocLayer();
             return this.geolocLayer;
@@ -75,7 +79,7 @@ export class GeolocLayerService {
     }
 
     redrawGeolocLayer(coords) {
-        const geolocLayerSource = this.getGeolocLayer.getSource();
+        const geolocLayerSource = this.getGeolocLayer().getSource();
         geolocLayerSource.clear();
         geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
     }
