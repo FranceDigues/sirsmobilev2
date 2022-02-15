@@ -43,7 +43,7 @@ export class MainPage implements AfterViewInit {
                 private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
                 private menu: MenuController, private loadingCtrl: LoadingController,
                 private platform: Platform, private dbService: DatabaseService,
-                private selectedObjectsService: SelectedObjectsService, private network: Network, private toastCtrl: ToastController,
+                private selectedObjectsService: SelectedObjectsService, private network: Network,
                 public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
                 private toastService: ToastService) {
 

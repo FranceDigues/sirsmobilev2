@@ -21,11 +21,11 @@ export class ToastService {
   shiftNotification() {
     if (this.notifications.length >= 1) {
       const n = this.notifications.shift();
-      n.present();
       n.onDidDismiss()
-      .then(() => {
-        this.shiftNotification();
-      })
+        .then(() => {
+          this.shiftNotification();
+        });
+      n.present();
     } else {
       this.isRunning = false;
     }
