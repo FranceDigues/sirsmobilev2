@@ -7,29 +7,10 @@ import { ToastNotification } from '../shared/models/toast-notification.model';
 })
 export class ToastService {
 
-  notifications = [];
-  isRunning = false;
+  store = [];
+  notification = null;
 
   constructor(private toastController: ToastController) { }
-
-  showAll() {
-    if (this.isRunning) return;
-    this.isRunning = true;
-    this.shiftNotification();
-  }
-
-  shiftNotification() {
-    if (this.notifications.length >= 1) {
-      const n = this.notifications.shift();
-      n.onDidDismiss()
-        .then(() => {
-          this.shiftNotification();
-        });
-      n.present();
-    } else {
-      this.isRunning = false;
-    }
-  }
 
   show(notification: ToastNotification) {
     this.toastController.create({
@@ -38,8 +19,33 @@ export class ToastService {
       position: notification.position
     })
     .then(t => {
-      this.notifications.push(t);
-      this.showAll();
+      if (this.notification) {
+        //shit the notification if message is the same of the current running or the same of one already stored
+        //this way we limit doublon
+        if (this.notification.message !== t.message && this.alreadyStore(t)) {
+          this.store.push(t);
+        }
+      } else {
+        this.showNext(t);
+      }
     })
+  }
+
+  private alreadyStore(t0) {
+    for (const t of this.store)
+      if (t.message === t0.message)
+        return true;
+    return false;
+  }
+
+  private showNext(t) {
+    this.notification = t;
+    this.notification.onDidDismiss(this.dismiss);
+    this.notification.present();
+  }
+
+  private dismiss() {
+    if (this.store.length === 0) this.notification = null;
+    else this.showNext(this.store.shift());
   }
 }
