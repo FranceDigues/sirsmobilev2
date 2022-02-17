@@ -101,10 +101,6 @@ export class MediaFormComponent implements OnInit {
                                     data: base64data
                                 };
                                 this.changeView.emit('form');
-                                // this.editionService.saveObject(this.objectDoc)
-                                //     .then(() => {
-                                //         this.changeView.emit('form');
-                                //     });
                             }
                         };
                     },

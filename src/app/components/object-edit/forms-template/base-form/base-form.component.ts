@@ -66,18 +66,6 @@ export class BaseFormComponent implements OnInit {
     }
   }
 
-  private title(eosReference) {
-    if (this.EOS.showText('fullName')) {
-      return eosReference.libelle ? eosReference.libelle : 'libellé indéterminé / id:  ' + eosReference.id;
-    } else if (this.EOS.showText('abstract')) {
-      return eosReference.abrege ? eosReference.abrege : eosReference.designation + ' : ' + eosReference.libelle
-    } else if (this.EOS.showText('both')) {
-      return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
-    } else {
-      throw "Unexpected behaviour showTextConfig should be defined";
-    }
-  }
-
   private optionValue(eosReference) {
     if (typeof eosReference._id === 'undefined') {
       return eosReference.id;

@@ -9,8 +9,6 @@ import {Camera} from '@ionic-native/camera/ngx';
 import {File, Entry, Metadata, DirectoryEntry} from '@ionic-native/file/ngx';
 import {UuidUtils} from 'src/app/utils/uuid-utils';
 import {formatDate} from '@angular/common';
-import {EditionModeService} from 'src/app/services/edition-mode.service';
-import {MapManagerService} from 'src/app/services/map-manager.service';
 import {DatabaseService} from '../../../../services/database.service';
 import {DatabaseModel} from '../../../database-connection/models/database.model';
 import {SirsDataService} from "../../../../services/sirs-data.service";
@@ -37,7 +35,6 @@ export class ObservationMediaComponent implements OnInit {
         public OES: ObservationEditService, private modalCtrl: ModalController, private geolocation: GeolocationService,
         private cameraService: CameraService, private camera: Camera, private file: File,
         private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
-        private editionService: EditionModeService, private mapManagerService: MapManagerService,
         private databaseService: DatabaseService, private sirsDataService: SirsDataService) {
         this.view = 'media';
         this.pendingContactList = true;
@@ -253,11 +250,7 @@ export class ObservationMediaComponent implements OnInit {
                                     content_type: 'image/jpeg',
                                     data: base64data
                                 };
-                                this.editionService.saveObject(this.OES.objectDoc)
-                                    .then(() => {
-                                        this.cancel();
-                                        this.mapManagerService.syncAllAppLayer();
-                                    });
+                                this.cancel();
                             }
                         }
                     }
@@ -276,7 +269,7 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     private isDependance(clazz) {
-        // Only dependance that have photos
+        // Only dependances or AHs that have photos.
         return clazz === 'DesordreDependance'
             || clazz === 'OuvrageVoirieDependance'
             || clazz === 'AireStockageDependance'

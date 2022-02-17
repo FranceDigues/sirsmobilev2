@@ -81,18 +81,10 @@ export class ObservationEditService {
             author: this.authService.user._id // Kinda hacked to get directly user value rather than using getValue() method. Otherwise getValue() returns null. Might be an async problem.
         };
         this.importPhotoData = null;
-
-        this.initRequests();
-    }
-
-    async initRequests() {
-
     }
 
     init(objectId: string, obsId: string) {
         this.setValuesToDefault();
-
-        this.initRequests();
 
         this.storageService.getItem('AppTronconsFavorities')
             .then(

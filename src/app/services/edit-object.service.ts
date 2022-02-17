@@ -1,19 +1,20 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {StorageService} from '@ionic-lib/lib-storage/storage.service';
-import {LoadingController, ToastController} from '@ionic/angular';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import { LoadingController, ToastController } from '@ionic/angular';
 import WKT from 'ol/format/WKT';
-import {transform} from 'ol/proj';
-import {getDistance} from 'ol/sphere';
-import {DatabaseService} from './database.service';
-import {EditionModeService} from './edition-mode.service';
-import {GeolocationService} from './geolocation.service';
-import {ObjectDocService} from './object-doc.service';
-import {UuidUtils as uuid} from '../utils/uuid-utils';
-import {PositionService} from './position.service';
-import {DatabaseModel} from '../components/database-connection/models/database.model';
-import {PluginUtils} from '../utils/plugin-utils';
-import {SirsDataService} from './sirs-data.service';
+import { transform } from 'ol/proj';
+import { getDistance } from 'ol/sphere';
+import { DatabaseService } from './database.service';
+import { EditionModeService } from './edition-mode.service';
+import { GeolocationService } from './geolocation.service';
+import { ObjectDocService } from './object-doc.service';
+import { UuidUtils as uuid } from '../utils/uuid-utils';
+import { PositionService } from './position.service';
+import { DatabaseModel } from '../components/database-connection/models/database.model';
+import { PluginUtils } from '../utils/plugin-utils';
+import { SirsDataService } from './sirs-data.service';
+import { LocalDatabase } from './local-database.service';
 
 @Injectable({
     providedIn: 'root'
@@ -47,79 +48,58 @@ export class EditObjectService {
     endPosBorneLabel: Promise<string> | string | null = null;
     isClosed;
 
-    constructor(private objectDocService: ObjectDocService,
-                private databaseService: DatabaseService,
-                private loadingCtrl: LoadingController,
-                private sirsDataService: SirsDataService,
-                private editionModeService: EditionModeService,
-                private route: Router,
-                private toastCtrl: ToastController,
-                private geolocationService: GeolocationService,
-                private positionService: PositionService,
-                private storageService: StorageService) {
+    constructor(private databaseService: DatabaseService,
+        private loadingCtrl: LoadingController,
+        private sirsDataService: SirsDataService,
+        private editionModeService: EditionModeService,
+        private route: Router,
+        private toastCtrl: ToastController,
+        private geolocationService: GeolocationService,
+        private positionService: PositionService,
+        private storageService: StorageService,
+        private localDB: LocalDatabase) {
     }
 
     init(type, id) {
         return new Promise(async (resolve) => {
+            const loading = await this.loadingCtrl.create({ message: 'Chargement' });
+            loading.present();
+
             this.resetValues();
             this.type = type;
-            this.isNew = !id;
-            await this.loadingCtrl.create({message: 'Chargement'})
-                .then(
-                    (loading) => {
-                        loading.present();
-                        this.objectDocService.getObjectDoc(type, id)
-                            .then(
-                                (objectDoc) => {
-                                    // Hack for borne fin data without borneFinId
-                                    if (typeof (objectDoc.borne_fin_aval) !== 'undefined' && typeof (objectDoc.borne_fin_distance) !== 'undefined' && !objectDoc.borneFinId) {
-                                        objectDoc.borneFinId = objectDoc.borneDebutId;
-                                        objectDoc.borne_fin_aval = objectDoc.borne_debut_aval;
-                                        objectDoc.borne_fin_distance = objectDoc.borne_debut_distance;
-                                    }
-                                    this.objectDoc = objectDoc;
-                                    this.objectType =PluginUtils.doc2Class(objectDoc);
-                                    this.isClosed = (!!objectDoc.positionFin || !!objectDoc.geometry || !!objectDoc.borneFinId);
+            this.isNew = !(id && id !== '');
 
-                                    // Hack for borne fin data without borneFinId
-                                    this.editionModeService.getReferenceTypes()
-                                        .then(
-                                            (refs) => {
-                                                const res = {};
+            if (this.isNew) {
+                this.objectDoc = this.editionModeService.newObject(type);
+            } else {
+                this.objectDoc = this.localDB.get(id);
+            }
 
-                                                for (const ref of refs) { // * need to do this bcs Promis.all accepts only array on parameter and not object
-                                                    res[ref[0]] = ref[1];
-                                                }
-                                                this.refs = res;
-                                                this.initTronconList();
-                                                this.checkDependance(loading);
-                                                this.getStartPosBorne();
-                                                this.getEndPosBorne();
-                                            }
-                                        );
-                                    if (this.isNew) {
-                                        this.isLinear = false;
-                                    } else {
-                                        if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
-                                            this.isLinear = false;
-                                        } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
-                                            && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
-                                                || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
-                                                || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
-                                            this.isLinear = false;
-                                        } else {
-                                            this.isLinear = true;
-                                        }
-                                    }
-                                });
-                    });
+            // Hack for borne fin data without borneFinId
+            if (typeof (this.objectDoc.borne_fin_aval) !== 'undefined'
+                && typeof (this.objectDoc.borne_fin_distance) !== 'undefined'
+                && !this.objectDoc.borneFinId) {
+                this.objectDoc.borneFinId = this.objectDoc.borneDebutId;
+                this.objectDoc.borne_fin_aval = this.objectDoc.borne_debut_aval;
+                this.objectDoc.borne_fin_distance = this.objectDoc.borne_debut_distance;
+            }
+            this.objectType = PluginUtils.doc2Class(this.objectDoc);
+            this.isClosed = (!!this.objectDoc.positionFin || !!this.objectDoc.geometry || !!this.objectDoc.borneFinId);
+
+            await this.initReferences();
+            this.initTronconList();
+            if (this.isDependance()) this.initDependance();
+            this.initStartPosBorne();
+            this.initEndPosBorne();
+            this.initIsLinear();
 
             await this.databaseService.getCurrentDatabaseSettings()
                 .then((config: DatabaseModel) => {
                     this.showTextConfig = config.context.showText;
                 });
 
-            resolve(null); // finished everything.
+            loading.dismiss();
+            resolve();
         });
     }
 
@@ -244,6 +224,15 @@ export class EditObjectService {
         return PluginUtils.isDependanceAhClass(this.objectDoc['@class']);
     }
 
+    private async initReferences() {
+        const refs = await this.editionModeService.getReferenceTypes();
+        const res = {};
+        for (const ref of refs) { //need to do this bcs Promis.all accepts only array on parameter and not object
+            res[ref[0]] = ref[1];
+        }
+        this.refs = res;
+    }
+
     initTronconList() {
         this.storageService.getItem('AppTronconsFavorities')
             .then(
@@ -258,89 +247,76 @@ export class EditObjectService {
             );
     }
 
-    private checkDependance(loading: HTMLIonLoadingElement) {
-        if (this.isDependance()) {
-            delete this.objectDoc.linearId;
+    private async initDependance() {
+        //Dependance or AH don't have linearId.
+        delete this.objectDoc.linearId;
 
-            if (!this.objectDoc.geometry) {
-                this.objDependanceType = 'point';
-            } else {
-                if (this.objectDoc.geometry.toUpperCase().indexOf('POLYGON') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOLYGON') > -1) {
-                    this.objDependanceType = 'polygon';
-                } else if (this.objectDoc.geometry.toUpperCase().indexOf('POINT') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOINT') > -1) {
-                    this.objDependanceType = 'point';
-                } else {
-                    this.objDependanceType = 'line';
-                }
-            }
-
-            const promises = [];
-            let check = false;
-            if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
-                //this.objectDoc.dependanceId = null; // ???
-                check = true;
-                promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                        startkey: ['fr.sirs.core.model.CheminAccesDependance'],
-                        endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
-                        include_docs: true
-                    }),
-                    this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                        startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
-                        endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
-                        include_docs: true
-                    }),
-                    this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                        startkey: ['fr.sirs.core.model.AutreDependance'],
-                        endkey: ['fr.sirs.core.model.AutreDependance', {}],
-                        include_docs: true
-                    }),
-                    this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                        startkey: ['fr.sirs.core.model.AireStockageDependance'],
-                        endkey: ['fr.sirs.core.model.AireStockageDependance', {}],
-                        include_docs: true
-                    })
-                );
-            }
-            if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance' ||
-                this.objectDoc['@class'] === 'fr.sirs.core.model.PrestationAmenagementHydraulique' ||
-                this.objectDoc['@class'] === 'fr.sirs.core.model.OuvrageAssocieAmenagementHydraulique' ||
-                this.objectDoc['@class'] === 'fr.sirs.core.model.StructureAmenagementHydraulique' ||
-                this.objectDoc['@class'] === 'fr.sirs.core.model.OrganeProtectionCollective') {
-                check = true;
-                promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.AmenagementHydraulique'],
-                    endkey: ['fr.sirs.core.model.AmenagementHydraulique', {}],
-                    include_docs: true
-                }));
-            }
-            Promise.all(promises)
-                .then((results) => {
-                    setTimeout(() => {
-                        if (results.length === 1) {
-                            this.amenagementHydrauliques.push(...(results[0].rows.map(elt => elt)));
-                        }
-                        if (results.length >= 4) {
-                            this.dependances.push(
-                                ...(results[0].rows.map(elt => elt)),
-                                ...(results[1].rows.map(elt => elt)),
-                                ...(results[2].rows.map(elt => elt)),
-                                ...(results[3].rows.map(elt => elt)));
-                        }
-                        if (results.length === 5) {
-                            this.amenagementHydrauliques.push(...(results[4].rows.map(elt => elt)));
-                        }
-                        loading.dismiss();
-                    }, 100);
-                }).catch((err) => {
-                console.error(err);
-                loading.dismiss();
-            });
-            if (!check) {
-                loading.dismiss();
-            }
+        //Determines the type of geometry
+        if (!this.objectDoc.geometry) {
+            this.objDependanceType = 'point';
+        } else if (this.objectDoc.geometry.toUpperCase().indexOf('POLYGON') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOLYGON') > -1) {
+            this.objDependanceType = 'polygon';
+        } else if (this.objectDoc.geometry.toUpperCase().indexOf('POINT') > -1 || this.objectDoc.geometry.toUpperCase().indexOf('MULTIPOINT') > -1) {
+            this.objDependanceType = 'point';
         } else {
-            loading.dismiss();
+            this.objDependanceType = 'line';
         }
+
+        //Collect initialization requests for AH and depandence
+        const promises = [];
+        if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
+            promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.CheminAccesDependance'],
+                endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
+                include_docs: true
+            }),
+                this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
+                    endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
+                    include_docs: true
+                }),
+                this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.AutreDependance'],
+                    endkey: ['fr.sirs.core.model.AutreDependance', {}],
+                    include_docs: true
+                }),
+                this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.AireStockageDependance'],
+                    endkey: ['fr.sirs.core.model.AireStockageDependance', {}],
+                    include_docs: true
+                })
+            );
+        }
+        if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance' ||
+            this.objectDoc['@class'] === 'fr.sirs.core.model.PrestationAmenagementHydraulique' ||
+            this.objectDoc['@class'] === 'fr.sirs.core.model.OuvrageAssocieAmenagementHydraulique' ||
+            this.objectDoc['@class'] === 'fr.sirs.core.model.StructureAmenagementHydraulique' ||
+            this.objectDoc['@class'] === 'fr.sirs.core.model.OrganeProtectionCollective') {
+            promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.AmenagementHydraulique'],
+                endkey: ['fr.sirs.core.model.AmenagementHydraulique', {}],
+                include_docs: true
+            }));
+        }
+        const dependanceAndAH = await Promise.all(promises);
+        await new Promise(resolve => {
+            setTimeout(() => {
+                if (dependanceAndAH.length === 1) {
+                    this.amenagementHydrauliques.push(...(dependanceAndAH[0].rows.map(elt => elt)));
+                }
+                if (dependanceAndAH.length >= 4) {
+                    this.dependances.push(
+                        ...(dependanceAndAH[0].rows.map(elt => elt)),
+                        ...(dependanceAndAH[1].rows.map(elt => elt)),
+                        ...(dependanceAndAH[2].rows.map(elt => elt)),
+                        ...(dependanceAndAH[3].rows.map(elt => elt)));
+                }
+                if (dependanceAndAH.length === 5) {
+                    this.amenagementHydrauliques.push(...(dependanceAndAH[4].rows.map(elt => elt)));
+                }
+                resolve();
+            }, 100);
+        })
     }
 
     save() {
@@ -354,7 +330,8 @@ export class EditObjectService {
             return;
         }
 
-        if ((!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId && !this.isDependance()) || (this.isDependance() && !this.objectDoc.geometry)) {
+        if ((!this.isDependance() && !this.objectDoc.positionDebut && !this.objectDoc.borneDebutId)
+            || (this.isDependance() && !this.objectDoc.geometry)) {
             this.toastCtrl.create({
                 message: 'Veuillez choisir une position pour cet objet, avant de continuer',
                 duration: 2000
@@ -379,10 +356,17 @@ export class EditObjectService {
 
         delete this.objectDoc.prFin;
 
-        this.editionModeService.saveObject(this.objectDoc).then(
-            () => {
-                this.route.navigateByUrl('/main');
-            });
+        if (this.isNew) {
+            this.editionModeService.createObject(this.objectDoc).then(
+                () => {
+                    this.route.navigateByUrl('/main');
+                });
+        } else {
+            this.editionModeService.updateObject(this.objectDoc).then(
+                () => {
+                    this.route.navigateByUrl('/main');
+                });
+        }
     }
 
     handlePos(pos, posEnd?) {
@@ -526,7 +510,7 @@ export class EditObjectService {
             this.objectDoc.borneFinId = data.borneDebutId;
             this.objectDoc.borneFinLibelle = data.borneDebutLibelle;
             this.objectDoc.approximatePositionFin = data.approximatePositionDebut;
-            this.getStartPosBorne(); // Update startPosBorneLabel
+            this.initStartPosBorne();
         } else {
             this.objectDoc.systemeRepId = data.systemeRepId;
             this.objectDoc.borne_debut_aval = data.borne_debut_aval === 'true';
@@ -541,8 +525,8 @@ export class EditObjectService {
             this.objectDoc.borneFinLibelle = data.borneFinLibelle;
             this.objectDoc.approximatePositionDebut = data.approximatePositionDebut;
             this.objectDoc.approximatePositionFin = data.approximatePositionFin;
-            this.getStartPosBorne(); // Update startPosBorneLabel
-            this.getEndPosBorne(); // Update endPosBorneLabel
+            this.initStartPosBorne();
+            this.initEndPosBorne();
         }
     }
 
@@ -554,10 +538,9 @@ export class EditObjectService {
             this.objectDoc.positionFin = this.objectDoc.positionDebut;
             this.objectDoc.approximatePositionFin = this.objectDoc.approximatePositionDebut;
         }
-
     }
 
-    changeObjectTypeDependance() { // ! same check here
+    changeObjectTypeDependance() {
         if (this.objDependanceType === 'line') {
             delete this.objectDoc.positionFin;
             delete this.objectDoc.approximatePositionFin;
@@ -582,9 +565,9 @@ export class EditObjectService {
         return this.objectDoc.positionFin ? this.positionService.getLatLongFromWKT(this.objectDoc.positionFin) : undefined;
     }
 
-    getStartPosBorne() {
+    initStartPosBorne() {
         this.startPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneDebutId},
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneDebutId },
                 (results) => {
                     const borneLabel = results && results.rows && results.rows.length ? results.rows[0].value.libelle : `avec l'id : ${this.objectDoc.borneDebutId}`;
                     const res = this.objectDoc.borneDebutId ?
@@ -594,9 +577,9 @@ export class EditObjectService {
         });
     }
 
-    getEndPosBorne() {
+    initEndPosBorne() {
         this.endPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', {key: this.objectDoc.borneFinId},
+            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneFinId },
                 (results) => {
                     const borneLabel = results && results.rows && results.rows.length ? results.rows[0].value.libelle : `avec l'id : ${this.objectDoc.borneFinId}`;
                     const res = this.objectDoc.borneFinId ?
@@ -618,31 +601,29 @@ export class EditObjectService {
         return this.objectDoc.systemeRepId || null;
     }
 
-    // * Location
-
     locateMe() {
         if (this.geolocationService.isEnabled) {
             this.geolocationService.getCurrentLocation()
-            .then(
-                (position) => {
-                    if (this.isDependance()) {
-                        this.handlePosDependance(position);
-                    } else {
-                        this.handlePos(position);
+                .then(
+                    (position) => {
+                        if (this.isDependance()) {
+                            this.handlePosDependance(position);
+                        } else {
+                            this.handlePos(position);
+                        }
                     }
-                }
-            );
+                );
         }
     }
 
     locateMeEnd() {
         if (this.geolocationService.isEnabled) {
             this.geolocationService.getCurrentLocation()
-            .then(
-                (position) => {
-                    this.handlePosDependanceEnd(position);
-                }
-            );
+                .then(
+                    (position) => {
+                        this.handlePosDependanceEnd(position);
+                    }
+                );
         }
     }
 
@@ -681,13 +662,31 @@ export class EditObjectService {
 
     title(eosReference) {
         if (this.showText('fullName')) {
-          return eosReference.libelle ? eosReference.libelle : 'libellé indéterminé / id:  ' + eosReference.id;
+            return eosReference.libelle ? eosReference.libelle : 'libellé indéterminé / id:  ' + eosReference.id;
         } else if (this.showText('abstract')) {
-          return eosReference.abrege ? eosReference.abrege : eosReference.designation + ' : ' + eosReference.libelle
+            return eosReference.abrege ? eosReference.abrege : eosReference.designation + ' : ' + eosReference.libelle
         } else if (this.showText('both')) {
-          return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
+            return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
         } else {
-          throw "Unexpected behaviour showTextConfig should be defined";
+            //default
+            return eosReference.abrege ? eosReference.abrege + ' : ' + eosReference.libelle : eosReference.designation + ' : ' + eosReference.libelle
         }
-      }
+    }
+
+    private initIsLinear() {
+        if (this.isNew) {
+            this.isLinear = false;
+        } else {
+            if (this.objectDoc.positionDebut && this.objectDoc.positionFin && this.objectDoc.positionDebut === this.objectDoc.positionFin) {
+                this.isLinear = false;
+            } else if (this.objectDoc.borneDebutId && this.objectDoc.borneFinId
+                && (this.objectDoc.borneDebutId === this.objectDoc.borneFinId
+                    || this.objectDoc.borne_debut_aval === this.objectDoc.borne_fin_aval
+                    || this.objectDoc.borne_debut_distance === this.objectDoc.borne_fin_distance)) {
+                this.isLinear = false;
+            } else {
+                this.isLinear = true;
+            }
+        }
+    }
 }

@@ -17,9 +17,9 @@ import TileWMS from 'ol/source/TileWMS';
 })
 export class BackLayerService {
 
-    backLayer: LayerGroup;
+    backLayer: LayerGroup = null;
 
-    backLayers: BackLayerModel;
+    backLayers: BackLayerModel = null;
 
     private backLayerToEdit: BackLayerModel; // Variable made to transfer layer data from backmap to editBackLayer components.
 
@@ -35,16 +35,19 @@ export class BackLayerService {
         if (this.backLayer === null || this.backLayers === null) {
             return new Promise((resolve) => {
                 this.dbService.getCurrentDatabaseSettings()
-                .then(
-                    (db: DatabaseModel) => {
-                        this.backLayers = db.context.backLayer;
-                        this.backLayer = this.createBackLayer();
-                        resolve();
-                    }
+                    .then(
+                        (db: DatabaseModel) => {
+                            this.backLayers = db.context.backLayer;
+                            this.backLayer = this.createBackLayer();
+                            resolve();
+                        }
                 );
             });
         } else {
-            return new Promise(() => console.log("backLayer and backLayers already loaded"));
+            return new Promise((resolve) => {
+                console.log("BackLayer and backLayers are already loaded.");
+                resolve();
+            });
         }
     }
 

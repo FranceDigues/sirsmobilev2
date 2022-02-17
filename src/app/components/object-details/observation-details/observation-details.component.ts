@@ -125,7 +125,7 @@ export class ObservationDetailsComponent implements OnInit {
 
                         this.objectDoc.editMode = true;
 
-                        this.editionService.saveObject(this.objectDoc);
+                        this.editionService.updateObject(this.objectDoc);
                     }
                 }
             ]
@@ -224,7 +224,7 @@ export class ObservationDetailsComponent implements OnInit {
 
         this.objectDoc.valid = false;
         this.objectDoc.editMode = true;
-        this.editionService.saveObject(this.objectDoc)
+        this.editionService.updateObject(this.objectDoc)
             .then(
                 () => {
                     this.mapManagerService.syncAllAppLayer();

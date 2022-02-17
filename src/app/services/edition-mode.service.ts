@@ -78,7 +78,18 @@ export class EditionModeService {
         return objectDoc;
     }
 
-    saveObject(objectDoc) {
+    createObject(objectDoc) {
+        return (this.localDB.create(objectDoc)
+            .then(
+                (doc) => {
+                    const source = this.editionLayerService.editionLayer.getSource();
+                    source.addFeature(this.editionLayerService.createEditionFeatureInstance(doc));
+                    return doc;
+                }
+            ));
+    }
+
+    updateObject(objectDoc) {
         return (this.localDB.save(objectDoc)
             .then(
                 () => {

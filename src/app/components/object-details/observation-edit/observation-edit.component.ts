@@ -63,8 +63,8 @@ export class ObservationEditComponent implements OnInit {
 
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
-                private route: Router, private editionService: EditionModeService, private objectDetails: ObjectDetails,
-                private mapManagerService: MapManagerService, public sirsDataService: SirsDataService) {
+                private route: Router, private editionService: EditionModeService,
+                private objectDetails: ObjectDetails, public sirsDataService: SirsDataService) {
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.isNewObject = !this.obsId;
@@ -193,6 +193,7 @@ export class ObservationEditComponent implements OnInit {
     }
 
     goMain() {
+        //think about clear photos already taken
         this.route.navigateByUrl('/main');
     }
 
@@ -218,7 +219,7 @@ export class ObservationEditComponent implements OnInit {
         delete this.objectDoc.prFin;
 
         // Save document.
-        this.editionService.saveObject(this.objectDoc).then(() => {
+        this.editionService.updateObject(this.objectDoc).then(() => {
             this.saving = false;
             this.route.navigateByUrl('/main');
         });

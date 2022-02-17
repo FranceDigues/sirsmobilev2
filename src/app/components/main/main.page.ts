@@ -91,12 +91,18 @@ export class MainPage implements AfterViewInit {
             this.mapManagerService.init(),
             this.shapesLayersManagerService.init()
         ])
+        .then(() => console.log("All layers are loaded successfully."));
 
         //Loading popup
         const loading = await this.loadingCtrl.create({message: 'Déploiement de la carte en cours'});
         loading.present();
 
-        //Complete current map with loaded layers
+        //Map création and loading layers
+        if (this.olService.getMap() !== null) {
+            //Force free memory use by the previous instance, avoid latency
+            this.olService.getMap().setTarget(null);
+            this.olService.map = null;
+        }
         this.olService.createMap('map');
         this.olService.getMap().setView(this.mapService.currentView);
         this.olService.addLayer(this.backLayerService.backLayer);
@@ -399,12 +405,5 @@ export class MainPage implements AfterViewInit {
             clickPixel = null;
             pointerIsDown = false;
         };
-    }
-
-    //Don't forget to destroy the map when leaving the component
-    //Fix latency problems on map
-    ngOnDestroy() {
-        this.olService.getMap().setTarget(null);
-        this.olService.map = null;
     }
 }
