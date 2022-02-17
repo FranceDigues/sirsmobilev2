@@ -83,7 +83,6 @@ export class MainPage implements AfterViewInit {
     }
 
     async ngAfterViewInit() {
-
         //Loading layers data
         await Promise.all([
             this.backLayerService.init(),
@@ -402,4 +401,10 @@ export class MainPage implements AfterViewInit {
         };
     }
 
+    //Don't forget to destroy the map when leaving the component
+    //Fix latency problems on map
+    ngOnDestroy() {
+        this.olService.getMap().setTarget(null);
+        this.olService.map = null;
+    }
 }

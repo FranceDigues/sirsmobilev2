@@ -29,5 +29,4 @@ export class DatabaseSyncComponent implements OnInit {
   goBack() {
     this.router.navigateByUrl('/main');
   }
-
 }
