@@ -6,21 +6,17 @@ import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
 import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
-import Cluster from 'ol/source/Cluster';
 import VectorSource from 'ol/source/Vector';
-import Style from 'ol/style/Style';
+import { Subject } from 'rxjs';
+import { PluginUtils } from '../utils/plugin-utils';
 import { AppLayersService } from './app-layers.service';
 import { FeatureCache } from './cache.service';
-import { MapService } from './map.service';
-import { DefaultStyle, RealPositionStyle } from './style.service';
-import { LocalDatabase } from './local-database.service';
-import { Subject } from 'rxjs';
-import { OLService } from '@ionic-lib/lib-map/ol.service';
-import { DatabaseService } from './database.service';
-import { PluginUtils } from '../utils/plugin-utils';
-import { SelectedObjectsService } from "./selected-objects.service";
 import { EditionLayerService } from "./edition-layer.service";
+import { LocalDatabase } from './local-database.service';
+import { MapService } from './map.service';
+import { SelectedObjectsService } from "./selected-objects.service";
 import { SirsDataService } from "./sirs-data.service";
+import { DefaultStyle, RealPositionStyle } from './style.service';
 
 @Injectable({
     providedIn: 'root'
@@ -38,8 +34,6 @@ export class MapManagerService {
                 private realPositionStyle: RealPositionStyle,
                 private DefaultStyleService: DefaultStyle,
                 private appLayersService: AppLayersService,
-                private olService: OLService,
-                private databaseService: DatabaseService,
                 private selectedObjectsService: SelectedObjectsService,
                 private editionLayerService: EditionLayerService
     ) {
@@ -73,19 +67,19 @@ export class MapManagerService {
 
     init() {
         return new Promise((resolve, reject) => {
-            this.createAppLayer()
+            if (this.appLayer) {
+                resolve(this.appLayer);
+            } else {
+                this.createAppLayer()
                 .then((appLayer: any) => {
                     this.appLayer = appLayer;
-                    if (this.appLayer) {
-                        this.olService.addLayer(this.appLayer);
-                    } else {
-                        console.warn("mapManagerService.appLayer is not initialized. If the app has been opened without any 'couche métier' loaded this is normal.");
-                    }
-                    resolve(appLayer);
+                    if (!this.appLayer) console.log("appLayer empty");
+                    resolve(this.appLayer);
                 }, (error) => {
                     console.error(error);
                     reject(error);
                 });
+            }
         });
     }
 
@@ -371,10 +365,7 @@ export class MapManagerService {
         });
     }
 
-    private async getAppLayerInstance(layerModel) {
-        if (!this.appLayer) {
-            await this.init();
-        }
+    private getAppLayerInstance(layerModel) {
         const layers = this.appLayer.getLayers().getArray();
         for (let i = 0; i < layers.length; i++) {
             if (layers[i].get('model') === layerModel) {
@@ -385,16 +376,12 @@ export class MapManagerService {
     }
 
     async syncAppLayer(layerModel) {
-        const olLayer = <any>await this.getAppLayerInstance(layerModel);
+        const olLayer = this.getAppLayerInstance(layerModel);
 
         olLayer.setVisible(layerModel.visible);
         olLayer.getSource().clear();
         if (layerModel.visible === true) {
-            // TODO loading here
-            this.setAppLayerFeatures(olLayer);
-            // setTimeout(() => {
-            //     this.setAppLayerFeatures(olLayer);
-            // }, 1000);
+            await this.setAppLayerFeatures(olLayer);
         }
     }
 
@@ -422,20 +409,19 @@ export class MapManagerService {
         collection[to] = tmp;
     }
 
-    async addLabelFeatureLayer(layerModel) {
-        const olLayer = <any>await this.getAppLayerInstance(layerModel);
+    addLabelFeatureLayer(layerModel) {
+        const olLayer = this.getAppLayerInstance(layerModel);
 
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 
-    async reloadLayer(layerModel) {
-        const olLayer = <any>await this.getAppLayerInstance(layerModel);
+    reloadLayer(layerModel) {
+        const olLayer = this.getAppLayerInstance(layerModel);
 
         // Load data if necessary.
         olLayer.getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
-
 }

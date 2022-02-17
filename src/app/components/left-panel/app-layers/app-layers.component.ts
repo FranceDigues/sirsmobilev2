@@ -26,10 +26,11 @@ export class AppLayersComponent implements OnInit {
     constructor(private appLayersService: AppLayersService,
                 public mapManagerService: MapManagerService,
                 private modalCtrl: ModalController,
-                private navCtrl: NavController,
                 private dbService: DatabaseService,
-                private editionLayerService: EditionLayerService,
-    ) {
+                private editionLayerService: EditionLayerService) {
+        this.mapManagerService.init().then(() => {
+            console.log("App layer initialized");
+        });
     }
 
     goBack() {
@@ -132,6 +133,4 @@ export class AppLayersComponent implements OnInit {
     onBack() {
         this.slidePathChange.emit('menu');
     }
-
-
 }

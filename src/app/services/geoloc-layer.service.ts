@@ -18,11 +18,14 @@ export class GeolocLayerService {
     geolocLayer: VectorLayer = null;
 
     constructor() {
-        this.init();
+        this.init().then();
     }
 
     init() {
-        this.geolocLayer = this.createGeolocLayer();
+        return new Promise((resolve) => {
+            this.geolocLayer = this.createGeolocLayer();
+            resolve();
+        })
     }
 
     getGeolocLayer() {

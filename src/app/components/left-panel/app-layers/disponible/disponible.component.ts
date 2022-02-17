@@ -13,7 +13,6 @@ import { EditionLayerService } from 'src/app/services/edition-layer.service';
 })
 export class LeftSlideDisponibleLayersComponent implements OnInit {
 
-
   @Output() readonly slidePathChange = new EventEmitter<any>();
 
   available = [];
@@ -73,30 +72,31 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     return false;
   }
 
-  toggleLayer(layerModel) {
+  async toggleLayer(layerModel) {
     if (this.isActive(layerModel)) {
       const index = this.appLayersService.removeFavorite(layerModel);
-      if (this.mapManagerService.appLayer) {
-        try {
-          this.mapManagerService.appLayer.getLayers().removeAt(index);
-        } catch {
-          // No layer at index.
-          console.warn('No layer at index : ', index);
-        }
-        this.editionLayerService.updateEditionLayerInstance(this.appLayersService.getFavorites());
+      if (!this.mapManagerService.appLayer) {
+        await this.mapManagerService.init();
       }
+      try {
+        this.mapManagerService.appLayer.getLayers().removeAt(index);
+      } catch {
+        // No layer at index.
+        console.warn('No layer at index : ', index);
+      }
+      this.editionLayerService.updateEditionLayerInstance(this.appLayersService.getFavorites());
     } else {
       this.appLayersService.addFavorite(layerModel);
-      if (this.mapManagerService.appLayer) {
-        const appLayerInstance = this.mapManagerService.createAppLayerInstance(layerModel);
-        appLayerInstance
-          .then(layer => {
-            this.mapManagerService.appLayer.getLayers().getArray().push(layer);
-          })
-          .catch(error => {
-            console.warn(layerModel, ' : Could not be added to the appLayer array.');
-          });
+      if (!this.mapManagerService.appLayer) {
+        await this.mapManagerService.init();
       }
+      this.mapManagerService.createAppLayerInstance(layerModel)
+        .then(layer => {
+          this.mapManagerService.appLayer.getLayers().getArray().push(layer);
+        })
+        .catch(error => {
+          console.warn(layerModel, ' : Could not be added to the appLayer array.');
+        });
     }
     this.updateFavorites();
   }
