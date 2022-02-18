@@ -119,6 +119,7 @@ export class TraitComponent implements OnInit {
             .then(() => {
                 this.document = undefined;
             });
+        //TODO Add layer to map ?? (like edit-mode.service)
     }
 
 

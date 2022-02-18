@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Coordinates, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
-import { DatabaseService } from './database.service';
-import { DatabaseModel } from '../components/database-connection/models/database.model';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +13,7 @@ export class GeolocationService {
     private enabled = false;
 
     constructor(private geolocation: Geolocation,
-                private loadingCtrl: LoadingController,
-                private databaseService: DatabaseService) {
+                private loadingCtrl: LoadingController) {
     }
 
     getCoords() {
