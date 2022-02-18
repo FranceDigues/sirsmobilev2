@@ -16,9 +16,9 @@ export class BaseFormComponent implements OnInit {
 
   attributeFilter = {
     "Prestation": ["borneDebutId", "borne_debut_aval", "borne_debut_distance", "positionDebut", "prDebut",
-    "borneFinId", "borne_fin_aval", "borne_fin_distance", "positionFin", "prFin", "systemeRepId",
-    "longitudeMin", "longitudeMax", "latitudeMin", "latitudeMax", "geometryMode", "editedGeoCoordinate",
-    "linearId"],
+      "borneFinId", "borne_fin_aval", "borne_fin_distance", "positionFin", "prFin", "systemeRepId",
+      "longitudeMin", "longitudeMax", "latitudeMin", "latitudeMax", "geometryMode", "editedGeoCoordinate",
+      "linearId"],
     "OuvrageAssocieAmenagementHydraulique": ["amenagementHydrauliqueId", "dependanceId"],
     "PrestationAmenagementHydraulique": ["amenagementHydrauliqueId", "dependanceId"],
     "AmenagementHydraulique": ["amenagementHydrauliqueId", "dependanceId"],

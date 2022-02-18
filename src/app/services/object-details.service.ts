@@ -360,8 +360,7 @@ export class ObjectDetails {
 
     private removeObjectId(receiverId, idToRemove, attribute) {
         this.localDB.get(receiverId)
-            .then(
-                (doc) => {
+            .then((doc) => {
                     if (doc) {
                         if (doc[attribute] && Array.isArray(doc[attribute]) && doc[attribute].indexOf(idToRemove) != -1) {
                             doc[attribute].splice(doc[attribute].indexOf(idToRemove), 1);
