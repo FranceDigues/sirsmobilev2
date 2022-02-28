@@ -3,8 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { AppLayersService } from '../../../services/app-layers.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import {LoadingController} from "@ionic/angular";
-// import { EditObjectService } from 'src/app/services/edit-object.service';
+import { LoadingController } from "@ionic/angular";
 
 @Component({
   selector: 'create-object',
@@ -17,10 +16,8 @@ export class CreateObjectComponent implements OnInit {
 
   constructor(public appLayersService: AppLayersService,
               private authService: AuthService,
-              private route: Router,
-              private loadingCtrl: LoadingController,
-              // private EOS: EditObjectService
-              ) { }
+              private router: Router,
+              private loadingControler: LoadingController) { }
 
   ngOnInit() {
   }
@@ -29,14 +26,15 @@ export class CreateObjectComponent implements OnInit {
     this.selectedLayer = layer;
   }
 
-    async addObject() {
-        this.loadingCtrl.create({message: 'Chargement'})
-            .then((loading) => {
-                loading.present();
-                const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
-                this.route.navigateByUrl('/object/' + encodeURIComponent(type) + '/');
-                loading.dismiss();
-            });
+  addObject() {
+    this.loadingControler.create({message: 'Chargement'})
+      .then((loading) => {
+        loading.present();
+        const type = this.selectedLayer.filterValue.substring(this.selectedLayer.filterValue.lastIndexOf('.') + 1);
+        const t = encodeURIComponent(type);
+        this.router.navigateByUrl('/object/' + t + '/')
+          .then(() => loading.dismiss());
+      });
     }
 
   showAddButtons() {
@@ -50,7 +48,6 @@ export class CreateObjectComponent implements OnInit {
       return false;
     }
   }
-
 }
 
 interface ConditionModel {
