@@ -11,7 +11,6 @@ import { GalleryModule } from './components/left-panel/gallery/gallery.module';
 import { DatabaseSyncComponent } from './components/database-sync/database-sync.component';
 import { DatabaseSyncModule } from './components/database-sync/database-sync.module';
 import { RightPanelModule } from './components/right-panel/right-panel.module';
-import { ObjectDocResolver } from './resolvers/object-doc-resolver';
 import { ObjectEditComponent } from './components/object-edit/object-edit.component';
 import { ObservationEditComponent } from './components/object-details/observation-edit/observation-edit.component';
 
@@ -44,9 +43,6 @@ const routes: Routes = [
     {
         path: 'object/:type/:id',
         component: ObjectEditComponent,
-        resolve: {
-            objectDoc: ObjectDocResolver
-        }
     },
     {
         path: 'observation/:objectId/:obsId',
