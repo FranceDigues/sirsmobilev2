@@ -8,7 +8,6 @@ import { getDistance } from 'ol/sphere';
 import { DatabaseService } from './database.service';
 import { EditionModeService } from './edition-mode.service';
 import { GeolocationService } from './geolocation.service';
-import { ObjectDocService } from './object-doc.service';
 import { UuidUtils as uuid } from '../utils/uuid-utils';
 import { PositionService } from './position.service';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
@@ -72,7 +71,7 @@ export class EditObjectService {
             if (this.isNew) {
                 this.objectDoc = this.editionModeService.newObject(type);
             } else {
-                this.objectDoc = this.localDB.get(id);
+                this.objectDoc = await this.localDB.get(id);
             }
 
             // Hack for borne fin data without borneFinId
@@ -88,7 +87,7 @@ export class EditObjectService {
 
             await this.initReferences();
             this.initTronconList();
-            if (this.isDependance()) this.initDependance();
+            if (this.isDependance()) await this.initDependance();
             this.initStartPosBorne();
             this.initEndPosBorne();
             this.initIsLinear();

@@ -11,7 +11,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { MapManagerService } from 'src/app/services/map-manager.service';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
 import { SirsDataService } from '../../../services/sirs-data.service';
