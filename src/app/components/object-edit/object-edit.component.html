@@ -251,7 +251,7 @@
                         </div>
                         <!-- Medias Part -->
                         <div class="full-height full-width" *ngIf="tab === 'medias'">
-                            <app-media-details [photos]="EOS.objectDoc.photos" [objectDoc]="objectDoc"
+                            <app-media-details [photos]="EOS.objectDoc.photos" [objectDoc]="EOS.objectDoc"
                                                (changeView)="setView($event)"></app-media-details>
                         </div>
                     </div>
@@ -281,5 +281,5 @@
 </div>
 <div class="full-height" *ngIf="view === 'media'">
     <app-media-form [coteList]="coteList" [orientationList]="orientationList" [objectType]="objectType"
-                    [objectDoc]="objectDoc" (changeView)="setView($event)"></app-media-form>
+                    [objectDoc]="EOS.objectDoc" (changeView)="setView($event)"></app-media-form>
 </div>
