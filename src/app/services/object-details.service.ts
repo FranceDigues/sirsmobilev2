@@ -41,6 +41,8 @@ export class ObjectDetails {
     // isDependance
     isDependance: boolean;
 
+    // isDeletable
+    isDeletable: boolean;
 
     constructor(private localDB: LocalDatabase, private route: Router,
         private editionService: EditionModeService, private mapManagerService: MapManagerService,
@@ -72,12 +74,41 @@ export class ObjectDetails {
 
         // isDependance
         this.isDependance = false;
+
+        // is deletable
+        this.isDeletable = false;
     }
 
     init() {
         if (this.selectedObject) {
+            let prestationClass: string;
+            let desordreClass: string;
+            let linearId: string;
             this.isDependance = PluginUtils.isDependanceAhDoc(this.selectedObject);
-            this.abstract = {};
+
+            this.initDisplayedValuesForReferences();
+            if (this.isDependance) {
+                desordreClass = 'fr.sirs.core.model.DesordreDependance';
+                prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+                linearId = null;
+            } else {
+                desordreClass = 'fr.sirs.core.model.Desordre';
+                prestationClass = 'fr.sirs.core.model.Prestation';
+                linearId = this.selectedObject.linearId;
+            }
+            this.initPrestation(prestationClass, linearId);
+            this.initDesordre(prestationClass, linearId);
+            this.initIsDeletable();
+        } else {
+            console.warn("object-details.service: you must define selectedObject before initialization.");
+        }
+    }
+
+    /*
+     * selectedObject must be initialized before using this method.
+     */
+    private initDisplayedValuesForReferences() {
+        this.abstract = {};
             const regex = new RegExp('.*Id$');
             for (let key in this.selectedObject) {
                 if (regex.test(key)) {
@@ -102,54 +133,56 @@ export class ObjectDetails {
                     );
                 }
             }
+    }
 
-            let prestationClass: string;
-            let desordreClass: string;
-            let linearId: string;
-            if (this.isDependance) {
-                desordreClass = 'fr.sirs.core.model.DesordreDependance';
-                prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
-                linearId = null;
-            } else {
-                desordreClass = 'fr.sirs.core.model.Desordre';
-                prestationClass = 'fr.sirs.core.model.Prestation';
-                linearId = this.selectedObject.linearId;
+    private initPrestation(prestationClass, linearId) {
+        this.localDB.query('Element/byClassAndLinear', {
+            startkey: [prestationClass, linearId],
+            endkey: [prestationClass, linearId, {}]
+        }).then(
+            (response) => {
+                this.prestationMap = {};
+                this.allPrestationList = response.map((elt) => {
+                    this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                    return elt.value;
+                });
+                this.filterPrestationList();
+                this.tempPrestation = null;
+            }, (err) => {
+                console.error(err);
             }
+        );
+    }
 
-            this.localDB.query('Element/byClassAndLinear', {
-                startkey: [prestationClass, linearId],
-                endkey: [prestationClass, linearId, {}]
-            }).then(
-                (response) => {
-                    this.prestationMap = {};
-                    this.allPrestationList = response.map((elt) => {
-                        this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
-                        return elt.value;
-                    });
-                    this.filterPrestationList();
-                    this.tempPrestation = null;
-                }, (err) => {
-                    console.error(err);
-                }
-            );
-            this.localDB.query('Element/byClassAndLinear', {
-                startkey: [desordreClass, linearId],
-                endkey: [desordreClass, linearId, {}]
-            }).then(
-                (response) => {
-                    this.desordreMap = {};
-                    this.allDesordreList = response.map((elt) => {
-                        this.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
-                        return elt.value;
-                    });
-                    this.filterDesordreList();
-                    this.tempDesordre = null;
-                }, (err) => {
-                    console.error(err);
-                }
-            );
-        } else {
-            console.warn("object-details.service: you must define selectedObject before init.");
+    private initDesordre(desordreClass, linearId) {
+        this.localDB.query('Element/byClassAndLinear', {
+            startkey: [desordreClass, linearId],
+            endkey: [desordreClass, linearId, {}]
+        }).then(
+            (response) => {
+                this.desordreMap = {};
+                this.allDesordreList = response.map((elt) => {
+                    this.desordreMap[elt.value.id] = elt.value.designation ? elt.value.designation : elt.value.id;
+                    return elt.value;
+                });
+                this.filterDesordreList();
+                this.tempDesordre = null;
+            }, (err) => {
+                console.error(err);
+            }
+        );
+    }
+
+    /*
+     * /!\ selectedObject must be initialized before using this method. /!\
+     */
+    private initIsDeletable() {
+        if (this.selectedObject.valid === true) {
+            delete this.selectedObject.createFromMobile;
+            this.localDB.save(this.selectedObject);
+        }
+        if (this.selectedObject.createFromMobile === true) {
+            this.isDeletable = true;
         }
     }
 
@@ -162,12 +195,10 @@ export class ObjectDetails {
         this.detailsType = 'objectDetails';
     }
 
-    async openDesordreLink(id) {
+    openDesordreLink(id) {
         if (this.isDependance) {
-            await this.EOS.init('DesordreDependance', id);
             this.route.navigateByUrl('/object/DesordreDependance/' + id);
         } else {
-            await this.EOS.init('Desordre', id);
             this.route.navigateByUrl('/object/Desordre/' + id);
         }
     }
@@ -231,12 +262,10 @@ export class ObjectDetails {
         });
     }
 
-    async openPrestationLink(id) {
+    openPrestationLink(id) {
         if (this.isDependance) {
-            await this.EOS.init('PrestationAmenagementHydraulique', id);
             this.route.navigateByUrl('/object/PrestationAmenagementHydraulique/' + id);
         } else {
-            await this.EOS.init('Prestation', id);
             this.route.navigateByUrl('/object/Prestation/' + id);
         }
     }
