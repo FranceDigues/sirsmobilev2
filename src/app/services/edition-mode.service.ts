@@ -79,6 +79,7 @@ export class EditionModeService {
     }
 
     createObject(objectDoc) {
+        objectDoc.createFromMobile = true;
         return (this.localDB.create(objectDoc)
             .then(
                 (doc) => {
