@@ -79,7 +79,7 @@ export class ObjectDetailsComponent implements OnInit {
         'OuvrageAssocieAmenagementHydraulique',
         'AmenagementHydraulique'
     ];
-    static editableDocumentClasses = [
+    static nonEditableDocumentClasses = [
         'fr.sirs.core.model.BorneDigue',
         'fr.sirs.core.model.TronconDigue',
         'fr.sirs.core.model.AmenagementHydraulique'
@@ -149,7 +149,7 @@ export class ObjectDetailsComponent implements OnInit {
     }
 
     canShowEditionButtons() {
-        if (ObjectDetailsComponent.editableDocumentClasses.indexOf(this.document['@class']) !== -1) {
+        if (ObjectDetailsComponent.nonEditableDocumentClasses.indexOf(this.document['@class']) !== -1) {
             return false;
         }
         if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
@@ -168,7 +168,6 @@ export class ObjectDetailsComponent implements OnInit {
     }
 
     async editObject() {
-        await this.EOS.init(this.objectType, this.document._id);
         this.route.navigateByUrl('/object/' + this.objectType + '/' + this.document._id);
     }
 
