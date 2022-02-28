@@ -36,7 +36,7 @@
         <ion-fab-button color="danger" (click)="editObject()" style="margin: 8px;">
             <ion-icon name="pencil-outline"></ion-icon>
         </ion-fab-button>
-        <ion-fab-button *ngIf="!document.valid" color="danger" (click)="removeObject()" style="margin: 8px;">
+        <ion-fab-button *ngIf="objectDetails.isDeletable" color="danger" (click)="removeObject()" style="margin: 8px;">
             <ion-icon name="trash-outline"></ion-icon>
         </ion-fab-button>
     </div>
