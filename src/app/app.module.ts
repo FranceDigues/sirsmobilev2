@@ -33,7 +33,6 @@ import { MapManagerService } from './services/map-manager.service';
 import { MapService } from './services/map.service';
 import { MapEditObjectService } from './services/map-edit-object.service';
 import { ObjectDetails } from './services/object-details.service';
-import { ObjectDocService } from './services/object-doc.service';
 import { SelectedObjectsService } from './services/selected-objects.service';
 import { ToastService } from './services/toast.service';
 import { FilterPipe } from './components/right-panel/create-object/create-object.component';
@@ -70,7 +69,7 @@ import { SirsDataService } from './services/sirs-data.service';
         SyncService, DatabaseService, AuthService,
         AppVersionsService, BackLayerService,
         SystemeEndiguement, AppTronconsService, DigueController,
-        TronconController, ObjectDocService, FilterPipe, EditObjectService,
+        TronconController, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
         ObservationEditService, Network, FileChooser, FilePath,
