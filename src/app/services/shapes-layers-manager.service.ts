@@ -80,6 +80,7 @@ export class ShapesLayersManagerService {
 
     this.allLayers.push(vectorLayer);
   }
+
   saveGeojson(sourceGeoJsonName: string, sourceGeoJson, visibility: boolean) {
     this.geoJsonArrayForDatabase.push({
       name: sourceGeoJsonName,

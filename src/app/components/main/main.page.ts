@@ -88,8 +88,7 @@ export class MainPage implements AfterViewInit {
             this.backLayerService.init(),
             this.geoLocLayer.init(),
             this.editionLayerService.init(),
-            this.mapManagerService.init(),
-            this.shapesLayersManagerService.init()
+            this.mapManagerService.init()
         ])
         .then(() => console.log("All layers are loaded successfully."));
 
@@ -109,6 +108,9 @@ export class MainPage implements AfterViewInit {
         this.olService.addLayer(this.editionLayerService.editionLayer);
         this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
         if (this.mapManagerService.appLayer) this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
+
+        //Loading layers from device
+        await this.shapesLayersManagerService.init();
 
         //Unable specific control to the map
         this.addMapControl();
