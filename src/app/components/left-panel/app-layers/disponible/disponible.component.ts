@@ -45,9 +45,12 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
 
   private sortOn() {
     return (a, b) => {
-      if (a.title.toLowerCase() < b.title.toLowerCase()) {
+      const lowtitlea = a.title.toLowerCase();
+      const lowtitleb = b.title.toLowerCase();
+
+      if (lowtitlea.localeCompare(lowtitleb) < 0) {
         return -1;
-      } else if (a.title.toLowerCase() > b.title.toLowerCase()){
+      } else if (lowtitlea.localeCompare(lowtitleb) > 0){
         return 1;
       } else {
           return 0;
