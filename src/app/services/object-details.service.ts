@@ -100,7 +100,7 @@ export class ObjectDetails {
             this.initDesordre(prestationClass, linearId);
             this.initIsDeletable();
         } else {
-            console.warn("object-details.service: you must define selectedObject before initialization.");
+            console.error("Unexpected behavior: you must define selectedObject before initialization.");
         }
     }
 
@@ -183,6 +183,8 @@ export class ObjectDetails {
         }
         if (this.selectedObject.createFromMobile === true) {
             this.isDeletable = true;
+        } else {
+            this.isDeletable = false;
         }
     }
 

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BaseFormComponent } from './base-form/base-form.component';
 import { CoteDigueGenericComponent } from './cote-digue/cote-digue.component';
 import { CreteComponent } from './crete/crete.component';
+import { DesordreDependanceAhComponent } from './desordre-dependance-ah/desordre-dependance-ah.component';
 import { DesordreComponent, RefSortPipe } from './desordre/desordre.component';
 import { FonctionHautBasIdGenericComponent } from './fonction-haut-bas-id/fonction-haut-bas-id.component';
 import { FonctionIdGenericComponent } from './fonction-id/fonction-id.component';
@@ -63,7 +64,7 @@ import { VoieDigueComponent } from './voie-digue/voie-digue.component';
     CoteDigueGenericComponent, UsageIdGenericComponent, NatureIdGenericComponent,
     FonctionIdGenericComponent, FonctionHautBasIdGenericComponent,
     NatureHautBasIdGenericComponent, MateriauHautBasIdGenericComponent,
-    BaseFormComponent
+    BaseFormComponent, DesordreDependanceAhComponent
   ],
   exports: [FormsTemplateComponent]
 })

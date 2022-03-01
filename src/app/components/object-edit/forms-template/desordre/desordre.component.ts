@@ -10,28 +10,40 @@ import { FilterPipe } from '../../../right-panel/create-object/create-object.com
 })
 export class DesordreComponent implements OnInit {
 
+  filteredTypeDesordreList = [];
+
   constructor(public EOS: EditObjectService, public filterPipe: FilterPipe,
               private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.FT.initCategorie();
-    this.initType();
     this.FT.initPosition();
     this.FT.initCote();
+    this.initfilteredTypeDesordreList();
   }
 
-  changeCategorie() {
-    const condition = { categorieId: this.EOS.objectDoc.categorieDesordreId };
-    const sortedArray = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, condition);
-
-    this.EOS.objectDoc.typeDesordreId = sortedArray[0]._id;
+  private initfilteredTypeDesordreList() {
+    this.filteredTypeDesordreList = this.EOS.refs.RefTypeDesordre;
   }
 
-  initType() {
-    const condition = { categorieId: this.EOS.objectDoc.categorieDesordreId };
-    const sortedArray = this.filterPipe.transform(this.EOS.refs.RefTypeDesordre, condition);
+  private changeType() {
+    if (this.EOS.objectDoc.typeDesordreId && this.EOS.objectDoc.typeDesordreId !== '') {
+      const typeDesordre = this.EOS.refs.RefTypeDesordre.find(typeDesordre => typeDesordre._id === this.EOS.objectDoc.typeDesordreId);
+      if (typeDesordre) {
+        this.EOS.objectDoc.categorieDesordreId = typeDesordre.categorieId;
+      }
+    }
+  }
 
-    this.EOS.objectDoc.typeDesordreId = this.EOS.objectDoc.typeDesordreId || sortedArray[0]._id;
+  private changeCategorie() {
+    if (this.EOS.objectDoc.categorieDesordreId && this.EOS.objectDoc.categorieDesordreId !== '') {
+      const typesFilteredByCategorie = this.EOS.refs.RefTypeDesordre.filter(
+        typeDesordre => typeDesordre.categorieId === this.EOS.objectDoc.categorieDesordreId
+      )
+      this.filteredTypeDesordreList = typesFilteredByCategorie;
+    } else {
+      this.filteredTypeDesordreList = this.EOS.refs.RefTypeDesordre;
+    }
+    this.EOS.objectDoc.typeDesordreId = null;
   }
 }
 

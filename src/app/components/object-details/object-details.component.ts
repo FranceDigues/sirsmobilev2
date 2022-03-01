@@ -99,7 +99,6 @@ export class ObjectDetailsComponent implements OnInit {
                 private localDB: LocalDatabase,
                 private editionLayerService: EditionLayerService,
                 private selectedObjectsService: SelectedObjectsService,
-                private EOS: EditObjectService,
                 private appLayersService: AppLayersService) {
         this.activeTab = 'description';
         this.objectDetails.detailsType = 'objectDetails';

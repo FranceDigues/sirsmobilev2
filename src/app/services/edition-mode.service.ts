@@ -160,7 +160,6 @@ export class EditionModeService {
         const promises = [];
 
         this.refTypes.forEach((refType) => {
-
             const classPath = 'fr.sirs.core.model.' + refType.name;
             const promise = new Promise((resolve, rejects) => {
                 this.localDB.query('byClassAndLinearRef', {
