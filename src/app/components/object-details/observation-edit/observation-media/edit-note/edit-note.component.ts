@@ -56,11 +56,17 @@ export class EditNoteComponent implements AfterViewInit {
     );
   }
 
+  private radioGroupChange(event) {
+    this.selectedColor = event.detail.value;
+  }
+
   startDrawing(ev) {
     this.drawing = true;
     let pageX: number;
     let pageY: number;
     let canvasPosition = this.canvasElement.getBoundingClientRect();
+    let ctx = this.canvasElement.getContext('2d');
+    ctx.lineWidth = 5;
 
     if (ev.touches) {
       pageX = ev.touches[0].pageX;
@@ -80,10 +86,6 @@ export class EditNoteComponent implements AfterViewInit {
   clearCanvas() {
     let ctx = this.canvasElement.getContext('2d');
     ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-  }
-
-  selectColor(color) {
-    this.selectedColor = color;
   }
 
   moved(ev) {
@@ -106,7 +108,6 @@ export class EditNoteComponent implements AfterViewInit {
 
     ctx.lineJoin = 'round';
     ctx.strokeStyle = this.selectedColor;
-    ctx.lineWidth = this.lineWidth;
 
     ctx.beginPath();
     ctx.moveTo(this.saveX, this.saveY);
@@ -152,5 +153,4 @@ export class EditNoteComponent implements AfterViewInit {
       );
     });
   }
-
 }

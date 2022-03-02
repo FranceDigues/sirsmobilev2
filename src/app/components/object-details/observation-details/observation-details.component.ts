@@ -68,12 +68,12 @@ export class ObservationDetailsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.OES.setValuesToDefault();
         this.OES.photos = this.photos;
         this.OES.objectDoc = this.objectDoc;
         this.OES.loaded = this.loaded;
         this.OES.showContent = this.showContent;
         this.OES.doc = this.doc;
-
         for (let photo of this.photos) {
             this.OES.loadImage(photo, true);
         }

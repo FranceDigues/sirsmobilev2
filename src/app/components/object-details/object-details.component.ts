@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
 import {ObjectDetails} from 'src/app/services/object-details.service';
 import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
@@ -6,7 +6,6 @@ import {AlertController} from '@ionic/angular';
 import {LocalDatabase} from '../../services/local-database.service';
 import {SelectedObjectsService} from 'src/app/services/selected-objects.service';
 import {EditionLayerService} from '../../services/edition-layer.service';
-import {EditObjectService} from 'src/app/services/edit-object.service';
 import {PluginUtils} from 'src/app/utils/plugin-utils';
 import {AppLayersService} from "../../services/app-layers.service";
 

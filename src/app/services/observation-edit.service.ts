@@ -129,6 +129,7 @@ export class ObservationEditService {
 
     setValuesToDefault() {
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
+        this.mediaPath = `${this.file.dataDirectory}medias`;
         this.mediaOptions = {
             id: '',
             chemin: '',
