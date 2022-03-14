@@ -13,6 +13,7 @@ import { DatabaseSyncModule } from './components/database-sync/database-sync.mod
 import { RightPanelModule } from './components/right-panel/right-panel.module';
 import { ObjectEditComponent } from './components/object-edit/object-edit.component';
 import { ObservationEditComponent } from './components/object-details/observation-edit/observation-edit.component';
+import { PhotoEditComponent } from './components/object-edit/photo-edit/photo-edit.component';
 
 const routes: Routes = [
     {
@@ -47,6 +48,10 @@ const routes: Routes = [
     {
         path: 'observation/:objectId/:obsId',
         component: ObservationEditComponent
+    },
+    {
+        path: 'photo/:parentId/:photoId',
+        component: PhotoEditComponent
     }
 ];
 
