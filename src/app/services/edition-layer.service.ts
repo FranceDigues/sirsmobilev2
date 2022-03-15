@@ -199,11 +199,12 @@ export class EditionLayerService {
             } else {
                 // Calculate approximate position for objects without position
             }
-
         }
 
         const feature = new Feature({ geometry });
-        feature.setStyle(this.editionLayerStyle.style(this.mapService.selection, feature, geometry.getType()));
+        const style = featureDoc['@class'] === 'fr.sirs.core.model.TronconDigue' ?
+            this.editionLayerStyle.tronconStyle() : this.editionLayerStyle.style(this.mapService.selection, feature, geometry.getType());
+        feature.setStyle(style);
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);

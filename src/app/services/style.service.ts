@@ -207,6 +207,36 @@ export class EditionLayerStyle {
         }
     }
 
+    tronconStyle() {
+        return () => {
+            const styles = [];
+
+            styles.push(this.getStyle.line(
+                this.EDITION_LAYER_COLOR_2,
+                this.EDITION_LAYER_STROKE_WIDTH,
+                [30, 20],
+                1
+            ));
+            const pointStyle = this.getStyle.point(
+                this.EDITION_LAYER_COLOR_1,
+                this.EDITION_LAYER_COLOR_2,
+                this.EDITION_LAYER_STROKE_WIDTH,
+                this.EDITION_LAYER_CIRCLE_RADIUS,
+                2
+            );
+            pointStyle.setGeometry(
+                (featureGeo) => {
+                    return new MultiPoint([
+                        featureGeo.getGeometry().getFirstCoordinates(),
+                        featureGeo.getGeometry().getLastCoordinates()
+                    ]);
+                }
+            );
+            styles.push(pointStyle);
+            return styles;
+        };
+    }
+
     private createPointStyleFunc(selection, feature, featureModel?, layerModel?) {
         return () => {
             if (selection.active && selection.active === feature) {
