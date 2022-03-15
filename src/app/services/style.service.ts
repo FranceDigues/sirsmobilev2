@@ -226,10 +226,13 @@ export class EditionLayerStyle {
             );
             pointStyle.setGeometry(
                 (featureGeo) => {
-                    return new MultiPoint([
-                        featureGeo.getGeometry().getFirstCoordinates(),
-                        featureGeo.getGeometry().getLastCoordinates()
-                    ]);
+                    const coordinates = featureGeo.getGeometry().getCoordinates();
+                    if (coordinates.length >= 3) {
+                        const mpCoords = [coordinates[0], coordinates[coordinates.length - 1]]
+                        return new MultiPoint(mpCoords);
+                    } else {
+                        return new MultiPoint(coordinates);
+                    }
                 }
             );
             styles.push(pointStyle);
