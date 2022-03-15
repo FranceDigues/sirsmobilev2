@@ -1,0 +1,53 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Photo</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="scroll-contents">
+  <div class="sirs-section">
+    <div class="sirs-field">
+      <span class="sirs-field-title">Numéro de désignation</span>
+      <span class="sirs-field-value" [textContent]="objectDetails.selectedPhoto.designation || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+      <span class="sirs-field-title">Libellé</span>
+      <span class="sirs-field-value" [textContent]="objectDetails.selectedPhoto.libelle || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+      <span class="sirs-field-title">Orientation</span>
+      <span class="sirs-field-value" [textContent]="orientationPhoto || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+      <span class="sirs-field-title">Côté</span>
+      <span class="sirs-field-value" [textContent]="cote || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+      <span class="sirs-field-title">Photographe</span>
+      <span class="sirs-field-value" [textContent]="photographe || 'Non définie'"></span>
+    </div>
+    <div class="sirs-field">
+      <span class="sirs-field-title">Commentaire</span>
+      <span class="sirs-field-value" [textContent]="objectDetails.selectedPhoto.commentaire || 'Non définie'"></span>
+    </div>
+  </div>
+  <ng-container>
+    <img (click)="open()" alt="Photo non disponible sur le mobile" [src]="photoPath"/>
+    <span style="padding-left: 5px;">{{ objectDetails.selectedPhoto.id }}</span>
+  </ng-container>
+  <div style="height: 200px;"></div>
+</ion-content>
+<div *ngIf="canShowEditionButtons()">
+  <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="start" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="editObject()">
+      <ion-icon name="create"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="removePhoto()">
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</div>
