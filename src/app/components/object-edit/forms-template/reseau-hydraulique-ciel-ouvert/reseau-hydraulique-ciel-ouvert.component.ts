@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
+import { LabelService } from 'src/app/services/label.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { EditObjectService } from '../../../../services/edit-object.service';
 })
 export class ReseauHydrauliqueCielOuvertComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService, private labelService: LabelService) { }
 
   ngOnInit() {
     this.initTypeReseauHydroCielOuvert();

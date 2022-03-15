@@ -49,6 +49,7 @@ import { GeolocLayerService } from './services/geoloc-layer.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { SirsDataService } from './services/sirs-data.service';
+import { LabelService } from './services/label.service';
 
 @NgModule({
     declarations: [AppComponent],
@@ -67,7 +68,7 @@ import { SirsDataService } from './services/sirs-data.service';
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         MapManagerService, GeolocLayerService, EditionLayerService,
         SyncService, DatabaseService, AuthService,
-        AppVersionsService, BackLayerService,
+        AppVersionsService, BackLayerService, LabelService,
         SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,

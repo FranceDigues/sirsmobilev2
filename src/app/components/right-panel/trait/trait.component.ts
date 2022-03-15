@@ -7,6 +7,7 @@ import WKT from 'ol/format/WKT';
 import { TrackerService } from '../../../services/tracker.service';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import {SirsDataService} from "../../../services/sirs-data.service";
+import { LabelService } from 'src/app/services/label.service';
 
 @Component({
     selector: 'trait',
@@ -42,7 +43,7 @@ export class TraitComponent implements OnInit {
                 private trackerService: TrackerService,
                 private authService: AuthService,
                 private localDatabase: LocalDatabase,
-                private formTemplate: FormsTemplateService) {
+                private labelService: LabelService) {
     }
 
     ngOnInit() {
@@ -137,9 +138,4 @@ export class TraitComponent implements OnInit {
         const geometry = (new LineString(this.coordinates)).transform(this.dataProjection, 'EPSG:3857');
         return this.wktFormat.writeGeometry(geometry);
     }
-
-    toString(doc) {
-        return this.formTemplate.doc2String(doc);
-    }
-
 }

@@ -90,7 +90,7 @@
   <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
     <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
       [selected]="EOS.objectDoc.securiteId === r.id">
-      {{ EOS.title(r) }}
+      {{ labelService.doc2String(r) }}
     </option>
   </select>
 </div>

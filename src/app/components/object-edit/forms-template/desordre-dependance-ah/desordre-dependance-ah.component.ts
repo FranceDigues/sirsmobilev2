@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseFormComponent } from 'src/app/components/object-edit/forms-template/base-form/base-form.component';
 import { EditObjectService } from 'src/app/services/edit-object.service';
+import { LabelService } from 'src/app/services/label.service';
 
 @Component({
   selector: 'form-desordre-dependance-ah',
@@ -11,8 +12,8 @@ export class DesordreDependanceAhComponent extends BaseFormComponent {
 
   filteredTypeDesordreList = [];
 
-  constructor(public EOS: EditObjectService) {
-    super(EOS);
+  constructor(public EOS: EditObjectService, public labelService: LabelService) {
+    super(EOS, labelService);
     this.initfilteredTypeDesordreList();
   }
 

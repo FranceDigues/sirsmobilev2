@@ -54,7 +54,7 @@
                 <select id="parent" name="parent" class="browser-default" required
                     [(ngModel)]="document[trait.attributeReference]">
                     <option *ngFor="let p of trait.parentValues" [value]="p.id">
-                        {{ toString(p) }}
+                        {{ labelService.doc2String(p) }}
                     </option>
                 </select>
             </div>
