@@ -116,10 +116,7 @@ export class ObservationEditComponent implements OnInit {
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
             });
-
         this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
-
-
     }
 
     createNewObservation() {
