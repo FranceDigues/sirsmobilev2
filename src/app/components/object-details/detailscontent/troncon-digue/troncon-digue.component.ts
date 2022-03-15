@@ -8,7 +8,7 @@ import { ObjectDetails } from 'src/app/services/object-details.service';
 })
 export class TronconDigueComponent {
 
-  @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
+  @Input() activeTab: 'description' | 'photos';
 
   constructor(public detailsObject: ObjectDetails) { }
 

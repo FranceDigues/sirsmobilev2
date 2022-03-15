@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 export class DetailsContentComponent {
 
     @Input() objectType;
-    @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
+    @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres' | 'photos';
 }
