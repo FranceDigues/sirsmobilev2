@@ -26,6 +26,7 @@ export class EditNoteComponent implements AfterViewInit {
 
   constructor(private platform: Platform, private base64ToGallery: Base64ToGallery,
               private toastCtrl: ToastController, private file: File,
+              //private androidPermissions: AndroidPermissions,  #TODO: can be use to ask permission access before saving file in the gallery
               private webview: WebView) {
                 this.colors = [
                   '#9e2956',
@@ -119,6 +120,26 @@ export class EditNoteComponent implements AfterViewInit {
     this.saveX = currentX;
     this.saveY = currentY;
   }
+
+  //TODO: bug when saving note and access to gallery is disable
+//   checkPermissions() {
+//     this.androidPermissions
+//     .checkPermission(this.androidPermissions
+//     .PERMISSION.WRITE_EXTERNAL_STORAGE)
+//     .then((result) => {
+//      console.log('Has permission?',result.hasPermission);
+//      this.hasWriteAccess = result.hasPermission;
+//    },(err) => {
+//        this.androidPermissions
+//          .requestPermission(this.androidPermissions
+//          .PERMISSION.WRITE_EXTERNAL_STORAGE);
+//     });
+//     if (!this.hasWriteAccess) {
+//       this.androidPermissions
+//         .requestPermissions([this.androidPermissions
+//         .PERMISSION.WRITE_EXTERNAL_STORAGE]);
+//     }
+//  }
 
   exportCanvasImage(): Promise<any> {
     return new Promise((resolve, rejects) => {
