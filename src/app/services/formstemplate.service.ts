@@ -171,41 +171,6 @@ export class FormsTemplateService {
         this.EOS.setupRef('fonctionnementId', this.EOS.refs.RefFonctionnementOAAH[0]);
     }
 
-
-    doc2String(doc) {
-        if (this.EOS.showTextConfig === "fullName") {
-            return doc.libelle ? doc.libelle : "libellé indéterminé / id:  " + doc._id
-        } else if (this.EOS.showTextConfig === "abstract") {
-            if (doc.abrege) {
-                return doc.abrege;
-            } else {
-                let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
-                let designation = doc.designation ? doc.designation : "designation indéterminée";
-                return designation + " : " + libelle;
-            }
-        } else if (this.EOS.showTextConfig === "both") {
-            let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
-            if (doc.abrege) {
-                return doc.abrege + " : " + libelle;
-            } else {
-                let designation = doc.designation ? doc.designation : "désignation indéterminée";
-                return designation + " : " + libelle;
-            }
-        } else {
-            let libelle = doc.libelle ? doc.libelle : "libellé indéterminé";
-            if (doc.abrege) {
-                return doc.abrege + " : " + libelle;
-            } else {
-                if (!doc.libelle && !doc.designation) {
-                    return "id: " + doc._id;
-                } else {
-                    let designation = doc.designation ? doc.designation : "désignation indéterminée";
-                    return designation + " : " + libelle;
-                }
-            }
-        }
-    }
-
     attributeNameOfObjectFromClass(objectType, clazz) {
         for (let key in formTemplatePilote[objectType]) {
             let value = formTemplatePilote[objectType][key];
