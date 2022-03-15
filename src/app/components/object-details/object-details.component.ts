@@ -1,13 +1,13 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild, ElementRef} from '@angular/core';
-import {ObjectDetails} from 'src/app/services/object-details.service';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
-import {AlertController} from '@ionic/angular';
-import {LocalDatabase} from '../../services/local-database.service';
-import {SelectedObjectsService} from 'src/app/services/selected-objects.service';
-import {EditionLayerService} from '../../services/edition-layer.service';
-import {PluginUtils} from 'src/app/utils/plugin-utils';
-import {AppLayersService} from "../../services/app-layers.service";
+import { Component, EventEmitter, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
+import { ObjectDetails } from 'src/app/services/object-details.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { LocalDatabase } from '../../services/local-database.service';
+import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
+import { EditionLayerService } from '../../services/edition-layer.service';
+import { PluginUtils } from 'src/app/utils/plugin-utils';
+import { AppLayersService } from "../../services/app-layers.service";
 
 declare var M: any;
 
@@ -78,6 +78,9 @@ export class ObjectDetailsComponent implements OnInit {
         'OuvrageAssocieAmenagementHydraulique',
         'AmenagementHydraulique'
     ];
+    static photoObjectType = [
+        'TronconDigue'
+    ];
     static nonEditableDocumentClasses = [
         'fr.sirs.core.model.BorneDigue',
         'fr.sirs.core.model.TronconDigue',
@@ -87,18 +90,18 @@ export class ObjectDetailsComponent implements OnInit {
     @Output() readonly statusChange = new EventEmitter<string>();
     @ViewChild('tabs') tabsMaterialize: ElementRef;
 
-    activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
+    activeTab: 'description' | 'observations' | 'prestations' | 'desordres' | 'photos';
     document;
     objectType;
 
     constructor(public objectDetails: ObjectDetails,
-                private authService: AuthService,
-                private route: Router,
-                private alertCtrl: AlertController,
-                private localDB: LocalDatabase,
-                private editionLayerService: EditionLayerService,
-                private selectedObjectsService: SelectedObjectsService,
-                private appLayersService: AppLayersService) {
+        private authService: AuthService,
+        private route: Router,
+        private alertCtrl: AlertController,
+        private localDB: LocalDatabase,
+        private editionLayerService: EditionLayerService,
+        private selectedObjectsService: SelectedObjectsService,
+        private appLayersService: AppLayersService) {
         this.activeTab = 'description';
         this.objectDetails.detailsType = 'objectDetails';
         this.document = this.objectDetails.selectedObject;
@@ -106,16 +109,7 @@ export class ObjectDetailsComponent implements OnInit {
         this.objectDetails.init();
     }
 
-    ngOnInit() {
-    }
-
-    // ngAfterViewInit() {
-    // WTF ??
-    // const elem = this.tabsMaterialize.nativeElement;
-    // const options = {};
-    // new M.Tabs(elem, options);
-    // }
-
+    ngOnInit() { }
 
     goBack() {
         this.statusChange.emit('general');
@@ -131,6 +125,10 @@ export class ObjectDetailsComponent implements OnInit {
 
     canShowObservationsTab() {
         return ObjectDetailsComponent.observationsObjectType.indexOf(this.objectType) !== -1;
+    }
+
+    canShowPhotosTab() {
+        return ObjectDetailsComponent.photoObjectType.indexOf(this.objectType) !== -1;
     }
 
     canShowPrestationsTab() {
@@ -163,6 +161,10 @@ export class ObjectDetailsComponent implements OnInit {
 
     canAddObservation() {
         return this.activeTab === 'observations' && this.authService.getValue().role !== 'GUEST';
+    }
+
+    canAddPhoto() {
+        return this.activeTab === 'photos' && this.authService.getValue().role !== 'GUEST';
     }
 
     async editObject() {
@@ -210,5 +212,9 @@ export class ObjectDetailsComponent implements OnInit {
 
     addObservation() {
         this.route.navigateByUrl('/observation/' + this.document._id.toString() + '/');
+    }
+
+    addPhoto() {
+        this.route.navigateByUrl('/photo/' + this.document._id.toString() + '/');
     }
 }
