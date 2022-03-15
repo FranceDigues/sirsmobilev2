@@ -7,6 +7,7 @@ import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
 import { EditObjectService } from './edit-object.service';
 import { PluginUtils } from '../utils/plugin-utils';
+import { LabelService } from './label.service';
 
 @Injectable({
     providedIn: 'root'
@@ -22,9 +23,10 @@ export class ObjectDetails {
     selectedFeatures: Array<any>;
     selectedObject;
     selectedObservation;
+    selectedPhoto;
 
     abstract;
-    detailsType: 'objectDetails' | 'observationDetails';
+    detailsType: 'objectDetails' | 'observationDetails' | 'photoDetails';
 
     // Prestations
     prestationMap: Object;
@@ -47,7 +49,7 @@ export class ObjectDetails {
     constructor(private localDB: LocalDatabase, private route: Router,
         private editionService: EditionModeService, private mapManagerService: MapManagerService,
         private alertCtrl: AlertController, private formService: FormsTemplateService,
-        private EOS: EditObjectService) {
+        private labelService: LabelService) {
         // Paths
         this.photoDir = null;
         this.notesDir = null;
@@ -91,6 +93,10 @@ export class ObjectDetails {
                 desordreClass = 'fr.sirs.core.model.DesordreDependance';
                 prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
                 linearId = null;
+            } else if (this.selectedObject['@class'] === 'fr.sirs.core.model.Photo') {
+                desordreClass = 'fr.sirs.core.model.Desordre';
+                prestationClass = 'fr.sirs.core.model.Prestation';
+                linearId = null;
             } else {
                 desordreClass = 'fr.sirs.core.model.Desordre';
                 prestationClass = 'fr.sirs.core.model.Prestation';
@@ -109,30 +115,30 @@ export class ObjectDetails {
      */
     private initDisplayedValuesForReferences() {
         this.abstract = {};
-            const regex = new RegExp('.*Id$');
-            for (let key in this.selectedObject) {
-                if (regex.test(key)) {
-                    const value = this.selectedObject[key];
-                    this.localDB.get(value).then(
-                        (doc) => {
-                            this.abstract[key.substr(0, key.length - 2)] = this.formService.doc2String(doc);
-                        },
-                        (error) => {
-                            console.log('No document found for this ID (' + value + '). ' + error);
-                        }
-                    );
-                } else if (key.toLowerCase() === 'author') {
-                    const value = this.selectedObject[key];
-                    this.localDB.get(value).then(
-                        (doc) => {
-                            this.abstract['author'] = doc.login;
-                        },
-                        (error) => {
-                            console.log('No document found for this author ID (' + value + '). ' + error);
-                        }
-                    );
-                }
+        const regex = new RegExp('.*Id$');
+        for (let key in this.selectedObject) {
+            if (regex.test(key)) {
+                const value = this.selectedObject[key];
+                this.localDB.get(value).then(
+                    (doc) => {
+                        this.abstract[key.substr(0, key.length - 2)] = this.labelService.doc2String(doc);
+                    },
+                    (error) => {
+                        console.log('No document found for this ID (' + value + '). ' + error);
+                    }
+                );
+            } else if (key.toLowerCase() === 'author') {
+                const value = this.selectedObject[key];
+                this.localDB.get(value).then(
+                    (doc) => {
+                        this.abstract['author'] = doc.login;
+                    },
+                    (error) => {
+                        console.log('No document found for this author ID (' + value + '). ' + error);
+                    }
+                );
             }
+        }
     }
 
     private initPrestation(prestationClass, linearId) {
@@ -177,7 +183,8 @@ export class ObjectDetails {
      * /!\ selectedObject must be initialized before using this method. /!\
      */
     private initIsDeletable() {
-        if (this.selectedObject.valid === true) {
+        //delete createFromMobile attribute if object are already validate
+        if (this.selectedObject.valid === true && this.selectedObject.createFromMobile) {
             delete this.selectedObject.createFromMobile;
             this.localDB.save(this.selectedObject);
         }
@@ -191,6 +198,11 @@ export class ObjectDetails {
     openObservationDetails(observation) {
         this.selectedObservation = observation;
         this.detailsType = 'observationDetails';
+    }
+
+    openPhotoDetails(photo) {
+        this.selectedPhoto = photo;
+        this.detailsType = 'photoDetails';
     }
 
     backToObjectDetails() {
@@ -392,22 +404,22 @@ export class ObjectDetails {
     private removeObjectId(receiverId, idToRemove, attribute) {
         this.localDB.get(receiverId)
             .then((doc) => {
-                    if (doc) {
-                        if (doc[attribute] && Array.isArray(doc[attribute]) && doc[attribute].indexOf(idToRemove) != -1) {
-                            doc[attribute].splice(doc[attribute].indexOf(idToRemove), 1);
-                        }
-                        doc.valid = false;
-                        doc.dateMaj = new Date().toISOString().split('T')[0];
-                        doc.editMode = true;
-                        this.editionService.updateObject(doc)
-                            .then(() => {
-                                this.mapManagerService.syncAllAppLayer();
-                                this.mapManagerService.clearAll();
-                            });
-                    } else {
-                        console.error("Document (" + receiverId + ") not found.");
+                if (doc) {
+                    if (doc[attribute] && Array.isArray(doc[attribute]) && doc[attribute].indexOf(idToRemove) != -1) {
+                        doc[attribute].splice(doc[attribute].indexOf(idToRemove), 1);
                     }
-                },
+                    doc.valid = false;
+                    doc.dateMaj = new Date().toISOString().split('T')[0];
+                    doc.editMode = true;
+                    this.editionService.updateObject(doc)
+                        .then(() => {
+                            this.mapManagerService.syncAllAppLayer();
+                            this.mapManagerService.clearAll();
+                        });
+                } else {
+                    console.error("Document (" + receiverId + ") not found.");
+                }
+            },
                 (err) => {
                     throw new Error(err);
                 }
