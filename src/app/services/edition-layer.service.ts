@@ -76,10 +76,10 @@ export class EditionLayerService {
                 .then(results => {
                     const editModePhotos = []; //photo treatment
                     function extractPhotos() {
-                        results.foreach(result => {
+                        results.forEach(result => {
                             if ("fr.sirs.core.model.TronconDigue" === result.doc['@class'] && result.doc.photos) {
                                 const trId = result.doc._id;
-                                result.doc.photos.foreach(p => {
+                                result.doc.photos.forEach(p => {
                                     if (p.editMode) {
                                         p.parent = trId;
                                         editModePhotos.push(p);
