@@ -67,7 +67,8 @@ export const designDocs = [
                         || (doc.geometry
                             && (doc['@class'].toLowerCase().indexOf('dependance') > -1
                             || doc['@class'].toLowerCase().indexOf('amenagementhydraulique') > -1
-                            || doc['@class'].toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective')))) {
+                            || doc['@class'].toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective'
+                            || doc['@class'].toLowerCase() === 'fr.sirs.core.model.troncondigue')))) { //TODO: eventually made a special request for TronconDigue to optimize (without borneIds)
                         emit(doc._id, {
                             '@class': doc['@class'],
                             'id': doc._id,
