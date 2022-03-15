@@ -48,6 +48,10 @@ export class CreateObjectComponent implements OnInit {
       return false;
     }
   }
+
+  layersWithoutPhotoTroncon() {
+    return this.appLayersService.getFavorites().filter(l => l.title !== 'Photos des tronçons');
+  }
 }
 
 interface ConditionModel {

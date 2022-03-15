@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
 import {SelectedObjectsService} from 'src/app/services/selected-objects.service';
 import {LocalDatabase} from '../../../services/local-database.service';
 import {ObjectDetails} from '../../../services/object-details.service';
-import {Toast} from '@ionic-native/toast/ngx';
 import Feature from 'ol/Feature';
 import {MapService} from "../../../services/map.service";
 
@@ -18,11 +17,10 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     subscription = null;
 
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
-                private localDB: LocalDatabase, private toast: Toast,
+                private localDB: LocalDatabase,
                 private objectDetails: ObjectDetails,
                 private mapService: MapService) {
     }
-
 
     get features(): Array<Feature> {
         return this.selectedObjectsService.features;
@@ -60,15 +58,34 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     openDetails(feature) {
         feature.set('visited', true);
         this.mapService.selection.active = feature;
-        this.localDB.get(feature.get('id'))
-            .then(
-                (doc) => {
-                    this.openDocumentSuccess(doc);
-                },
-                (err) => {
-                    this.toast.showLongTop('Une erreur s\'est produite.').subscribe();
-                }
-            );
+        //Layer of containment object
+        if (feature.get('parent')) {
+            this.localDB.get(feature.get('parent'))
+                .then(
+                    (doc) => {
+                        for (const key in doc) {
+                            const value = doc[key];
+                            if (Array.isArray(value)) {
+                                const found = value.find(innerDoc => innerDoc.id === feature.get('id'));
+                                if (found) {
+                                    //Only photos of troncons are supported for now.
+                                    if (doc['@class'] === 'fr.sirs.core.model.TronconDigue' && found['@class'] === 'fr.sirs.core.model.Photo') {
+                                        this.openPhotoTronconSuccess(doc, found);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+        } else {
+            this.localDB.get(feature.get('id'))
+                .then(
+                    (doc) => {
+                        this.openDocumentSuccess(doc);
+                    }
+                );
+        }
     }
 
     changeStatus(path: 'general' | 'details') {
@@ -80,6 +97,13 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         this.objectDetails.selectedObject = doc;
         this.status = 'details';
         this.cdr.detectChanges();
+    }
+
+    private openPhotoTronconSuccess(troncon, photo) {
+        this.objectDetails.selectedObject = troncon;
+        this.status = 'details';
+        this.cdr.detectChanges();
+        this.objectDetails.openPhotoDetails(photo);
     }
 
 }

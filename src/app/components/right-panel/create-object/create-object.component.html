@@ -9,7 +9,7 @@
             <ion-list>
                 <ion-radio-group>
                     <ion-item
-                            *ngFor="let layer of (this.appLayersService.getFavorites()|filterPipe:{editable: true})">
+                            *ngFor="let layer of (layersWithoutPhotoTroncon() | filterPipe: {editable: true})">
                         {{ layer.title }}
                         <ion-radio color="secondary" slot="end" (click)="selectLayer(layer)"></ion-radio>
                     </ion-item>
