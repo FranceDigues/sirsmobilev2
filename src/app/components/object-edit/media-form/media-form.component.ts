@@ -9,7 +9,6 @@ import {UuidUtils} from '../../../utils/uuid-utils';
 import {ModalController, ToastController} from '@ionic/angular';
 import {formatDate} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
-import {EditionModeService} from '../../../services/edition-mode.service';
 import {GeolocationService} from '../../../services/geolocation.service';
 import {AlertController} from '@ionic/angular';
 import {PositionByBorneModalComponent} from '../positionbyborne-modal/positionbyborne-modal.component';
@@ -24,10 +23,6 @@ import {SirsDataService} from '../../../services/sirs-data.service';
     styleUrls: ['./media-form.component.scss'],
 })
 export class MediaFormComponent implements OnInit {
-    @Input() coteList;
-    @Input() orientationList;
-    @Input() objectType;
-    @Input() objectDoc;
     @Output() changeView = new EventEmitter<string>();
     public importPhotoData;
     public view = 'media-form';
@@ -48,8 +43,7 @@ export class MediaFormComponent implements OnInit {
                 private geolocation: GeolocationService,
                 public alertController: AlertController,
                 public modalController: ModalController,
-                private positionService: PositionService,
-                private editionService: EditionModeService) {
+                private positionService: PositionService) {
     }
 
     ngOnInit() {
@@ -72,19 +66,19 @@ export class MediaFormComponent implements OnInit {
     }
 
     getPosition() {
-        return this.mediaOptions.positionDebut ? this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut) : 'à définir';
+        return this.mediaOptions.positionDebut ? this.positionService.getLatLongFromWKT(this.EOS.objectDoc.positionDebut) : 'à définir';
     }
 
     save() {
         if (this.mediaOptions.id) {
-            if (!this.objectDoc.photos) {
-                this.objectDoc.photos = [];
+            if (!this.EOS.objectDoc.photos) {
+                this.EOS.objectDoc.photos = [];
             }
-            if (!this.objectDoc._attachments) {
-                this.objectDoc._attachments = {};
+            if (!this.EOS.objectDoc._attachments) {
+                this.EOS.objectDoc._attachments = {};
             }
-            this.objectDoc.photos.push(this.mediaOptions);
-            const url = this.importPhotoData ? this.importPhotoData : this.getPhotoPath(this.objectDoc.photos[this.objectDoc.photos.length - 1]);
+            this.EOS.objectDoc.photos.push(this.mediaOptions);
+            const url = this.importPhotoData ? this.importPhotoData : this.getPhotoPath(this.EOS.objectDoc.photos[this.EOS.objectDoc.photos.length - 1]);
             // Convert url image to blob
             this.httpClient.get(url, {responseType: 'blob'})
                 .subscribe(
@@ -96,7 +90,7 @@ export class MediaFormComponent implements OnInit {
                             if (typeof reader.result === 'string') {
                                 const base64data = reader.result.replace('data:image/jpeg;base64,', '');
                                 // Save the photo like attachment to the object
-                                this.objectDoc._attachments[this.mediaOptions.id] = {
+                                this.EOS.objectDoc._attachments[this.mediaOptions.id] = {
                                     content_type: 'image/jpeg',
                                     data: base64data
                                 };
@@ -286,7 +280,7 @@ export class MediaFormComponent implements OnInit {
     fillMediaOptions(photoId: string, fileName: string) {
         // Store the photo in the object document.
         this.mediaOptions.id = photoId;
-        this.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.isDependance(this.objectType) ? '.PhotoDependance' : '.Photo');
+        this.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.EOS.isDependance() ? '.PhotoDependance' : '.Photo');
         this.mediaOptions.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
         this.mediaOptions.chemin = '/' + fileName;
         this.mediaOptions.valid = false;
@@ -307,19 +301,5 @@ export class MediaFormComponent implements OnInit {
         base64StringLength = base64String.length;
         inBytes = (base64StringLength / 4) * 3 - padding;
         return inBytes;
-    }
-
-    private isDependance(clazz) {
-        // Only dependance that have photos
-        return clazz === 'DesordreDependance'
-            || clazz === 'OuvrageVoirieDependance'
-            || clazz === 'AireStockageDependance'
-            || clazz === 'CheminAccesDependance'
-            || clazz === 'AutreDependance'
-            || clazz === 'AmenagementHydraulique'
-            || clazz === 'PrestationAmenagementHydraulique'
-            || clazz === 'StructureAmenagementHydraulique'
-            || clazz === 'OuvrageAssocieAmenagementHydraulique'
-            || clazz === 'OrganeProtectionCollective';
     }
 }

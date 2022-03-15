@@ -41,7 +41,7 @@
                         <ion-icon name="location-outline"></ion-icon>
                     </ion-button>
                     <ion-button color="medium"
-                                *ngIf="isDependance(objectType)"
+                                *ngIf="EOS.isDependance()"
                                 (click)="selectPositionByReferralSystem()">
                         <ion-icon name="analytics-outline"></ion-icon>
                     </ion-button>
@@ -61,13 +61,13 @@
                             <select class="browser-default"
                                     *ngIf="EOS.showText('fullName')"
                                     [ngModel]="mediaOptions.orientationPhoto">
-                                <option *ngFor="let v of orientationList"
+                                <option *ngFor="let v of sirsDataService.orientationList"
                                         [value]="v.id">{{v.value.libelle}}</option>
                             </select>
                             <select class="browser-default"
                                     *ngIf="EOS.showText('abstract')"
                                     [ngModel]="mediaOptions.orientationPhoto">
-                                <ng-container *ngFor="let v of orientationList">
+                                <ng-container *ngFor="let v of sirsDataService.orientationList">
                                     <option *ngIf="v.value.abrege" [value]="v.id">{{ v.value.abrege}}</option>
                                     <option *ngIf="!v.value.abrege" [value]="v.id">
                                         {{ v.value.designation + ' : ' + v.value.libelle}}</option>
@@ -76,7 +76,7 @@
                             <select class="browser-default"
                                     *ngIf="EOS.showText('both')"
                                     [ngModel]="mediaOptions.orientationPhoto">
-                                <ng-container *ngFor="let v of orientationList">
+                                <ng-container *ngFor="let v of sirsDataService.orientationList">
                                     <option *ngIf="v.value.abrege" [value]="v.id">
                                         {{ v.value.abrege + ' : ' + v.value.libelle }}
                                     </option>
@@ -91,7 +91,7 @@
                             <select class="browser-default"
                                     *ngIf="EOS.showText('fullName')"
                                     [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of coteList">
+                                <ng-container *ngFor="let v of sirsDataService.coteList">
                                     <option [value]="v.id">
                                         {{ v.value.libelle }}
                                     </option>
@@ -100,7 +100,7 @@
                             <select class="browser-default"
                                     *ngIf="EOS.showText('abstract')"
                                     [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of coteList">
+                                <ng-container *ngFor="let v of sirsDataService.coteList">
                                     <option *ngIf="v.value.abrege" [value]="v.id">
                                         {{ v.value.abrege }}
                                     </option>
@@ -112,7 +112,7 @@
                             <select class="browser-default"
                                     *ngIf="EOS.showText('both')"
                                     [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of coteList">
+                                <ng-container *ngFor="let v of sirsDataService.coteList">
                                     <option *ngIf="v.value.abrege" [value]="v.id">
                                         {{ v.value.abrege + ' : ' + v.value.libelle }}
                                     </option>
