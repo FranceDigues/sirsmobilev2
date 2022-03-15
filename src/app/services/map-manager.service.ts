@@ -71,14 +71,14 @@ export class MapManagerService {
                 resolve(this.appLayer);
             } else {
                 this.createAppLayer()
-                .then((appLayer: any) => {
-                    this.appLayer = appLayer;
-                    if (!this.appLayer) console.log("appLayer empty");
-                    resolve(this.appLayer);
-                }, (error) => {
-                    console.error(error);
-                    reject(error);
-                });
+                    .then((appLayer: any) => {
+                        this.appLayer = appLayer;
+                        if (!this.appLayer) console.log("appLayer empty");
+                        resolve(this.appLayer);
+                    }, (error) => {
+                        console.error(error);
+                        reject(error);
+                    });
             }
         });
     }
@@ -153,6 +153,32 @@ export class MapManagerService {
                     ).catch((error) => {
                         console.error(error);
                     });
+                //Specific case of troncon photo
+                } else if (layerModel.filterValue === 'fr.sirs.core.model.Photo' && layerModel.title === 'Photos des tronçons') {
+                    const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
+                    promise = this.localDB.query('TronconDigue/streamLight', {
+                        keys: tmp === null ? [] : tmp.map((item) => {
+                            return item.id;
+                        })
+                    }).then(
+                        (results) => {
+                            const collectPhotos = [];
+                            results.map(obj => obj.value).forEach(troncon => {
+                                if (troncon.photos) {
+                                    troncon.photos.forEach(photo => {
+                                        if (!photo.editMode) {
+                                            photo.parent = troncon._id;
+                                            collectPhotos.push(photo);
+                                        }
+                                    });
+                                }
+                            });
+                            return collectPhotos.map(this.createAppFeatureModelFromObject.bind(this));
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    );
                 } else {
                     // Get all the favorites tronçons ids
                     const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
@@ -194,11 +220,14 @@ export class MapManagerService {
                     })
                 }).then(
                     (results) => {
-                        return results.map(this.createAppFeatureModel.bind(this));
+                        return results.filter((item) => {
+                            return !item.value.editMode;
+                        }).map(this.createAppFeatureModel.bind(this));
                     },
                     (error) => {
                         console.error(error);
-                    });
+                    }
+                );
             } else {
                 // Case fr.sirs.core.model.BorneDigue
                 const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
@@ -234,9 +263,7 @@ export class MapManagerService {
         });
     }
 
-    createAppFeatureModel(featureDoc) {
-        // depending on 'include_docs' option when querying docs
-        featureDoc = featureDoc.doc || featureDoc.value;
+    private createAppFeatureModelFromObject(obj) {
         let dataProjection;
 
         if (!this.sirsDataService.sirsDoc) {
@@ -251,17 +278,17 @@ export class MapManagerService {
         let projGeometry;
         let realGeometry;
 
-        if (featureDoc.geometry && featureDoc['@class'] && PluginUtils.isDependanceAhClass(featureDoc['@class'])) {
-            projGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+        if (obj.geometry && obj['@class'] && PluginUtils.isDependanceAhClass(obj['@class'])) {
+            projGeometry = this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
             });
-            realGeometry = this.wktFormat.readGeometry(featureDoc.geometry, {
+            realGeometry = this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
             });
         } else {
-            projGeometry = featureDoc.geometry ? this.wktFormat.readGeometry(featureDoc.geometry, {
+            projGeometry = obj.geometry ? this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
             }) : undefined;
@@ -272,16 +299,16 @@ export class MapManagerService {
                 projGeometry = new Point(projGeometry.getCoordinates()[0]);
             }
 
-            realGeometry = featureDoc.positionDebut ?
-                this.wktFormat.readGeometry(featureDoc.positionDebut, {
+            realGeometry = obj.positionDebut ?
+                this.wktFormat.readGeometry(obj.positionDebut, {
                     dataProjection,
                     featureProjection: 'EPSG:3857'
                 }) : undefined;
 
-            if (realGeometry && featureDoc.positionFin && featureDoc.positionFin !== featureDoc.positionDebut) {
+            if (realGeometry && obj.positionFin && obj.positionFin !== obj.positionDebut) {
                 realGeometry = new LineString([
                     realGeometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(featureDoc.positionFin, {
+                    this.wktFormat.readGeometry(obj.positionFin, {
                         dataProjection,
                         featureProjection: 'EPSG:3857'
                     }).getFirstCoordinate()
@@ -290,14 +317,21 @@ export class MapManagerService {
         }
 
         return {
-            id: featureDoc.id || featureDoc._id,
-            rev: featureDoc.rev || featureDoc._rev,
-            designation: featureDoc.designation,
-            title: featureDoc.libelle,
+            id: obj.id || obj._id,
+            rev: obj.rev || obj._rev,
+            designation: obj.designation,
+            title: obj.libelle,
             projGeometry,
             realGeometry,
-            archive: featureDoc.date_fin ? true : false
+            archive: obj.date_fin ? true : false,
+            parent: obj.parent
         };
+    }
+
+    createAppFeatureModel(featureDoc) {
+        // depending on 'include_docs' option when querying docs
+        const obj = featureDoc.doc || featureDoc.value;
+        return this.createAppFeatureModelFromObject(obj);
     }
 
     createAppFeatureInstances(featureModels, layerModel) {
@@ -323,6 +357,7 @@ export class MapManagerService {
                     feature.set('designation', featureModel.designation);
                     feature.set('@class', layerModel.filterValue);
                     feature.set('title', featureModel.libelle);
+                    feature.set('parent', featureModel.parent);
                     features.push(feature);
                 } else {
                     // Show only not archived objects
@@ -343,6 +378,7 @@ export class MapManagerService {
                         feature.set('designation', featureModel.designation);
                         feature.set('@class', layerModel.filterValue);
                         feature.set('title', featureModel.libelle);
+                        feature.set('parent', featureModel.parent);
                         features.push(feature);
                     }
                 }
