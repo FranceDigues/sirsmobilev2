@@ -15,6 +15,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditNoteModule } from '../object-details/observation-edit/observation-media/edit-note/edit-note.module';
 import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklook.module';
 import { MatButtonModule } from '@angular/material/button';
+import { PhotoEditComponent } from './photo-edit/photo-edit.component';
 
 @NgModule({
     imports: [
@@ -34,7 +35,7 @@ import { MatButtonModule } from '@angular/material/button';
         MapLineComponent, MapPointComponent,
         MapPolygonComponent, PositionByBorneModalComponent,
         MediaDetailsComponent,
-        MediaFormComponent
+        MediaFormComponent, PhotoEditComponent
     ],
     exports: [ObjectEditComponent, MapPointComponent]
 })

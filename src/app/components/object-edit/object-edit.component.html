@@ -280,6 +280,5 @@
     <map-polygon class="full-height" (slidePathChange)="changeSlidePath($event)"></map-polygon>
 </div>
 <div class="full-height" *ngIf="view === 'media'">
-    <app-media-form [coteList]="coteList" [orientationList]="orientationList" [objectType]="objectType"
-                    [objectDoc]="EOS.objectDoc" (changeView)="setView($event)"></app-media-form>
+    <app-media-form (changeView)="setView($event)"></app-media-form>
 </div>

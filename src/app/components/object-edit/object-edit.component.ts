@@ -30,7 +30,7 @@ export class ObjectEditComponent implements OnInit {
     ngOnInit() {
         const id = this.activatedRoute.snapshot.paramMap.get('id');
         const objectType = this.activatedRoute.snapshot.paramMap.get('type');
-        this.EOS.init(objectType, id);
+        this.EOS.init(objectType, id).then();
         this.refTypes = this.sirsDataService.refTypes;
         this.orientationList = this.sirsDataService.refOrientationPhoto;
         this.coteList = this.sirsDataService.refCote;
