@@ -16,6 +16,7 @@ import { EditNoteModule } from '../object-details/observation-edit/observation-m
 import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklook.module';
 import { MatButtonModule } from '@angular/material/button';
 import { PhotoEditComponent } from './photo-edit/photo-edit.component';
+import { PositionbyborneModalPhotoComponent } from './photo-edit/positionbyborne-modal-photo/positionbyborne-modal-photo.component';
 
 @NgModule({
     imports: [
@@ -35,7 +36,7 @@ import { PhotoEditComponent } from './photo-edit/photo-edit.component';
         MapLineComponent, MapPointComponent,
         MapPolygonComponent, PositionByBorneModalComponent,
         MediaDetailsComponent,
-        MediaFormComponent, PhotoEditComponent
+        MediaFormComponent, PhotoEditComponent, PositionbyborneModalPhotoComponent
     ],
     exports: [ObjectEditComponent, MapPointComponent]
 })

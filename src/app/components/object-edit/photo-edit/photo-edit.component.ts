@@ -10,7 +10,7 @@ import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { GeolocationService } from '../../../services/geolocation.service';
 import { AlertController } from '@ionic/angular';
-import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
+import { PositionbyborneModalPhotoComponent } from './positionbyborne-modal-photo/positionbyborne-modal-photo.component';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { PositionService } from '../../../services/position.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
@@ -146,7 +146,7 @@ export class PhotoEditComponent implements OnInit {
             const attachement = await this.createAttachementFromCurrentMedia();
             if (attachement) {
                 if (!this.objectDoc._attachments) this.objectDoc._attachments = {};
-                this.objectDoc._attachments[this.photoDoc.id] = attachement; 
+                this.objectDoc._attachments[this.photoDoc.id] = attachement;
             }
 
             // Save parent
@@ -187,7 +187,7 @@ export class PhotoEditComponent implements OnInit {
         })
     }
 
-    private async selectPositionByReferralSystem() {
+    private async selectPositionBySR() {
         let data;
 
         if (this.photoDoc.systemeRepId) {
@@ -197,7 +197,8 @@ export class PhotoEditComponent implements OnInit {
                 borne_distance: this.photoDoc.borne_debut_distance,
                 borneId: this.photoDoc.borneDebutId,
                 borneLibelle: this.photoDoc.borneDebutLibelle || '',
-                media: true
+                media: true,
+                parentSystemeRepId: this.objectDoc.systemeRepDefautId
             };
         } else {
             data = {
@@ -206,15 +207,24 @@ export class PhotoEditComponent implements OnInit {
                 borne_distance: 0,
                 borneId: '',
                 borneLibelle: '',
-                media: true
+                media: true,
+                parentSystemeRepId: this.objectDoc.systemeRepDefautId
             };
         }
         const modal = await this.modalController.create({
-            component: PositionByBorneModalComponent,
+            component: PositionbyborneModalPhotoComponent,
             animated: true,
             cssClass: 'modal-css',
             componentProps: { data }
         });
+        modal.onDidDismiss()
+            .then(
+                (result) => {
+                    if (result.data) {
+                        this.handlePositionByBorne(result.data);
+                    }
+                }
+            );
         return await modal.present();
     }
 
@@ -231,11 +241,11 @@ export class PhotoEditComponent implements OnInit {
     private locateMe() {
         if (this.geolocation.isEnabled) {
             this.geolocation.getCurrentLocation()
-            .then(
-                (position) => {
-                    this.handlePos(position);
-                }
-            );
+                .then(
+                    (position) => {
+                        this.handlePos(position);
+                    }
+                );
         }
     }
 
@@ -380,11 +390,50 @@ export class PhotoEditComponent implements OnInit {
     }
 
     private handlePos(pos) {
+        delete this.photoDoc.systemeRepId;
+        delete this.photoDoc.borne_debut_aval;
+        delete this.photoDoc.borne_debut_distance;
+        delete this.photoDoc.borneDebutId;
+        delete this.photoDoc.borne_fin_aval;
+        delete this.photoDoc.borne_fin_distance;
+        delete this.photoDoc.borneFinId;
+        delete this.photoDoc.borneDebutLibelle;
+        delete this.photoDoc.borneFinLibelle;
+        delete this.photoDoc.approximatePositionDebut;
+        delete this.photoDoc.approximatePositionFin;
+
+        this.photoDoc.editedGeoCoordinate = true;
         const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
         const geom = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
         this.photoDoc.positionDebut = geom;
         this.photoDoc.positionFin = geom;
         this.photoDoc.geometry = 'LINESTRING (' + coordinate[0] + ' ' + coordinate[1] + ', ' + coordinate[0] + ' ' + coordinate[1] + ')';
+    }
+
+    private handlePositionByBorne(data) {
+        delete this.photoDoc.positionDebut;
+        delete this.photoDoc.positionFin;
+        delete this.photoDoc.geometry;
+        delete this.photoDoc.longitudeMin;
+        delete this.photoDoc.longitudeMax;
+        delete this.photoDoc.latitudeMin;
+        delete this.photoDoc.latitudeMax;
+        delete this.photoDoc.geometryMode;
+
+        this.photoDoc.editedGeoCoordinate = false;
+        this.photoDoc.systemeRepId = data.systemeRepId;
+        //borne debut
+        this.photoDoc.borne_debut_aval = data.borne_aval === 'true';
+        this.photoDoc.borne_debut_distance = data.borne_distance;
+        this.photoDoc.borneDebutId = data.borneId;
+        this.photoDoc.approximatePositionDebut = data.approximatePosition;
+        this.photoDoc.borneDebutLibelle = data.borneLibelle;
+        //borne fin
+        this.photoDoc.borne_fin_aval = data.borne_aval === 'true';
+        this.photoDoc.borne_fin_distance = data.borne_distance;
+        this.photoDoc.borneFinId = data.borneId;
+        this.photoDoc.approximatePositionFin = data.approximatePosition;
+        this.photoDoc.borneFinLibelle = data.borneLibelle;
     }
 
     private getImage() {
