@@ -95,7 +95,7 @@ export class PhotoEditComponent implements OnInit {
                         this.isNew = false;
                         const photos = this.objectDoc.photos;
                         if (photos) {
-                            this.photoIndex = photos.findIndex(p => p => p.id === this.photoId)
+                            this.photoIndex = photos.findIndex(p => p.id === this.photoId)
                             if (this.photoIndex === -1) {
                                 throw new Error('Unexpected behaviour: parent document ' + this.parentId + ' should contain photo ' + this.photoId);
                             } else {
