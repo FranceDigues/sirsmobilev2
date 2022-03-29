@@ -11,6 +11,7 @@ import { DatabaseService } from './database.service';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
 import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,6 +25,7 @@ export class EditionLayerService {
         private sirsDataService: SirsDataService,
         private databaseService: DatabaseService,
         private editionLayerStyle: EditionLayerStyle,
+        private storageService: StorageService,
         private mapService: MapService) {
         this.init().then();
     }
@@ -67,52 +69,72 @@ export class EditionLayerService {
         this.setEditionLayerFeatures(this.editionLayer, favorites).then();
     }
 
+    /*
+    * Possibility to improve performances by update objectsModeEdition5 view by including selection by linearId
+    * for classic element and another without for dependance/ah objects.
+    */
     setEditionLayerFeatures(olLayer, favorites?: any[]) {
         const olSource = olLayer.getSource();
         olSource.clear();
 
-        return new Promise((resolve) => {
-            this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true })
-                .then(results => {
-                    const editModePhotos = []; //photo treatment
-                    function extractPhotos() {
-                        results.forEach(result => {
-                            if ("fr.sirs.core.model.TronconDigue" === result.doc['@class'] && result.doc.photos) {
-                                const trId = result.doc._id;
-                                result.doc.photos.forEach(p => {
-                                    if (p.editMode) {
-                                        p.parent = trId;
-                                        editModePhotos.push(p);
-                                    }
-                                });
+        return new Promise(async (resolve) => {
+            let editedObjects = await this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true });
+
+            //Filter edited objects by the favorites selection of troncon
+            const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
+            const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
+            editedObjects = editedObjects.filter(eo => {
+                //TronconDigue cases
+                if ("fr.sirs.core.model.TronconDigue" === eo.doc['@class']) {
+                    return tronconIds.indexOf(eo.doc._id) > -1;
+                //All objects that have linearId attribute case
+                } else if (eo.doc.linearId) {
+                    return  tronconIds.indexOf(eo.doc.linearId) > -1;
+                //All other cases namely dependance/AH
+                } else {
+                    return true;
+                }
+            });
+
+            //Photo treatment
+            const editModePhotos = [];
+            function extractPhotos() {
+                editedObjects.forEach(obj => {
+                    if ("fr.sirs.core.model.TronconDigue" === obj.doc['@class'] && obj.doc.photos) {
+                        const trId = obj.doc._id;
+                        obj.doc.photos.forEach(p => {
+                            if (p.editMode) {
+                                p.parent = trId;
+                                editModePhotos.push(p);
                             }
                         });
                     }
+                });
+            }
 
-                    if (favorites && favorites.length > 0) {
-                        const visibleFeatures = [];
+            if (favorites && favorites.length > 0) {
+                const visibleFeatures = [];
 
-                        for (const favorite of favorites) {
-                            if (favorite.visible) {
-                                if (favorite.title === 'Photos des tronçons') { //photo treatment
-                                    extractPhotos();
-                                } else {
-                                    for (const result of results) {
-                                        if (favorite.filterValue === result.value['@class']) {
-                                            visibleFeatures.push(result);
-                                        }
-                                    }
+                for (const favorite of favorites) {
+                    if (favorite.visible) {
+                        if (favorite.title === 'Photos des tronçons') { //photo treatment
+                            extractPhotos();
+                        } else {
+                            for (const obj of editedObjects) {
+                                if (favorite.filterValue === obj.value['@class']) {
+                                    visibleFeatures.push(obj);
                                 }
                             }
                         }
-                        olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
-                    } else {
-                        extractPhotos();
-                        olSource.addFeatures(this.createEditionFeatureInstances(results));
                     }
-                    olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
-                    resolve();
-                })
+                }
+                olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
+            } else {
+                extractPhotos();
+                olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
+            }
+            olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
+            resolve();
         })
     }
 
