@@ -388,35 +388,30 @@ export class EditObjectService {
         // Point case
         if (!this.isLinear) {
             this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-            this.watchDocPositionDebut();
             this.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+            this.watchDocPositionDebut();
         } else {
             // Linear case
-
             if (posEnd) {
-                let coordinateEnd = null;
-                coordinateEnd = transform([posEnd.longitude, posEnd.latitude], 'EPSG:4326', this.dataProjection);
-
+                let coordinateEnd = transform([posEnd.longitude, posEnd.latitude], 'EPSG:4326', this.dataProjection);
                 this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
-                this.watchDocPositionDebut();
-                this.linearPosEditionHandler.startPoint = false;
-
                 this.objectDoc.positionFin = 'POINT(' + coordinateEnd[0] + ' ' + coordinateEnd[1] + ')';
+                this.linearPosEditionHandler.startPoint = false;
                 this.linearPosEditionHandler.endPoint = false;
-                if (!this.objectDoc.positionDebut && this.objectDoc.positionFin) {
-                    this.objectDoc.positionDebut = this.objectDoc.positionFin;
-                    this.watchDocPositionDebut();
-                }
+                this.watchDocPositionDebut();
             } else {
                 if (this.linearPosEditionHandler.startPoint) {
                     this.objectDoc.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                     this.watchDocPositionDebut();
                     this.linearPosEditionHandler.startPoint = false;
+                    if (!this.objectDoc.positionFin) {
+                        this.objectDoc.positionFin = this.objectDoc.positionDebut;
+                    }
                 }
                 if (this.linearPosEditionHandler.endPoint) {
                     this.objectDoc.positionFin = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
                     this.linearPosEditionHandler.endPoint = false;
-                    if (!this.objectDoc.positionDebut && this.objectDoc.positionFin) {
+                    if (!this.objectDoc.positionDebut) {
                         this.objectDoc.positionDebut = this.objectDoc.positionFin;
                         this.watchDocPositionDebut();
                     }
