@@ -146,7 +146,7 @@ export class AddShapesLayersComponent implements OnInit {
                             })
                             .catch(async error => {
                                 const toast = await this.toastCtrl.create({
-                                    message: 'Erreur lors de la lecture du fichier. Assurez-vous d\'avoir concervé les .shp et .dbf ensemble.',
+                                    message: 'Erreur lors de la lecture du fichier. Assurez-vous d\'avoir sélectionné un fichier .shp avec ses composants (.shx, .dbf, .prj).',
                                     duration: 6000
                                 });
                                 toast.present();
