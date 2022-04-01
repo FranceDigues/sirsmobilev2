@@ -200,11 +200,11 @@ export class ObservationEditComponent implements OnInit {
     save() {
         this.saving = true;
         if (this.isNewObject) {
-            if (!this.objectDoc.observations) {
-                this.objectDoc.observations = [];
-            }
-
+            // Add the new pictures to the new observation
+            if (!this.observation.photos) this.observation.photos = [];
+            this.observation.photos.push(...this.observationEditService.photos)
             // Add the new observation to observation list.
+            if (!this.objectDoc.observations) this.objectDoc.observations = [];
             this.objectDoc.observations.push(this.observation);
         }
         this.objectDoc.valid = false;
