@@ -52,6 +52,7 @@ export class EditNoteComponent implements AfterViewInit {
         this.goBack();
       },
       err => {
+        console.error(err);
         this.goBack();
       }
     );
