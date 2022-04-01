@@ -29,7 +29,7 @@
                         <div class="medias" *ngSwitchCase="'medias'">
                             <div class="pics row" *ngIf="observationEditService.showContent">
                                 <div fxLayout="row" fxLayoutAlign="start center" *ngIf="sirsDataService.mediaPath">
-                                    <div *ngFor="let photo of observation.photos"
+                                    <div *ngFor="let photo of observationEditService.photos"
                                         (ngInit)="observationEditService.loadImage(photo)">
                                         <div class="progress" *ngIf="!observationEditService.loaded[photo.id]">
                                             <div class="indeterminate"></div>
