@@ -89,18 +89,16 @@ export class DefaultStyle {
         return new Style({stroke: stroke, zIndex: zIndex});
     }
 
-    private createPolygonStyle(selection, feature, color?, featureModel?, layerModel?) {
+    private createPolygonStyle(selection, feature, color, featureModel?, layerModel?) {
         color[3] = this.handling.opacityHandling(selection, feature);
 
         const styles = [];
         const highlight = this.handling.highlightHandling2(selection, feature);
         const zIndex = this.handling.zIndexHandling(selection, feature);
-        const strokeColor = color;
-        const strokeWidth = 5;
         if (highlight) {
-            styles.push(this.getStyle.polygon([255, 255, 255, color[3]], strokeWidth + 4, [20, 30], zIndex, featureModel, layerModel));
+            styles.push(this.getStyle.polygon([255, 255, 255, color[3]], zIndex, featureModel, layerModel));
         }
-        styles.push(this.getStyle.polygon(strokeColor, strokeWidth, [30, 20], zIndex, featureModel, layerModel));
+        styles.push(this.getStyle.polygon(color, zIndex, featureModel, layerModel));
         return styles;
     }
 
@@ -165,18 +163,16 @@ export class RealPositionStyle {
         return styles;
     }
 
-    private createPolygonStyle(selection, feature, color?, featureModel?, layerModel?): Array<Style> {
+    private createPolygonStyle(selection, feature, color, featureModel?, layerModel?): Array<Style> {
         color[3] = this.handling.opacityHandling(selection, feature);
         const styles = [];
         const highlight = this.handling.highlightHandling2(selection, feature);
         const zIndex = this.handling.zIndexHandling(selection, feature);
-        const lineStrokeColor = color;
-        const lineStrokeWidth = 3;
 
         if (highlight) {
-            styles.push(this.getStyle.polygon([255, 255, 255, color[3]], lineStrokeWidth + 4, [20, 30], zIndex, featureModel, layerModel));
+            styles.push(this.getStyle.polygon([255, 255, 255, color[3]], zIndex, featureModel, layerModel));
         }
-        styles.push(this.getStyle.polygon(lineStrokeColor, lineStrokeWidth, [30, 20], zIndex, featureModel, layerModel));
+        styles.push(this.getStyle.polygon(color, zIndex, featureModel, layerModel));
         return styles;
     }
 }
@@ -289,8 +285,7 @@ export class EditionLayerStyle {
 
     private createPolygonStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
         return () => {
-            return [this.getStyle.polygon(this.EDITION_LAYER_COLOR_2, this.EDITION_LAYER_STROKE_WIDTH,
-                [30, 20], 1, featureModel, layerModel)];
+            return [this.getStyle.polygon(this.EDITION_LAYER_COLOR_2, 1, featureModel, layerModel)];
         };
     }
 }
@@ -376,8 +371,8 @@ export class GetStyle {
         return new Style({stroke, zIndex});
     }
 
-    polygon(strokeColor, strokeWidth, lineDash, zIndex, featureModel?, layerModel?): Style {
-        const stroke = new Stroke({color: strokeColor, width: strokeWidth, lineDash});
+    polygon(strokeColor, zIndex, featureModel?, layerModel?): Style {
+        const fill = new Fill({color: strokeColor});
 
         if (layerModel) {
             if (layerModel.featLabels) {
@@ -388,9 +383,9 @@ export class GetStyle {
                     fill: new Fill({color: 'black'}),
                     stroke: new Stroke({color: 'white', width: 0.5})
                 });
-                return new Style({stroke, zIndex, text});
+                return new Style({fill, zIndex, text});
             }
         }
-        return new Style({stroke, zIndex});
+        return new Style({fill, zIndex});
     }
 }
