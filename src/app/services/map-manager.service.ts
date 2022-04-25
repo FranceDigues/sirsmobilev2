@@ -73,7 +73,6 @@ export class MapManagerService {
                 this.createAppLayer()
                     .then((appLayer: any) => {
                         this.appLayer = appLayer;
-                        if (!this.appLayer) console.log("appLayer empty");
                         resolve(this.appLayer);
                     }, (error) => {
                         console.error(error);
@@ -102,8 +101,12 @@ export class MapManagerService {
                     this.mapLoadingSubject.complete();
                 });
             } else {
+                const layerGroup = new LayerGroup({
+                    name: 'Objects',
+                    layers: []
+                });
+                resolve(layerGroup);
                 this.mapLoadingSubject.complete();
-                resolve(null);
             }
         });
     }

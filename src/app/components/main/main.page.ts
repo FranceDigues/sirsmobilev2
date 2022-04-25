@@ -108,7 +108,7 @@ export class MainPage implements AfterViewInit {
         this.olService.addLayer(this.backLayerService.backLayer);
         this.olService.addLayer(this.editionLayerService.editionLayer);
         this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
-        if (this.mapManagerService.appLayer) this.olService.addLayer(this.mapManagerService.appLayer); // Adds data layer to map (points, lines, etc.).
+        this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
 
         //Loading layers from device
         await this.shapesLayersManagerService.init();
