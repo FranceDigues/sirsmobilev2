@@ -103,7 +103,7 @@ export class MainPage implements AfterViewInit {
             this.olService.map = null;
         }
         this.olService.createMap('map');
-        this.olService.setMoveTolerance(3);
+        this.olService.setMoveTolerance(6); //Configure map sensiblity when drag it
         this.olService.getMap().setView(this.mapService.currentView);
         this.olService.addLayer(this.backLayerService.backLayer);
         this.olService.addLayer(this.editionLayerService.editionLayer);
