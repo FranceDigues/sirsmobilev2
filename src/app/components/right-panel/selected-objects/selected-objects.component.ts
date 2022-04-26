@@ -4,6 +4,7 @@ import {LocalDatabase} from '../../../services/local-database.service';
 import {ObjectDetails} from '../../../services/object-details.service';
 import Feature from 'ol/Feature';
 import {MapService} from "../../../services/map.service";
+import { MapManagerService } from 'src/app/services/map-manager.service';
 
 @Component({
     selector: 'selected-objects',
@@ -19,7 +20,8 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
                 private localDB: LocalDatabase,
                 private objectDetails: ObjectDetails,
-                private mapService: MapService) {
+                private mapService: MapService,
+                private mapManagerService: MapManagerService) {
     }
 
     get features(): Array<Feature> {
@@ -58,6 +60,12 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     openDetails(feature) {
         feature.set('visited', true);
         this.mapService.selection.active = feature;
+        //force refresh object data layers
+        if (this.mapManagerService.appLayer !== null) {
+            this.mapManagerService.appLayer.getLayers().forEach((layer) => {
+                layer.getSource().changed();
+            });
+        }
         //Layer of containment object
         if (feature.get('parent')) {
             this.localDB.get(feature.get('parent'))
