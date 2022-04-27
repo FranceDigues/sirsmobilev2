@@ -178,6 +178,6 @@ Enfin suivre les indications du formulaire de création de release.
 
 Une fois l'APK déployée, il vous faut partager avec le client la nouvelle application.
 
-Naviguez de la maniere suivante: Toutes les applications > Sirs Mobile Test Ionic 5 > Publier > Tests > Tests internes > afficher les détails de la release > "Dans 'Nouveaux app bundles', à la ligne de l'APK, la flèche à l'extrémité gauche" > Téléchargements.
+Allez dans: Toutes les applications > Sirs Mobile Test Ionic 5 > Publier > Tests > Tests internes > afficher les détails de la release > "Dans 'Nouveaux app bundles', à la ligne de l'APK, la flèche à l'extrémité gauche" > Téléchargements.
 Dans "Téléchargement" , cliquer sur "Copier le lien partageable", envoyer le au client, il doit l'ouvrir sur un systeme Android.
 Il est peut être nécéssaire à cette étape d' "activé la partage d'application en interne" du systeme recevant l'application.
