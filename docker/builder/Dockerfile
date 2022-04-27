@@ -10,6 +10,7 @@ MAINTAINER berenger.dalle-cort@geomatys.com
 # Define paths and versions
 ENV OPEN_JDK_VERSION="8"
 ENV NODEJS_VERSION="12"
+ENV NPM_VERSION="7.24.2"
 ENV ANDROID_SDK_ROOT="/opt/android"
 ENV ANDROID_HOME="/opt/android"
 ENV ANDROID_VERSION="28"
@@ -39,6 +40,7 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x | bash -
 RUN apt-get install nodejs -y
 RUN npm link @angular/cli
+RUN npm install -g npm@${NPM_VERSION}
 RUN echo `node --version`
 RUN echo `npm --version`
 RUN echo `ng version`
