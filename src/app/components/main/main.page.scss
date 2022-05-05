@@ -1,5 +1,5 @@
 #map {
-  height: calc(100% - 63px);;
+  height: calc(100% - 63px);
   width: 100%;
 }
 
@@ -8,12 +8,12 @@
   width: 100%;
 }
 
-ion-icon {
-  font-size: 20px;
+#navbar-buttons {
+  height: 100%;
 }
 
-.header-icon {
-  padding-top: 20px;
+ion-icon {
+  font-size: 20px;
 }
 
 ion-menu {
@@ -28,7 +28,6 @@ ion-toolbar {
   height: 100% !important;
 }
 
-// background-color: #0097A7 !important;
 .header-slide {
   height: 64px;
 }
@@ -48,6 +47,7 @@ ion-toolbar {
 }
 
 .navbar-custom {
+  //background-size: 100%;
   background-color: #00bcd0;
 }
 

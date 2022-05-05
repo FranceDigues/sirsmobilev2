@@ -7,37 +7,52 @@
 </ion-menu>
 
 <div class="map full-height" id="slide">
-    <header>
-        <nav class="navbar navbar-custom navbar-expand-sm">
-            <div class="collapse navbar-collapse" id="navbarToggler">
-                <a *ngIf="editionLayerService.editionLayer && editionLayerService.editionLayer.getVisible()" class="nav-item">Mode Edition</a>
-                <div class="gps-infos" fxLayout="column" fxLayoutAlign="center center" *ngIf="geolocationService.lastGPSUpdate">
-                    <span class="gps-text">Précision du signal GPS : {{ geolocationService.gpsAccuracy }}&nbsp;m</span>
-                    <span class="gps-text">&nbsp;{{ geolocationService.lastGPSUpdate }}</span>
-                </div>
-            </div>
-            <a *ngIf="geolocationService.isEnabled" class="nav-item nav-link header-icon" (click)="locateMe()">
-                <ion-icon name="navigate-outline"></ion-icon>
-            </a>
-            <a class="nav-item nav-link header-icon" (click)="zoomToCurrentLocation()">
-                <ion-icon name="flag-outline"></ion-icon>
-            </a>
-           <a class="nav-item nav-link header-icon" (click)="refresh()">
-               <ion-icon name="refresh-outline"></ion-icon>
-           </a>
-            <a class="nav-item nav-link header-icon" (click)="logout()">
-                <ion-icon name="power-outline"></ion-icon>
-            </a>
+    <div class="nav-wrapper">
+        <nav class="navbar-custom">
+            <ul id="navbarToggler" class="left hide-on-small-only">
+                <li>
+                    <a *ngIf="editionLayerService.editionLayer && editionLayerService.editionLayer.getVisible()">Mode
+                        Edition</a>
+                </li>
+                <li>
+                    <div class="gps-infos" *ngIf="geolocationService.lastGPSUpdate">
+                        <span class="gps-text">Précision du signal GPS :
+                            {{ geolocationService.gpsAccuracy }}&nbsp;m<br>&nbsp;{{ geolocationService.lastGPSUpdate }}</span>
+                    </div>
+                </li>
+            </ul>
+            <ul id="navbar-buttons" class="right">
+                <li>
+                    <a *ngIf="geolocationService.isEnabled" class="header-icon" (click)="locateMe()">
+                        <ion-icon name="navigate-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="zoomToCurrentLocation()">
+                        <ion-icon name="flag-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="refresh()">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="logout()">
+                        <ion-icon name="power-outline"></ion-icon>
+                    </a>
+                </li>
+            </ul>
         </nav>
-    </header>
+    </div>
 
     <div class="map">
         <div id="map" #map></div>
         <div class="left-slider">
-            <img src="../../../assets/img/slider1.png" (click)="handleSliderLeft()" alt="Left side slide"/>
+            <img src="../../../assets/img/slider1.png" (click)="handleSliderLeft()" alt="Left side slide" />
         </div>
         <div class="right-slider">
-            <img src="../../../assets/img/slider2.png" (click)="handleSliderRight()" alt="Right side slide"/>
+            <img src="../../../assets/img/slider2.png" (click)="handleSliderRight()" alt="Right side slide" />
         </div>
     </div>
     <ion-fab horizontal="end" vertical="bottom" slot="fixed">
@@ -54,4 +69,3 @@
         </ion-fab-list>
     </ion-fab>
 </div>
-
