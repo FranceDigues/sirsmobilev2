@@ -552,11 +552,21 @@ export class EditObjectService {
     }
 
     getStartPos() {
-        return this.objectDoc.positionDebut ? this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut) : undefined;
+        if (this.objectDoc.positionDebut) {
+            let coordinates = this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut);
+            return this.roundGPSCoordinate(coordinates[0]) + ", " + this.roundGPSCoordinate(coordinates[1]);
+        } else {
+            return undefined;
+        }
     }
 
     getEndPos() {
-        return this.objectDoc.positionFin ? this.positionService.getLatLongFromWKT(this.objectDoc.positionFin) : undefined;
+        if (this.objectDoc.positionFin) {
+            let coordinates = this.positionService.getLatLongFromWKT(this.objectDoc.positionFin);
+            return this.roundGPSCoordinate(coordinates[0]) + ", " + this.roundGPSCoordinate(coordinates[1]);
+        } else {
+            return undefined;
+        }
     }
 
     initStartPosBorne() {
@@ -584,11 +594,21 @@ export class EditObjectService {
     }
 
     getStartPosDependance() {
-        return this.objectDoc.geometry ? this.positionService.getLatLongFromWKT(this.objectDoc.geometry) : undefined;
+        if (this.objectDoc.geometry) {
+            let coordinates = this.positionService.getLatLongFromWKT(this.objectDoc.geometry);
+            return this.roundGPSCoordinate(coordinates[0]) + ", " + this.roundGPSCoordinate(coordinates[1]);
+        } else {
+            return undefined;
+        }
     }
 
     getEndPosDependance() {
-        return this.objectDoc.geometry ? this.positionService.getLatLongFromWKT(this.objectDoc.geometry, true) : undefined;
+        if (this.objectDoc.geometry) {
+            let coordinates = this.positionService.getLatLongFromWKT(this.objectDoc.geometry, true);
+            return this.roundGPSCoordinate(coordinates[0]) + ", " + this.roundGPSCoordinate(coordinates[1]);
+        } else {
+            return undefined;
+        }
     }
 
     getEndPointSR() {
@@ -596,29 +616,25 @@ export class EditObjectService {
     }
 
     locateMe() {
-        if (this.geolocationService.isEnabled) {
-            this.geolocationService.getCurrentLocation()
-                .then(
-                    (position) => {
-                        if (this.isDependance()) {
-                            this.handlePosDependance(position);
-                        } else {
-                            this.handlePos(position);
-                        }
+        this.geolocationService.getCurrentLocation()
+            .then(
+                (position) => {
+                    if (this.isDependance()) {
+                        this.handlePosDependance(position);
+                    } else {
+                        this.handlePos(position);
                     }
-                );
-        }
+                }
+            );
     }
 
     locateMeEnd() {
-        if (this.geolocationService.isEnabled) {
-            this.geolocationService.getCurrentLocation()
-                .then(
-                    (position) => {
-                        this.handlePosDependanceEnd(position);
-                    }
-                );
-        }
+        this.geolocationService.getCurrentLocation()
+            .then(
+                (position) => {
+                    this.handlePosDependanceEnd(position);
+                }
+            );
     }
 
     activatedGPSPositionButton() {
@@ -682,5 +698,10 @@ export class EditObjectService {
                 this.isLinear = true;
             }
         }
+    }
+
+    // 7 decimal places according GPS location accuracy
+    private roundGPSCoordinate(x) {
+        return Number.parseFloat(x).toFixed(7);
     }
 }
