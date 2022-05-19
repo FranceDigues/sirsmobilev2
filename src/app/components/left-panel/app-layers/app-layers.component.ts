@@ -71,9 +71,11 @@ export class AppLayersComponent implements OnInit {
     }
 
     onRenderItems(event) {
+        //Can happen that event.detail.to reach the maximum size of list
+        const to = event.detail.to >= this.layers.length ? this.layers.length - 1 : event.detail.to;
         const draggedItem = this.layers.splice(event.detail.from, 1)[0];
-        this.layers.splice(event.detail.to, 0, draggedItem);
-        this.move(event.detail.from, event.detail.to);
+        this.layers.splice(to, 0, draggedItem);
+        this.move(event.detail.from, to);
         event.detail.complete();
         this.updateFavorites();
     }

@@ -54,14 +54,23 @@ export class ShapesLayersManagerService {
       .catch(error => console.error(error));
 
     if (this.shapeLayers && this.shapeLayers.length > 0) {
-      for (let data of this.shapeLayers) {
+      const copy = this.shapeLayers.map(x => Object.assign({}, x));
+      for (let data of copy) {
         let geojson = await this.getGeojson(data);
         const projCode = this.getProjCode(data);
-        const features = new GeoJSON().readFeatures(geojson, {
-          dataProjection: projCode,
-          featureProjection: 'EPSG:3857'
-        });
-        this.addFeaturesToMap(data.name, features);
+        try {
+          const features = new GeoJSON().readFeatures(geojson, {
+            dataProjection: projCode,
+            featureProjection: 'EPSG:3857'
+          });
+          this.addFeaturesToMap(data.name, features);
+        } catch (err) {
+          console.error('Lecture du geojson ' + geojson + ' impossible. Suppression de la référence dans le stockage.');
+          console.error(err);
+          const i: number = copy.indexOf(data);
+          this.shapeLayers.splice(i, 1);
+          this.saveAllLayersInDevice();
+        }
       }
 
       if (this.shapeLayers.length == this.allLayers.length) { // These two arrays should always have the same size.
