@@ -30,13 +30,19 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
                     this.appLayersService.getAvailable()
                     .then(
                       (layers) => {
-                        this.available = this.order(layers);
+                        //HACK hard to remove old dependance module configuration from desktop
+                        const withoutOldDependanceModules = this.oldDependanceFilter(layers);
+                        this.available = this.order(withoutOldDependanceModules);
                         loading.dismiss();
                       }
                     );
                   }
                 );
               }
+
+  private oldDependanceFilter(layers) {
+    return layers.filter(l => !(Array.isArray(l.categories) && l.categories.includes('Dépendances')))
+  }
 
   private order(value: any) {
     const data = value.sort(this.sortOn());
