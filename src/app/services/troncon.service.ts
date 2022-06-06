@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { DatabaseService } from './database.service';
 import { LoadingController } from '@ionic/angular';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -156,6 +157,7 @@ export class TronconController {
             });
         }
         this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites);
+        this.appTronconsService.updated.next('tronçon updated');
     }
 }
 
@@ -163,7 +165,7 @@ export class TronconController {
     providedIn: 'root',
 })
 export class AppTronconsService {
-
+    updated = new Subject();
     favorites = [];
 
     constructor(private storageService: StorageService) {

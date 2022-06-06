@@ -29,7 +29,6 @@ export class AppLayersComponent implements OnInit {
                 private dbService: DatabaseService,
                 private editionLayerService: EditionLayerService) {
         this.layers.reverse();
-        console.log(this.layers);
         this.mapManagerService.init().then(() => {
             console.log('App layer initialized');
         });

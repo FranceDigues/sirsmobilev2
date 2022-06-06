@@ -12,6 +12,7 @@ import { DatabaseModel } from '../components/database-connection/models/database
 import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import { AppTronconsService } from './troncon.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,8 +27,18 @@ export class EditionLayerService {
         private databaseService: DatabaseService,
         private editionLayerStyle: EditionLayerStyle,
         private storageService: StorageService,
-        private mapService: MapService) {
+        private mapService: MapService,
+                private appTronconsService: AppTronconsService) {
         this.init().then();
+        this.appTronconsService.updated
+            .subscribe({
+                next: () => {
+                    if (this.editionLayer.getVisible()) {
+                        console.log(this.editionLayer);
+                        this.redrawEditionLayerAfterSynchronization();
+                    }
+                }
+            });
     }
 
     init() {
@@ -84,19 +95,19 @@ export class EditionLayerService {
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
             const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
             editedObjects = editedObjects.filter(eo => {
-                //TronconDigue cases
-                if ("fr.sirs.core.model.TronconDigue" === eo.doc['@class']) {
+                // TronconDigue cases
+                if ('fr.sirs.core.model.TronconDigue' === eo.doc['@class']) {
                     return tronconIds.indexOf(eo.doc._id) > -1;
-                //All objects that have linearId attribute case
+                // All objects that have linearId attribute case
                 } else if (eo.doc.linearId) {
                     return  tronconIds.indexOf(eo.doc.linearId) > -1;
-                //All other cases namely dependance/AH
+                // All other cases namely dependance/AH
                 } else {
                     return true;
                 }
             });
 
-            //Photo treatment
+            // Photo treatment
             const editModePhotos = [];
             function extractPhotos() {
                 editedObjects.forEach(obj => {
