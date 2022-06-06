@@ -223,7 +223,7 @@ export class ShapesLayersManagerService {
           resolve(dataLayers);
         })
         .catch(error => reject(error));
-    })
+    });
   }
 
   getGeojson(data) {

@@ -442,10 +442,8 @@ export class MapManagerService {
 
     moveAppLayer(from, to) {
         const collection = this.appLayer.getLayers().getArray();
-        const tmp = collection[from];
-
-        collection[from] = collection[to];
-        collection[to] = tmp;
+        const element = collection.splice(from, 1)[0];
+        collection.splice(to, 0, element);
     }
 
     addLabelFeatureLayer(layerModel) {

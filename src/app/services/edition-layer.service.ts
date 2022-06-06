@@ -41,9 +41,9 @@ export class EditionLayerService {
                             this.editionLayer.setVisible(config.context.settings.edition);
                             resolve();
                         }
-                    )
+                    );
                 });
-        })
+        });
     }
 
     createEditionLayerInstance(favorites?: any[]) {
@@ -61,7 +61,7 @@ export class EditionLayerService {
                     resolve(olLayer);
                 }
             );
-        })
+        });
     }
 
     updateEditionLayerInstance(favorites?: any[]) {
@@ -80,7 +80,7 @@ export class EditionLayerService {
         return new Promise(async (resolve) => {
             let editedObjects = await this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true });
 
-            //Filter edited objects by the favorites selection of troncon
+            // Filter edited objects by the favorites selection of troncon
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
             const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
             editedObjects = editedObjects.filter(eo => {
@@ -135,7 +135,7 @@ export class EditionLayerService {
             }
             olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
             resolve();
-        })
+        });
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -154,7 +154,7 @@ export class EditionLayerService {
             } else {
                 throw new Error('Unexpected behavior: photoDoc must have value');
             }
-        }, [])
+        }, []);
     }
 
     /**
