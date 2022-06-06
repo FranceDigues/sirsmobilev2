@@ -28,7 +28,7 @@ export class AppLayersComponent implements OnInit {
                 private modalCtrl: ModalController,
                 private dbService: DatabaseService,
                 private editionLayerService: EditionLayerService) {
-        // this.layers.reverse();
+        this.layers.reverse();
         console.log(this.layers);
         this.mapManagerService.init().then(() => {
             console.log('App layer initialized');
@@ -42,6 +42,7 @@ export class AppLayersComponent implements OnInit {
     changeSlidePath(event) {
         this.path = event;
         this.layers = Object.assign([], this.appLayersService.getFavorites());
+        this.layers.reverse();
     }
 
     getClassIcon(condition) {
@@ -62,7 +63,7 @@ export class AppLayersComponent implements OnInit {
     }
 
     updateFavorites() {
-        this.appLayersService.favorites = Object.assign([], this.layers);
+        this.appLayersService.favorites = Object.assign([], Object.assign([], this.layers).reverse());
         this.dbService.getCurrentDatabaseSettings()
             .then(
                 (db: DatabaseModel) => {
@@ -83,9 +84,9 @@ export class AppLayersComponent implements OnInit {
     }
 
     move(from, to) {
-        this.mapManagerService.moveAppLayer(from, to);
+        this.mapManagerService.moveAppLayer(this.layers.length - from - 1, this.layers.length - to - 1);
         this.clearAll();
-        const tmpLayersAfterSort = Object.assign([], this.layers);
+        const tmpLayersAfterSort = Object.assign([], Object.assign([], this.layers).reverse());
         this.appLayersService.setFavorites(tmpLayersAfterSort);
     }
 
