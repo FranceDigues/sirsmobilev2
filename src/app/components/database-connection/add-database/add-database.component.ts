@@ -25,7 +25,7 @@ export class AddDatabaseComponent implements OnInit {
 
     ngOnInit() {
         this.name = this.formBuilder.control('', Validators.required);
-        this.url = this.formBuilder.control('http://', Validators.required);
+        this.url = this.formBuilder.control('https://', Validators.required);
         this.userId = this.formBuilder.control('', Validators.required);
         this.password = this.formBuilder.control('', Validators.required);
         this.databaseForm = this.formBuilder.group({
