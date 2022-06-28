@@ -30,7 +30,6 @@ import { RightPanelModule } from '../right-panel/right-panel.module';
   ],
   providers: [
     Geolocation,
-    GeolocationService,
     RealPositionStyle,
     EditionModeService
   ],

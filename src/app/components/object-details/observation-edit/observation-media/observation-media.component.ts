@@ -1,6 +1,8 @@
 import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ObservationEditService} from 'src/app/services/observation-edit.service';
 import {ModalController, ToastController} from '@ionic/angular';
+import { ToastService } from '../../../../services/toast.service';
+import { ToastNotification } from '../../../../shared/models/toast-notification.model';
 import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionbyborne-modal2.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {CameraService} from '@ionic-lib/lib-camera/camera.service';
@@ -31,11 +33,17 @@ export class ObservationMediaComponent implements OnInit {
     refOrientationPhoto;
     refCote;
 
-    constructor(
-        public OES: ObservationEditService, private modalCtrl: ModalController, private geolocation: GeolocationService,
-        private cameraService: CameraService, private camera: Camera, private file: File,
-        private toastCtrl: ToastController, private cdr: ChangeDetectorRef,
-        private databaseService: DatabaseService, private sirsDataService: SirsDataService) {
+    constructor(public OES: ObservationEditService,
+                private modalCtrl: ModalController,
+                private geolocation: GeolocationService,
+                private cameraService: CameraService,
+                private camera: Camera,
+                private file: File,
+                private toastCtrl: ToastController,
+                private toastService: ToastService,
+                private cdr: ChangeDetectorRef,
+                private databaseService: DatabaseService,
+                private sirsDataService: SirsDataService) {
         this.view = 'media';
         this.pendingContactList = true;
 
@@ -125,14 +133,17 @@ export class ObservationMediaComponent implements OnInit {
         this.setView('note');
     }
 
-    locateMe() {
+    public locateMe(): void {
+        // TODO(marius): Add precision display on locating
         if (this.geolocation.isEnabled) {
-            this.geolocation.getCurrentLocation()
-            .then(
-                (position) => {
-                    this.OES.handlePos(position);
-                }
-            );
+            this.geolocation.getCurrentLocation().then((position) => {
+                this.OES.handlePos(position);
+            }).catch(err => {
+                this.toastService.show(new ToastNotification('Erreur lors de la localisation GPS', 3000));
+                console.warn(err);
+            });
+        } else {
+            this.toastService.show(new ToastNotification('Veuillez activer la localisation GPS', 3000));
         }
     }
 

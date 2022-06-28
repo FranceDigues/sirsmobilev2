@@ -36,17 +36,17 @@
         <div>
           <label>Position</label>
           <div class="edit-position-buttons right">
-            <a class="nav-item nav-link position-button" (click)="locateMe()">
+            <a class="nav-item nav-link position-button" matRipple (click)="locateMe()">
               <span>
                 <ion-icon class="option-button-edit-object" name="navigate-outline"></ion-icon>
               </span>
             </a>
-            <a class="nav-item nav-link position-button" (click)="setView('map')">
+            <a class="nav-item nav-link position-button" matRipple (click)="setView('map')">
               <span>
                 <ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon>
               </span>
             </a>
-            <a class="nav-item nav-link position-button" *ngIf="OES.troncons.length > 0 && !isDependance(OES.objectType)"
+            <a class="nav-item nav-link position-button" matRipple *ngIf="OES.troncons.length > 0 && !isDependance(OES.objectType)"
               (click)="selectPosBySR()">
               <span>
                 <ion-icon class="option-button-edit-object" name="options-outline"></ion-icon>

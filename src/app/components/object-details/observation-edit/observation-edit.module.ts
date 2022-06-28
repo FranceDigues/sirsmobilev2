@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { IonicModule } from '@ionic/angular';
 import { ArraySortPipe2, NgInitDirective, ObservationEditComponent } from './observation-edit.component';
@@ -25,7 +26,8 @@ import { ObjectEditModule } from '../../object-edit/object-edit.module';
         FlexLayoutModule,
         ObjectEditModule,
         DirectiveModule,
-        EditNoteModule
+        EditNoteModule,
+        MatRippleModule,
     ],
     providers: [
         Base64ToGallery

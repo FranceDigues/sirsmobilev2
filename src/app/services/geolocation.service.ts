@@ -31,7 +31,7 @@ export class GeolocationService {
     async getCurrentLocation(): Promise<Coordinates> {
         const options: GeolocationOptions = {
             maximumAge: 20000,
-            timeout: 50000,
+            timeout: 10000,
             enableHighAccuracy: true
         };
         const loading = await this.loadingCtrl.create({
