@@ -161,3 +161,15 @@ ion-content {
 .waves-effect.waves-cyan .waves-ripple{
   background-color: rgba(31,188,206,0.65)
 }
+
+.pic-item {
+  position: relative;
+
+  ion-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 20px;
+  }
+}

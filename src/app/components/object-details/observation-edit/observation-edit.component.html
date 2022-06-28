@@ -27,19 +27,20 @@
                                 (complément)</span>
                         </div>
                         <div class="medias" *ngSwitchCase="'medias'">
-                            <div class="pics row" *ngIf="observationEditService.showContent">
-                                <div fxLayout="row" fxLayoutAlign="start center" *ngIf="sirsDataService.mediaPath">
-                                    <div *ngFor="let photo of observationEditService.photos"
-                                        (ngInit)="observationEditService.loadImage(photo)">
+                            <div class="pics row" fxLayout="row" *ngIf="observationEditService.showContent">
+
+                                <mat-grid-list cols="4" rowHeight="110px" fxFlexFill *ngIf="sirsDataService.mediaPath">
+                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos" (ngInit)="observationEditService.loadImage(photo)">
                                         <div class="progress" *ngIf="!observationEditService.loaded[photo.id]">
                                             <div class="indeterminate"></div>
                                         </div>
-                                        <div class="pic-quicklook" *ngIf="observationEditService.loaded[photo.id]">
+                                        <div *ngIf="observationEditService.loaded[photo.id]" class="pic-item">
                                             <img alt="Photo non disponible" (click)="observationEditService.open(photo)"
-                                                [src]="observationEditService.getPhotoPath(photo)" />
+                                                 [src]="observationEditService.getPhotoPath(photo)" />
+                                            <ion-icon name="close" (click)="observationEditService.remove(photo)"></ion-icon>
                                         </div>
-                                    </div>
-                                </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
                             </div>
                             <div class="text-center">
                                 <button type="button" class="btn btn-large waves-effect waves-teal"

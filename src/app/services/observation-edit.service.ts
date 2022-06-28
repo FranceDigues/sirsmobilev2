@@ -32,7 +32,7 @@ export class ObservationEditService {
     isNewObject: boolean;
     mediaPath: string;
     showContent: boolean;
-    photos;
+    photos: Array<any>;
     loaded = {};
     troncons = [];
     mediaOptions;
@@ -371,6 +371,14 @@ export class ObservationEditService {
                     console.error('Error open method :', error);
                 }
             );
+    }
+
+    remove(photo): void {
+        console.log(this.photos, photo);
+        const index = this.photos.findIndex((item) => item.id === photo.id);
+        if (index !== -1) {
+            this.photos.splice(index, 1);
+        }
     }
 
     warningSizeMessage() {
