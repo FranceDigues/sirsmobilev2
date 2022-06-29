@@ -74,7 +74,9 @@ export class ObservationDetailsComponent implements OnInit {
         this.OES.showContent = this.showContent;
         this.OES.doc = this.doc;
         for (let photo of this.photos) {
-            this.OES.loadImage(photo, true);
+            // preload images
+            const img = new Image();
+            img.src = this.OES.getPhotoPath(photo);
         }
     }
 

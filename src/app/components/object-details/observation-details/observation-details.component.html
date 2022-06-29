@@ -32,7 +32,7 @@
     </div>
   </div>
     <div *ngFor="let photo of photos; let index = index">
-      <ng-container *ngIf="OES.loaded[photo.id]">
+      <ng-container>
         <img (click)="OES.open(photo)" alt="Photo non disponible sur le mobile" [src]="OES.getPhotoPath(photo, true)" />
         <span style="padding-left: 5px;">{{ photo.id }}</span>
         <button style="margin-left: 15px;" type="button" class="btn-floating btn-small waves-effect waves-light pink"
@@ -40,9 +40,6 @@
           <ion-icon name="trash-outline"></ion-icon>
         </button>
       </ng-container>
-      <div class="progress" *ngIf="!OES.loaded[photo.id]">
-        <div class="indeterminate"></div>
-      </div>
     </div>
     <div style="height: 200px;"></div>
 </ion-content>
