@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { EditObjectService } from 'src/app/services/edit-object.service';
+import { GeolocationService } from '../../services/geolocation.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 import { SirsDataService } from '../../services/sirs-data.service';
 
@@ -20,7 +21,9 @@ export class ObjectEditComponent implements OnInit {
 
     // * EOS for Edit Object Service -> to have better lisibility
 
-    constructor(public EOS: EditObjectService, private router: Router,
+    constructor(public EOS: EditObjectService,
+                public geolocationService: GeolocationService,
+                private router: Router,
                 private alertCtrl: AlertController,
                 private activatedRoute: ActivatedRoute,
                 private modalCtrl: ModalController,

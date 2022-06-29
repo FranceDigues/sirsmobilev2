@@ -137,7 +137,7 @@ export class ObservationMediaComponent implements OnInit {
         // TODO(marius): Add precision display on locating
         if (this.geolocation.isEnabled) {
             this.geolocation.getCurrentLocation().then((position) => {
-                this.OES.handlePos(position);
+                this.OES.handlePos(position, this.geolocation.getGPSAccuracy());
             }).catch(err => {
                 this.toastService.show(new ToastNotification('Erreur lors de la localisation GPS', 3000));
                 console.warn(err);

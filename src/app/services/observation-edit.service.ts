@@ -46,6 +46,7 @@ export class ObservationEditService {
     urgence;
     suiteApporterList;
     suiteApporter;
+    private _positionPrecision: number;
 
     // SEPCIFICATION RESEAU ET OUVRAGE
     etatOuvrage;
@@ -315,9 +316,14 @@ export class ObservationEditService {
         }).then(toast => toast.present());
     }
 
-    handlePos(pos) {
+    /**
+     * @param pos
+     * @param accuracy accuracy in meters
+     */
+    public handlePos(pos: Coordinates, accuracy: number): void {
         const coordinate = transform([pos.longitude, pos.latitude], 'EPSG:4326', this.dataProjection);
         this.mediaOptions.positionDebut = 'POINT(' + coordinate[0] + ' ' + coordinate[1] + ')';
+        this._positionPrecision = accuracy;
     }
 
     handlePosByBorne(data) {
@@ -331,5 +337,9 @@ export class ObservationEditService {
 
     isReseauEtOuvrageType() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
+
+    get positionPrecision(): number {
+        return this._positionPrecision;
     }
 }

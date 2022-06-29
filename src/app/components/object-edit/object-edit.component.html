@@ -62,7 +62,7 @@
                                         </div>
                                         <div class="sirs-field-value"
                                              *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">{{
-                                            EOS.getStartPos() }}</div>
+                                            EOS.getStartPos() }}{{geolocationService.getGPSAccuracy() !== null ? ', Précision: +/- ' + geolocationService.getGPSAccuracy() + ' m' : ''}}</div>
                                         <div class="sirs-field-title"
                                              *ngIf="!EOS.objectDoc.editedGeoCoordinate && !EOS.objectDoc.positionDebut">
                                             Position : {{ EOS.startPosBorneLabel | async }}

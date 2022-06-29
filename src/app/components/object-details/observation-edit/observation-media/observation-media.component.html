@@ -55,7 +55,7 @@
           </div>
           <div *ngIf="OES.mediaOptions.positionDebut" class="sirs-field-inline">
             <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
-            <span class="sirs-field-value">{{ OES.mediaOptions.positionDebut }}</span>
+            <span class="sirs-field-value">{{ OES.mediaOptions.positionDebut }}{{OES.positionPrecision !== undefined ? ', +/- ' + OES.positionPrecision + ' m' : ''}}</span>
           </div>
           <div *ngIf="OES.mediaOptions.borneDebutId" class="sirs-field-inline">
             <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
