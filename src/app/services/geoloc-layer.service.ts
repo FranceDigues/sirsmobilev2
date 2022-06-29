@@ -15,26 +15,14 @@ import Circle from 'ol/geom/Circle';
     providedIn: 'root'
 })
 export class GeolocLayerService {
-    geolocLayer: VectorLayer = null;
+    private readonly geolocLayer: VectorLayer;
 
     constructor() {
-        this.init().then();
+        this.geolocLayer = this.createGeolocLayer();
     }
 
-    init() {
-        return new Promise((resolve) => {
-            this.geolocLayer = this.createGeolocLayer();
-            resolve();
-        })
-    }
-
-    getGeolocLayer() {
-        if (!this.geolocLayer) {
-            this.geolocLayer = this.createGeolocLayer();
-            return this.geolocLayer;
-        } else {
-            return this.geolocLayer;
-        }
+    getGeolocLayer(): VectorLayer {
+        return this.geolocLayer;
     }
 
     createGeolocLayer(): VectorLayer {
@@ -81,9 +69,10 @@ export class GeolocLayerService {
         ];
     }
 
-    redrawGeolocLayer(coords) {
-        const geolocLayerSource = this.getGeolocLayer().getSource();
+    redrawGeolocLayer(coords): void {
+        const geolocLayerSource = this.geolocLayer.getSource();
         geolocLayerSource.clear();
         geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
+        geolocLayerSource.changed();
     }
 }

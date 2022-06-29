@@ -1,6 +1,7 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
@@ -33,10 +34,11 @@ import { ToastNotification } from '../../shared/models/toast-notification.model'
     templateUrl: './main.page.html',
     styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements AfterViewInit {
+export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     public pathRightSlide = 'objectsCreation';
     public connectSubscription;
     public disconnectSubscription;
+    private onGeolocationSubscription: Subscription;
 
     constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
         public editionLayerService: EditionLayerService, private geoLocLayer: GeolocLayerService,
@@ -67,6 +69,16 @@ export class MainPage implements AfterViewInit {
             });
     }
 
+    public ngOnInit(): void {
+        this.onGeolocationSubscription = this.geolocationService.onPositionUpdated.subscribe((coord) => {
+            this.geoLocLayer.redrawGeolocLayer(coord);
+        })
+    }
+
+    public ngOnDestroy(): void {
+        this.onGeolocationSubscription.unsubscribe();
+    }
+
     async watchDeviceConnection() {
         // watch network for a disconnection
         this.connectSubscription = this.network.onConnect()
@@ -86,7 +98,6 @@ export class MainPage implements AfterViewInit {
         //Loading layers data
         await Promise.all([
             this.backLayerService.init(),
-            this.geoLocLayer.init(),
             this.editionLayerService.init(),
             this.mapManagerService.init()
         ])

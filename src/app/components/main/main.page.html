@@ -15,9 +15,9 @@
                         Edition</a>
                 </li>
                 <li>
-                    <div class="gps-infos" *ngIf="geolocationService.lastGPSUpdate">
+                    <div class="gps-infos" *ngIf="geolocationService.getLastGPSUpdate()">
                         <span class="gps-text">Précision du signal GPS :
-                            {{ geolocationService.gpsAccuracy }}&nbsp;m<br>&nbsp;{{ geolocationService.lastGPSUpdate }}</span>
+                            {{ geolocationService.getGPSAccuracy() }}&nbsp;m<br>&nbsp;{{ geolocationService.getLastGPSUpdate() }}</span>
                     </div>
                 </li>
             </ul>
