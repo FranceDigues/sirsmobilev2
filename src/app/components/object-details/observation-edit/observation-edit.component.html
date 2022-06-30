@@ -30,8 +30,11 @@
                             <div class="pics row" fxLayout="row" *ngIf="observationEditService.showContent">
 
                                 <mat-grid-list cols="4" rowHeight="110px" fxFlexFill *ngIf="sirsDataService.mediaPath">
-                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos">
-                                        <div class="pic-item">
+                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos" (ngInit)="observationEditService.loadImage(photo)">
+                                        <div class="progress" *ngIf="!observationEditService.loaded[photo.id]">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                        <div *ngIf="observationEditService.loaded[photo.id]" class="pic-item">
                                             <img alt="Photo non disponible" (click)="observationEditService.open(photo)"
                                                  [src]="observationEditService.getPhotoPath(photo)" />
                                             <ion-icon name="close" (click)="observationEditService.remove(photo)"></ion-icon>

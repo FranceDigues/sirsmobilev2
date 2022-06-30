@@ -275,6 +275,81 @@ export class ObservationEditService {
         return this.http.get(imageUrl, { responseType: 'blob' });
     }
 
+    loadImage(photo, details?) {
+        const imageUrl = this.getPhotoPath(photo, details);
+        this.http.head(imageUrl, {headers: {'Accept': 'image/*'}, responseType: 'blob'}).subscribe(
+            () => {
+                this.loaded[photo.id] = true;
+                this.ref.tick(); // Force Ionic to detect changes
+            },
+            (error) => {
+                console.debug('Object doesn\'t exists, loading from DB');
+                if (this.objectDoc._attachments) {
+                    let keyAttachment = null;
+                    let objAttachment;
+                    Object.keys(this.objectDoc._attachments).forEach((key) => {
+                        if (key.indexOf(photo.id) !== -1) {
+                            keyAttachment = key;
+                        }
+                    });
+                    objAttachment = this.objectDoc._attachments[keyAttachment];
+                    if (objAttachment) {
+                        this.localDB.getAttachment(this.objectDoc._id, keyAttachment)
+                            .then((blob) => {
+                                let fileName;
+                                if (keyAttachment.indexOf('.') !== -1) {
+                                    fileName = keyAttachment;
+                                } else {
+                                    let ext;
+                                    switch (objAttachment.content_type) {
+                                        case 'image/jpeg':
+                                            ext = '.jpg';
+                                            break;
+                                        case 'image/png':
+                                            ext = '.png';
+                                            break;
+                                        case 'image/gif':
+                                            ext = '.gif';
+                                            break;
+                                        case 'image/tiff':
+                                            ext = '.tif';
+                                            break;
+                                    }
+                                    fileName = keyAttachment + ext;
+                                }
+                                this.file.resolveDirectoryUrl(this.mediaPath)
+                                    .then((targetDir: DirectoryEntry) => {
+                                        targetDir.getFile(fileName, { create: true }, (file: FileEntry) => {
+                                            file.createWriter((fileWriter) => {
+                                                fileWriter.onwriteend = () => {
+                                                    this.loaded[photo.id] = true;
+                                                    this.ref.tick(); // Force Ionic to detect changes
+                                                };
+                                                fileWriter.write(blob);
+                                            }, () => {
+                                                this.loaded[photo.id] = true;
+                                                this.ref.tick(); // Force Ionic to detect changes
+                                            });
+                                        });
+                                    });
+                            },
+                                (err) => {
+                                    this.loaded[photo.id] = true;
+                                    this.ref.tick(); // Force Ionic to detect changes
+                                    console.warn(err);
+                                });
+                    } else {
+                        this.loaded[photo.id] = true;
+                        this.ref.tick(); // Force Ionic to detect changes
+                    }
+                } else {
+                    console.warn(`missing image attachment, DB model not respected.`)
+                    this.loaded[photo.id] = true;
+                    this.ref.tick(); // Force Ionic to detect changes
+                }
+            });
+    }
+
     // Index of looking for multiple occurrence of a character and returning a list with all the indexes.
     homemadeIndexOf(myString: string, character: string) {
         const list: number[] = [];
