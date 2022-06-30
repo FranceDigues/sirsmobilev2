@@ -377,7 +377,12 @@ export class ObservationEditService {
     }
 
     remove(photo): void {
-        console.log(this.photos, photo);
+        if (this.objectDoc._attachments && this.objectDoc._attachments[photo.id]) {
+            delete this.objectDoc._attachments[photo.id];
+        } else {
+            console.warn(`The deleted picture doesn't exists in the local database`);
+        }
+
         const index = this.photos.findIndex((item) => item.id === photo.id);
         if (index !== -1) {
             this.photos.splice(index, 1);
