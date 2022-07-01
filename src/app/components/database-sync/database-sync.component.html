@@ -34,7 +34,7 @@
                     <p>Synchronisation effectuée avec succès.</p>
                 </div>
                 <div *ngIf="syncService.status === 3">
-                    <p>Une erreur s'est produite pendant la synchronisation.</p>
+                    <p>{{syncService.error}}</p>
                 </div>
                 <div class="sirs-card-action">
                     <div *ngIf="syncService.status === 0" fxLayout="row" fxLayoutAlign="space-between center">
