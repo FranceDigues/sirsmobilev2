@@ -22,7 +22,7 @@
                         Veuillez rentrer le mot de passe
                     </div>
                     <div class="text-right">
-                        <a (click)="status = 1.">Mot de passe oublié ?</a>
+                        <a (click)="status = 1;">Mot de passe oublié ?</a>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
     </div>
 
     <div *ngIf="status == 2">
-        <app-firstsync></app-firstsync>
+        <app-firstsync (backPressed)="status = 0"></app-firstsync>
     </div>
 
 </div>

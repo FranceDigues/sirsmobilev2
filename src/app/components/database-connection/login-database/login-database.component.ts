@@ -1,6 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { DatabaseService } from '../../../services/database.service';
+import { SirsDataService } from '../../../services/sirs-data.service';
 
 @Component({
   selector: 'app-login-database',
@@ -18,7 +21,12 @@ export class LoginDatabaseComponent implements OnInit {
     password: ''
   };
 
-  constructor(private authService: AuthService, private alrtCtrl: AlertController) { }
+  constructor(private authService: AuthService,
+              private alrtCtrl: AlertController,
+              private router: Router,
+              private sirsDataService: SirsDataService,
+              private dbService: DatabaseService,
+              private loadingCtrl: LoadingController) { }
 
   ngOnInit() {}
 
@@ -29,8 +37,20 @@ export class LoginDatabaseComponent implements OnInit {
   authenticate() {
     this.authService.login(this.auth.username, this.auth.password)
     .then(
-      () => {
-        this.status = 2;
+      async () => {
+        const database = await this.dbService.getDatabaseSettings();
+        if (database && database[0].replicated) {
+          const loading = await this.loadingCtrl.create({
+            message: 'Déploiement en cours ...'
+          });
+          await loading.present();
+          await this.sirsDataService.loadDataFromDB();
+          this.authService.user = this.dbService.activeDB.context.authUser;
+          await this.router.navigateByUrl('/main');
+          await loading.dismiss();
+        } else {
+          this.status = 2;
+        }
       },
       async (error) => {
         console.error('Login ERROR : ' + error);

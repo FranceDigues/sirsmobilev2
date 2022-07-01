@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SyncService } from '../../../services/sync.service';
 import { Router } from '@angular/router';
 import { DatabaseService } from 'src/app/services/database.service';
@@ -11,6 +11,8 @@ import { SirsDataService } from '../../../services/sirs-data.service';
     styleUrls: ['./firstsync.component.scss'],
 })
 export class FirstsyncComponent implements OnInit {
+
+    @Output() backPressed: EventEmitter<void> = new EventEmitter<void>();
 
     constructor(public syncService: SyncService, public router: Router,
                 public dbService: DatabaseService,
@@ -37,6 +39,10 @@ export class FirstsyncComponent implements OnInit {
                     console.error(error);
                 }
             );
+    }
+
+    public onBackPressed(): void {
+        this.backPressed.next();
     }
 
 }
