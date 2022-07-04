@@ -134,7 +134,6 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     public locateMe(): void {
-        // TODO(marius): Add precision display on locating
         if (this.geolocation.isEnabled) {
             this.geolocation.getCurrentLocation().then((position) => {
                 this.OES.handlePos(position, this.geolocation.getGPSAccuracy());
@@ -156,6 +155,13 @@ export class ObservationMediaComponent implements OnInit {
         this.cameraService.getPhotoFromGallery(options)
             .then(
                 (imageData: string) => {
+                    if (this.calculateImageSize(imageData) > 1048576) {
+                        this.toastCtrl.create({
+                            message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+                            duration: 3000
+                        }).then(toast => toast.present());
+                        return;
+                    }
                     const photoId = UuidUtils.generateUuid();
                     const fileName = photoId + '.jpg';
                     this.fillMediaOptions(photoId, fileName);
@@ -163,6 +169,23 @@ export class ObservationMediaComponent implements OnInit {
                     this.cdr.detectChanges();
                 }
             );
+    }
+
+    calculateImageSize(base64String) {
+        let padding;
+        let inBytes;
+        let base64StringLength;
+        if (base64String.endsWith('==')) {
+            padding = 2;
+        } else if (base64String.endsWith('=')) {
+            padding = 1;
+        } else {
+            padding = 0;
+        }
+
+        base64StringLength = base64String.length;
+        inBytes = (base64StringLength / 4) * 3 - padding;
+        return inBytes;
     }
 
     saveNoteEdit(file) {
@@ -247,25 +270,33 @@ export class ObservationMediaComponent implements OnInit {
                     this.OES.objectDoc._attachments = {};
                 }
 
-                // Convert url image to blob
-                this.OES.getImage(this.OES.importPhotoData).subscribe(
-                    (blob) => {
-                        let reader = new FileReader();
-                        reader.readAsDataURL(blob);
-                        // Convert blob to base64
-                        reader.onloadend = () => {
-                            if (typeof reader.result === 'string') {
-                                let base64data = reader.result.replace('data:image/jpeg;base64,', '');
-                                // Save the photo like attachment to the object
-                                this.OES.objectDoc._attachments[this.OES.mediaOptions.id] = {
-                                    content_type: 'image/jpeg',
-                                    data: base64data
-                                };
-                                this.cancel();
+                let isBase64 = this.OES.importPhotoData.indexOf('base64') !== -1;
+
+                const saveBase64 = (txt) => {
+                    txt = txt.replace(`data:image/jpeg;base64,`, '');
+                    this.OES.objectDoc._attachments[this.OES.mediaOptions.id] = {
+                        content_type: 'image/jpeg',
+                        data: txt
+                    };
+                    this.cancel();
+                }
+                if (isBase64) {
+                    saveBase64(this.OES.importPhotoData);
+                } else {
+                    // Convert url image to blob
+                    this.OES.getImage(this.OES.importPhotoData).subscribe(
+                        (blob) => {
+                            let reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            // Convert blob to base64
+                            reader.onloadend = () => {
+                                if (typeof reader.result === 'string') {
+                                    saveBase64(reader.result);
+                                }
                             }
                         }
-                    }
-                );
+                    );
+                }
             }
         } else {
             this.toastCtrl.create({

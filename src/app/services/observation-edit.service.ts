@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ApplicationRef, Injectable } from '@angular/core';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { ToastNotification } from '../shared/models/toast-notification.model';
 import { ObjectDetails } from './object-details.service';
 import { LocalDatabase } from './local-database.service';
 import { File, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
@@ -18,6 +19,7 @@ import { ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { SirsDataService } from './sirs-data.service';
 import { PluginUtils } from '../utils/plugin-utils';
+import { ToastService } from './toast.service';
 
 @Injectable({
     providedIn: 'root'
@@ -61,7 +63,7 @@ export class ObservationEditService {
         private fileOpener: FileOpener, private authService: AuthService,
         private sirsDataService: SirsDataService, private storageService: StorageService,
         private webview: WebView, private db: DatabaseService, private toastCtrl: ToastController,
-        private ref: ApplicationRef) {
+        private ref: ApplicationRef, private toastService: ToastService) {
     }
 
     // pre init method exists as the init methods are called from other components and services.
@@ -275,6 +277,28 @@ export class ObservationEditService {
         return this.http.get(imageUrl, { responseType: 'blob' });
     }
 
+    private static base64toBlob(base64Data: string, contentType: string): Blob {
+        contentType = contentType || '';
+        let sliceSize = 512;
+        let byteCharacters = atob(base64Data);
+        let byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            let byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            let byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, {type: contentType});
+    }
+
     loadImage(photo, details?) {
         const imageUrl = this.getPhotoPath(photo, details);
         this.http.head(imageUrl, {headers: {'Accept': 'image/*'}, responseType: 'blob'}).subscribe(
@@ -282,7 +306,7 @@ export class ObservationEditService {
                 this.loaded[photo.id] = true;
                 this.ref.tick(); // Force Ionic to detect changes
             },
-            (error) => {
+            async (_) => {
                 console.debug('Object doesn\'t exists, loading from DB');
                 if (this.objectDoc._attachments) {
                     let keyAttachment = null;
@@ -294,51 +318,56 @@ export class ObservationEditService {
                     });
                     objAttachment = this.objectDoc._attachments[keyAttachment];
                     if (objAttachment) {
-                        this.localDB.getAttachment(this.objectDoc._id, keyAttachment)
-                            .then((blob) => {
-                                let fileName;
-                                if (keyAttachment.indexOf('.') !== -1) {
-                                    fileName = keyAttachment;
-                                } else {
-                                    let ext;
-                                    switch (objAttachment.content_type) {
-                                        case 'image/jpeg':
-                                            ext = '.jpg';
-                                            break;
-                                        case 'image/png':
-                                            ext = '.png';
-                                            break;
-                                        case 'image/gif':
-                                            ext = '.gif';
-                                            break;
-                                        case 'image/tiff':
-                                            ext = '.tif';
-                                            break;
-                                    }
-                                    fileName = keyAttachment + ext;
-                                }
-                                this.file.resolveDirectoryUrl(this.mediaPath)
-                                    .then((targetDir: DirectoryEntry) => {
-                                        targetDir.getFile(fileName, { create: true }, (file: FileEntry) => {
-                                            file.createWriter((fileWriter) => {
-                                                fileWriter.onwriteend = () => {
-                                                    this.loaded[photo.id] = true;
-                                                    this.ref.tick(); // Force Ionic to detect changes
-                                                };
-                                                fileWriter.write(blob);
-                                            }, () => {
-                                                this.loaded[photo.id] = true;
-                                                this.ref.tick(); // Force Ionic to detect changes
-                                            });
-                                        });
+                        let blob;
+                        try {
+                            blob = await this.localDB.getAttachment(this.objectDoc._id, keyAttachment);
+                        } catch (err) {
+                            if (err && err.name && err.name === 'not_found') {
+                                blob = ObservationEditService.base64toBlob(objAttachment.data, objAttachment.content_type);
+                            } else {
+                                this.toastService.show(new ToastNotification('Erreur lors de la sauvegarde du fichier dans la base de données', 3000));
+                                console.error(err);
+                            }
+                        }
+                        let fileName;
+                        if (keyAttachment.indexOf('.') !== -1) {
+                            fileName = keyAttachment;
+                        } else {
+                            let ext;
+                            switch (objAttachment.content_type) {
+                                case 'image/jpeg':
+                                    ext = '.jpg';
+                                    break;
+                                case 'image/png':
+                                    ext = '.png';
+                                    break;
+                                case 'image/gif':
+                                    ext = '.gif';
+                                    break;
+                                case 'image/tiff':
+                                    ext = '.tif';
+                                    break;
+                            }
+                            fileName = keyAttachment + ext;
+                        }
+                        this.file.resolveDirectoryUrl(this.mediaPath)
+                            .then((targetDir: DirectoryEntry) => {
+                                targetDir.getFile(fileName, { create: true }, (file: FileEntry) => {
+                                    file.createWriter((fileWriter) => {
+                                        fileWriter.onwriteend = () => {
+                                            this.loaded[photo.id] = true;
+                                            this.ref.tick(); // Force Ionic to detect changes
+                                        };
+                                        fileWriter.write(blob);
+                                    }, () => {
+                                        console.warn('Error while creating DB filewriter');
+                                        this.loaded[photo.id] = true;
+                                        this.ref.tick(); // Force Ionic to detect changes
                                     });
-                            },
-                                (err) => {
-                                    this.loaded[photo.id] = true;
-                                    this.ref.tick(); // Force Ionic to detect changes
-                                    console.warn(err);
                                 });
+                            });
                     } else {
+                        console.warn('No attachment available');
                         this.loaded[photo.id] = true;
                         this.ref.tick(); // Force Ionic to detect changes
                     }

@@ -247,7 +247,7 @@ export class MediaFormComponent implements OnInit {
         this.savePicture(file);
     }
 
-    getPhotoFromGallery() {
+    getPicFromGallery() {
         const options: Options = {
             quality: 50,
             encodingType: this.camera.EncodingType.JPEG,
