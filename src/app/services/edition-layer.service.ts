@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { LocalDatabase } from './local-database.service';
-import { EditionLayerStyle } from './style.service';
-import { MapService } from './map.service';
-import VectorLayer from 'ol/layer/Vector';
+import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';
-import LineString from 'ol/geom/LineString';
-import VectorSource from 'ol/source/Vector';
 import WKT from 'ol/format/WKT';
-import { DatabaseService } from './database.service';
+import LineString from 'ol/geom/LineString';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
 import { PluginUtils } from '../utils/plugin-utils';
+import { DatabaseService } from './database.service';
+import { LocalDatabase } from './local-database.service';
+import { MapService } from './map.service';
 import { SirsDataService } from './sirs-data.service';
-import { StorageService } from '@ionic-lib/lib-storage/storage.service';
+import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
 
 @Injectable({
@@ -29,7 +29,6 @@ export class EditionLayerService {
         private storageService: StorageService,
         private mapService: MapService,
                 private appTronconsService: AppTronconsService) {
-        this.init().then();
         this.appTronconsService.updated
             .subscribe({
                 next: () => {
@@ -41,37 +40,20 @@ export class EditionLayerService {
             });
     }
 
-    init() {
-        return new Promise((resolve) => {
-            this.databaseService.getCurrentDatabaseSettings()
-                .then((config: DatabaseModel) => {
-                    this.favorites = config.favorites;
-                    this.createEditionLayerInstance(this.favorites).then(
-                        (layer) => {
-                            this.editionLayer = layer;
-                            this.editionLayer.setVisible(config.context.settings.edition);
-                            resolve();
-                        }
-                    );
-                });
-        });
+    async init() {
+        const config: DatabaseModel = await this.databaseService.getCurrentDatabaseSettings() as DatabaseModel;
+        this.favorites = config.favorites;
+        this.editionLayer = this.createEditionLayerInstance();
+        this.editionLayer.setVisible(config.context.settings.edition);
     }
 
-    createEditionLayerInstance(favorites?: any[]) {
-        return new Promise((resolve) => {
-            const olLayer = new VectorLayer({
-                name: 'Edition',
-                model: { selectable: true },
-                zIndex: 1000,
-                source: new VectorSource({ useSpatialIndex: false })
-            });
-
-            // Set the layer that contains the new objects of the edition mode
-            this.setEditionLayerFeatures(olLayer, favorites).then(
-                () => {
-                    resolve(olLayer);
-                }
-            );
+    /** Call setEditionLayerFeatures after */
+    createEditionLayerInstance() {
+        return new VectorLayer({
+            name: 'Edition',
+            model: { selectable: true },
+            zIndex: 1000,
+            source: new VectorSource({ useSpatialIndex: false })
         });
     }
 

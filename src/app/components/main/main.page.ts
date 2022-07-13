@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
@@ -40,14 +41,25 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     public disconnectSubscription;
     private onGeolocationSubscription: Subscription;
 
-    constructor(private olService: OLService, private backLayerService: BackLayerService, public geolocationService: GeolocationService,
-        public editionLayerService: EditionLayerService, private geoLocLayer: GeolocLayerService,
-        private mapService: MapService, private mapManagerService: MapManagerService, private authService: AuthService,
-        private menu: MenuController, private loadingCtrl: LoadingController,
-        private platform: Platform, private dbService: DatabaseService,
-        private selectedObjectsService: SelectedObjectsService, private network: Network,
-        public OES: ObservationEditService, private shapesLayersManagerService: ShapesLayersManagerService,
-        private toastService: ToastService) {
+    constructor(
+        public geolocationService: GeolocationService,
+        public editionLayerService: EditionLayerService,
+        private olService: OLService,
+        private backLayerService: BackLayerService,
+        private geoLocLayer: GeolocLayerService,
+        private mapService: MapService,
+        private mapManagerService: MapManagerService,
+        private authService: AuthService,
+        private menu: MenuController,
+        private loadingCtrl: LoadingController,
+        private platform: Platform,
+        private dbService: DatabaseService,
+        private selectedObjectsService: SelectedObjectsService,
+        private network: Network,
+        private shapesLayersManagerService: ShapesLayersManagerService,
+        private toastService: ToastService,
+        private toastController: ToastController,
+        private ref: ApplicationRef) {
 
         this.platform.pause.subscribe(
             () => {
@@ -95,17 +107,18 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     }
 
     async ngAfterViewInit() {
+        //Loading popup
+        const loading = await this.loadingCtrl.create({message: 'Initialisation des services en cours'});
+        await loading.present();
+
         //Loading layers data
         await Promise.all([
             this.backLayerService.init(),
+            this.mapManagerService.init(),
             this.editionLayerService.init(),
-            this.mapManagerService.init()
-        ])
-        .then(() => console.log("All layers are loaded successfully."));
-
-        //Loading popup
-        const loading = await this.loadingCtrl.create({message: 'Déploiement de la carte en cours'});
-        loading.present();
+        ]);
+        console.log("All layers are loaded successfully.");
+        loading.message = 'Déploiement de la carte en cours';
 
         //Map création and loading layers
         if (this.olService.getMap() !== null) {
@@ -119,12 +132,22 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         this.olService.addLayer(this.editionLayerService.editionLayer);
         this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
         this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
+        this.ref.tick();
 
         //Loading layers from device
         await this.shapesLayersManagerService.init();
 
         //Unable specific control to the map
         this.addMapControl();
+
+        //Update favorite layers
+        this.mapManagerService.clearAll();
+
+        //Update user location
+        this.locateMe();
+
+        loading.message = 'Chargement des données du calque d\'édition ... (Cette opération peux durer plusieurs minutes)';
+        await this.editionLayerService.setEditionLayerFeatures(this.editionLayerService.editionLayer, this.editionLayerService.favorites);
 
         //Update favorite layers
         this.mapManagerService.clearAll();
@@ -136,9 +159,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     }
                 }
             );
-
-        //Update user location
-        this.locateMe();
     }
 
     locateMe() {

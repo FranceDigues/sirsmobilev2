@@ -40,8 +40,8 @@ export class DatabaseService {
                 console.error('Unexpected behavior: active database is null');
             }
             this.localDB = new PouchDB(this.activeDB.name, {
-                iosDatabaseLocation: 'Library',
-                androidDatabaseImplementation: 2,
+                location: 'default',
+                androidDatabaseProvider: 'system',
                 adapter: 'cordova-sqlite'
             });
             /* Indicate there is no memory leak in the Fourth Step (10 listeners by default).

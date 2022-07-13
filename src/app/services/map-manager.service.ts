@@ -65,21 +65,11 @@ export class MapManagerService {
             );
     }
 
-    init() {
-        return new Promise((resolve, reject) => {
-            if (this.appLayer) {
-                resolve(this.appLayer);
-            } else {
-                this.createAppLayer()
-                    .then((appLayer: any) => {
-                        this.appLayer = appLayer;
-                        resolve(this.appLayer);
-                    }, (error) => {
-                        console.error(error);
-                        reject(error);
-                    });
-            }
-        });
+    async init() {
+        if (!this.appLayer) {
+            this.appLayer = await this.createAppLayer();
+        }
+        return this.appLayer;
     }
 
     private createAppLayer() {

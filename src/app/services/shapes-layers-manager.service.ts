@@ -45,7 +45,9 @@ export class ShapesLayersManagerService {
     await this.getAllLayersFromDevice()
       .then(async (dataLayers: any) => {
         if (dataLayers.error) {
-          console.error(dataLayers.error);
+          if (dataLayers.error.code === undefined || dataLayers.error.code !== 2) {
+            console.warn(dataLayers.error);
+          }
           this.shapeLayers = [];
         } else {
           this.shapeLayers = dataLayers;

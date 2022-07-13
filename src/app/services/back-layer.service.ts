@@ -28,26 +28,13 @@ export class BackLayerService {
         private webview: WebView,
         private ol: OLService,
         private mapService: MapService) {
-        this.init().then();
     }
 
-    init() {
+    async init(): Promise<void> {
         if (this.backLayer === null || this.backLayers === null) {
-            return new Promise((resolve) => {
-                this.dbService.getCurrentDatabaseSettings()
-                    .then(
-                        (db: DatabaseModel) => {
-                            this.backLayers = db.context.backLayer;
-                            this.backLayer = this.createBackLayer();
-                            resolve();
-                        }
-                );
-            });
-        } else {
-            return new Promise((resolve) => {
-                console.log("BackLayer and backLayers are already loaded.");
-                resolve();
-            });
+            const db: DatabaseModel = await this.dbService.getCurrentDatabaseSettings() as DatabaseModel;
+            this.backLayers = db.context.backLayer;
+            this.backLayer = this.createBackLayer();
         }
     }
 

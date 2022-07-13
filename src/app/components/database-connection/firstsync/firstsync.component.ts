@@ -21,19 +21,15 @@ export class FirstsyncComponent implements OnInit {
     }
 
     ngOnInit() {
-        const isFirstSync = true;
-
-        this.syncService.sync(isFirstSync)
-            .then(() => {
-                    setTimeout(async () => {
-                        const loading = await this.loadingCtrl.create({
-                            message: 'Déploiement en cours ...'
-                        });
-                        await loading.present();
-                        await this.sirsDataService.loadDataFromDB();
-                        await this.router.navigateByUrl('/main');
-                        await loading.dismiss();
-                    }, 1300);
+        this.syncService.sync(true)
+            .then(async () => {
+                    const loading = await this.loadingCtrl.create({
+                        message: 'Déploiement en cours ...'
+                    });
+                    await loading.present();
+                    await this.sirsDataService.loadDataFromDB();
+                    await this.router.navigateByUrl('/main');
+                    await loading.dismiss();
                 },
                 (error) => {
                     console.error(error);
