@@ -49,7 +49,11 @@ export class SyncService {
 
             console.debug('[Sync Service] Starting sync');
 
-            this.http.head(this.dbService.activeDB.url, {}).pipe(timeout(5 * 1000)).subscribe(() => { // Allow to check if the server is online
+            const settings: any = await this.dbService.getCurrentDatabaseSettings();
+
+            const auth = `Basic ${btoa(settings.userId + ':' + settings.password)}`;
+
+            this.http.head(this.dbService.activeDB.url, {headers: {Authorization: auth}}).pipe(timeout(5 * 1000)).subscribe(() => { // Allow to check if the server is online
                 this.synch = PouchDB.sync(localDB, remoteDB, options)
                     .on('complete', () => {
                         console.debug('[Sync Service] Sync complete');
