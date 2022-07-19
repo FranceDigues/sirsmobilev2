@@ -15,7 +15,7 @@ export class GeolocationService {
     private updateIntervalId: any;
     private onPositionUpdatedSubject: Subject<Coordinates> = new Subject<Coordinates>();
 
-    private readonly UPDATE_TIMEOUT: number = 10 * 1000; // gps update timeout in ms
+    private readonly UPDATE_TIMEOUT: number = 30 * 1000; // gps update timeout in ms
 
     constructor(private geolocation: Geolocation,
                 private loadingCtrl: LoadingController) {
@@ -36,7 +36,7 @@ export class GeolocationService {
 
     async getCurrentLocation(silent: boolean = false): Promise<Coordinates> {
         const options: GeolocationOptions = {
-            maximumAge: 20000,
+            maximumAge: 60000,
             timeout: 10000,
             enableHighAccuracy: true
         };
@@ -73,6 +73,7 @@ export class GeolocationService {
     set isEnabled(flag: boolean) {
         this.enabled = flag;
         if (this.enabled) {
+            this.update();
             this.updateIntervalId = setInterval(this.update, this.UPDATE_TIMEOUT);
         } else if (this.updateIntervalId !== undefined) {
             clearInterval(this.updateIntervalId);
@@ -85,6 +86,7 @@ export class GeolocationService {
     }
 
     private update(): void {
+        console.debug('Update GPS');
         this.getCurrentLocation(true).then();
     }
 }
