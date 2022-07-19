@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Coordinates, Geolocation, GeolocationOptions } from '@ionic-native/geolocation/ngx';
+import { Coordinates, Geolocation, GeolocationOptions, Geoposition } from '@ionic-native/geolocation/ngx';
 import { LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Observable, Subject } from 'rxjs';
+import { GeolocLayerService } from './geoloc-layer.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export class GeolocationService {
     private readonly UPDATE_TIMEOUT: number = 30 * 1000; // gps update timeout in ms
 
     constructor(private geolocation: Geolocation,
+                private geolocLayerService: GeolocLayerService,
                 private loadingCtrl: LoadingController) {
         this.update = this.update.bind(this);
     }
@@ -47,23 +49,18 @@ export class GeolocationService {
             });
             await loading.present();
         }
-        return new Promise((resolve, rejects) => {
-            this.geolocation.getCurrentPosition(options)
-                .then(
-                    (position) => {
-                        this.coords = position.coords;
-                        this.gpsAccuracy = Math.round(position.coords.accuracy);
-                        this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');
-                        if (!silent) loading.dismiss();
-                        this.onPositionUpdatedSubject.next(this.coords);
-                        resolve(position.coords);
-                    },
-                    (error) => {
-                        if (!silent) loading.dismiss();
-                        rejects(error);
-                    }
-                );
-        });
+        try {
+            const position: Geoposition = await this.geolocation.getCurrentPosition(options);
+            this.coords = position.coords;
+            this.gpsAccuracy = Math.round(position.coords.accuracy);
+            this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');
+            if (!silent) await loading.dismiss();
+            this.onPositionUpdatedSubject.next(this.coords);
+            return position.coords;
+        } catch (e) {
+            if (!silent) await loading.dismiss();
+            throw e;
+        }
     }
 
     get isEnabled(): boolean {
@@ -78,6 +75,7 @@ export class GeolocationService {
         } else if (this.updateIntervalId !== undefined) {
             clearInterval(this.updateIntervalId);
             this.updateIntervalId = undefined;
+            this.geolocLayerService.clearGeolocLayer();
         }
     }
 

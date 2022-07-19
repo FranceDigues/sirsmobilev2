@@ -75,4 +75,10 @@ export class GeolocLayerService {
         geolocLayerSource.addFeatures(this.createGeolocFeatureInstances(coords));
         geolocLayerSource.changed();
     }
+
+    clearGeolocLayer(): void {
+        const geolocLayerSource = this.geolocLayer.getSource();
+        geolocLayerSource.clear();
+        geolocLayerSource.changed();
+    }
 }
