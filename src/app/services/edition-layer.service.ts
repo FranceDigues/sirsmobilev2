@@ -5,6 +5,7 @@ import WKT from 'ol/format/WKT';
 import LineString from 'ol/geom/LineString';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import { bbox } from 'ol/loadingstrategy';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
 import { PluginUtils } from '../utils/plugin-utils';
 import { DatabaseService } from './database.service';
@@ -53,7 +54,7 @@ export class EditionLayerService {
             name: 'Edition',
             model: { selectable: true },
             zIndex: 1000,
-            source: new VectorSource({ useSpatialIndex: false })
+            source: new VectorSource({ strategy: bbox })
         });
     }
 

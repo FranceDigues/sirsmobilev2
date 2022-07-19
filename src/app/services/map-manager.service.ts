@@ -7,7 +7,9 @@ import Point from 'ol/geom/Point';
 import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import {bbox} from 'ol/loadingstrategy';
 import { Subject } from 'rxjs';
+import { FavoritesLayersModel } from '../components/database-connection/models/database.model';
 import { PluginUtils } from '../utils/plugin-utils';
 import { AppLayersService } from './app-layers.service';
 import { FeatureCache } from './cache.service';
@@ -65,60 +67,47 @@ export class MapManagerService {
             );
     }
 
-    async init() {
+    async init(): Promise<LayerGroup> {
         if (!this.appLayer) {
             this.appLayer = await this.createAppLayer();
         }
         return this.appLayer;
     }
 
-    private createAppLayer() {
-        return new Promise(resolve => {
-            const promises = [];
-            const appLayers = this.appLayersService.getFavorites();
+    private async createAppLayer(): Promise<LayerGroup> {
+        const promises: VectorLayer[] = [];
+        const appLayers: FavoritesLayersModel[] = this.appLayersService.getFavorites();
+        let layers: VectorLayer[] = [];
 
-            if (appLayers && appLayers.length > 0) {
-                appLayers.forEach((layerModel) => {
-                    promises.push(this.createAppLayerInstance(layerModel));
-                });
+        if (appLayers && appLayers.length > 0) {
+            appLayers.forEach((layerModel) => {
+                promises.push(this.createAppLayerInstance(layerModel));
+            });
+            layers = await Promise.all(promises)
+        }
 
-                Promise.all(promises).then(responses => {
-                    const layerGroup = new LayerGroup({
-                        name: 'Objects',
-                        layers: responses
-                    });
-                    resolve(layerGroup);
-                    this.mapLoadingSubject.complete();
-                });
-            } else {
-                const layerGroup = new LayerGroup({
-                    name: 'Objects',
-                    layers: []
-                });
-                resolve(layerGroup);
-                this.mapLoadingSubject.complete();
-            }
+        const layerGroup = new LayerGroup({
+            name: 'Objects',
+            layers: layers,
         });
+        this.mapLoadingSubject.complete();
+        return layerGroup;
     }
 
-    createAppLayerInstance(layerModel) {
-        return new Promise(resolve => {
-            let olLayer: VectorLayer;
-            olLayer = new VectorLayer({
-                name: layerModel.title,
-                visible: layerModel.visible,
-                model: layerModel,
-                source: new VectorSource({useSpatialIndex: false})
-            });
-
-            if (layerModel.visible === true) {
-                this.setAppLayerFeatures(olLayer).then(response => {
-                    resolve(olLayer);
-                });
-            } else {
-                resolve(olLayer);
-            }
+    createAppLayerInstance(layerModel): Promise<VectorLayer> {
+        let olLayer: VectorLayer;
+        olLayer = new VectorLayer({
+            name: layerModel.title,
+            visible: layerModel.visible,
+            model: layerModel,
+            source: new VectorSource({strategy: bbox})
         });
+
+        if (layerModel.visible === true) {
+            return this.setAppLayerFeatures(olLayer).then(() => Promise.resolve(olLayer));
+        } else {
+            return Promise.resolve(olLayer);
+        }
     }
 
     setAppLayerFeatures(olLayer) {
