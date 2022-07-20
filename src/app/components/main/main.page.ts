@@ -2,7 +2,7 @@ import { AfterViewInit, ApplicationRef, Component, OnDestroy, OnInit } from '@an
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { AppLayersService } from '../../services/app-layers.service';
 import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
@@ -13,7 +13,6 @@ import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
 import { Network } from '@ionic-native/network/ngx';
 import { EditionLayerService } from '../../services/edition-layer.service';
-import { ObservationEditService } from 'src/app/services/observation-edit.service';
 import { GeolocLayerService } from 'src/app/services/geoloc-layer.service';
 
 // OpenLayers
@@ -59,6 +58,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         private shapesLayersManagerService: ShapesLayersManagerService,
         private toastService: ToastService,
         private toastController: ToastController,
+        private appLayersService: AppLayersService,
         private ref: ApplicationRef) {
 
         this.platform.pause.subscribe(
@@ -110,6 +110,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         //Loading popup
         const loading = await this.loadingCtrl.create({message: 'Initialisation des services en cours'});
         await loading.present();
+
+
+        this.appLayersService.dbChanged();
 
         //Loading layers data
         await Promise.all([

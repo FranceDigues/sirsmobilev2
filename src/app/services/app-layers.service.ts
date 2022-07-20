@@ -16,6 +16,11 @@ export class AppLayersService {
 
     cachedDescriptions = null;
 
+    public dbChanged(): void {
+        this.favorites = this.databaseService.activeDB.favorites;
+        this.cachedDescriptions = null;
+    }
+
     moduleDescriptions() {
         return new Promise((resolve, rejects) => {
             if (!this.cachedDescriptions) {

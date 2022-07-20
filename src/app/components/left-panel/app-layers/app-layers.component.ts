@@ -62,14 +62,15 @@ export class AppLayersComponent implements OnInit {
     }
 
     updateFavorites() {
-        this.appLayersService.favorites = Object.assign([], Object.assign([], this.layers).reverse());
-        this.dbService.getCurrentDatabaseSettings()
-            .then(
-                (db: DatabaseModel) => {
-                    db.favorites = this.appLayersService.favorites;
-                    this.dbService.setCurrentDatabaseSettings(db);
-                }
-            );
+        this.appLayersService.favorites = Object.assign([], this.layers).reverse();
+        this.dbService.getCurrentDatabaseSettings().then((db: DatabaseModel) => {
+            db.favorites = this.appLayersService.favorites;
+            return this.dbService.setCurrentDatabaseSettings(db);
+        }).then(() => {
+            console.debug('Favorites updated');
+        }).catch((e) => {
+            console.warn('Favorites update error', e);
+        });
     }
 
     onRenderItems(event) {
