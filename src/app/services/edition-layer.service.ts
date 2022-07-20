@@ -72,7 +72,7 @@ export class EditionLayerService {
         olSource.clear();
 
         return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true });
+            let editedObjects = await this.localDB.query('objetsModeEdition6/objetsModeEdition6', { include_docs: true });
 
             // Filter edited objects by the favorites selection of troncon
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');

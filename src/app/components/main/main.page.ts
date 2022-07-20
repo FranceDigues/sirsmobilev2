@@ -147,6 +147,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         this.locateMe();
 
         loading.message = 'Chargement des données du calque d\'édition ... (Cette opération peux durer plusieurs minutes)';
+
         await this.editionLayerService.setEditionLayerFeatures(this.editionLayerService.editionLayer, this.editionLayerService.favorites);
 
         //Update favorite layers

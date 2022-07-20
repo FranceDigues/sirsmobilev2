@@ -8,11 +8,9 @@ import { DatabaseService } from './database.service';
 })
 export class MapService {
 
-    currentView = null;
-    constructor(private dbService: DatabaseService) {
+    _currentView = null;
+    constructor(private dbService: DatabaseService) {}
 
-        this.currentView = this.getCurrentView();
-    }
     public selection = {
         list: [],
         active: null
@@ -20,7 +18,7 @@ export class MapService {
     public archiveObjectsFlag = false;
 
     getCurrentView() {
-        if (!this.currentView) {
+        if (!this._currentView) {
             const isCurrentView = this.dbService.activeDB.context.currentView;
             if (isCurrentView) {
                 return new View({
@@ -36,7 +34,11 @@ export class MapService {
                 });
             }
         }
-        return this.currentView;
+        return this._currentView;
+    }
+
+    get currentView(): View {
+        return this.getCurrentView();
     }
 
 

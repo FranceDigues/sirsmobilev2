@@ -7,6 +7,7 @@ import { DatabaseModel } from 'src/app/components/database-connection/models/dat
 import { AuthService } from '../../../services/auth.service';
 import { DatabaseService } from '../../../services/database.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
+import { designDocs } from '../replicate-database/couchDB-Vues';
 
 @Component({
     selector: 'app-database-choice',
@@ -20,10 +21,14 @@ export class DatabaseChoiceComponent implements OnInit {
     status = 0;
     databaseIndex = 0;
 
-    constructor(private router: Router, private platform: Platform,
-                public alertCtrl: AlertController, private dbService: DatabaseService,
-                private authService: AuthService, private splashScreen: SplashScreen,
-                private statusBar: StatusBar, private sirsDataService: SirsDataService,
+    constructor(private router: Router,
+                private platform: Platform,
+                public alertCtrl: AlertController,
+                private dbService: DatabaseService,
+                private authService: AuthService,
+                private splashScreen: SplashScreen,
+                private statusBar: StatusBar,
+                private sirsDataService: SirsDataService,
                 private loadingCtrl: LoadingController) {
         this.init();
     }
@@ -129,8 +134,20 @@ export class DatabaseChoiceComponent implements OnInit {
             await loading.present();
             await this.sirsDataService.loadDataFromDB();
             this.authService.user = this.dbService.activeDB.context.authUser;
+            await this.updateViews();
             await this.router.navigateByUrl('/main');
             await loading.dismiss();
+        }
+    }
+
+
+    public async updateViews(): Promise<void> {
+        for (const designDoc of designDocs) {
+            try {
+                await this.dbService.localDB.put(designDoc);
+            } catch (error) {
+                if (error.status !== 409) console.warn(error);
+            }
         }
     }
 
