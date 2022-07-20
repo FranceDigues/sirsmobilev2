@@ -312,6 +312,8 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
          otherwise if user press multiple fingers on the screen issues may appear.
          */
         let uniqueLayer;
+
+        let clickStartTime: number = Date.now();
         // Radius in meter. Starting value equal to the double of the resolution.
         let radius = 2 * this.mapService.getCurrentView().getResolution();
         // Store the coordinates of the click in this variable.
@@ -326,7 +328,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             // check that pointerIsDown is false, so it does not trigger this event more than once at a time.
             if (!pointerIsDown) {
                 const longClickEvent = () => { // Draws the circle as long as the click is hold.
-
+                    clickStartTime = Date.now();
                     if (!uniqueLayer) {
                         const centerLongitudeLatitude = evt.coordinate;
                         uniqueLayer = new VectorLayer({
@@ -344,10 +346,13 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                         evt.map.addLayer(uniqueLayer);
 
                         intervalTask = setInterval(() => {
+                            const currentTime = Date.now();
+                            const diffTime = currentTime - clickStartTime;
+                            const diffTimePixels = diffTime / 10;
                             /* Make the radius bigger every 5 milliseconds.
                             zoomLevel ratio to make it grow bigger if you're zoomed out.
                              */
-                            radius += evt.map.getView().getResolution();
+                            radius = evt.map.getView().getResolution() * diffTimePixels;
                             uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
                         }, 5);
                     }
