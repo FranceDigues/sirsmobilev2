@@ -2,7 +2,7 @@
 <div *ngIf="EOS.showText('fullName')">
     <select id="damSide" class="browser-default"
             name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-            <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')" [value]="r.id"
+            <option *ngFor="let r of refCote" [value]="r.id"
               [selected]="EOS.objectDoc.coteId === r.id">
               {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
             </option>
@@ -11,7 +11,7 @@
 <div *ngIf="EOS.showText('abstract')">
     <select id="damSide" class="browser-default"
       name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-        <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')"
+        <option *ngFor="let r of refCote"
                 [ngValue]="r.id"
                 [selected]="EOS.objectDoc.coteId === r.id">
             {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
@@ -21,7 +21,7 @@
 <div *ngIf="EOS.showText('both')">
   <select id="damSide" class="browser-default"
   name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-    <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName')"
+    <option *ngFor="let r of refCote"
       [ngValue]="r.id"
       [selected]="EOS.objectDoc.coteId === r.id">
           {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}

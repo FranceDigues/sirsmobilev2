@@ -62,7 +62,7 @@ export class EditObjectService {
     init(type, id) {
         return new Promise(async (resolve) => {
             const loading = await this.loadingCtrl.create({ message: 'Chargement' });
-            loading.present();
+            await loading.present();
 
             this.resetValues();
             this.type = type;
@@ -82,22 +82,24 @@ export class EditObjectService {
                 this.objectDoc.borne_fin_aval = this.objectDoc.borne_debut_aval;
                 this.objectDoc.borne_fin_distance = this.objectDoc.borne_debut_distance;
             }
+
             this.objectType = PluginUtils.doc2Class(this.objectDoc);
             this.isClosed = (!!this.objectDoc.positionFin || !!this.objectDoc.geometry || !!this.objectDoc.borneFinId);
 
             await this.initReferences();
             this.initTronconList();
             if (this.isDependance()) await this.initDependance();
-            this.initStartPosBorne();
-            this.initEndPosBorne();
+            await this.initStartPosBorne();
+            await this.initEndPosBorne();
             this.initIsLinear();
 
             await this.databaseService.getCurrentDatabaseSettings()
                 .then((config: DatabaseModel) => {
                     this.showTextConfig = config.context.showText;
+                    return Promise.resolve();
                 });
 
-            loading.dismiss();
+            await loading.dismiss();
             resolve();
         });
     }
@@ -570,27 +572,37 @@ export class EditObjectService {
     }
 
     initStartPosBorne() {
-        this.startPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneDebutId })
-                .then(results => {
-                    const borneLabel = results && results.rows && results.rows.length ? results.rows[0].value.libelle : `avec l'id : ${this.objectDoc.borneDebutId}`;
-                    const res = this.objectDoc.borneDebutId ?
-                        `à ${Math.round(this.objectDoc.borne_debut_distance)} m en ${(this.objectDoc.borne_debut_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
-                    resolve(res);
-                });
-        });
+        if (this.objectDoc.borneDebutId) {
+            return new Promise<string>((resolve) => {
+                this.databaseService.getLocalDB().get(this.objectDoc.borneDebutId)
+                    .then(results => {
+                        const borneLabel = results ? results.value.libelle : `avec l'id : ${this.objectDoc.borneDebutId}`;
+                        const res = this.objectDoc.borneDebutId ?
+                            `à ${Math.round(this.objectDoc.borne_debut_distance)} m en ${(this.objectDoc.borne_debut_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
+                        this.startPosBorneLabel = res;
+                        resolve(res);
+                    });
+            });
+        } else {
+            return Promise.resolve(undefined);
+        }
     }
 
     initEndPosBorne() {
-        this.endPosBorneLabel = new Promise<string>((resolve) => {
-            this.databaseService.getLocalDB().query('byId', { key: this.objectDoc.borneFinId })
-                .then(results => {
-                    const borneLabel = results && results.rows && results.rows.length ? results.rows[0].value.libelle : `avec l'id : ${this.objectDoc.borneFinId}`;
-                    const res = this.objectDoc.borneFinId ?
-                        `à ${Math.round(Math.round(this.objectDoc.borne_fin_distance))} m en ${(this.objectDoc.borne_fin_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
-                    resolve(res);
-                });
-        });
+        if (this.objectDoc.borneFinId) {
+            return new Promise<string>((resolve) => {
+                this.databaseService.getLocalDB().get(this.objectDoc.borneFinId)
+                    .then(result => {
+                        const borneLabel = result ? result.value.libelle : `avec l'id : ${this.objectDoc.borneFinId}`;
+                        const res = this.objectDoc.borneFinId ?
+                            `à ${Math.round(Math.round(this.objectDoc.borne_fin_distance))} m en ${(this.objectDoc.borne_fin_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
+                        this.endPosBorneLabel = res;
+                        resolve(res);
+                    });
+            });
+        } else {
+            return Promise.resolve(undefined);
+        }
     }
 
     getStartPosDependance() {
