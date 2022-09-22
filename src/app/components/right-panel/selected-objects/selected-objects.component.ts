@@ -1,10 +1,11 @@
-import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
-import {SelectedObjectsService} from 'src/app/services/selected-objects.service';
-import {LocalDatabase} from '../../../services/local-database.service';
-import {ObjectDetails} from '../../../services/object-details.service';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
+import { LocalDatabase } from '../../../services/local-database.service';
+import { ObjectDetails } from '../../../services/object-details.service';
 import Feature from 'ol/Feature';
-import {MapService} from "../../../services/map.service";
+import { MapService } from "../../../services/map.service";
 import { MapManagerService } from 'src/app/services/map-manager.service';
+import { EditionLayerService } from '../../../services/edition-layer.service';
 
 @Component({
     selector: 'selected-objects',
@@ -21,7 +22,8 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
                 private localDB: LocalDatabase,
                 private objectDetails: ObjectDetails,
                 private mapService: MapService,
-                private mapManagerService: MapManagerService) {
+                private mapManagerService: MapManagerService,
+                private editionLayerService: EditionLayerService) {
     }
 
     get features(): Array<Feature> {
@@ -62,10 +64,11 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         this.mapService.selection.active = feature;
         //force refresh object data layers
         if (this.mapManagerService.appLayer !== null) {
-            this.mapManagerService.appLayer.getLayers().forEach((layer) => {
-                layer.getSource().changed();
-            });
+            this.mapManagerService.appLayer.getLayers().forEach(layer => layer.getSource().changed());
         }
+
+        this.editionLayerService.editionLayer.getLayersArray().forEach(layer => layer.getSource().changed());
+
         //Layer of containment object
         if (feature.get('parent')) {
             this.localDB.get(feature.get('parent'))
