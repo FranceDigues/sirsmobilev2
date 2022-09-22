@@ -576,7 +576,7 @@ export class EditObjectService {
             return new Promise<string>((resolve) => {
                 this.databaseService.getLocalDB().get(this.objectDoc.borneDebutId)
                     .then(results => {
-                        const borneLabel = results ? results.value.libelle : `avec l'id : ${this.objectDoc.borneDebutId}`;
+                        const borneLabel = this.findBorneLabel(results);
                         const res = this.objectDoc.borneDebutId ?
                             `à ${Math.round(this.objectDoc.borne_debut_distance)} m en ${(this.objectDoc.borne_debut_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
                         this.startPosBorneLabel = res;
@@ -588,12 +588,27 @@ export class EditObjectService {
         }
     }
 
+    findBorneLabel(results) {
+        const defaultText = `avec l'id : ${this.objectDoc.borneDebutId}`;
+        if (results) {
+            if (results.libelle) {
+                return results.libelle;
+            } else if (results.value) {
+                return results.value.libelle || defaultText;
+            } else {
+                return defaultText;
+            }
+        } else {
+            return defaultText;
+        }
+    }
+
     initEndPosBorne() {
         if (this.objectDoc.borneFinId) {
             return new Promise<string>((resolve) => {
                 this.databaseService.getLocalDB().get(this.objectDoc.borneFinId)
                     .then(result => {
-                        const borneLabel = result ? result.value.libelle : `avec l'id : ${this.objectDoc.borneFinId}`;
+                        const borneLabel = this.findBorneLabel(result);
                         const res = this.objectDoc.borneFinId ?
                             `à ${Math.round(Math.round(this.objectDoc.borne_fin_distance))} m en ${(this.objectDoc.borne_fin_aval ? 'amont' : 'aval')} de la borne ${borneLabel}` : 'à définir';
                         this.endPosBorneLabel = res;
