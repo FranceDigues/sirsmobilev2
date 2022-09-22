@@ -28,6 +28,7 @@ import ScaleLine from 'ol/control/ScaleLine';
 import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ToastNotification } from '../../shared/models/toast-notification.model';
+import { LongClickSelect } from '@plugins/LongClickSelect';
 
 @Component({
     selector: 'app-main',
@@ -308,7 +309,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         // Timing management.
         let delay; // Store timeout event.
         let intervalTask; // Store interval event.
-        const longPress = 500; // Milliseconds value set to 500ms, if higher I consider it a long click.
 
         // OpenLayers management.
         /* This layer object should be assigned once at a time,
@@ -342,7 +342,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                             }),
                             style: [
                                 new Style({
-                                    fill: new Fill({ color: [255, 255, 255, 0.5] })
+                                    fill: new Fill({color: [255, 255, 255, 0.5]})
                                 })
                             ]
                         });
@@ -361,6 +361,8 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     }
                 };
                 pointerIsDown = true;
+                // Milliseconds value set to 200ms, if higher I consider it a long click.
+                const longPress = +localStorage.getItem('touchSensitivity') || 200;
                 // Wait 'longPress' milliseconds before firing longClickEvent.
                 delay = setTimeout(longClickEvent, longPress);
                 clickPixel = evt.coordinates;

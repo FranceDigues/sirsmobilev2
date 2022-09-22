@@ -33,4 +33,12 @@
             </ion-item>
         </ion-radio-group>
     </ion-list>
+    <label class="block-title">Sensibilité de la sélection des objets ({{touchSensitivity}} ms)  : </label>
+    <ion-range [ticks]="true"
+               [snaps]="true"
+               [pin]="true"
+               [(ngModel)]="touchSensitivity"
+               [step]="100"
+               [min]="100"
+               [max]="1000"></ion-range>
 </ion-content>

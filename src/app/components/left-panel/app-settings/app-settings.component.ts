@@ -11,6 +11,14 @@ export class AppSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
     public showTextConfig;
 
+    get touchSensitivity() {
+        return +localStorage.getItem('touchSensitivity') || 200;
+    }
+
+    set touchSensitivity(value: number) {
+        localStorage.setItem('touchSensitivity', value.toString());
+    }
+
     constructor(private databaseService: DatabaseService) {
     }
 
