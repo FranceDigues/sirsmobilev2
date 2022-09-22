@@ -395,11 +395,12 @@ export class MapManagerService {
 
     async syncAppLayer(layerModel) {
         const olLayer = this.getAppLayerInstance(layerModel);
-
-        olLayer.setVisible(layerModel.visible);
-        olLayer.getSource().clear();
-        if (layerModel.visible === true) {
-            await this.setAppLayerFeatures(olLayer);
+        if (olLayer) {
+            olLayer.setVisible(layerModel.visible);
+            olLayer.getSource().clear();
+            if (layerModel.visible === true) {
+                await this.setAppLayerFeatures(olLayer);
+            }
         }
     }
 
