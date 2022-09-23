@@ -77,7 +77,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
         this.platform.resume.subscribe(
             async () => {
-                this.saveCurrentView();
+                // this.saveCurrentView();
                 await this.watchDeviceConnection();
             });
     }
@@ -215,18 +215,22 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     }
 
     saveCurrentView() {
-        const currentView = this.mapService.currentView;
-        if (currentView) {
-            this.dbService.getCurrentDatabaseSettings().then(
-                (db: DatabaseModel) => {
-                    db.context.currentView = {
-                        zoom: this.olService.map.getView().getZoom(),
-                        coords: this.olService.map.getView().getCenter()
-                    };
-                    this.dbService.setCurrentDatabaseSettings(db);
-                }
-            );
-        }
+        this.dbService.activeDB.context.currentView = {
+            zoom: this.olService.map.getView().getZoom(),
+            coords: this.olService.map.getView().getCenter()
+        };
+
+        this.dbService.getCurrentDatabaseSettings().then(
+            (db: DatabaseModel) => {
+                db.context.currentView = {
+                    zoom: this.olService.map.getView().getZoom(),
+                    coords: this.olService.map.getView().getCenter()
+                };
+                this.dbService.setCurrentDatabaseSettings(db)
+                    .then(r => console.log('updated map view'));
+            }
+        );
+
     }
 
     private async refresh() {
@@ -309,6 +313,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         // Timing management.
         let delay; // Store timeout event.
         let intervalTask; // Store interval event.
+        let isInitializedEvent = false;
 
         // OpenLayers management.
         /* This layer object should be assigned once at a time,
@@ -440,6 +445,14 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                 uniqueLayer = null;
             }
             resetCircle();
+
+            // Save the current extent and zoom level
+            if (isInitializedEvent) {
+                this.saveCurrentView();
+            } else {
+                isInitializedEvent = true;
+            }
+
         });
 
         const resetCircle = () => {
