@@ -39,6 +39,13 @@ export class ObjectEditComponent implements OnInit {
         this.coteList = this.sirsDataService.refCote;
     }
 
+    getStartPositionValue() {
+        // Try to get GPS precision info
+        const precisionGPSText = this.geolocationService.getGPSAccuracy() ? ', Précision: +/- ' + this.geolocationService.getGPSAccuracy() + ' m' : '';
+
+        return this.EOS.getStartPos() + precisionGPSText;
+    }
+
     backToMain() {
         this.router.navigateByUrl('/main');
     }
