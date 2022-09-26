@@ -227,7 +227,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     coords: this.olService.map.getView().getCenter()
                 };
                 this.dbService.setCurrentDatabaseSettings(db)
-                    .then(r => console.log('updated map view'));
+                    .then(() => console.log('updated map view'));
             }
         );
 
@@ -408,7 +408,11 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
                         const properties = feature.getProperties();
                         if (properties.geometry && properties.id && properties['@class']) {
-                            featuresIntersection.push(feature);
+                            // Add feature only in not exist in featuresIntersection
+                            const find = featuresIntersection.find(item => item.get('id') === feature.get('id'));
+                            if (!find) {
+                                featuresIntersection.push(feature);
+                            }
                         }
                     });
                 });
