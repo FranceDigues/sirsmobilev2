@@ -42,16 +42,6 @@ export class AppLayersService {
 
     extraLeaves(nodes, parent?) {
         let leaves = [];
-
-        // for (let node_tmp in nodes) {
-        //     let node = nodes[node_tmp];
-        //     node.categories = typeof parent === 'object' ? parent.categories.concat(parent.title) : [];
-        //     if (Array.isArray(node.children)) {
-        //         leaves = leaves.concat(this.extraLeaves(node.children, node));
-        //     } else {
-        //         leaves.push(node);
-        //     }
-        // }
         nodes.forEach((node) => {
             node.categories = typeof parent === 'object' ? parent.categories.concat(parent.title) : [];
             if (Array.isArray(node.children)) {

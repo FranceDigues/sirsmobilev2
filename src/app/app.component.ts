@@ -37,57 +37,5 @@ export class AppComponent implements OnInit {
 
         });
 
-
-        //  // Add a handler for cordova event types
-        // // $ionicPlatform.on();
-        //
-        // /** Add listener to the pause event
-        //  * The pause event fires when the native platform puts the application into the background,
-        //  * typically when the user switches to a different application.
-        //  */
-        //
-        // // add an Event listener for the online/offline events
-        //
-        // var offlineHandler = function () {
-        //     $rootScope.$apply(function () {
-        //         $rootScope.online = false;
-        //         $cordovaToast
-        //             .showLongTop('La connexion est échoué');
-        //     });
-        // };
-        //
-        // var onlineHandler = function () {
-        //     $rootScope.$apply(function () {
-        //         $rootScope.online = true;
-        //         $cordovaToast
-        //             .showLongTop('Connexion établie avec succès');
-        //     });
-        // };
-        //
-        // $rootScope.online = navigator.onLine;
-        //
-        // $window.addEventListener("offline", offlineHandler, false);
-        //
-        // $window.addEventListener("online", onlineHandler, false);
-        //
-        // $ionicPlatform.on("pause", function (event) {
-        //     $rootScope.online = undefined;
-        //     $window.removeEventListener("offline", offlineHandler, false);
-        //     $window.removeEventListener("online", onlineHandler, false);
-        // });
-        //
-        // $ionicPlatform.on("resume", function (event) {
-        //     $rootScope.online = navigator.onLine;
-        //     $window.addEventListener("offline", offlineHandler, false);
-        //     $window.addEventListener("online", onlineHandler, false);
-        // });
-        //
-        // //Handle the Hardware BackButton
-        // $ionicPlatform.onHardwareBackButton(function (event) {
-        //     $rootScope.online = undefined;
-        //     $window.removeEventListener("offline", offlineHandler, false);
-        //     $window.removeEventListener("online", onlineHandler, false);
-        // });
-
     }
 }

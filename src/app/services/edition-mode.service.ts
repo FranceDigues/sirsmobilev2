@@ -130,7 +130,7 @@ export class EditionModeService {
     }
 
     getEditionModeObjects5() {
-        return (this.localDB.query('objetsModeEdition5/objetsModeEdition6', {
+        return (this.localDB.query('objetsModeEdition5/objetsModeEdition5', {
             include_docs: true
         }));
     }

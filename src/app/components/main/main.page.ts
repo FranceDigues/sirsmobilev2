@@ -85,7 +85,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     public ngOnInit(): void {
         this.onGeolocationSubscription = this.geolocationService.onPositionUpdated.subscribe((coord) => {
             this.geoLocLayer.redrawGeolocLayer(coord);
-        })
+        });
     }
 
     public ngOnDestroy(): void {
