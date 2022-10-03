@@ -67,8 +67,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.remoteDB.info()
     .then(
       (result) => {
-        const count = result.doc_del_count ? result.doc_count + result.doc_del_count : result.doc_count;
-        this.firstStepComplete(count);
+        this.firstStepComplete(result.doc_count);
       },
       (err) => {
         this.firstStepError(err);
