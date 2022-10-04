@@ -19,6 +19,8 @@ import { transform } from 'ol/proj';
 import { LocalDatabase } from 'src/app/services/local-database.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { LabelService } from 'src/app/services/label.service';
+import {DatabaseModel} from "../../database-connection/models/database.model";
+import {DatabaseService} from "../../../services/database.service";
 
 @Component({
     selector: 'app-photo-edit',
@@ -39,6 +41,7 @@ export class PhotoEditComponent implements OnInit {
     private orientationList;
     private photoIndex;
     private objectDoc;
+    public defaultObservateurId;
 
     constructor(private activeRoute: ActivatedRoute,
         private authService: AuthService,
@@ -57,60 +60,66 @@ export class PhotoEditComponent implements OnInit {
         private positionService: PositionService,
         private localDB: LocalDatabase,
         private editionModeService: EditionModeService,
-        private labelService: LabelService) {
+        private labelService: LabelService,
+                private databaseService: DatabaseService) {
     }
 
     ngOnInit() {
-        this.isNew = true;
-        this.photoDoc = {
-            id: '',
-            chemin: '',
-            designation: '',
-            libelle: '',
-            orientationPhoto: '',
-            coteId: '',
-            commentaire: '',
-            photographeId: '',
-            author: this.authService.getValue()._id,
-            valid: false,
-            editMode: true
-        };
-        this.photoDoc['@class'] = 'fr.sirs.core.model.Photo';
-        this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}medias`;
-        this.parentId = this.activeRoute.snapshot.paramMap.get('parentId');
-        this.photoId = this.activeRoute.snapshot.paramMap.get('photoId'); //Mandatory if edition
+        this.databaseService.getCurrentDatabaseSettings()
+            .then((config: DatabaseModel) => {
+                this.defaultObservateurId = config.context.defaultObservateurId;
 
-        if (this.parentId && this.parentId !== '') {
-            this.initReferenceList();
-            this.localDB.get(this.parentId)
-                .then(doc => {
-                    this.objectDoc = doc;
-                    this.objectDoc.valid = false;
-                    this.objectDoc.editMode = true;
-                    if (!this.objectDoc.photos) this.objectDoc.photos = [];
+                this.isNew = true;
+                this.photoDoc = {
+                    id: '',
+                    chemin: '',
+                    designation: '',
+                    libelle: '',
+                    orientationPhoto: '',
+                    coteId: '',
+                    commentaire: '',
+                    photographeId: this.defaultObservateurId || '',
+                    author: this.authService.getValue()._id,
+                    valid: false,
+                    editMode: true
+                };
+                this.photoDoc['@class'] = 'fr.sirs.core.model.Photo';
+                this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
+                this.mediaPath = `${this.file.dataDirectory}medias`;
+                this.parentId = this.activeRoute.snapshot.paramMap.get('parentId');
+                this.photoId = this.activeRoute.snapshot.paramMap.get('photoId'); //Mandatory if edition
 
-                    //If edition
-                    if (this.photoId && this.photoId !== '') {
-                        this.isNew = false;
-                        const photos = this.objectDoc.photos;
-                        if (photos) {
-                            this.photoIndex = photos.findIndex(p => p.id === this.photoId)
-                            if (this.photoIndex === -1) {
-                                throw new Error('Unexpected behaviour: parent document ' + this.parentId + ' should contain photo ' + this.photoId);
-                            } else {
-                                this.photoDoc = photos[this.photoIndex];
-                                this.photoDoc.valid = false;
-                                this.photoDoc.editMode = true;
+                if (this.parentId && this.parentId !== '') {
+                    this.initReferenceList();
+                    this.localDB.get(this.parentId)
+                        .then(doc => {
+                            this.objectDoc = doc;
+                            this.objectDoc.valid = false;
+                            this.objectDoc.editMode = true;
+                            if (!this.objectDoc.photos) this.objectDoc.photos = [];
+
+                            //If edition
+                            if (this.photoId && this.photoId !== '') {
+                                this.isNew = false;
+                                const photos = this.objectDoc.photos;
+                                if (photos) {
+                                    this.photoIndex = photos.findIndex(p => p.id === this.photoId)
+                                    if (this.photoIndex === -1) {
+                                        throw new Error('Unexpected behaviour: parent document ' + this.parentId + ' should contain photo ' + this.photoId);
+                                    } else {
+                                        this.photoDoc = photos[this.photoIndex];
+                                        this.photoDoc.valid = false;
+                                        this.photoDoc.editMode = true;
+                                    }
+                                } else {
+                                    throw new Error('Unexpected behaviour: Ask for edition of photo ' + this.photoId + ', but no photos found in the parent document ' + this.parentId);
+                                }
                             }
-                        } else {
-                            throw new Error('Unexpected behaviour: Ask for edition of photo ' + this.photoId + ', but no photos found in the parent document ' + this.parentId);
-                        }
-                    }
-                })
-        } else {
-            throw new Error("Can't use this component without parent reference parameter: parentId");
-        }
+                        })
+                } else {
+                    throw new Error("Can't use this component without parent reference parameter: parentId");
+                }
+            });
     }
 
     private initReferenceList() {

@@ -119,7 +119,17 @@ export class DatabaseService {
             .then(
                 (database: DatabaseModel) => {
                     database.context.showText = value;
-                    this.setCurrentDatabaseSettings(database);
+                    this.setCurrentDatabaseSettings(database).then();
+                },
+            );
+    }
+
+    changeDefaultObservateurId(value: string) {
+        this.getCurrentDatabaseSettings()
+            .then(
+                (database: DatabaseModel) => {
+                    database.context.defaultObservateurId = value;
+                    this.setCurrentDatabaseSettings(database).then();
                 },
             );
     }

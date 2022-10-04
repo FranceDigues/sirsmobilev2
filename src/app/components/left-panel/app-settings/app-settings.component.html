@@ -41,4 +41,21 @@
                [step]="100"
                [min]="100"
                [max]="1000"></ion-range>
+    <label class="block-title">Observateur par défaut : </label>
+    <div class="block-default-obs">
+        <select name="contactList" class="browser-default"
+                [(ngModel)]="defaultObservateurId"
+                (change)="changeDefaultObservateurId()">
+            <option *ngFor="let observateur of contactList | sortByDocNom"
+                    [value]="observateur.id"
+                    [selected]="observateur.id === defaultObservateurId">
+                {{ parseContactName(observateur) }}
+            </option>
+        </select>
+        <button class="sirs-button-item remove-obs"
+                (click)="defaultObservateurId='';changeDefaultObservateurId();$event.stopPropagation()">
+            <ion-icon name="trash-outline"></ion-icon>
+        </button>
+    </div>
+
 </ion-content>

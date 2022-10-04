@@ -14,6 +14,7 @@ export interface DatabaseModel {
 export interface SettingsModel {
     authUser?;
     showText?: string;
+    defaultObservateurId: string,
     backLayer?: BackLayerModel;
     // mode?: {
     //     enableGeolocation: boolean,

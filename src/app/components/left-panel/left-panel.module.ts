@@ -18,6 +18,7 @@ import { AddShapesLayersComponent } from './shapes-layers-manager/add-shapes-lay
 import { GalleryModule } from './gallery/gallery.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
+import {ObservationEditModule} from "../object-details/observation-edit/observation-edit.module";
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { MatIconModule } from '@angular/material/icon';
         IonicModule,
         GalleryModule,
         FlexLayoutModule,
-        MatIconModule
+        MatIconModule,
+        ObservationEditModule
     ],
     providers: [],
     declarations: [

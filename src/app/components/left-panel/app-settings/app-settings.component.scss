@@ -13,3 +13,19 @@ ion-toolbar {
   margin-top: 10px;
 }
 
+.block-default-obs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .remove-obs {
+    width: 55px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    margin: 10px;
+  }
+}
+
+

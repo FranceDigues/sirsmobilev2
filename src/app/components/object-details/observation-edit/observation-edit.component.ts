@@ -8,16 +8,16 @@ import {
     Pipe,
     PipeTransform
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ObservationEditService } from 'src/app/services/observation-edit.service';
-import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { DatabaseService } from '../../../services/database.service';
-import { DatabaseModel } from '../../database-connection/models/database.model';
-import { SirsDataService } from '../../../services/sirs-data.service';
-import { UuidUtils } from '../../../utils/uuid-utils';
-import { formatDate } from '@angular/common';
-import { ObjectDetails } from '../../../services/object-details.service';
-import { PluginUtils } from 'src/app/utils/plugin-utils';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ObservationEditService} from 'src/app/services/observation-edit.service';
+import {EditionModeService} from 'src/app/services/edition-mode.service';
+import {DatabaseService} from '../../../services/database.service';
+import {DatabaseModel} from '../../database-connection/models/database.model';
+import {SirsDataService} from '../../../services/sirs-data.service';
+import {UuidUtils} from '../../../utils/uuid-utils';
+import {formatDate} from '@angular/common';
+import {ObjectDetails} from '../../../services/object-details.service';
+import {PluginUtils} from 'src/app/utils/plugin-utils';
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -59,6 +59,7 @@ export class ObservationEditComponent implements OnInit {
     saving = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
     etatOuvAccGCList;
     manoeuvreOuvrageList;
+    defaultObservateurId;
 
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
@@ -115,14 +116,16 @@ export class ObservationEditComponent implements OnInit {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
+                this.defaultObservateurId = config.context.defaultObservateurId;
+                this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
             });
-        this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
     }
 
     createNewObservation() {
         const observation = {
             id: UuidUtils.generateUuid(),
             date: formatDate(Date.now(), 'yyyy-MM-dd', 'en-US'),
+            observateurId: this.defaultObservateurId || '',
             photos: [],
             valid: false
         };
@@ -287,8 +290,7 @@ export class NgInitDirective implements OnInit {
 export class ArraySortPipe2 implements PipeTransform {
 
     transform(value: any, exponent: any) {
-        const data = value.sort(this.sortOn());
-        return data;
+        return value ? value.sort(this.sortOn()) : '';
     }
 
     sortOn() {

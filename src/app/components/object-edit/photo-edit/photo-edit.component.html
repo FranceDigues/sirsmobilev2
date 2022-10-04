@@ -82,7 +82,7 @@
                     <div>
                         <label>Photographe</label>
                         <div class="sirs-field">
-                            <select id="contactList" class="browser-default" [(ngModel)]="photoDoc.photographeId">
+                            <select class="browser-default" [(ngModel)]="photoDoc.photographeId">
                                 <option *ngFor="let c of contactList || []" [selected]="c.id === photoDoc.photographeId" [value]="c.id">
                                     {{ c.doc.nom }} {{ c.doc.prenom ? c.doc.prenom : '' }}
                                 </option>

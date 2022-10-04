@@ -38,7 +38,7 @@ import { ObjectEditModule } from '../../object-edit/object-edit.module';
         ObservationMediaComponent, PositionByBorneModal2Component,
         ArraySortPipe2
     ],
-    exports: [ObservationEditComponent]
+    exports: [ObservationEditComponent, ArraySortPipe2]
 })
 export class ObservationEditModule {
 }

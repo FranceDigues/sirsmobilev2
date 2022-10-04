@@ -1,6 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DatabaseService } from '../../../services/database.service';
-import { DatabaseModel } from '../../database-connection/models/database.model';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {DatabaseService} from '../../../services/database.service';
+import {DatabaseModel} from '../../database-connection/models/database.model';
+import {SirsDataService} from "../../../services/sirs-data.service";
 
 @Component({
     selector: 'app-settings',
@@ -10,6 +11,8 @@ import { DatabaseModel } from '../../database-connection/models/database.model';
 export class AppSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
     public showTextConfig;
+    public defaultObservateurId;
+    public contactList;
 
     get touchSensitivity() {
         return +localStorage.getItem('touchSensitivity') || 200;
@@ -19,14 +22,22 @@ export class AppSettingsComponent implements OnInit {
         localStorage.setItem('touchSensitivity', value.toString());
     }
 
-    constructor(private databaseService: DatabaseService) {
+    constructor(private databaseService: DatabaseService,
+                public sirsDataService: SirsDataService) {
     }
 
     ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
+                this.defaultObservateurId = config.context.defaultObservateurId;
             });
+
+        this.sirsDataService.getContactList().then((list) => {
+            this.contactList = list;
+        }, (error) => {
+            console.error('error contactList returned : ', error);
+        });
     }
 
     goBack() {
@@ -35,6 +46,15 @@ export class AppSettingsComponent implements OnInit {
 
     changeShowTextConfig(value: string) {
         this.databaseService.changeShowTextConfig(value);
+    }
+
+    changeDefaultObservateurId() {
+        this.databaseService
+            .changeDefaultObservateurId(this.defaultObservateurId);
+    }
+
+    parseContactName(observateur) {
+        return `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}`;
     }
 
 }

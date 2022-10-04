@@ -32,6 +32,7 @@ export class ObservationMediaComponent implements OnInit {
     contactList;
     refOrientationPhoto;
     refCote;
+    defaultObservateurId;
 
     constructor(public OES: ObservationEditService,
                 private modalCtrl: ModalController,
@@ -75,6 +76,10 @@ export class ObservationMediaComponent implements OnInit {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
+                this.defaultObservateurId = config.context.defaultObservateurId;
+
+                this.OES.contact = this.defaultObservateurId || '';
+                this.OES.mediaOptions.photographeId = this.defaultObservateurId || '';
             });
     }
 

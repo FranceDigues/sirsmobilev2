@@ -137,9 +137,11 @@
         <div>
           <label>Photographe</label>
           <div class="sirs-field">
-            <select id="contactList" class="browser-default" *ngIf="contactList && contactList.length > 0"
+            <select class="browser-default" *ngIf="contactList && contactList.length > 0"
               [(ngModel)]="OES.contact" name="contactList" (ngModelChange)="changeContact()">
-              <option *ngFor="let contact of contactList | sortByDocNom" [selected]="contact.id === OES.contact">
+              <option *ngFor="let contact of contactList | sortByDocNom"
+                      [value]="contact.id"
+                      [selected]="contact.id === OES.contact">
                 {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
               </option>
             </select>
