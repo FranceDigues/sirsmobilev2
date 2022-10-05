@@ -46,15 +46,17 @@ import { OuvrageAssocieAmenagementHydrauliqueComponent } from './ouvrage-associe
 import { PrestationAmenagementHydrauliqueComponent } from './prestation-amenagement-hydraulique/prestation-amenagement-hydraulique.component';
 import { StructureAmenagementHydrauliqueComponent } from './structure-amenagement-hydraulique/structure-amenagement-hydraulique.component';
 import { TraitAmenagementHydrauliqueComponent } from './trait-amenagement-hydraulique/trait-amenagement-hydraulique.component';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    MatCheckboxModule,
-    MatButtonModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+    ],
   providers: [
   ],
   declarations: [
