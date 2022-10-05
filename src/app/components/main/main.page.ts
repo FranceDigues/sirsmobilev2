@@ -130,7 +130,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             this.olService.getMap().setTarget(null);
             this.olService.map = null;
         }
-        this.olService.createMap('map', null, 6);
+        this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
         this.olService.getMap().setView(this.mapService.currentView);
         this.olService.addLayer(this.backLayerService.backLayer);
         this.olService.addLayer(this.editionLayerService.editionLayer);

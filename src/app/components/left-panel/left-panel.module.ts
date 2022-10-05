@@ -19,6 +19,7 @@ import { GalleryModule } from './gallery/gallery.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import {ObservationEditModule} from "../object-details/observation-edit/observation-edit.module";
+import {AppSettings2Component} from "./app-settings2/app-settings2.component";
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import {ObservationEditModule} from "../object-details/observation-edit/observat
         MenuPanelComponent,
         AppInfosComponent,
         AppSettingsComponent,
+        AppSettings2Component,
         ShapesLayersManagerComponent,
         AddShapesLayersComponent,
         LeftSlideBackmapComponent,

@@ -1,0 +1,28 @@
+<ion-header translucent>
+    <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Paramètres Carte</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+    <label class="block-title">Sensibilité de la sélection des objets ({{touchSensitivity}} ms)  : </label>
+    <ion-range [ticks]="true"
+               [snaps]="true"
+               [pin]="true"
+               [(ngModel)]="touchSensitivity"
+               [step]="100"
+               [min]="100"
+               [max]="1000"></ion-range>
+
+    <label class="block-title">Map moveTolerance ({{moveTolerance}} px)  : </label>
+    <ion-range [ticks]="true"
+               [snaps]="true"
+               [pin]="true"
+               [(ngModel)]="moveTolerance"
+               [step]="1"
+               [min]="1"
+               [max]="20"></ion-range>
+
+</ion-content>

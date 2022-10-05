@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
         </ion-buttons>
-        <ion-title>Configuration</ion-title>
+        <ion-title>Paramètres avancés</ion-title>
     </ion-toolbar>
 </ion-header>
 <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
@@ -41,6 +41,16 @@
                [step]="100"
                [min]="100"
                [max]="1000"></ion-range>
+
+    <label class="block-title">Sensibilité de la sélection des objets ({{touchSensitivity}} ms)  : </label>
+    <ion-range [ticks]="true"
+               [snaps]="true"
+               [pin]="true"
+               [(ngModel)]="touchSensitivity"
+               [step]="100"
+               [min]="100"
+               [max]="1000"></ion-range>
+
     <label class="block-title">Observateur par défaut : </label>
     <div class="block-default-obs">
         <select name="contactList" class="browser-default"
