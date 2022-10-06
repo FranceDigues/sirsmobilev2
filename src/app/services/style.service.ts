@@ -193,8 +193,7 @@ export class EditionLayerStyle {
     style(selection, feature, type?, featureModel?, layerModel?) {
         switch (type) {
             case 'LineString':
-                return this.createLineStyleFunc(featureModel, layerModel,
-                    feature.get('selected'), selection.active && selection.active === feature);
+                return this.createLineStyleFunc(selection, feature, featureModel, layerModel);
             case 'Point':
                 return this.createPointStyleFunc(selection, feature, featureModel, layerModel);
             case 'Polygon':
@@ -263,23 +262,67 @@ export class EditionLayerStyle {
         };
     }
 
-    private createLineStyleFunc(featureModel?, layerModel?, selected = false, active = false) {
+    private createLineStyleFunc(selection, feature, featureModel?, layerModel?) {
         return () => {
             const styles = [];
-            styles.push(this.getStyle.line(this.EDITION_LAYER_COLOR_2, this.EDITION_LAYER_STROKE_WIDTH,
-                [30, 20], 1, featureModel, layerModel));
-            const pointStyle = this.getStyle.point(this.EDITION_LAYER_COLOR_1,
-                this.EDITION_LAYER_COLOR_2,
-                this.EDITION_LAYER_STROKE_WIDTH,
-                this.EDITION_LAYER_CIRCLE_RADIUS,
-                2, featureModel, layerModel);
-            pointStyle.setGeometry(
-                (featureGeo) => {
-                    return new MultiPoint(featureGeo.getGeometry().getCoordinates());
-                }
-            );
-            styles.push(pointStyle);
-            return styles;
+
+            if (selection.active && selection.active === feature) {
+                styles.push(this.getStyle.line(
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    [30, 20], 1, featureModel, layerModel));
+                const pointStyle = this.getStyle.point(
+                    [255, 0, 0, 0.3],
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    2, featureModel, layerModel);
+                pointStyle.setGeometry(
+                    (featureGeo) => {
+                        return new MultiPoint(featureGeo.getGeometry().getCoordinates());
+                    }
+                );
+                styles.push(pointStyle);
+                return styles;
+
+            } else if (feature.get('selected')) {
+                styles.push(this.getStyle.line(
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    [30, 20], 1, featureModel, layerModel));
+                const pointStyle = this.getStyle.point(
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_COLOR_1,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    2, featureModel, layerModel);
+                pointStyle.setGeometry(
+                    (featureGeo) => {
+                        return new MultiPoint(featureGeo.getGeometry().getCoordinates());
+                    }
+                );
+                styles.push(pointStyle);
+                return styles;
+
+            } else {
+                styles.push(this.getStyle.line(
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    [30, 20], 1, featureModel, layerModel));
+                const pointStyle = this.getStyle.point(
+                    this.EDITION_LAYER_COLOR_1,
+                    this.EDITION_LAYER_COLOR_2,
+                    this.EDITION_LAYER_STROKE_WIDTH,
+                    this.EDITION_LAYER_CIRCLE_RADIUS,
+                    2, featureModel, layerModel);
+                pointStyle.setGeometry(
+                    (featureGeo) => {
+                        return new MultiPoint(featureGeo.getGeometry().getCoordinates());
+                    }
+                );
+                styles.push(pointStyle);
+                return styles;
+            }
         };
     }
 
