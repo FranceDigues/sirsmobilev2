@@ -80,8 +80,7 @@ export class PhotoEditComponent implements OnInit {
                     commentaire: '',
                     photographeId: this.defaultObservateurId || '',
                     author: this.authService.getValue()._id,
-                    valid: false,
-                    editMode: true
+                    valid: false
                 };
                 this.photoDoc['@class'] = 'fr.sirs.core.model.Photo';
                 this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
@@ -95,7 +94,6 @@ export class PhotoEditComponent implements OnInit {
                         .then(doc => {
                             this.objectDoc = doc;
                             this.objectDoc.valid = false;
-                            this.objectDoc.editMode = true;
                             if (!this.objectDoc.photos) this.objectDoc.photos = [];
 
                             //If edition
@@ -109,7 +107,6 @@ export class PhotoEditComponent implements OnInit {
                                     } else {
                                         this.photoDoc = photos[this.photoIndex];
                                         this.photoDoc.valid = false;
-                                        this.photoDoc.editMode = true;
                                     }
                                 } else {
                                     throw new Error('Unexpected behaviour: Ask for edition of photo ' + this.photoId + ', but no photos found in the parent document ' + this.parentId);

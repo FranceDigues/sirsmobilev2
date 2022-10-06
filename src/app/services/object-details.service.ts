@@ -229,7 +229,6 @@ export class ObjectDetails {
         this.filterDesordreList();
         this.selectedObject.valid = false;
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-        this.selectedObject.editMode = true;
         this.editionService.updateObject(this.selectedObject)
             .then(() => {
                 this.mapManagerService.syncAllAppLayer();
@@ -256,7 +255,6 @@ export class ObjectDetails {
                         }
                         this.selectedObject.valid = false;
                         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-                        this.selectedObject.editMode = true;
                         this.filterDesordreList();
                         this.editionService.updateObject(this.selectedObject)
                             .then(() => {
@@ -295,7 +293,6 @@ export class ObjectDetails {
         this.filterPrestationList();
         this.selectedObject.valid = false;
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-        this.selectedObject.editMode = true;
         this.editionService.updateObject(this.selectedObject)
             .then(() => {
                 this.mapManagerService.syncAllAppLayer();
@@ -338,7 +335,6 @@ export class ObjectDetails {
                         }
                         this.selectedObject.valid = false;
                         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-                        this.selectedObject.editMode = true;
                         this.filterPrestationList();
                         this.editionService.updateObject(this.selectedObject)
                             .then(() => {
@@ -385,7 +381,6 @@ export class ObjectDetails {
                         }
                         doc.valid = false;
                         doc.dateMaj = new Date().toISOString().split('T')[0];
-                        doc.editMode = true;
                         this.editionService.updateObject(doc)
                             .then(() => {
                                 this.mapManagerService.syncAllAppLayer();
@@ -410,7 +405,6 @@ export class ObjectDetails {
                     }
                     doc.valid = false;
                     doc.dateMaj = new Date().toISOString().split('T')[0];
-                    doc.editMode = true;
                     this.editionService.updateObject(doc)
                         .then(() => {
                             this.mapManagerService.syncAllAppLayer();

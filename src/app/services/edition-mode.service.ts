@@ -69,8 +69,7 @@ export class EditionModeService {
             '@class': 'fr.sirs.core.model.' + type,
             author: this.authService.user._id,
             valid: false,
-            linearId: null,
-            editMode: true
+            linearId: null
         };
         if (type !== 'Désordre') {
             objectDoc.photos = [];
@@ -130,7 +129,7 @@ export class EditionModeService {
     }
 
     getEditionModeObjects5() {
-        return (this.localDB.query('objetsModeEdition5/objetsModeEdition5', {
+        return (this.localDB.query('objetsModeEdition6/objetsModeEdition6', {
             include_docs: true
         }));
     }

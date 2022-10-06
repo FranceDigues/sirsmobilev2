@@ -211,7 +211,6 @@ export class ObservationEditComponent implements OnInit {
             this.objectDoc.observations.push(this.observation);
         }
         this.objectDoc.valid = false;
-        this.objectDoc.editMode = true;
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
         // check what is this flags with Sirs desktop
         delete this.objectDoc.prDebut;

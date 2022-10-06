@@ -126,7 +126,7 @@ export class MapManagerService {
                     }).then(
                         (results) => {
                             return results.filter((item) => {
-                                return !item.doc.editMode;
+                                return item.doc.valid;
                             }).map(this.createAppFeatureModel.bind(this));
                         },
                         (error) => {
@@ -148,7 +148,7 @@ export class MapManagerService {
                             results.map(obj => obj.value).forEach(troncon => {
                                 if (troncon.photos) {
                                     troncon.photos.forEach(photo => {
-                                        if (!photo.editMode) {
+                                        if (photo.valid) {
                                             photo.parent = troncon._id;
                                             collectPhotos.push(photo);
                                         }
@@ -203,7 +203,7 @@ export class MapManagerService {
                 }).then(
                     (results) => {
                         return results.filter((item) => {
-                            return !item.value.editMode;
+                            return item.value.valid;
                         }).map(this.createAppFeatureModel.bind(this));
                     },
                     (error) => {

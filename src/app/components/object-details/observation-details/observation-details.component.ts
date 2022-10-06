@@ -122,8 +122,6 @@ export class ObservationDetailsComponent implements OnInit {
 
                         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
 
-                        this.objectDoc.editMode = true;
-
                         this.editionService.updateObject(this.objectDoc);
                     }
                 }
@@ -222,7 +220,6 @@ export class ObservationDetailsComponent implements OnInit {
         };
 
         this.objectDoc.valid = false;
-        this.objectDoc.editMode = true;
         this.editionService.updateObject(this.objectDoc)
             .then(
                 () => {

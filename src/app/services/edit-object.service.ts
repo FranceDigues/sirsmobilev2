@@ -351,8 +351,6 @@ export class EditObjectService {
 
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
 
-        this.objectDoc.editMode = true;
-
         delete this.objectDoc.prDebut;
 
         delete this.objectDoc.prFin;

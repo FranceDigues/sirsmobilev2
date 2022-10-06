@@ -151,7 +151,6 @@ export class PhotoDetailsComponent implements OnInit {
   private saveParent() {
     return new Promise(resolve => {
       this.objectDetails.selectedObject.valid = false;
-      this.objectDetails.selectedObject.editMode = true;
       this.objectDetails.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
       this.editionModeService.updateObject(this.objectDetails.selectedObject).then(() => {
         resolve();

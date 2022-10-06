@@ -72,7 +72,7 @@ export class EditionLayerService {
         olSource.clear();
 
         return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition5/objetsModeEdition5', { include_docs: true });
+            let editedObjects = await this.localDB.query('objetsModeEdition6/objetsModeEdition6', { include_docs: true });
 
             // Filter edited objects by the favorites selection of troncon
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
@@ -97,7 +97,7 @@ export class EditionLayerService {
                     if ("fr.sirs.core.model.TronconDigue" === obj.doc['@class'] && obj.doc.photos) {
                         const trId = obj.doc._id;
                         obj.doc.photos.forEach(p => {
-                            if (p.editMode) {
+                            if (!p.valid) {
                                 p.parent = trId;
                                 editModePhotos.push(p);
                             }

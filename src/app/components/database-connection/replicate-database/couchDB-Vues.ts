@@ -8,7 +8,7 @@ export const indexedViews = [
     'Element/byClassAndLinear',
     'Document/byPath',
     'TronconDigue/streamLight',
-    // 'objetsModeEdition6/objetsModeEdition6',
+    'objetsModeEdition6/objetsModeEdition6',
     // Local views
     'ElementSpecial3',
     'bySEIdHB',
@@ -59,11 +59,11 @@ export const designDocs = [
         }
     },
     {
-        _id: '_design/objetsModeEdition5',
+        _id: '_design/objetsModeEdition6',
         views: {
-            objetsModeEdition5: {
+            objetsModeEdition6: {
                 map: function (doc) {
-                    if (doc.editMode && !doc.valid && ((doc.positionDebut && doc.positionFin)
+                    if (!doc.valid && ((doc.positionDebut && doc.positionFin)
                         || (doc.borneDebutId && doc.borneFinId)
                         || (doc.geometry
                             && (doc['@class'].toLowerCase().indexOf('dependance') > -1
@@ -127,7 +127,7 @@ export const designDocs = [
         views: {
             'ElementSpecial3': {
                 map: function (doc) {
-                    if (doc['@class'] && !doc.editMode) {
+                    if (doc['@class'] && doc.valid) {
                         emit([doc['@class'], doc.linearId], {
                             id: doc._id, rev: doc._rev,
                             designation: doc.designation, libelle: doc.libelle,
