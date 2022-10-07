@@ -280,7 +280,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   fourthStep() {
     console.debug('[Replication] Indexing database ...');
     this.step = 4;
-    this.description = 'Contruction des index... (Cette opération peux durer quelques minutes)';
+    this.description = 'Construction des index... (Cette opération peux durer quelques minutes)';
     this.percent = 0;
     this.completion = '0/' + indexedViews.length;
 
@@ -289,6 +289,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
     for (const view of indexedViews) {
       const query: Promise<void> = this.localDB.query(view, {limit: 0}).then(() => {
+        this.completion = proceedViews+ '/' + indexedViews.length;
         this.fourthStepProgress(++proceedViews);
         return Promise.resolve();
       });
