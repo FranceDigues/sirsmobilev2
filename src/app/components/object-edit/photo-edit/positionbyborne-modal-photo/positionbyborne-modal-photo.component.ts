@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import WKT from 'ol/format/WKT';
 import { DatabaseService } from 'src/app/services/database.service';
+import { EditObjectService } from "../../../../services/edit-object.service";
 
 @Component({
   selector: 'app-positionbyborne-modal-photo',
@@ -13,13 +14,15 @@ export class PositionbyborneModalPhotoComponent implements OnInit {
   @Input() data;
 
   wktFormat = new WKT();
+  troncon = null;
   systemeReperage = null;
   systemeReperageList = null;
   systemeReperageId = null;
 
   constructor(private modalCtrl: ModalController,
               private db: DatabaseService, private loadingCtrl: LoadingController,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              public EOS: EditObjectService) {
                 this.init();
               }
 
@@ -87,7 +90,10 @@ export class PositionbyborneModalPhotoComponent implements OnInit {
     const vs = glMatrix.vec2.scale(vn, vn, borne_distance);
     const o = glMatrix.vec2.add([], x, vs);
 
-    return 'POINT(' + o[0] + ' ' + o[1] + ')';
+      // Try to find the closest point in Tronçon
+      const o1 = this.wktFormat.readGeometry(this.troncon.geometry).getClosestPoint(o);
+
+      return 'POINT(' + o1[0] + ' ' + o1[1] + ')';
   }
 
   validate() {
@@ -105,6 +111,9 @@ export class PositionbyborneModalPhotoComponent implements OnInit {
   }
 
   init() {
+      this.troncon = this.EOS.troncons.find((item) => {
+          return item.id === this.EOS.objectDoc.linearId;
+      });
     this.loadingCtrl.create({ message: 'Chargement' })
     .then(
       (loading: HTMLIonLoadingElement) => {

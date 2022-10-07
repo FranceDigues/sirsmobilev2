@@ -138,7 +138,10 @@ export class PositionByBorneModalComponent implements OnInit {
 
     const o = glMatrix.vec2.add([], x, vs);
 
-    return 'POINT(' + o[0] + ' ' + o[1] + ')';
+    // Try to find the closest point in Tronçon
+    const o1 = this.wktFormat.readGeometry(this.troncon.geometry).getClosestPoint(o);
+
+    return 'POINT(' + o1[0] + ' ' + o1[1] + ')';
   }
 
   validate() {
