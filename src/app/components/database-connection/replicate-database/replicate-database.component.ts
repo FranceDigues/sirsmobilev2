@@ -288,20 +288,24 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     let proceedViews = 0;
 
     for (const view of indexedViews) {
-      const query: Promise<void> = this.localDB.query(view, {limit: 0}).then(() => {
-        this.completion = proceedViews+ '/' + indexedViews.length;
-        this.fourthStepProgress(++proceedViews);
-        return Promise.resolve();
-      });
+      const query: Promise<void> = this.localDB.query(view, {limit: 0});
+
       promises.push(query);
     }
 
-    Promise.all(promises).then(() => {
-      this.fourthStepComplete();
-      console.debug('[Replication] Database indexed ...');
-    }).catch((error) => {
-      this.fourthStepError(error).then();
-    });
+    for (const promise of promises) {
+      promise.then(() => {
+        proceedViews++;
+        this.completion = proceedViews + '/' + indexedViews.length;
+        this.fourthStepProgress(proceedViews);
+        if (proceedViews === indexedViews.length) {
+          this.fourthStepComplete();
+          console.debug('[Replication] Database indexed ...');
+        }
+      }).catch((error) => {
+        this.fourthStepError(error).then();
+      });
+    }
   }
 
   fourthStepProgress(proceedViews) {
