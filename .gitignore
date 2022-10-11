@@ -14,6 +14,7 @@ UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
 
 *.apk
+*.aab
 *.iml
 *.log
 log.txt

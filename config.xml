@@ -7,12 +7,12 @@
     <access origin="*" />
     <access origin="file://*" />
     <allow-navigation href="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
+    <allow-intent android:exported="true" href="http://*/*" />
+    <allow-intent android:exported="true" href="https://*/*" />
+    <allow-intent android:exported="true" href="tel:*" />
+    <allow-intent android:exported="true" href="sms:*" />
+    <allow-intent android:exported="true" href="mailto:*" />
+    <allow-intent android:exported="true" href="geo:*" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
@@ -22,7 +22,7 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="android-targetSdkVersion" value="30" />
+    <preference name="android-targetSdkVersion" value="31" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
             <application android:usesCleartextTraffic="true" />
@@ -31,7 +31,7 @@
             <uses-permission android:name="android.permission.INTERNET" />
         </edit-config>
         <resource-file src="resources/android/xml/network_security_config.xml" target="app/src/main/res/xml/network_security_config.xml" />
-        <allow-intent href="market:*" />
+        <allow-intent android:exported="true" href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />

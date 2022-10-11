@@ -153,18 +153,46 @@ This will build a new "builder" docker image (cf. docker/builder/Dockerfile for 
 In order to change the version of the builder, edit the `BUILDER_VERSION` entry in CI/CD variables.
 
 ## 6 - Deployment
+### Générer l'AAB
+
+Lignes de commande pour générer l'AAB:
+
+```
+ionic cordova platform rm android
+
+ionic cordova build android --release -- -- --packageType=bundle
+
+// Il faut ajouter android:exported="true" dans la balise activity de platforms/android/app/src/main/AndroidManifest.xml
+
+// Rebuilder pour appliquer les modifications
+ionic cordova build android --release -- -- --packageType=bundle
+
+$ANDROID_HOME/build-tools/32.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/bundle/release/app-release.aab sirsmobile_<version>_<test/prod>.aab
+```
+
+A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
+```
+$ANDROID_HOME/build-tools/32.0.0/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true -min-sdk-version 26 sirsmobile_<version>_<test/prod>.aab
+
+rm sirsmobile_<version>_<test/prod>.aab.idsig
+```
+
+
 ### Générer l'APK
 
 Lignes de commande pour générer l'APK:
 
 ```
 ionic cordova platform rm android
+
 ionic cordova build android --release
+
 $ANDROID_HOME/build-tools/32.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_<version>_<test/prod>.apk
 ```
 A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
 ```
 $ANDROID_HOME/build-tools/32.0.0/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true sirsmobile_<version>_<test/prod>.apk
+
 rm sirsmobile_<version>_<test/prod>.apk.idsig
 ```
 A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
