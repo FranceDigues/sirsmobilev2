@@ -109,11 +109,14 @@ export class DatabaseChoiceComponent implements OnInit {
                 },
                 {
                     text: 'OK',
-                    handler: () => {
-                        this.databases.splice(this.databaseIndex, 1);
-                        this.dbService.saveDatabaseSettings(this.databases);
-                        this.selectedDatabase = null;
-                        return;
+                    handler: async () => {
+                        const localDB = await this.dbService.getLocalDB();
+
+                        localDB.destroy().then(() => {
+                            this.databases.splice(this.databaseIndex, 1);
+                            this.dbService.saveDatabaseSettings(this.databases);
+                            this.selectedDatabase = null;
+                        }).catch(err => console.error(err));
                     }
                 }
             ]
