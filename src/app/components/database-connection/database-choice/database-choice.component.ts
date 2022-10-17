@@ -116,6 +116,7 @@ export class DatabaseChoiceComponent implements OnInit {
                             this.databases.splice(this.databaseIndex, 1);
                             this.dbService.saveDatabaseSettings(this.databases);
                             this.selectedDatabase = null;
+                            this.dbService.removeDB$.next("DB deleted");
                         }).catch(err => console.error(err));
                     }
                 }

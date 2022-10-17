@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { DatabaseModel } from '../components/database-connection/models/database.model';
+import { Subject } from "rxjs";
 
 @Injectable({
     providedIn: 'root',
@@ -9,6 +10,7 @@ export class DatabaseService {
     remoteDB = null;
     localDB = null;
     activeDB: DatabaseModel;
+    removeDB$ = new Subject();
 
     constructor(private nativeStorage: NativeStorage) {
     }

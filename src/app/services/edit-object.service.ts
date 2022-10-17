@@ -150,6 +150,9 @@ export class EditObjectService {
         } else {
             this.troncons = this.allTroncons;
         }
+        if (this.troncons.length === 1) {
+            this.objectDoc.linearId = this.troncons[0].id;
+        }
     }
 
     watchDocPositionFin() { // ! call this instead changing value alone
@@ -161,6 +164,9 @@ export class EditObjectService {
             );
         } else {
             this.troncons = this.allTroncons;
+        }
+        if (this.troncons.length === 1) {
+            this.objectDoc.linearId = this.troncons[0].id;
         }
     }
 

@@ -19,6 +19,7 @@ import { MapService } from './map.service';
 import { SelectedObjectsService } from "./selected-objects.service";
 import { SirsDataService } from "./sirs-data.service";
 import { DefaultStyle, RealPositionStyle } from './style.service';
+import { DatabaseService } from "./database.service";
 
 @Injectable({
     providedIn: 'root'
@@ -37,7 +38,8 @@ export class MapManagerService {
                 private DefaultStyleService: DefaultStyle,
                 private appLayersService: AppLayersService,
                 private selectedObjectsService: SelectedObjectsService,
-                private editionLayerService: EditionLayerService
+                private editionLayerService: EditionLayerService,
+                private dbService: DatabaseService
     ) {
         // Highlight the selected features
         this.selectedObjectsService.getFeatures()
@@ -65,6 +67,11 @@ export class MapManagerService {
                     }
                 }
             );
+
+        this.dbService.removeDB$
+            .subscribe({
+                next: () => this.appLayer = null
+            })
     }
 
     async init(): Promise<LayerGroup> {

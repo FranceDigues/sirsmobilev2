@@ -124,12 +124,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         console.log("All layers are loaded successfully.");
         loading.message = 'Déploiement de la carte en cours';
 
-        //Map création and loading layers
-        if (this.olService.getMap() !== null) {
-            //Force free memory use by the previous instance, avoid latency
-            this.olService.getMap().setTarget(null);
-            this.olService.map = null;
-        }
         this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
         this.olService.getMap().setView(this.mapService.currentView);
         this.olService.addLayer(this.backLayerService.backLayer);
@@ -164,6 +158,8 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                         this.olService.getMap().updateSize();
                         this.olService.getMap().setTarget();
                         this.olService.getMap().setTarget('map');
+                        window.setTimeout(() => {
+                        }, 400);
                     }
                 }
             );
