@@ -157,9 +157,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                         loading.dismiss();
                         this.olService.getMap().updateSize();
                         this.olService.getMap().setTarget();
-                        this.olService.getMap().setTarget('map');
                         window.setTimeout(() => {
-                        }, 400);
+                            this.olService.getMap().setTarget('map');
+                        }, 200);
                     }
                 }
             );
