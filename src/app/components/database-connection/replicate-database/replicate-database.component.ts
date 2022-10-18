@@ -107,28 +107,8 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.percent = 0;
     this.completion = '0/' + docCount;
 
-    // usefull for debug
-    // this.remoteDB.info()
-    // .then(
-    //   (result) => {
-    //     console.log("secondStep remoteDb info : ", result)
-    //   },
-    //   (err) => {
-    //     console.log("secondStep remoteDb error : ", err)
-    //   }
-    // );
-    // this.localDB.info()
-    // .then(
-    //   (result) => {
-    //     console.log("secondStep localDB info : ", result)
-    //   },
-    //   (err) => {
-    //     console.log("secondStep localDB error : ", err)
-    //   }
-    // );
-
     const subject = new Subject<any>();
-    this.remoteDB.replicate.to(this.localDB, { live: false, retry: true, batches_limit: 50, batch_size: 500 })
+    this.remoteDB.replicate.to(this.localDB, { live: false, retry: true, batches_limit: 10, batch_size: 100 })
     .on('change', (result) => {
       console.log('2 - En COURS : ', result);
       const arg = {
@@ -280,9 +260,9 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   fourthStep() {
     console.debug('[Replication] Indexing database ...');
     this.step = 4;
-    this.description = 'Construction des index... (Cette opération peux durer quelques minutes)';
+    this.description = 'Préparation de la base de donnée';
     this.percent = 0;
-    this.completion = '0/' + indexedViews.length;
+    this.completion = '';
 
     const promises: Promise<any>[] = [];
     let proceedViews = 0;
@@ -295,6 +275,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
     for (const promise of promises) {
       promise.then(() => {
+        this.description = 'Construction des index... (Cette opération peux durer quelques minutes)';
         proceedViews++;
         this.completion = proceedViews + '/' + indexedViews.length;
         this.fourthStepProgress(proceedViews);
