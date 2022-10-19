@@ -12,6 +12,7 @@ import { FirstsyncComponent } from './firstsync/firstsync.component';
 import { LoginDatabaseComponent } from './login-database/login-database.component';
 import { ReplicateDatabaseComponent } from './replicate-database/replicate-database.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
         IonicModule,
         DatabaseConnectionPageRoutingModule,
         FlexLayoutModule,
-        MatButtonModule
+        MatButtonModule,
+        MatProgressSpinnerModule
     ],
     providers: [],
     declarations: [DatabaseConnectionPage, AddDatabaseComponent, DatabaseChoiceComponent, EditDatabaseComponent,

@@ -275,9 +275,9 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
     for (const promise of promises) {
       promise.then(() => {
-        this.description = 'Construction des index... (Cette opération peux durer quelques minutes)';
+        this.description = 'Construction des indexes';
         proceedViews++;
-        this.completion = proceedViews + '/' + indexedViews.length;
+        // this.completion = proceedViews + '/' + indexedViews.length;
         this.fourthStepProgress(proceedViews);
         if (proceedViews === indexedViews.length) {
           this.fourthStepComplete();
@@ -292,7 +292,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   fourthStepProgress(proceedViews) {
     this.percent = (proceedViews / indexedViews.length) * 100;
     console.debug('[Replication] Indexing progress: ' + proceedViews);
-    this.completion = proceedViews + '/' + indexedViews.length;
+    // this.completion = proceedViews + '/' + indexedViews.length;
   }
 
   fourthStepComplete() {
