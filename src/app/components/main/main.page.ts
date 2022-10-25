@@ -124,19 +124,20 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         console.log("All layers are loaded successfully.");
         loading.message = 'Déploiement de la carte en cours';
 
-        this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
-        this.olService.getMap().setView(this.mapService.currentView);
-        this.olService.addLayer(this.backLayerService.backLayer);
-        this.olService.addLayer(this.editionLayerService.editionLayer);
-        this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
-        this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
-        this.ref.tick();
+        if (!this.olService.getMap()) {
+            this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
+            this.olService.getMap().setView(this.mapService.currentView);
+            this.olService.addLayer(this.backLayerService.backLayer);
+            this.olService.addLayer(this.editionLayerService.editionLayer);
+            this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
+            this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
+            this.ref.tick();
+            //Unable specific control to the map
+            this.addMapControl();
+        }
 
         //Loading layers from device
         await this.shapesLayersManagerService.init();
-
-        //Unable specific control to the map
-        this.addMapControl();
 
         //Update favorite layers
         this.mapManagerService.clearAll();
