@@ -215,15 +215,15 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
     saveCurrentView() {
         this.dbService.activeDB.context.currentView = {
-            zoom: this.olService.map.getView().getZoom(),
-            coords: this.olService.map.getView().getCenter()
+            zoom: this.olService.getMap().getView().getZoom(),
+            coords: this.olService.getMap().getView().getCenter()
         };
 
         this.dbService.getCurrentDatabaseSettings().then(
             (db: DatabaseModel) => {
                 db.context.currentView = {
-                    zoom: this.olService.map.getView().getZoom(),
-                    coords: this.olService.map.getView().getCenter()
+                    zoom: this.olService.getMap().getView().getZoom(),
+                    coords: this.olService.getMap().getView().getCenter()
                 };
                 this.dbService.setCurrentDatabaseSettings(db)
                     .then(() => console.log('updated map view'));

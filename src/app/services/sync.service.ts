@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { MapManagerService } from './map-manager.service';
 import { EditionLayerService } from './edition-layer.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class SyncService {
     private status: number = 0;
     private percent: number = 0;
@@ -72,9 +72,9 @@ export class SyncService {
                     })
                     .on('denied', (error) => {
                         console.warn('[Sync Service] Access denied', error);
-                        subject.error(new Error('Impossible de synchroniser, droits manquants pour cet utilisateur dans la base de données.'));
+                        subject.error(new Error('Impossible de synchroniser, droits manquants pour cet utilisateur dans la base de données.\n' + error.result));
                     });
-            }, () => {
+            }, (error) => {
                 console.warn('Cannot reach the server');
                 subject.error(new Error('Impossible de contacter le serveur. Vérifiez votre connection internet et l\'état du serveur distant.'));
             });
