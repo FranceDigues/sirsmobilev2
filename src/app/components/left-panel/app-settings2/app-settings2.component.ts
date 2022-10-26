@@ -14,7 +14,7 @@ export class AppSettings2Component {
     }
 
     set touchSensitivity(value: number) {
-        localStorage.setItem('moveTolerance', value.toString());
+        localStorage.setItem('touchSensitivity', value.toString());
     }
 
     get moveTolerance() {
