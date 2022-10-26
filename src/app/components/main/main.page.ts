@@ -90,6 +90,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
+        this.olService.getMap().setTarget();
         this.onGeolocationSubscription.unsubscribe();
         this.mapLoadingSubjectSubscription.unsubscribe();
     }
@@ -157,7 +158,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                 {
                     complete: () => {
                         loading.dismiss();
-                        console.log("je suis ici");
                         this.olService.getMap().updateSize();
                         this.olService.getMap().setTarget();
                         window.setTimeout(() => {
