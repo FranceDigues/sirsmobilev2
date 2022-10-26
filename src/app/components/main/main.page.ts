@@ -35,7 +35,7 @@ import { LongClickSelect } from '@plugins/LongClickSelect';
     templateUrl: './main.page.html',
     styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements AfterViewInit, OnInit, OnDestroy, RouteReuseStrategy {
+export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     public pathRightSlide = 'objectsCreation';
     public connectSubscription;
     public disconnectSubscription;
