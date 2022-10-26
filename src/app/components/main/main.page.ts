@@ -35,11 +35,12 @@ import { LongClickSelect } from '@plugins/LongClickSelect';
     templateUrl: './main.page.html',
     styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements AfterViewInit, OnInit, OnDestroy {
+export class MainPage implements AfterViewInit, OnInit, OnDestroy, RouteReuseStrategy {
     public pathRightSlide = 'objectsCreation';
     public connectSubscription;
     public disconnectSubscription;
     private onGeolocationSubscription: Subscription;
+    private mapLoadingSubjectSubscription: Subscription;
 
     constructor(
         public geolocationService: GeolocationService,
@@ -90,6 +91,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.onGeolocationSubscription.unsubscribe();
+        this.mapLoadingSubjectSubscription.unsubscribe();
     }
 
     async watchDeviceConnection() {
@@ -124,20 +126,19 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         console.log("All layers are loaded successfully.");
         loading.message = 'Déploiement de la carte en cours';
 
-        if (!this.olService.getMap()) {
-            this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
-            this.olService.getMap().setView(this.mapService.currentView);
-            this.olService.addLayer(this.backLayerService.backLayer);
-            this.olService.addLayer(this.editionLayerService.editionLayer);
-            this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
-            this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
-            //Unable specific control to the map
-            this.addMapControl();
-            this.ref.tick();
-        }
+        this.olService.createMap('map', null, +localStorage.getItem('moveTolerance') || 1);
+        this.olService.getMap().setView(this.mapService.currentView);
+        this.olService.addLayer(this.backLayerService.backLayer);
+        this.olService.addLayer(this.editionLayerService.editionLayer);
+        this.olService.addLayer(this.geoLocLayer.getGeolocLayer());
+        this.olService.addLayer(this.mapManagerService.appLayer); //Adds data layer to map (points, lines, etc.).
+        this.ref.tick();
 
         //Loading layers from device
         await this.shapesLayersManagerService.init();
+
+        //Unable specific control to the map
+        this.addMapControl();
 
         //Update favorite layers
         this.mapManagerService.clearAll();
@@ -151,11 +152,12 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
         //Update favorite layers
         this.mapManagerService.clearAll();
-        this.mapManagerService.mapLoadingSubject
+        this.mapLoadingSubjectSubscription = this.mapManagerService.mapLoadingSubject
             .subscribe(
                 {
                     complete: () => {
                         loading.dismiss();
+                        console.log("je suis ici");
                         this.olService.getMap().updateSize();
                         this.olService.getMap().setTarget();
                         window.setTimeout(() => {
@@ -424,10 +426,10 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     this.pathRightSlide = 'objectsSelected';
                     this.selectedObjectsService.updateFeatures(featuresIntersection);
                     this.mapService.selection.list = featuresIntersection;
-                    this.menu.open('right-slider');
+                    this.menu.open('right-slider').then();
                 } else {
                     this.selectedObjectsService.updateFeatures([]);
-                    this.menu.close('right-slider');
+                    this.menu.close('right-slider').then();
                 }
             }
             resetCircle();
