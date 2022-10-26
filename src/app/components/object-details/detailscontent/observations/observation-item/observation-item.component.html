@@ -1,0 +1,7 @@
+<span *ngIf="observation.date">{{ observation.date|date:'dd/MM/yyyy' }}</span>
+<span *ngIf="!observation.date && observation.designation">{{ observation.designation }}</span>
+<span *ngIf="!observation.date && !observation.designation && observation.id">{{ observation.id }}</span>
+<mat-icon *ngIf="hasPhoto$ | async;" style="margin-left: auto;">photo_library</mat-icon>
+<ng-template *ngIf="loading">
+    <mat-spinner [diameter]="18"></mat-spinner>
+</ng-template>

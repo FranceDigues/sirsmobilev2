@@ -47,6 +47,8 @@ import { PrestationAmenagementHydrauliqueComponent } from './prestation-amenagem
 import { StructureAmenagementHydrauliqueComponent } from './structure-amenagement-hydraulique/structure-amenagement-hydraulique.component';
 import { TraitAmenagementHydrauliqueComponent } from './trait-amenagement-hydraulique/trait-amenagement-hydraulique.component';
 import {MatIconModule} from "@angular/material/icon";
+import { ObservationItemComponent } from "./observations/observation-item/observation-item.component";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
     imports: [
@@ -56,6 +58,7 @@ import {MatIconModule} from "@angular/material/icon";
         MatCheckboxModule,
         MatButtonModule,
         MatIconModule,
+        MatProgressSpinnerModule,
     ],
   providers: [
   ],
@@ -73,7 +76,7 @@ import {MatIconModule} from "@angular/material/icon";
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, AmenagementHydrauliqueComponent, OrganeProtectionCollectiveComponent,
     OuvrageAssocieAmenagementHydrauliqueComponent, PrestationAmenagementHydrauliqueComponent,
-    StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent
+    StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent, ObservationItemComponent
   ],
   exports: [DetailsContentComponent]
 })
