@@ -277,7 +277,7 @@ export class ObservationEditService {
         return this.http.get(imageUrl, { responseType: 'blob' });
     }
 
-    private static base64toBlob(base64Data: string, contentType: string): Blob {
+    public static base64toBlob(base64Data: string, contentType: string): Blob {
         contentType = contentType || '';
         let sliceSize = 512;
         let byteCharacters = atob(base64Data);

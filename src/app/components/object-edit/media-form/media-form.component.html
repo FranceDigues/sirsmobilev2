@@ -2,7 +2,7 @@
     <div class="object-form" *ngSwitchCase="'media-form'" fxLayout="row" fxLayoutAlign="center start">
         <div class="sirs-card" fxFlex="80">
             <div class="sirs-card-wrapper" fxLayout="column" fxLayoutAlign="start stretch">
-                <div class="sirs-card-content" fxFlex>
+                <div class="sirs-card-content" fxFlex style="overflow-y: auto;">
                     <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
                     <div class="text-center">
                         <ion-button color="medium" (click)="takePhoto()">
@@ -58,69 +58,21 @@
                     <div fxLayout="row" fxLayoutGap="10px">
                         <div fxFlex="50">
                             <label>Orientations</label>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('fullName')"
-                                    [ngModel]="mediaOptions.orientationPhoto">
-                                <option *ngFor="let v of sirsDataService.orientationList"
-                                        [value]="v.id">{{v.value.libelle}}</option>
-                            </select>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('abstract')"
-                                    [ngModel]="mediaOptions.orientationPhoto">
-                                <ng-container *ngFor="let v of sirsDataService.orientationList">
-                                    <option *ngIf="v.value.abrege" [value]="v.id">{{ v.value.abrege}}</option>
-                                    <option *ngIf="!v.value.abrege" [value]="v.id">
-                                        {{ v.value.designation + ' : ' + v.value.libelle}}</option>
-                                </ng-container>
-                            </select>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('both')"
-                                    [ngModel]="mediaOptions.orientationPhoto">
-                                <ng-container *ngFor="let v of sirsDataService.orientationList">
-                                    <option *ngIf="v.value.abrege" [value]="v.id">
-                                        {{ v.value.abrege + ' : ' + v.value.libelle }}
-                                    </option>
-                                    <option *ngIf="!v.value.abrege" [value]="v.id">
-                                        {{ v.value.designation + ' : ' + v.value.libelle }}
-                                    </option>
-                                </ng-container>
-                            </select>
+                            <ion-select [ngModel]="mediaOptions.orientationPhoto">
+                                <ion-select-option *ngFor="let orientation of orientationList"
+                                                   [value]="orientation.id">
+                                    {{formatOptionText(orientation)}}
+                                </ion-select-option>
+                            </ion-select>
                         </div>
                         <div fxFlex="50">
                             <label>Côté</label>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('fullName')"
-                                    [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of sirsDataService.coteList">
-                                    <option [value]="v.id">
-                                        {{ v.value.libelle }}
-                                    </option>
-                                </ng-container>
-                            </select>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('abstract')"
-                                    [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of sirsDataService.coteList">
-                                    <option *ngIf="v.value.abrege" [value]="v.id">
-                                        {{ v.value.abrege }}
-                                    </option>
-                                    <option *ngIf="!v.value.abrege" [value]="v.id">
-                                        {{ v.value.designation + ' : ' + v.value.libelle }}
-                                    </option>
-                                </ng-container>
-                            </select>
-                            <select class="browser-default"
-                                    *ngIf="EOS.showText('both')"
-                                    [ngModel]="mediaOptions.coteId">
-                                <ng-container *ngFor="let v of sirsDataService.coteList">
-                                    <option *ngIf="v.value.abrege" [value]="v.id">
-                                        {{ v.value.abrege + ' : ' + v.value.libelle }}
-                                    </option>
-                                    <option *ngIf="!v.value.abrege" [value]="v.id">
-                                        {{ v.value.designation + ' : ' + v.value.libelle }}
-                                    </option>
-                                </ng-container>
-                            </select>
+                            <ion-select [ngModel]="mediaOptions.coteId">
+                                <ion-select-option *ngFor="let cote of coteList"
+                                                   [value]="cote.id">
+                                    {{formatOptionText(cote)}}
+                                </ion-select-option>
+                            </ion-select>
                         </div>
                     </div>
                     <div>
@@ -142,7 +94,7 @@
     </div>
     <!--     Position Map -->
     <div class="full-height" *ngSwitchCase="'media-map'">
-        <map-point class="full-height" (slidePathChange)="setView('form-media')"
+        <map-point class="full-height" (slidePathChange)="setView('media-form')"
                    (successData)="handlePos($event)"></map-point>
     </div>
     <!-- Note -->

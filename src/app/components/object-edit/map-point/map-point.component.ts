@@ -94,6 +94,7 @@ export class MapPointComponent implements OnInit {
             latitude: finalRes[1],
             accuracy: -1
         };
+        this.successData.emit(args);
         if (this.notNeedEOS !== undefined && this.notNeedEOS === 'true') {
             this.successData.emit(args);
         } else {

@@ -1,21 +1,21 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
-import {EditObjectService} from '../../../services/edit-object.service';
-import {CameraService} from '@ionic-lib/lib-camera/camera.service';
-import {DirectoryEntry, Entry, File, Metadata} from '@ionic-native/file/ngx';
-import {Options} from '@ionic-lib/lib-camera/interface.model';
-import {Camera} from '@ionic-native/camera/ngx';
-import {UuidUtils} from '../../../utils/uuid-utils';
-import {ModalController, ToastController} from '@ionic/angular';
-import {formatDate} from '@angular/common';
-import {HttpClient} from '@angular/common/http';
-import {GeolocationService} from '../../../services/geolocation.service';
-import {AlertController} from '@ionic/angular';
-import {PositionByBorneModalComponent} from '../positionbyborne-modal/positionbyborne-modal.component';
-import {WebView} from '@ionic-native/ionic-webview/ngx';
-import {PositionService} from '../../../services/position.service';
-import {Coordinates} from '@ionic-native/geolocation/ngx';
-import {SirsDataService} from '../../../services/sirs-data.service';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import { EditObjectService } from '../../../services/edit-object.service';
+import { CameraService } from '@ionic-lib/lib-camera/camera.service';
+import { DirectoryEntry, Entry, File, Metadata } from '@ionic-native/file/ngx';
+import { Options } from '@ionic-lib/lib-camera/interface.model';
+import { Camera } from '@ionic-native/camera/ngx';
+import { UuidUtils } from '../../../utils/uuid-utils';
+import { ModalController, ToastController } from '@ionic/angular';
+import { formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { GeolocationService } from '../../../services/geolocation.service';
+import { AlertController } from '@ionic/angular';
+import { PositionByBorneModalComponent } from '../positionbyborne-modal/positionbyborne-modal.component';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { PositionService } from '../../../services/position.service';
+import { Coordinates } from '@ionic-native/geolocation/ngx';
+import { SirsDataService } from '../../../services/sirs-data.service';
 
 @Component({
     selector: 'app-media-form',
@@ -29,6 +29,8 @@ export class MediaFormComponent implements OnInit {
     public mediaOptions;
     public mediaPath;
     public dataProjection;
+    public orientationList;
+    public coteList;
 
     constructor(private authService: AuthService,
                 private cameraService: CameraService,
@@ -47,6 +49,8 @@ export class MediaFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.orientationList = this.sirsDataService.refOrientationPhoto;
+        this.coteList = this.sirsDataService.refCote;
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.mediaOptions = {
             id: '',
@@ -66,7 +70,7 @@ export class MediaFormComponent implements OnInit {
     }
 
     getPosition() {
-        return this.mediaOptions.positionDebut ? this.positionService.getLatLongFromWKT(this.EOS.objectDoc.positionDebut) : 'à définir';
+        return this.mediaOptions.positionDebut ? this.positionService.getLatLongFromWKT(this.mediaOptions.positionDebut) : 'à définir';
     }
 
     save() {
@@ -145,14 +149,16 @@ export class MediaFormComponent implements OnInit {
     }
 
     locateMe() {
-        if (this.geolocation.isEnabled) {
-            this.geolocation.getCurrentLocation()
+        this.geolocation.getCurrentLocation()
             .then(
-                (position: Coordinates) => {
-                    this.positionService.getWKTFromLatLong(position);
+                (coordinates: Coordinates) => {
+                    this.mediaOptions.positionDebut = this.positionService.getWKTFromLatLong(coordinates);
                 }
             );
-        }
+    }
+
+    public handlePos(coordinates: Coordinates): void {
+        this.mediaOptions.positionDebut = this.positionService.getWKTFromLatLong(coordinates);
     }
 
     async selectPosition() {
@@ -301,5 +307,20 @@ export class MediaFormComponent implements OnInit {
         base64StringLength = base64String.length;
         inBytes = (base64StringLength / 4) * 3 - padding;
         return inBytes;
+    }
+
+    formatOptionText(orientation) {
+        switch (this.EOS.showTextConfig) {
+            case 'fullName':
+                return orientation.value.libelle;
+            case 'abstract':
+                return orientation.value.abrege ? orientation.value.abrege
+                    : (orientation.value.designation + ' : ' + orientation.value.libelle);
+            default:
+                return orientation.value.abrege
+                    ? (orientation.value.abrege + ' : ' + orientation.value.libelle)
+                    : (orientation.value.designation + ' : ' + orientation.value.libelle);
+        }
+
     }
 }
