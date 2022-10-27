@@ -162,7 +162,9 @@ ionic cordova platform rm android
 
 ionic cordova build android --release -- -- --packageType=bundle
 
-// Il faut ajouter android:exported="true" dans la balise activity de platforms/android/app/src/main/AndroidManifest.xml
+// Il faut ajouter android:exported="true" dans la balise activity 
+// et tools:node="remove" dans la balise <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+// de fichier : platforms/android/app/src/main/AndroidManifest.xml
 
 // Rebuilder pour appliquer les modifications
 ionic cordova build android --release -- -- --packageType=bundle

@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <div fxFlex="50">
-                            <label>Côte</label>
+                            <label>Côté</label>
                             <select id="coteList" class="browser-default" [(ngModel)]="photoDoc.coteId">
                                 <option *ngFor="let c of coteList || []" [selected]="c.id === photoDoc.coteId" [value]="c.id">
                                     {{ labelService.doc2String(c.value) }}

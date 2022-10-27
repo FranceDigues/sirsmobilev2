@@ -513,7 +513,7 @@ export const formTemplatePilote = {
         "cote": {
             "name": "cote",
             "type": "EFloat",
-            "label": "Côte",
+            "label": "Côté",
             "reference": false,
             "min": 0
         },
@@ -581,7 +581,7 @@ export const formTemplatePilote = {
         "cote": {
             "name": "cote",
             "type": "EFloat",
-            "label": "Côte",
+            "label": "Côté",
             "reference": false,
             "min": 0
         },
@@ -817,7 +817,7 @@ export const formTemplatePilote = {
         "cote": {
             "name": "cote",
             "type": "EFloat",
-            "label": "Côte",
+            "label": "Côté",
             "reference": false,
             "min": 0
         },
@@ -992,7 +992,7 @@ export const formTemplatePilote = {
         "cote": {
             "name": "cote",
             "type": "EFloat",
-            "label": "Côte",
+            "label": "Côté",
             "reference": false,
             "min": 0
         },
