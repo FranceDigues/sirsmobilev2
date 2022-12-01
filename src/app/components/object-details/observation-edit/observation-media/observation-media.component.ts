@@ -328,4 +328,8 @@ export class ObservationMediaComponent implements OnInit {
             || clazz === 'OuvrageAssocieAmenagementHydraulique'
             || clazz === 'OrganeProtectionCollective';
     }
+
+    parseContactName(contact) {
+        return contact.doc.nom ? `${contact.doc.nom} ${contact.doc.prenom ? contact.doc.prenom : ''}` : contact.doc.designation;
+    }
 }

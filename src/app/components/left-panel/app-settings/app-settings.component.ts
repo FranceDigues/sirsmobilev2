@@ -1,7 +1,7 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DatabaseService} from '../../../services/database.service';
-import {DatabaseModel} from '../../database-connection/models/database.model';
-import {SirsDataService} from "../../../services/sirs-data.service";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { DatabaseService } from '../../../services/database.service';
+import { DatabaseModel } from '../../database-connection/models/database.model';
+import { SirsDataService } from "../../../services/sirs-data.service";
 
 @Component({
     selector: 'app-settings',
@@ -54,7 +54,7 @@ export class AppSettingsComponent implements OnInit {
     }
 
     parseContactName(observateur) {
-        return `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}`;
+        return observateur.doc.nom ? `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}` : observateur.doc.designation;
     }
 
 }

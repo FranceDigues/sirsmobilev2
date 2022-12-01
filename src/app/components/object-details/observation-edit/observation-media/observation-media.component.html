@@ -142,7 +142,7 @@
               <option *ngFor="let contact of contactList | sortByDocNom"
                       [value]="contact.id"
                       [selected]="contact.id === OES.contact">
-                {{ contact.doc.nom }} {{ contact.doc.prenom ? contact.doc.prenom : '' }}
+                {{ parseContactName(contact) }}
               </option>
             </select>
             <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
