@@ -106,6 +106,8 @@ export class DatabaseService {
                         if (database.name === this.activeDB.name) {
                             databases[i] = updatedDatabase;
                             this.saveDatabaseSettings(databases);
+                            // Update activeDB object with the updated data
+                            this.activeDB = databases[i];
                         }
                     });
                 }
