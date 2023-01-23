@@ -393,7 +393,7 @@ export class MapManagerService {
     private getAppLayerInstance(layerModel) {
         const layers = this.appLayer.getLayers().getArray();
         for (let i = 0; i < layers.length; i++) {
-            if (layers[i].get('model') === layerModel) {
+            if (layers[i].get('model').title === layerModel.title) {
                 return layers[i];
             }
         }

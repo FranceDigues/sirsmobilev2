@@ -353,8 +353,10 @@ export class EditObjectService {
             this.objectDoc['sourceId'] = 'RefSource:4';
         }
 
+        // Invalid the document
         this.objectDoc.valid = false;
 
+        // Update date
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
 
         delete this.objectDoc.prDebut;
