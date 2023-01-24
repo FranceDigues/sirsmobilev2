@@ -15,13 +15,20 @@ export class GeolocationService {
     private enabled: boolean = false;
     private updateIntervalId: any;
     private onPositionUpdatedSubject: Subject<Coordinates> = new Subject<Coordinates>();
+    public updateTimeout: number; // gps update timeout in ms
+    public gpsOptions: GeolocationOptions;
 
-    private readonly UPDATE_TIMEOUT: number = 30 * 1000; // gps update timeout in ms
 
     constructor(private geolocation: Geolocation,
                 private geolocLayerService: GeolocLayerService,
                 private loadingCtrl: LoadingController) {
         this.update = this.update.bind(this);
+        this.updateTimeout = localStorage.getItem('gpsUpdateTimout') ? +localStorage.getItem('gpsUpdateTimout') : (30 * 1000); // gps update timeout in ms
+        this.gpsOptions = JSON.parse(localStorage.getItem('gpsConfig')) || {
+            maximumAge: 60,
+            timeout: 10000,
+            enableHighAccuracy: true
+        };
     }
 
     getCoords(): Coordinates {
@@ -37,11 +44,6 @@ export class GeolocationService {
     }
 
     async getCurrentLocation(silent: boolean = false): Promise<Coordinates> {
-        const options: GeolocationOptions = {
-            maximumAge: 60000,
-            timeout: 10000,
-            enableHighAccuracy: true
-        };
         let loading: HTMLIonLoadingElement;
         if (!silent) {
             loading = await this.loadingCtrl.create({
@@ -50,7 +52,7 @@ export class GeolocationService {
             await loading.present();
         }
         try {
-            const position: Geoposition = await this.geolocation.getCurrentPosition(options);
+            const position: Geoposition = await this.geolocation.getCurrentPosition(this.gpsOptions);
             this.coords = position.coords;
             this.gpsAccuracy = Math.round(position.coords.accuracy);
             this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');
@@ -71,7 +73,7 @@ export class GeolocationService {
         this.enabled = flag;
         if (this.enabled) {
             this.update();
-            this.updateIntervalId = setInterval(this.update, this.UPDATE_TIMEOUT);
+            this.updateIntervalId = setInterval(this.update, this.updateTimeout);
         } else if (this.updateIntervalId !== undefined) {
             clearInterval(this.updateIntervalId);
             this.updateIntervalId = undefined;
@@ -85,6 +87,6 @@ export class GeolocationService {
 
     private update(): void {
         console.debug('Update GPS');
-        this.getCurrentLocation(true).then();
+        this.getCurrentLocation(true).then(console.log, console.error);
     }
 }

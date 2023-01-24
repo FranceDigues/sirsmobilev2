@@ -1,0 +1,29 @@
+<ion-header translucent="">
+    <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Paramètres GPS</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" fullscreen="" class="scroll-all-content">
+    <div class="gps-settings-block">
+        <label class="block-title">GPS update timeout en ms : </label>
+        <ion-input type="number" [(ngModel)]="geolocationService.updateTimeout"></ion-input>
+        <label class="block-title">Maximum Age en ms: </label>
+        <ion-input type="number" [(ngModel)]="geolocationService.gpsOptions.maximumAge"></ion-input>
+        <label class="block-title">Timeout en ms : </label>
+        <ion-input type="number" [(ngModel)]="geolocationService.gpsOptions.timeout"></ion-input>
+        <div class="tgl-block">
+            <label class="block-title">enableHighAccuracy : </label>
+            <ion-toggle [(ngModel)]="geolocationService.gpsOptions.enableHighAccuracy"></ion-toggle>
+        </div>
+        <div class="btn-block">
+            <ion-button color="medium" (click)="validate()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span style="margin-left: 10px">Valider</span>
+            </ion-button>
+        </div>
+    </div>
+
+</ion-content>

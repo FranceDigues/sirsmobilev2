@@ -18,8 +18,9 @@ import { AddShapesLayersComponent } from './shapes-layers-manager/add-shapes-lay
 import { GalleryModule } from './gallery/gallery.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
-import {ObservationEditModule} from "../object-details/observation-edit/observation-edit.module";
-import {AppSettings2Component} from "./app-settings2/app-settings2.component";
+import { ObservationEditModule } from "../object-details/observation-edit/observation-edit.module";
+import { AppSettings2Component } from "./app-settings2/app-settings2.component";
+import { GpsSettingsComponent } from "./gps-settings/gps-settings.component";
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import {AppSettings2Component} from "./app-settings2/app-settings2.component";
         AppInfosComponent,
         AppSettingsComponent,
         AppSettings2Component,
+        GpsSettingsComponent,
         ShapesLayersManagerComponent,
         AddShapesLayersComponent,
         LeftSlideBackmapComponent,
