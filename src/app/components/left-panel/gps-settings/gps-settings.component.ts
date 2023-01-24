@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { GeolocationService } from "../../../services/geolocation.service";
-import { LoadingController } from "@ionic/angular";
+import { ToastController } from "@ionic/angular";
 
 @Component({
     selector: 'app-gps-settings',
@@ -11,7 +11,7 @@ export class GpsSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
     constructor(public geolocationService: GeolocationService,
-                private loadingCtrl: LoadingController,) {
+                private toastCtrl: ToastController) {
     }
 
     ngOnInit() {
@@ -22,11 +22,6 @@ export class GpsSettingsComponent implements OnInit {
     }
 
     async validate() {
-        const loading = await this.loadingCtrl.create({
-            message: 'Déploiement en cours ...'
-        });
-        await loading.present();
-
         if (this.geolocationService.isEnabled) {
             // Clear old GPS configuration
             this.geolocationService.isEnabled = false;
@@ -36,6 +31,10 @@ export class GpsSettingsComponent implements OnInit {
 
         localStorage.setItem('gpsUpdateTimout', JSON.stringify(this.geolocationService.updateTimeout));
         localStorage.setItem('gpsConfig', JSON.stringify(this.geolocationService.gpsOptions));
-        await loading.dismiss();
+        const toast = await this.toastCtrl.create({
+            message: 'Les paramètres GPS ont été mis à jour avec succès',
+            duration: 5000
+        });
+        await toast.present();
     }
 }

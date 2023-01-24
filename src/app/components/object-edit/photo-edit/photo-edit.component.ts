@@ -21,6 +21,7 @@ import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { LabelService } from 'src/app/services/label.service';
 import {DatabaseModel} from "../../database-connection/models/database.model";
 import {DatabaseService} from "../../../services/database.service";
+import { error } from "protractor";
 
 @Component({
     selector: 'app-photo-edit',
@@ -250,6 +251,10 @@ export class PhotoEditComponent implements OnInit {
                 .then(
                     (position) => {
                         this.handlePos(position);
+                    },
+                    (error) =>{
+                        console.error(error);
+                        this.geolocation.openModal('Erreur lors de la localisation GPS', error.message).then();
                     }
                 );
         }

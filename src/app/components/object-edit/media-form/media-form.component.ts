@@ -16,6 +16,7 @@ import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { PositionService } from '../../../services/position.service';
 import { Coordinates } from '@ionic-native/geolocation/ngx';
 import { SirsDataService } from '../../../services/sirs-data.service';
+import { error } from "protractor";
 
 @Component({
     selector: 'app-media-form',
@@ -153,6 +154,10 @@ export class MediaFormComponent implements OnInit {
             .then(
                 (coordinates: Coordinates) => {
                     this.mediaOptions.positionDebut = this.positionService.getWKTFromLatLong(coordinates);
+                },
+                (error) => {
+                 console.error(error);
+                 this.geolocation.openModal('Erreur lors de la localisation GPS', error.message).then();
                 }
             );
     }

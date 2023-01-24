@@ -144,6 +144,7 @@ export class ObservationMediaComponent implements OnInit {
                 this.OES.handlePos(position, this.geolocation.getGPSAccuracy());
             }).catch(err => {
                 this.toastService.show(new ToastNotification('Erreur lors de la localisation GPS', 3000));
+                this.geolocation.openModal('Erreur lors de la localisation GPS', err.message).then();
                 console.warn(err);
             });
         } else {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Coordinates, Geolocation, GeolocationOptions, Geoposition } from '@ionic-native/geolocation/ngx';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Observable, Subject } from 'rxjs';
 import { GeolocLayerService } from './geoloc-layer.service';
@@ -17,15 +17,17 @@ export class GeolocationService {
     private onPositionUpdatedSubject: Subject<Coordinates> = new Subject<Coordinates>();
     public updateTimeout: number; // gps update timeout in ms
     public gpsOptions: GeolocationOptions;
+    alertGPS;
 
 
     constructor(private geolocation: Geolocation,
                 private geolocLayerService: GeolocLayerService,
-                private loadingCtrl: LoadingController) {
+                private loadingCtrl: LoadingController,
+                private alertController: AlertController) {
         this.update = this.update.bind(this);
         this.updateTimeout = localStorage.getItem('gpsUpdateTimout') ? +localStorage.getItem('gpsUpdateTimout') : (30 * 1000); // gps update timeout in ms
         this.gpsOptions = JSON.parse(localStorage.getItem('gpsConfig')) || {
-            maximumAge: 60,
+            maximumAge: 60000,
             timeout: 10000,
             enableHighAccuracy: true
         };
@@ -87,6 +89,23 @@ export class GeolocationService {
 
     private update(): void {
         console.debug('Update GPS');
-        this.getCurrentLocation(true).then(console.log, console.error);
+        this.getCurrentLocation(true).then(console.log, (err) => {
+            this.openModal('Erreur lors de la localisation GPS', err.message).then();
+        });
+    }
+
+    async openModal(header: string, message: string) {
+        if (this.alertGPS) {
+            this.alertGPS.dismiss();
+        }
+        this.alertGPS = await this.alertController.create({
+            header: header,
+            cssClass: 'gps',
+            message: message,
+            buttons: ['OK'],
+            backdropDismiss: true
+        });
+
+        await this.alertGPS.present();
     }
 }

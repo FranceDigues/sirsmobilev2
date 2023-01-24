@@ -139,3 +139,9 @@ ion-modal {
 .alert-radio-label.sc-ion-alert-md {
   white-space: normal !important;
 }
+
+.gps {
+  .alert-wrapper {
+    z-index: 9999999999999999 !important;
+  }
+}

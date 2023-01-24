@@ -7,6 +7,7 @@ import VectorLayer from 'ol/layer/Vector';
 import { Style, Stroke, Fill, Circle } from 'ol/style';
 import MultiPoint from 'ol/geom/MultiPoint';
 import { GeolocLayerService } from './geoloc-layer.service';
+import { error } from "protractor";
 
 @Injectable({
     providedIn: 'root'
@@ -97,6 +98,10 @@ export class MapEditObjectService {
         .then(
             () => {
                 this.zoomToMe();
+            },
+            (error) => {
+                console.error(error);
+                this.geoloc.openModal('Erreur lors de la localisation GPS', error.message).then();
             }
         );
       }

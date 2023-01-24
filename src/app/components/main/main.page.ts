@@ -177,10 +177,13 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     },
                     (error) => {
                         console.error('Error getting location', error);
+
+                        this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
+
                         if (error.message === 'Illegal Access') {
                             this.toastService.show(
                                 new ToastNotification(
-                                    'Accés au GPS impossible. Activer la localisation pour cette application.',
+                                    'Accès au GPS impossible. Activer la localisation pour cette application.',
                                     2500,
                                     'top')
                             );
@@ -211,6 +214,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     },
                     (error) => {
                         console.error('Error getting location', error);
+                        this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
                     }
                 );
         }

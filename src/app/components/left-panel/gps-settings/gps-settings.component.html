@@ -8,12 +8,31 @@
 </ion-header>
 <ion-content [scrollEvents]="true" fullscreen="" class="scroll-all-content">
     <div class="gps-settings-block">
-        <label class="block-title">GPS update timeout en ms : </label>
-        <ion-input type="number" [(ngModel)]="geolocationService.updateTimeout"></ion-input>
-        <label class="block-title">Maximum Age en ms: </label>
-        <ion-input type="number" [(ngModel)]="geolocationService.gpsOptions.maximumAge"></ion-input>
-        <label class="block-title">Timeout en ms : </label>
-        <ion-input type="number" [(ngModel)]="geolocationService.gpsOptions.timeout"></ion-input>
+        <label class="block-title">GPS update timeout : {{geolocationService.updateTimeout}} ms : </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.updateTimeout"
+                   [step]="1000"
+                   [min]="5000"
+                   [max]="60000"></ion-range>
+
+        <label class="block-title">Maximum Age : {{geolocationService.gpsOptions.maximumAge}} ms: </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.gpsOptions.maximumAge"
+                   [step]="1000"
+                   [min]="1000"
+                   [max]="120000"></ion-range>
+        <label class="block-title">Timeout : {{geolocationService.gpsOptions.timeout}} ms : </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.gpsOptions.timeout"
+                   [step]="1000"
+                   [min]="1000"
+                   [max]="120000"></ion-range>
         <div class="tgl-block">
             <label class="block-title">enableHighAccuracy : </label>
             <ion-toggle [(ngModel)]="geolocationService.gpsOptions.enableHighAccuracy"></ion-toggle>

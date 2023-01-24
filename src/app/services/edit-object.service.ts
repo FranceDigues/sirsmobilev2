@@ -14,6 +14,7 @@ import { DatabaseModel } from '../components/database-connection/models/database
 import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
+import { error } from "protractor";
 
 @Injectable({
     providedIn: 'root'
@@ -657,6 +658,10 @@ export class EditObjectService {
                     } else {
                         this.handlePos(position);
                     }
+                },
+                (error) =>{
+                    console.error(error);
+                    this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
                 }
             );
     }
@@ -666,6 +671,10 @@ export class EditObjectService {
             .then(
                 (position) => {
                     this.handlePosDependanceEnd(position);
+                },
+                (error) =>{
+                    console.error(error);
+                    this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
                 }
             );
     }
