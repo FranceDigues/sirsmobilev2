@@ -18,6 +18,7 @@ import { UuidUtils } from '../../../utils/uuid-utils';
 import { formatDate } from '@angular/common';
 import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
+import { AuthService } from "../../../services/auth.service";
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -64,7 +65,7 @@ export class ObservationEditComponent implements OnInit {
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
                 private route: Router, private editionService: EditionModeService,
-                private objectDetails: ObjectDetails, public sirsDataService: SirsDataService) {
+                private objectDetails: ObjectDetails, public sirsDataService: SirsDataService, private authService: AuthService) {
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.isNewObject = !this.obsId;
@@ -118,6 +119,7 @@ export class ObservationEditComponent implements OnInit {
                 this.showTextConfig = config.context.showText;
                 this.defaultObservateurId = config.context.defaultObservateurId;
                 this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
+                this.observation.author = this.authService.user._id;
             });
     }
 
