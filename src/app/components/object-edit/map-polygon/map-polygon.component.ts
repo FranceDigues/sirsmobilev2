@@ -93,7 +93,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
         let firstPoint = this.arrayPoints[0]
         this.arrayPoints.push(firstPoint);
 
-        const polygonGeometry = new Polygon([this.arrayPoints]);
+        const polygonGeometry = new Polygon(this.arrayPoints);
         const polygonFeature = new Feature({geometry: polygonGeometry});
 
         const multiPointGeometry = new MultiPoint(this.arrayPoints);

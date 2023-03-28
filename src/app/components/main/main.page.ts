@@ -338,17 +338,17 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
         // On pointerdown event (hold click) a long press is awaited. If a longpress is detected and uniqueLayer does not exist
         // a circle is drawn. This circle then grows as long as the click is hold in the setInterval method (every 1ms).
+        // @ts-ignore
         this.olService.getMap().on('pointerdown', (evt) => {
             // check that pointerIsDown is false, so it does not trigger this event more than once at a time.
             if (!pointerIsDown) {
                 const longClickEvent = () => { // Draws the circle as long as the click is hold.
                     clickStartTime = Date.now();
                     if (!uniqueLayer) {
+                        // @ts-ignore
                         const centerLongitudeLatitude = evt.coordinate;
                         uniqueLayer = new VectorLayer({
-                            name: 'CircleInteraction',
                             source: new VectorSource({
-                                projection: 'EPSG:4326',
                                 features: [new Feature(new Circle(centerLongitudeLatitude, radius))]
                             }),
                             style: [
@@ -357,6 +357,11 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                                 })
                             ]
                         });
+
+                        uniqueLayer.set('name', 'CircleInteraction');
+                        uniqueLayer.set('projection', 'EPSG:4326');
+
+                        // @ts-ignore
                         evt.map.addLayer(uniqueLayer);
 
                         intervalTask = setInterval(() => {
@@ -366,6 +371,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                             /* Make the radius bigger every 5 milliseconds.
                             zoomLevel ratio to make it grow bigger if you're zoomed out.
                              */
+                            // @ts-ignore
                             radius = evt.map.getView().getResolution() * diffTimePixels;
                             uniqueLayer.getSource().getFeatures()[0].getGeometry().setRadius(radius);
                         }, 5);
@@ -376,10 +382,12 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                 const longPress = +localStorage.getItem('touchSensitivity') || 200;
                 // Wait 'longPress' milliseconds before firing longClickEvent.
                 delay = setTimeout(longClickEvent, longPress);
+                // @ts-ignore
                 clickPixel = evt.coordinates;
             }
         });
 
+        // @ts-ignore
         // If the click is stopped then everything is cancelled.
         this.olService.getMap().on('pointerup', (evt) => {
             if (uniqueLayer) {
@@ -403,6 +411,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                                 if (source instanceof VectorSource) {
                                     callback.call(this, source);
                                 } else if (source instanceof ImageSource) {
+                                    // @ts-ignore
                                     callback.call(this, source.getSource());
                                 }
                             }
@@ -423,6 +432,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     });
                 });
 
+                // @ts-ignore
                 evt.map.removeLayer(uniqueLayer);
                 uniqueLayer = null;
 

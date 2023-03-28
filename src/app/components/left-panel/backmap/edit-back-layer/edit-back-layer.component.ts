@@ -48,7 +48,9 @@ export class LeftSlideEditBackLayerComponent implements OnInit {
 
   addBackLayer() {
     if (this.backLayerForm.authorization.login !== '' && this.backLayerForm.authorization.pw !== '') {
+      // @ts-ignore
       const tileImage: TileImage = this.backLayerForm.source;
+      // @ts-ignore
       tileImage.tileLoadFunction((imageTile, src) => {
           const oReq = new XMLHttpRequest();
           oReq.open('GET', src, true);
@@ -65,7 +67,7 @@ export class LeftSlideEditBackLayerComponent implements OnInit {
           };
 
           oReq.send();
-      });
+      },'');
     }
     this.goBack();
   }

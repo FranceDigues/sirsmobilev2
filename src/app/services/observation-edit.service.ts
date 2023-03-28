@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { SirsDataService } from './sirs-data.service';
 import { PluginUtils } from '../utils/plugin-utils';
 import { ToastService } from './toast.service';
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -236,17 +237,17 @@ export class ObservationEditService {
                     const srb = systemeReperage.value.systemeReperageBornes[index];
 
                     // Calculate approximate position
-                    const x = wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+                    const x = (wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
                     let y;
 
                     if (borneAval) {
                         y = (index === systemeReperage.value.systemeReperageBornes.length - 1)
-                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+                            ? (wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+                            : (wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
                     } else {
                         y = (index === 0)
-                            ? wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-                            : wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+                            ? (wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+                            : (wktFormat.readGeometry(systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
                     }
 
                     const v = glMatrix.vec2.sub([], y, x);

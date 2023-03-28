@@ -7,7 +7,7 @@ import Point from 'ol/geom/Point';
 import LayerGroup from 'ol/layer/Group';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import {bbox} from 'ol/loadingstrategy';
+import { bbox } from 'ol/loadingstrategy';
 import { Subject } from 'rxjs';
 import { FavoritesLayersModel } from '../components/database-connection/models/database.model';
 import { PluginUtils } from '../utils/plugin-utils';
@@ -56,7 +56,7 @@ export class MapManagerService {
 
                     if (this.appLayer) {
                         this.appLayer.getLayers().forEach((layer) => {
-                            layer.getSource().changed();
+                            (layer as VectorLayer<any>).getSource().changed();
                         });
                     }
 
@@ -82,33 +82,36 @@ export class MapManagerService {
     }
 
     private async createAppLayer(): Promise<LayerGroup> {
-        const promises: VectorLayer[] = [];
+        const promises: VectorLayer<any>[] = [];
         const appLayers: FavoritesLayersModel[] = this.appLayersService.getFavorites();
-        let layers: VectorLayer[] = [];
+        let layers: VectorLayer<any>[] = [];
 
         if (appLayers && appLayers.length > 0) {
             appLayers.forEach((layerModel) => {
-                promises.push(this.createAppLayerInstance(layerModel));
+                this.createAppLayerInstance(layerModel)
+                    .then(response => {
+                        promises.push(response);
+                    });
             });
             layers = await Promise.all(promises)
         }
 
         const layerGroup = new LayerGroup({
-            name: 'Objects',
             layers: layers,
         });
+        layerGroup.set('name', 'Objects');
         this.mapLoadingSubject.complete();
         return layerGroup;
     }
 
-    createAppLayerInstance(layerModel): Promise<VectorLayer> {
-        let olLayer: VectorLayer;
+    createAppLayerInstance(layerModel): Promise<VectorLayer<any>> {
+        let olLayer: VectorLayer<any>;
         olLayer = new VectorLayer({
-            name: layerModel.title,
             visible: layerModel.visible,
-            model: layerModel,
-            source: new VectorSource({strategy: bbox})
+            source: new VectorSource({ strategy: bbox })
         });
+        olLayer.set('name', layerModel.title);
+        olLayer.set('model', layerModel);
 
         if (layerModel.visible === true) {
             return this.setAppLayerFeatures(olLayer).then(() => Promise.resolve(olLayer));
@@ -142,7 +145,7 @@ export class MapManagerService {
                     ).catch((error) => {
                         console.error(error);
                     });
-                //Specific case of troncon photo
+                    //Specific case of troncon photo
                 } else if (layerModel.filterValue === 'fr.sirs.core.model.Photo' && layerModel.title === 'Photos des tronçons') {
                     const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
                     promise = this.localDB.query('TronconDigue/streamLight', {
@@ -297,10 +300,10 @@ export class MapManagerService {
             if (realGeometry && obj.positionFin && obj.positionFin !== obj.positionDebut) {
                 realGeometry = new LineString([
                     realGeometry.getFirstCoordinate(),
-                    this.wktFormat.readGeometry(obj.positionFin, {
+                    (this.wktFormat.readGeometry(obj.positionFin, {
                         dataProjection,
                         featureProjection: 'EPSG:3857'
-                    }).getFirstCoordinate()
+                    }) as Point).getFirstCoordinate()
                 ]);
             }
         }
@@ -404,7 +407,7 @@ export class MapManagerService {
         const olLayer = this.getAppLayerInstance(layerModel);
         if (olLayer) {
             olLayer.setVisible(layerModel.visible);
-            olLayer.getSource().clear();
+            (olLayer as VectorLayer<any>).getSource().clear();
             if (layerModel.visible === true) {
                 await this.setAppLayerFeatures(olLayer);
             }
@@ -437,7 +440,7 @@ export class MapManagerService {
         const olLayer = this.getAppLayerInstance(layerModel);
 
         olLayer.get('model').featLabels = !olLayer.get('model').featLabels;
-        olLayer.getSource().clear();
+        (olLayer as VectorLayer<any>).getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 
@@ -445,7 +448,7 @@ export class MapManagerService {
         const olLayer = this.getAppLayerInstance(layerModel);
 
         // Load data if necessary.
-        olLayer.getSource().clear();
+        (olLayer as VectorLayer<any>).getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
 }

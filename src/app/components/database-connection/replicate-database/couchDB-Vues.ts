@@ -8,7 +8,7 @@ export const indexedViews = [
     'Element/byClassAndLinear',
     'Document/byPath',
     'TronconDigue/streamLight',
-    'objetsModeEdition6/objetsModeEdition6',
+    'objetsModeEdition7/objetsModeEdition7',
     // Local views
     'ElementSpecial3',
     'bySEIdHB',
@@ -59,9 +59,9 @@ export const designDocs = [
         }
     },
     {
-        _id: '_design/objetsModeEdition6',
+        _id: '_design/objetsModeEdition7',
         views: {
-            objetsModeEdition6: {
+            objetsModeEdition7: {
                 map: function (doc) {
                     if (!doc.valid && ((doc.positionDebut && doc.positionFin)
                         || (doc.borneDebutId && doc.borneFinId)
@@ -70,13 +70,7 @@ export const designDocs = [
                             || doc['@class'].toLowerCase().indexOf('amenagementhydraulique') > -1
                             || doc['@class'].toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective'
                             || doc['@class'].toLowerCase() === 'fr.sirs.core.model.troncondigue')))) { //TODO: eventually made a special request for TronconDigue to optimize (without borneIds)
-                        emit(doc._id, {
-                            '@class': doc['@class'],
-                            'id': doc._id,
-                            'rev': doc._rev,
-                            'designation': doc.designation,
-                            'libelle': doc.libelle
-                        });
+                        emit(doc._id, doc);
                     }
                 }.toString()
             }

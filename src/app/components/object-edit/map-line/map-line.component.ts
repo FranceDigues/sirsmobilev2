@@ -13,6 +13,7 @@ import { Toast } from '@ionic-native/toast/ngx';
 import WKT from 'ol/format/WKT';
 import { MapEditObjectService } from 'src/app/services/map-edit-object.service';
 import {SirsDataService} from "../../../services/sirs-data.service";
+import Point from "ol/geom/Point";
 
 @Component({
   selector: 'map-line',
@@ -44,8 +45,8 @@ export class MapLineComponent implements OnInit, AfterViewInit {
     this.addInteraction();
     if (this.EOS.isDependance() && this.EOS.objectDoc.geometry) { // If line already exists (Dependance)
       const geometry = this.wktFormat.readGeometry(this.EOS.objectDoc.geometry);
-      const coordsStart = transform(geometry.getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
-      const coordsEnd = transform(geometry.getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      const coordsStart = transform((geometry as Point).getFirstCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
+      const coordsEnd = transform((geometry as Point).getLastCoordinate(), this.EOS.dataProjection, 'EPSG:3857');
 
       const lineStringGeometry = new LineString([coordsStart, coordsEnd]);
       const lineStringFeature = new Feature({ geometry: lineStringGeometry });

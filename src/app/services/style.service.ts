@@ -3,6 +3,8 @@ import MultiPoint from 'ol/geom/MultiPoint';
 import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { MapService } from './map.service';
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -155,7 +157,7 @@ export class RealPositionStyle {
         const pointStyle = this.getStyle.point(pointFillColor, pointStrokeColor, pointStrokeWidth,
             pointCircleRadius, zIndex, featureModel, layerModel);
         pointStyle.setGeometry(
-            (featureGeo) => {
+            (featureGeo : Feature<Point>) => {
                 return new MultiPoint(featureGeo.getGeometry().getCoordinates());
             }
         );
@@ -220,7 +222,7 @@ export class EditionLayerStyle {
                 2
             );
             pointStyle.setGeometry(
-                (featureGeo) => {
+                (featureGeo: Feature<Point>) => {
                     const coordinates = featureGeo.getGeometry().getCoordinates();
                     if (coordinates.length >= 3) {
                         const mpCoords = [coordinates[0], coordinates[coordinates.length - 1]]
@@ -278,7 +280,7 @@ export class EditionLayerStyle {
                     this.EDITION_LAYER_CIRCLE_RADIUS,
                     2, featureModel, layerModel);
                 pointStyle.setGeometry(
-                    (featureGeo) => {
+                    (featureGeo : Feature<Point>) => {
                         return new MultiPoint(featureGeo.getGeometry().getCoordinates());
                     }
                 );
@@ -297,7 +299,7 @@ export class EditionLayerStyle {
                     this.EDITION_LAYER_CIRCLE_RADIUS,
                     2, featureModel, layerModel);
                 pointStyle.setGeometry(
-                    (featureGeo) => {
+                    (featureGeo : Feature<Point>) => {
                         return new MultiPoint(featureGeo.getGeometry().getCoordinates());
                     }
                 );
@@ -316,7 +318,7 @@ export class EditionLayerStyle {
                     this.EDITION_LAYER_CIRCLE_RADIUS,
                     2, featureModel, layerModel);
                 pointStyle.setGeometry(
-                    (featureGeo) => {
+                    (featureGeo : Feature<Point>) => {
                         return new MultiPoint(featureGeo.getGeometry().getCoordinates());
                     }
                 );

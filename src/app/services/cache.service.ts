@@ -3,7 +3,7 @@ import ScaleLine from 'ol/control/ScaleLine';
 import { getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
 import MultiPoint from 'ol/geom/MultiPoint';
-import { fromExtent } from 'ol/geom/Polygon';
+import Polygon, { fromExtent } from 'ol/geom/Polygon';
 import { defaults } from 'ol/interaction';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
@@ -19,17 +19,18 @@ import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import { MapService } from 'src/app/services/map.service';
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CacheMapManager {
 
-    targetLayer: TileLayer;
+    targetLayer: TileLayer<any>;
 
-    previousAreaLayer: VectorLayer;
+    previousAreaLayer: VectorLayer<any>;
 
-    currentAreaLayer: VectorLayer;
+    currentAreaLayer: VectorLayer<any>;
 
     constructor(private mapService: MapService) {
         this.targetLayer = null;
@@ -45,11 +46,9 @@ export class CacheMapManager {
         const previousAreaLayerStyle2 = new Style({
             image: new CircleStyle({
                 radius: radius,
-                fill: new Fill({color: [255, 0, 0, 1]})
+                fill: new Fill({ color: [255, 0, 0, 1] })
             }),
-            geometry: (feature) => {
-                this.geometryFunctionStyle(feature);
-            }
+            geometry: this.geometryFunctionStyle
         });
 
         const currentAreaLayerStyle1 = new Style({
@@ -61,37 +60,37 @@ export class CacheMapManager {
                 radius: radius,
                 fill: new Fill({ color: [0, 0, 255, 1] })
             }),
-            geometry: (feature) => {
-                this.geometryFunctionStyle(feature);
-            }
+            geometry: this.geometryFunctionStyle
         });
 
-        this.targetLayer = new TileLayer({
-            name: 'Target'
-        });
+        this.targetLayer = new TileLayer({});
+
+        this.targetLayer.set('name', 'Target');
 
         this.previousAreaLayer = new VectorLayer({
-            name: 'Previous Area',
             source: new VectorSource(),
             style: [previousAreaLayerStyle1, previousAreaLayerStyle2]
         });
 
+        this.previousAreaLayer.set('name', 'Previous Area');
+
         this.currentAreaLayer = new VectorLayer({
-            name: 'Current Area',
             source: new VectorSource(),
             style: [currentAreaLayerStyle1, currentAreaLayerStyle2]
         });
+
+        this.currentAreaLayer.set('name', 'Current Area');
     }
 
     geometryFunctionStyle(feature) {
         // return the coordinates of the first ring of the polygon
 
-        const coordinates = feature.getGeometry().getCoordinates()[0];
+        const coordinates = (feature as Feature<Polygon>).getGeometry().getCoordinates()[0];
         return new MultiPoint(coordinates);
     }
 
     createFeatureInstance(extent) {
-        return new Feature({ geometry: new fromExtent(extent) });
+        return new Feature({ geometry: fromExtent(extent) });
     }
 
     buildConfig(): Map {
@@ -105,14 +104,14 @@ export class CacheMapManager {
             ],
             target: 'mapCache',
             interactions: defaults({
-            altShiftDragRotate: false,
-            shiftDragZoom: false
+                altShiftDragRotate: false,
+                shiftDragZoom: false
             })
         });
     }
 
     handleTypesSource(layerModel) {
-        switch(layerModel.source.type) {
+        switch (layerModel.source.type) {
             case 'OSM':
                 return new OSM(layerModel.source);
             case 'TileWMS':
@@ -123,7 +122,8 @@ export class CacheMapManager {
                 return new OSM({
                     url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 });
-        };
+        }
+        ;
     }
 
     clearTargetLayer() {

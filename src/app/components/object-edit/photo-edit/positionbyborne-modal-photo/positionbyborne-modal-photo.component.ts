@@ -3,6 +3,7 @@ import { AlertController, LoadingController, ModalController } from '@ionic/angu
 import WKT from 'ol/format/WKT';
 import { DatabaseService } from 'src/app/services/database.service';
 import { EditObjectService } from "../../../../services/edit-object.service";
+import Point from "ol/geom/Point";
 
 @Component({
   selector: 'app-positionbyborne-modal-photo',
@@ -72,17 +73,17 @@ export class PositionbyborneModalPhotoComponent implements OnInit {
   private calculateApproximatePosition(borneId, borne_aval, borne_distance) {
     const index = this.systemeReperage.value.systemeReperageBornes.findIndex(item => item.borneId === borneId);
     const srb = this.systemeReperage.value.systemeReperageBornes[index];
-    const x = this.wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+    const x = (this.wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
     let y;
 
     if (borne_aval === 'true') {
         y = (index === this.systemeReperage.value.systemeReperageBornes.length - 1)
-            ? this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-            : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
     } else {
         y = (index === 0)
-            ? this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-            : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
     }
 
     const v = glMatrix.vec2.sub([], y, x);

@@ -4,6 +4,8 @@ import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { Coordinates } from '@ionic-native/geolocation/ngx';
 import { SirsDataService } from './sirs-data.service';
+import Point from "ol/geom/Point";
+import { Geometry } from "ol/geom";
 
 @Injectable({
     providedIn: 'root'
@@ -20,8 +22,8 @@ export class PositionService {
     }
 
     getLatLongFromWKT(wktGeometry, lastPositionFlag?: boolean) {
-        const geometry = this.wktFormat.readGeometry(wktGeometry);
-        return transform(lastPositionFlag ? geometry.getLastCoordinate() : geometry.getFirstCoordinate(), this.dataProjection, 'EPSG:4326');
+        const geometry  = this.wktFormat.readGeometry(wktGeometry);
+        return transform(lastPositionFlag ? (geometry as Point).getLastCoordinate() : (geometry as Point).getFirstCoordinate(), this.dataProjection, 'EPSG:4326');
     }
 
     getWKTFromLatLong(position: Coordinates) {

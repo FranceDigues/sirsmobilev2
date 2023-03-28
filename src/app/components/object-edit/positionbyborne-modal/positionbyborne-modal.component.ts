@@ -3,6 +3,7 @@ import { ModalController, LoadingController, AlertController } from '@ionic/angu
 import { EditObjectService } from '../../../services/edit-object.service';
 import WKT from 'ol/format/WKT';
 import { DatabaseService } from '../../../services/database.service';
+import Point from "ol/geom/Point";
 
 @Component({
   selector: 'app-positionbyborne-modal',
@@ -117,17 +118,17 @@ export class PositionByBorneModalComponent implements OnInit {
     const srb = this.systemeReperage.value.systemeReperageBornes[index];
 
     // Calculate approximate position
-    const x = this.wktFormat.readGeometry(srb.borneGeometry).getCoordinates();
+    const x = (this.wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
     let y;
 
     if (borne_aval === 'true') {
         y = (index === this.systemeReperage.value.systemeReperageBornes.length - 1)
-            ? this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-            : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry).getCoordinates();
+            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
     } else {
         y = (index === 0)
-            ? this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry).getCoordinates()
-            : this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry).getCoordinates();
+            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
     }
 
     const v = glMatrix.vec2.sub([], y, x);

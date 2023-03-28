@@ -15,19 +15,18 @@ import Circle from 'ol/geom/Circle';
     providedIn: 'root'
 })
 export class GeolocLayerService {
-    private readonly geolocLayer: VectorLayer;
+    private readonly geolocLayer: VectorLayer<any>;
 
     constructor() {
         this.geolocLayer = this.createGeolocLayer();
     }
 
-    getGeolocLayer(): VectorLayer {
+    getGeolocLayer(): VectorLayer<any> {
         return this.geolocLayer;
     }
 
-    createGeolocLayer(): VectorLayer {
-        return new VectorLayer({
-            name: 'Geolocation',
+    createGeolocLayer(): VectorLayer<any> {
+        let layer = new VectorLayer({
             visible: true,
             source: new VectorSource({useSpatialIndex: false}),
             style: (feature) => {
@@ -55,6 +54,8 @@ export class GeolocLayerService {
                 }
             }
         });
+        layer.set('name', 'Geolocation');
+        return layer;
     }
 
     createGeolocFeatureInstances(coords): Array<Feature> {

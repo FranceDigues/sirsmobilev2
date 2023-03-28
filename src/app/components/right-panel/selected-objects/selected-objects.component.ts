@@ -6,6 +6,7 @@ import Feature from 'ol/Feature';
 import { MapService } from "../../../services/map.service";
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { EditionLayerService } from '../../../services/edition-layer.service';
+import VectorLayer from "ol/layer/Vector";
 
 @Component({
     selector: 'selected-objects',
@@ -64,7 +65,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         this.mapService.selection.active = feature;
         //force refresh object data layers
         if (this.mapManagerService.appLayer !== null) {
-            this.mapManagerService.appLayer.getLayers().forEach(layer => layer.getSource().changed());
+            this.mapManagerService.appLayer.getLayers().forEach(layer => (layer as VectorLayer<any>).getSource().changed());
         }
 
         this.editionLayerService.editionLayer.getLayersArray().forEach(layer => layer.getSource().changed());

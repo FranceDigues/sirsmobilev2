@@ -29,6 +29,7 @@
         "libs/plugins/*"
       ],
     },
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

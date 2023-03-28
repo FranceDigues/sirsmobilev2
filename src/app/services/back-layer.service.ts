@@ -11,6 +11,7 @@ import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import TileWMS from 'ol/source/TileWMS';
+import TileSource from "ol/source/Tile";
 
 @Injectable({
     providedIn: 'root'
@@ -40,15 +41,16 @@ export class BackLayerService {
 
     createBackLayer() {
         // * give time for backLayerService to init
-        return new LayerGroup({
-            name: 'Background',
+        let group = new LayerGroup({
             layers: [
                 this.createBackLayerInstance(this.getActive())
             ]
         });
+        group.set('name', 'Background');
+        return group;
     }
 
-    createBackLayerInstance(layerModel): TileLayer {
+    createBackLayerInstance(layerModel): TileLayer<any> {
         let layer = null;
         if (typeof layerModel.cache === 'object' && layerModel.cache.active) {
             const extent = layerModel.cache.extent;
@@ -58,16 +60,16 @@ export class BackLayerService {
                 url
             });
             layer = new TileLayer({
-                name: layerModel.name,
                 extent,
                 source
             });
+            layer.set('name', layerModel.name);
         } else {
             layer = new TileLayer({
-                name: layerModel.name,
-                model: layerModel,
                 source: this.goodBackLayerSource(layerModel)
             });
+            layer.set('name', layerModel.name);
+            layer.set('model', layerModel);
         }
         return layer;
     }
@@ -76,16 +78,19 @@ export class BackLayerService {
         return this.webview.convertFileSrc(url);
     }
 
-    private goodBackLayerSource(layerModel: ListBackLayer) {
+    private goodBackLayerSource(layerModel: ListBackLayer): TileSource {
         if (layerModel.source.type === 'OSM') {
             return new OSM(layerModel.source);
         } else if (layerModel.source.type === 'TileWMS') {
+            // @ts-ignore
             return new TileWMS(layerModel.source);
         } else if (layerModel.source.type === 'XYZ') {
             return new XYZ(layerModel.source);
         } else if (layerModel.source.type === 'WFS') {
+            // @ts-ignore
             return new WFS().writeGetFeature(layerModel.source);
         } else if (layerModel.source.type === 'WMTS') {
+            // @ts-ignore
             return new WMTS(layerModel.source);
         } else {
             return new OSM({
@@ -118,7 +123,7 @@ export class BackLayerService {
         this.backLayer.getLayers().setAt(0, this.createBackLayerInstance(layer));
 
         if (typeof layer.cache === 'object') {
-            this.mapService.currentView.fit(layer.cache.extent, this.ol.map.getSize());
+            this.mapService.currentView.fit(layer.cache.extent, { size: this.ol.map.getSize() });
         }
     }
 

@@ -22,7 +22,7 @@ export class ShapesLayersManagerComponent implements OnInit {
     this.shapesLayersManagerService.removeLayerFromMap(layer, index);
   }
 
-  retrieveLayerName(vectorLayer: VectorLayer) {
+  retrieveLayerName(vectorLayer: VectorLayer<any>) {
     return vectorLayer.getProperties().name ? vectorLayer.getProperties().name : "error: no name found.";
   }
 

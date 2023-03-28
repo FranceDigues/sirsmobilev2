@@ -16,6 +16,8 @@ import * as shapefile from 'node_modules/shapefile';
 
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4';
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
 
 @Injectable({
   providedIn: 'root'
@@ -97,7 +99,6 @@ export class ShapesLayersManagerService {
   addFeaturesToMap(name: string, features) {
     //prefer VectorImageLayer instead of VectorLayer for reason of performance with regard to the data size imported
     const layer = new VectorImageLayer({
-      name: name,
       source: new VectorSource({
         features: features
       }),
@@ -134,7 +135,7 @@ export class ShapesLayersManagerService {
     return this.allLayers;
   }
 
-  styleFunction(feature) {
+  styleFunction(feature : Feature<Point>) {
     const image = new CircleStyle({
       radius: 5,
       fill: null,

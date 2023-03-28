@@ -15,6 +15,7 @@ import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
 import { error } from "protractor";
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -179,7 +180,7 @@ export class EditObjectService {
             featureProjection: 'EPSG:3857'
         });
 
-        const positionCoord = geomatryPosition.getCoordinates();
+        const positionCoord = (geomatryPosition as Point).getCoordinates();
         let geom = null;
         let geomTronc = null;
         // Get of the LineStrings from the list of Troncons
@@ -454,7 +455,7 @@ export class EditObjectService {
             if (this.objectDoc.geometry && this.objectDoc.geometry.toUpperCase().indexOf('LINESTRING') > -1) {
                 let geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
 
-                geometry.setCoordinates([coordinate, geometry.getLastCoordinate()]);
+                (geometry as Point).setCoordinates([coordinate, (geometry as Point).getLastCoordinate()]);
 
                 this.objectDoc.geometry = this.wktFormat.writeGeometry(geometry);
             } else {
@@ -483,7 +484,7 @@ export class EditObjectService {
 
         let geometry = this.wktFormat.readGeometry(this.objectDoc.geometry);
 
-        geometry.setCoordinates([geometry.getFirstCoordinate(), coordinate]);
+        (geometry as Point).setCoordinates([(geometry as Point).getFirstCoordinate(), coordinate]);
 
         this.objectDoc.geometry = this.wktFormat.writeGeometry(geometry);
     }

@@ -8,6 +8,7 @@ import { Style, Stroke, Fill, Circle } from 'ol/style';
 import MultiPoint from 'ol/geom/MultiPoint';
 import { GeolocLayerService } from './geoloc-layer.service';
 import { error } from "protractor";
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -70,7 +71,7 @@ export class MapEditObjectService {
                         width: 1.25
                       })
                     }),
-                    geometry: new MultiPoint(f.getGeometry().getCoordinates())
+                    geometry: new MultiPoint((f.getGeometry() as Point).getCoordinates())
                   })
                 ];
               } else {

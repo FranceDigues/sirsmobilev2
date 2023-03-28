@@ -14,6 +14,7 @@ import { MapService } from './map.service';
 import { SirsDataService } from './sirs-data.service';
 import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
+import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -24,11 +25,11 @@ export class EditionLayerService {
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase,
-        private sirsDataService: SirsDataService,
-        private databaseService: DatabaseService,
-        private editionLayerStyle: EditionLayerStyle,
-        private storageService: StorageService,
-        private mapService: MapService,
+                private sirsDataService: SirsDataService,
+                private databaseService: DatabaseService,
+                private editionLayerStyle: EditionLayerStyle,
+                private storageService: StorageService,
+                private mapService: MapService,
                 private appTronconsService: AppTronconsService) {
         this.appTronconsService.updated
             .subscribe({
@@ -50,12 +51,14 @@ export class EditionLayerService {
 
     /** Call setEditionLayerFeatures after */
     createEditionLayerInstance() {
-        return new VectorLayer({
-            name: 'Edition',
-            model: { selectable: true },
+        let layer = new VectorLayer({
             zIndex: 1000,
             source: new VectorSource({ strategy: bbox })
         });
+        layer.set('name', 'Edition');
+        layer.set('model', { selectable: true });
+
+        return layer;
     }
 
     updateEditionLayerInstance(favorites?: any[]) {
@@ -72,18 +75,18 @@ export class EditionLayerService {
         olSource.clear();
 
         return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition6/objetsModeEdition6', { include_docs: true });
+            let editedObjects = await this.localDB.query('objetsModeEdition7/objetsModeEdition7', { include_docs: false });
 
             // Filter edited objects by the favorites selection of troncon
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
             const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
             editedObjects = editedObjects.filter(eo => {
                 // TronconDigue cases
-                if ('fr.sirs.core.model.TronconDigue' === eo.doc['@class']) {
-                    return tronconIds.indexOf(eo.doc._id) > -1;
+                if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
+                    return tronconIds.indexOf(eo.id) > -1;
                 // All objects that have linearId attribute case
-                } else if (eo.doc.linearId) {
-                    return  tronconIds.indexOf(eo.doc.linearId) > -1;
+                } else if (eo.value.linearId) {
+                    return  tronconIds.indexOf(eo.value.linearId) > -1;
                 // All other cases namely dependance/AH
                 } else {
                     return true;
@@ -94,9 +97,9 @@ export class EditionLayerService {
             const editModePhotos = [];
             function extractPhotos() {
                 editedObjects.forEach(obj => {
-                    if ("fr.sirs.core.model.TronconDigue" === obj.doc['@class'] && obj.doc.photos) {
-                        const trId = obj.doc._id;
-                        obj.doc.photos.forEach(p => {
+                    if ("fr.sirs.core.model.TronconDigue" === obj.value['@class'] && obj.value.photos) {
+                        const trId = obj.id;
+                        obj.value.photos.forEach(p => {
                             if (!p.valid) {
                                 p.parent = trId;
                                 editModePhotos.push(p);
@@ -134,7 +137,7 @@ export class EditionLayerService {
 
     createEditionFeatureInstances(featureDocs) {
         return featureDocs.reduce((features, featureDoc) => {
-            if (featureDoc.doc) features.push(this.createEditionFeatureInstance(featureDoc.doc));
+            if (featureDoc.value) features.push(this.createEditionFeatureInstance(featureDoc.value));
             return features;
         }, []);
     }
@@ -160,9 +163,15 @@ export class EditionLayerService {
         let geometry = null;
 
         if (photoDoc.positionDebut) {
-            geometry = this.wktFormat.readGeometry(photoDoc.positionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
+            geometry = this.wktFormat.readGeometry(photoDoc.positionDebut, {
+                dataProjection,
+                featureProjection: 'EPSG:3857'
+            });
         } else if (photoDoc.approximatePositionDebut) {
-            geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
+            geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, {
+                dataProjection,
+                featureProjection: 'EPSG:3857'
+            });
         } else {
             return null;
         }
@@ -204,12 +213,12 @@ export class EditionLayerService {
                         && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                     geometry = new LineString([
                         geometry.getFirstCoordinate(),
-                        this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
+                        (this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
                             {
                                 dataProjection,
                                 featureProjection: 'EPSG:3857'
                             }
-                        ).getFirstCoordinate()
+                        ) as Point).getFirstCoordinate()
                     ]);
                 }
             } else {
