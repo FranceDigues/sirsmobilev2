@@ -16,7 +16,6 @@ import { MapService } from './map.service';
 import { SirsDataService } from './sirs-data.service';
 import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
-import Point from "ol/geom/Point";
 
 @Injectable({
     providedIn: 'root'
@@ -27,11 +26,11 @@ export class EditionLayerService {
     wktFormat = new WKT();
 
     constructor(private localDB: LocalDatabase,
-                private sirsDataService: SirsDataService,
-                private databaseService: DatabaseService,
-                private editionLayerStyle: EditionLayerStyle,
-                private storageService: StorageService,
-                private mapService: MapService,
+        private sirsDataService: SirsDataService,
+        private databaseService: DatabaseService,
+        private editionLayerStyle: EditionLayerStyle,
+        private storageService: StorageService,
+        private mapService: MapService,
                 private appTronconsService: AppTronconsService) {
         this.appTronconsService.updated
             .subscribe({
@@ -53,14 +52,12 @@ export class EditionLayerService {
 
     /** Call setEditionLayerFeatures after */
     createEditionLayerInstance() {
-        let layer = new VectorLayer({
+        return new VectorLayer({
+            name: 'Edition',
+            model: { selectable: true },
             zIndex: 1000,
             source: new VectorSource({ strategy: bbox })
         });
-        layer.set('name', 'Edition');
-        layer.set('model', { selectable: true });
-
-        return layer;
     }
 
     updateEditionLayerInstance(favorites?: any[]) {
@@ -86,10 +83,10 @@ export class EditionLayerService {
                 // TronconDigue cases
                 if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
                     return tronconIds.indexOf(eo.id) > -1;
-                // All objects that have linearId attribute case
+                    // All objects that have linearId attribute case
                 } else if (eo.value.linearId) {
                     return  tronconIds.indexOf(eo.value.linearId) > -1;
-                // All other cases namely dependance/AH
+                    // All other cases namely dependance/AH
                 } else {
                     return true;
                 }
@@ -165,15 +162,9 @@ export class EditionLayerService {
         let geometry = null;
 
         if (photoDoc.positionDebut) {
-            geometry = this.wktFormat.readGeometry(photoDoc.positionDebut, {
-                dataProjection,
-                featureProjection: 'EPSG:3857'
-            });
+            geometry = this.wktFormat.readGeometry(photoDoc.positionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
         } else if (photoDoc.approximatePositionDebut) {
-            geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, {
-                dataProjection,
-                featureProjection: 'EPSG:3857'
-            });
+            geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
         } else {
             return null;
         }
@@ -215,12 +206,12 @@ export class EditionLayerService {
                         && (featureDoc.approximatePositionFin !== featureDoc.approximatePositionDebut)))) {
                     geometry = new LineString([
                         geometry.getFirstCoordinate(),
-                        (this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
+                        this.wktFormat.readGeometry(featureDoc.positionFin ? featureDoc.positionFin : featureDoc.approximatePositionFin,
                             {
                                 dataProjection,
                                 featureProjection: 'EPSG:3857'
                             }
-                        ) as Point).getFirstCoordinate()
+                        ).getFirstCoordinate()
                     ]);
                 }
             } else {

@@ -74,9 +74,11 @@ export class ArraySortPipe  implements PipeTransform {
 
   sortOn() {
     return (a, b) => {
-      if (a.value.libelle.toLowerCase() < b.value.libelle.toLowerCase()) {
+      const v1 = a.value ? a.value.libelle : a.libelle;
+      const v2 = b.value ? b.value.libelle : b.libelle;
+      if (v1.toLowerCase() < v2.toLowerCase()) {
         return -1;
-      } else if (a.value.libelle.toLowerCase() > b.value.libelle.toLowerCase()){
+      } else if (v1.toLowerCase() > v2.toLowerCase()){
         return 1;
       } else {
           return 0;
