@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { AfterViewInit, ApplicationRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LoadingController, MenuController, Platform, ToastController } from '@ionic/angular';

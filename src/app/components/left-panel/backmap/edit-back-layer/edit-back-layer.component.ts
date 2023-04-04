@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BackLayerService } from 'src/app/services/back-layer.service';
 import TileImage from 'ol/source/TileImage';

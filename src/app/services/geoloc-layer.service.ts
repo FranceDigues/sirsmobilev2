@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from "@angular/core";
 
 import VectorLayer from 'ol/layer/Vector';

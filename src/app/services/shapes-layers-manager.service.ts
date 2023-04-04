@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 

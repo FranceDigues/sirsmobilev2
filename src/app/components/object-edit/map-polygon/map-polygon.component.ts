@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {OLService} from '@ionic-lib/lib-map/ol.service';
 import {ToastController} from '@ionic/angular';

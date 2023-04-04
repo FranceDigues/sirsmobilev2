@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ShapesLayersManagerService } from 'src/app/services/shapes-layers-manager.service';

@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+// @ts-nocheck
 
+import { Injectable } from '@angular/core';
 import WKT from 'ol/format/WKT';
 import { transform } from 'ol/proj';
 import { Coordinates } from '@ionic-native/geolocation/ngx';

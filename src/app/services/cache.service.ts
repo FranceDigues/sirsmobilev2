@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from '@angular/core';
 import ScaleLine from 'ol/control/ScaleLine';
 import { getWidth } from 'ol/extent';

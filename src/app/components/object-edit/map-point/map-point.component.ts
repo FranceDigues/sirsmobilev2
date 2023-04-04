@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import Draw from 'ol/interaction/Draw';

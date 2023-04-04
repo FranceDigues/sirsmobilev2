@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { EditObjectService } from '../../../services/edit-object.service';

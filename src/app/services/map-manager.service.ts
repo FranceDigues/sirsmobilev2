@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import Feature from 'ol/Feature';

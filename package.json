@@ -43,6 +43,7 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/storage": "^2.2.0",
     "@ng-bootstrap/ng-bootstrap": "6.0.2",
+    "@types/geojson": "^7946.0.10",
     "angular-md5": "^0.1.10",
     "bootstrap": "4.5.2",
     "cordova": "^10.0.0",

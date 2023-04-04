@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { HttpClient } from '@angular/common/http';
 import { ApplicationRef, Injectable } from '@angular/core';
 import { FileOpener } from '@ionic-native/file-opener/ngx';

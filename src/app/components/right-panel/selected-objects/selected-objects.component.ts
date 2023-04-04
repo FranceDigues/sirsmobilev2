@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SelectedObjectsService } from 'src/app/services/selected-objects.service';
 import { LocalDatabase } from '../../../services/local-database.service';

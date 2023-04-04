@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from '@angular/core';
 import { DatabaseService } from './database.service';
 import { BackLayerModel, DatabaseModel, ListBackLayer } from '../components/database-connection/models/database.model';

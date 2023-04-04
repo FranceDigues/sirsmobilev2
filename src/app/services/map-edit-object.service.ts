@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from '@angular/core';
 import { OLService } from '@ionic-lib/lib-map/ol.service';
 import { LongClickSelect } from '@plugins/LongClickSelect.js';

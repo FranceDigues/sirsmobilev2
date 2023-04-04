@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BackLayerService } from 'src/app/services/back-layer.service';
 

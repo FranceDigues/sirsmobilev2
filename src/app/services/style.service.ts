@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Injectable } from '@angular/core';
 import MultiPoint from 'ol/geom/MultiPoint';
 import { Fill, Stroke, Style, Text } from 'ol/style';

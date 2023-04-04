@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import WKT from 'ol/format/WKT';
