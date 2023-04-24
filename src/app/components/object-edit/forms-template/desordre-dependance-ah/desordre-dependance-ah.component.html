@@ -21,7 +21,7 @@
       (change)="changeCategorie()">
       <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
         [selected]="isSelected(s, r)">
-        {{ labelService.doc2String(r) }}
+        {{ r | docToString | async }}
       </option>
     </select>
   </div>
@@ -33,7 +33,7 @@
         (change)="changeType()">
         <option *ngFor="let r of filteredTypeDesordreList | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
           [selected]="isSelected(s, r)">
-          {{ labelService.doc2String(r) }}
+          {{ r | docToString | async }}
         </option>
       </select>
     </div>
@@ -45,7 +45,7 @@
       <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
         <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
           [selected]="isSelected(s, r)">
-          {{ labelService.doc2String(r) }}
+          {{ r | docToString | async }}
         </option>
       </select>
     </div>

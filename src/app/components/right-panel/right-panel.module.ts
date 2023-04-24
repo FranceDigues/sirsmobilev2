@@ -16,6 +16,7 @@ import { DetailsContentModule } from '../object-details/detailscontent/details-c
 import { ObservationEditModule } from '../object-details/observation-edit/observation-edit.module';
 import { TraitComponent } from './trait/trait.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         ObservationEditModule,
         ObjectDetailsModule,
         DirectiveModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        DocToStringPipeModule
     ],
     providers: [],
     declarations: [

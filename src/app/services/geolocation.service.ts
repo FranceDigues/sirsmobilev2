@@ -88,7 +88,6 @@ export class GeolocationService {
     }
 
     private update(): void {
-        console.debug('Update GPS');
         this.getCurrentLocation(true).then(console.log, (err) => {
             this.openModal('Erreur lors de la localisation GPS', err.message).then();
         });

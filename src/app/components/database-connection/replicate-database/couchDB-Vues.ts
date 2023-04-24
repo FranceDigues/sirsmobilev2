@@ -8,7 +8,7 @@ export const indexedViews = [
     'Element/byClassAndLinear',
     'Document/byPath',
     'TronconDigue/streamLight',
-    'objetsModeEdition7/objetsModeEdition7',
+    'objetsModeEdition8/objetsModeEdition8',
     // Local views
     'ElementSpecial3',
     'bySEIdHB',
@@ -59,18 +59,27 @@ export const designDocs = [
         }
     },
     {
-        _id: '_design/objetsModeEdition7',
+        _id: '_design/objetsModeEdition8',
         views: {
-            objetsModeEdition7: {
+            objetsModeEdition8: {
                 map: function (doc) {
-                    if (!doc.valid && ((doc.positionDebut && doc.positionFin)
-                        || (doc.borneDebutId && doc.borneFinId)
-                        || (doc.geometry
-                            && (doc['@class'].toLowerCase().indexOf('dependance') > -1
+                    if (!doc.valid) {
+                        if ((doc.positionDebut && doc.positionFin)) {
+                            emit(doc._id, doc);
+                        } else if (doc.borneDebutId && doc.borneFinId) {
+                            emit(doc._id, doc);
+                        } else if (doc.geometry) {
+                            if (doc['@class'].toLowerCase().indexOf('dependance') > -1
                                 || doc['@class'].toLowerCase().indexOf('amenagementhydraulique') > -1
                                 || doc['@class'].toLowerCase() === 'fr.sirs.core.model.organeprotectioncollective'
-                                || doc['@class'].toLowerCase() === 'fr.sirs.core.model.troncondigue')))) { //TODO: eventually made a special request for TronconDigue to optimize (without borneIds)
-                        emit(doc._id, doc);
+                                || doc['@class'] === 'fr.sirs.core.model.ArbreVegetation'
+                                || doc['@class'] === 'fr.sirs.core.model.HerbaceeVegetation'
+                                || doc['@class'] === 'fr.sirs.core.model.InvasiveVegetation'
+                                || doc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'
+                                || doc['@class'].toLowerCase() === 'fr.sirs.core.model.troncondigue') {
+                                emit(doc._id, doc);
+                            }
+                        }
                     }
                 }.toString()
             }

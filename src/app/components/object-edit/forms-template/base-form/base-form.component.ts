@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { LabelService } from 'src/app/services/label.service';
 import { formTemplatePilote } from 'src/app/utils/form-template-pilote';
 
 @Component({
@@ -28,7 +27,7 @@ export class BaseFormComponent implements OnInit {
     "OrganeProtectionCollective": ["amenagementHydrauliqueId", "dependanceId"]
   }
 
-  constructor(public EOS: EditObjectService, public labelService: LabelService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
     let formConf = this.conf(this.EOS.type);

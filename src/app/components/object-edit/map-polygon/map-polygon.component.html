@@ -4,7 +4,6 @@
       <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="closePolygon()">Fermer le polygone</ion-button>
       <ion-button (click)="mapEditObject.locateMe()">Me localiser</ion-button>
       <ion-button (click)="validate()">Valider</ion-button>
     </ion-buttons>
@@ -12,3 +11,6 @@
   </ion-toolbar>
 </ion-header>
 <div id="mapPolygon" #mapPolygon></div>
+<div *ngIf="isVegetation" class="vegetation-msg">
+  Vous devez définir un polygone dans la zone marquée autour de parcelle sélectionné
+</div>

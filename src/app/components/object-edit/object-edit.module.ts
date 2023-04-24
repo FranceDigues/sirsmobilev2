@@ -17,6 +17,8 @@ import { PhotoQuicklookModule } from '../../shared/photo-quicklook/photo-quicklo
 import { MatButtonModule } from '@angular/material/button';
 import { PhotoEditComponent } from './photo-edit/photo-edit.component';
 import { PositionbyborneModalPhotoComponent } from './photo-edit/positionbyborne-modal-photo/positionbyborne-modal-photo.component';
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
 
 @NgModule({
     imports: [
@@ -28,7 +30,9 @@ import { PositionbyborneModalPhotoComponent } from './photo-edit/positionbyborne
         FlexLayoutModule,
         EditNoteModule,
         PhotoQuicklookModule,
-        MatButtonModule
+        MatButtonModule,
+        MatCheckboxModule,
+        DocToStringPipeModule
     ],
     providers: [],
     declarations: [

@@ -49,7 +49,8 @@ import { GeolocLayerService } from './services/geoloc-layer.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { SirsDataService } from './services/sirs-data.service';
-import { LabelService } from './services/label.service';
+import { DocToStringPipeModule } from "./pipe/doc-to-string.pipe.module";
+import { DocToStringPipe } from "./pipe/doc-to-string.pipe";
 
 @NgModule({
     declarations: [AppComponent],
@@ -60,7 +61,7 @@ import { LabelService } from './services/label.service';
         AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
         DatabaseConnectionPageModule, LibCameraModule,
         NgbCollapseModule, FlexLayoutModule, DirectiveModule,
-        ObjectEditModule
+        ObjectEditModule, DocToStringPipeModule
     ],
     providers: [
         StatusBar, OLService, SplashScreen, NativeStorage,
@@ -68,12 +69,12 @@ import { LabelService } from './services/label.service';
         RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
         MapManagerService, GeolocLayerService, EditionLayerService,
         SyncService, DatabaseService, AuthService,
-        AppVersionsService, BackLayerService, LabelService,
+        AppVersionsService, BackLayerService,
         SystemeEndiguement, AppTronconsService, DigueController,
         TronconController, FilterPipe, EditObjectService,
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
-        ObservationEditService, Network, FileChooser, FilePath,
+        ObservationEditService, Network, FileChooser, FilePath,DocToStringPipe,
         SirsDataService, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

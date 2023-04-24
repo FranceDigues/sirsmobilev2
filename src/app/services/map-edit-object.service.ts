@@ -9,7 +9,6 @@ import VectorLayer from 'ol/layer/Vector';
 import { Style, Stroke, Fill, Circle } from 'ol/style';
 import MultiPoint from 'ol/geom/MultiPoint';
 import { GeolocLayerService } from './geoloc-layer.service';
-import { error } from "protractor";
 import Point from "ol/geom/Point";
 
 @Injectable({

@@ -5,9 +5,9 @@ import { EditionModeService } from './edition-mode.service';
 import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
-import { EditObjectService } from './edit-object.service';
 import { PluginUtils } from '../utils/plugin-utils';
-import { LabelService } from './label.service';
+import { DocToStringPipe } from "../pipe/doc-to-string.pipe";
+import { AppLayersService } from "./app-layers.service";
 
 @Injectable({
     providedIn: 'root'
@@ -49,7 +49,8 @@ export class ObjectDetails {
     constructor(private localDB: LocalDatabase, private route: Router,
         private editionService: EditionModeService, private mapManagerService: MapManagerService,
         private alertCtrl: AlertController, private formService: FormsTemplateService,
-        private labelService: LabelService) {
+        private docToStringPipe: DocToStringPipe,
+                private appLayersService: AppLayersService) {
         // Paths
         this.photoDir = null;
         this.notesDir = null;
@@ -90,15 +91,12 @@ export class ObjectDetails {
 
             this.initDisplayedValuesForReferences();
             if (this.isDependance) {
-                desordreClass = 'fr.sirs.core.model.DesordreDependance';
                 prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
                 linearId = null;
             } else if (this.selectedObject['@class'] === 'fr.sirs.core.model.Photo') {
-                desordreClass = 'fr.sirs.core.model.Desordre';
                 prestationClass = 'fr.sirs.core.model.Prestation';
                 linearId = null;
             } else {
-                desordreClass = 'fr.sirs.core.model.Desordre';
                 prestationClass = 'fr.sirs.core.model.Prestation';
                 linearId = this.selectedObject.linearId;
             }
@@ -121,7 +119,7 @@ export class ObjectDetails {
                 const value = this.selectedObject[key];
                 this.localDB.get(value).then(
                     (doc) => {
-                        this.abstract[key.substr(0, key.length - 2)] = this.labelService.doc2String(doc);
+                        this.abstract[key.substr(0, key.length - 2)] = this.docToStringPipe.transform(doc);
                     },
                     (error) => {
                         console.log('No document found for this ID (' + value + '). ' + error);
@@ -291,13 +289,11 @@ export class ObjectDetails {
         }
         this.selectedObject.prestationIds.push(this.tempPrestation);
         this.filterPrestationList();
+        // Make the doc in edit mode
         this.selectedObject.valid = false;
         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
         this.editionService.updateObject(this.selectedObject)
-            .then(() => {
-                this.mapManagerService.syncAllAppLayer();
-                this.mapManagerService.clearAll();
-            });
+            .then();
 
         // Reciproque ajout dans l'objet prestation
         let clazz = PluginUtils.doc2Class(this.selectedObject);
@@ -307,7 +303,7 @@ export class ObjectDetails {
         } else {
             attribute = this.formService.attributeNameOfObjectFromClass("Prestation", clazz);
         }
-        const regex = new RegExp('.*Ids$');
+        const regex = /.*Ids$/;
         if (regex.test(attribute)) {
             this.addObjectId(this.tempPrestation, this.selectedObject["_id"], attribute);
         }
@@ -337,10 +333,7 @@ export class ObjectDetails {
                         this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
                         this.filterPrestationList();
                         this.editionService.updateObject(this.selectedObject)
-                            .then(() => {
-                                this.mapManagerService.syncAllAppLayer();
-                                this.mapManagerService.clearAll();
-                            });
+                            .then();
 
                         // Reciproque suppression dans l'objet prestation
                         if (removedIds && removedIds.length == 1) {
@@ -381,11 +374,10 @@ export class ObjectDetails {
                         }
                         doc.valid = false;
                         doc.dateMaj = new Date().toISOString().split('T')[0];
-                        this.editionService.updateObject(doc)
-                            .then(() => {
-                                this.mapManagerService.syncAllAppLayer();
-                                this.mapManagerService.clearAll();
-                            });
+                        // Check if the layer model is visible or not
+                        const isVisible = !!this.appLayersService.getFavorites().find(item => item.filterValue === doc['@class']);
+                        this.editionService.updateObject(doc, isVisible)
+                            .then();
                     } else {
                         console.error("Document (" + receiverId + ") not found.");
                     }
@@ -405,11 +397,10 @@ export class ObjectDetails {
                     }
                     doc.valid = false;
                     doc.dateMaj = new Date().toISOString().split('T')[0];
-                    this.editionService.updateObject(doc)
-                        .then(() => {
-                            this.mapManagerService.syncAllAppLayer();
-                            this.mapManagerService.clearAll();
-                        });
+                    // Check if the layer model is visible or not
+                    const isVisible = !!this.appLayersService.getFavorites().find(item => item.filterValue === doc['@class']);
+                    this.editionService.updateObject(doc, isVisible)
+                        .then();
                 } else {
                     console.error("Document (" + receiverId + ") not found.");
                 }

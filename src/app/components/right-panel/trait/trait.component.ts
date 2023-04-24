@@ -5,9 +5,7 @@ import { LocalDatabase } from '../../../services/local-database.service';
 import LineString from 'ol/geom/LineString';
 import WKT from 'ol/format/WKT';
 import { TrackerService } from '../../../services/tracker.service';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import {SirsDataService} from "../../../services/sirs-data.service";
-import { LabelService } from 'src/app/services/label.service';
 
 @Component({
     selector: 'trait',
@@ -42,8 +40,7 @@ export class TraitComponent implements OnInit {
                 private editionModeService: EditionModeService,
                 private trackerService: TrackerService,
                 private authService: AuthService,
-                private localDatabase: LocalDatabase,
-                private labelService: LabelService) {
+                private localDatabase: LocalDatabase) {
     }
 
     ngOnInit() {

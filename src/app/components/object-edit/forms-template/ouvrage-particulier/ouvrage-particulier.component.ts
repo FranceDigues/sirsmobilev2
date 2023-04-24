@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
-import { LabelService } from 'src/app/services/label.service';
 
 @Component({
   selector: 'form-ouvrage-particulier',
@@ -10,7 +9,7 @@ import { LabelService } from 'src/app/services/label.service';
 })
 export class OuvrageParticulierComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService, private labelService: LabelService) { }
+  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.initTypeOuvrageParticulier();

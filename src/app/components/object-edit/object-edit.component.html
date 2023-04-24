@@ -26,7 +26,7 @@
                                 </div>
 
 
-                                <div *ngIf="(!EOS.isDependance() || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
+                                <div *ngIf="((!EOS.isDependance() && !EOS.isVegetation())  || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
                                      class="switch">
                                     <label class="label-edit">
                                         Objet ponctuel
@@ -53,7 +53,22 @@
                                     </select>
                                 </div>
 
-                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance()"
+                                <div *ngIf="EOS.isVegetation() && EOS.objectDoc.parcelleId && (EOS.isNew || EOS.isClosed)"
+                                     class="switch">
+                                    <select id="objectType" class="browser-default" [(ngModel)]="EOS.objVegetationType"
+                                            name="objectType" (change)="EOS.changeObjectTypeVegetation()">
+                                        <option *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation'"
+                                                [value]="'point'" [selected]="EOS.objVegetationType === 'point'">
+                                            Objet ponctuel
+                                        </option>
+                                        <option *ngIf="EOS.objectDoc['@class'] !== 'fr.sirs.core.model.ArbreVegetation'"
+                                                [value]="'polygon'" [selected]="EOS.objVegetationType === 'polygon'">
+                                            Objet polygonale
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="sirs-field-inline" *ngIf="!EOS.isLinear && !EOS.isDependance() && !EOS.isVegetation()"
                                      fxLayout="row" fxLayoutAlign="space-between center">
                                     <div>
                                         <div class="sirs-field-title"
@@ -85,7 +100,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance()">
+                                <div class="sirs-field-inline" *ngIf="EOS.isLinear && !EOS.isDependance() && !EOS.isVegetation()">
                                     <div fxLayout="row" fxLayoutAlign="space-between center">
                                         <div class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
                                             Position de début : {{ EOS.getStartPos() }}
@@ -192,9 +207,40 @@
                                     </div>
                                 </div>
 
+                                <div class="sirs-field-inline" *ngIf="EOS.isVegetation()" fxLayout="row"
+                                     fxLayoutAlign="space-between center">
+                                    <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+                                         class="sirs-field-title" *ngIf="EOS.objVegetationType === 'polygon'">
+                                        <div>
+                                            Dessiner un polygone
+                                        </div>
+                                        <button class="option-button" (click)="drawPolygon()">
+                                            <ion-icon class="option-button-icon" name="triangle-outline"></ion-icon>
+                                        </button>
+                                    </div>
+
+                                    <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+                                         class="sirs-field-title"
+                                         *ngIf="EOS.objVegetationType === 'point'">
+                                        <div>
+                                            Position : {{ EOS.getStartPosDependance() }}
+                                        </div>
+                                        <div>
+                                            <button class="option-button" (click)="EOS.locateMe()"
+                                                    *ngIf="EOS.objVegetationType === 'point'">
+                                                <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                                            </button>
+                                            <button class="option-button" (click)="selectPos()"
+                                                    *ngIf="EOS.objVegetationType === 'point'">
+                                                <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div class="row" *ngIf="!EOS.isDependance()">
+                            <div class="row" *ngIf="!EOS.isDependance() && !EOS.isVegetation()">
                                 <div class="sirs-field col col-100">
                                     <label for="trancon" class="active edit-label">La liste des Tronçons</label>
                                     <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
@@ -202,6 +248,128 @@
                                         <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
                                             {{ troncon.libelle }}</option>
                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="EOS.isVegetation()">
+                                <div class="sirs-field col col-100">
+                                    <label for="parcelle" class="active edit-label">La liste des Parcelles Vegetation</label>
+                                    <select id="parcelle" class="browser-default" [(ngModel)]="EOS.objectDoc.parcelleId"
+                                            name="parcelle">
+                                        <option *ngFor="let parcelle of EOS.parcelles" [ngValue]="parcelle.value.id">
+                                            {{ parcelle.value.designation || parcelle.value.id }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="EOS.isVegetation()">
+                                <div class="sirs-field col col-100" style="display: flex;gap: 10px;">
+                                    <ion-checkbox slot="end" name="contactEau"
+                                                  [(ngModel)]="EOS.objectDoc.contactEau"></ion-checkbox>
+                                    <label style="margin-top: 3px">Contact Eau</label>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="EOS.isVegetation()" style="padding: 0 10px;">
+                                <div fxFlex="50">
+                                    <label>Position Type</label>
+                                    <ion-select name="positionType" [(ngModel)]="EOS.objectDoc.typePositionId">
+                                        <ion-select-option *ngFor="let position of EOS.refs.RefPosition"
+                                                           [value]="position.id">
+                                            {{formatOptionText(position)}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                                <div fxFlex="50">
+                                    <label>Côté Type</label>
+                                    <ion-select name="coteType" [(ngModel)]="EOS.objectDoc.typeCoteId">
+                                        <ion-select-option *ngFor="let cote of EOS.refs.RefCote"
+                                                           [value]="cote.id">
+                                            {{formatOptionText(cote)}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="EOS.isVegetation() && EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+                                <div class="sirs-field col col-100">
+                                    <label for="densite" class="active">Densité</label>
+                                    <input id="densite" name="densite" type="number" min=0
+                                           [(ngModel)]="EOS.objectDoc.densite" />
+                                </div>
+                            </div>
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation() && EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+                                <div class="sirs-field col col-100">
+                                    <label for="hauteur" class="active">Hauteur</label>
+                                    <input id="hauteur" name="hauteur" type="number" min=0
+                                           [(ngModel)]="EOS.objectDoc.hauteur"/>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation() && EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+                                <div class="sirs-field col col-100">
+                                    <label for="diametre" class="active">Diamètre</label>
+                                    <input id="diametre" name="diametre" type="number" min=0
+                                           [(ngModel)]="EOS.objectDoc.diametre"/>
+                                </div>
+                            </div>
+
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation()
+                                 && (EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation' || EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation')">
+                                <div fxFlex="100" style="margin: 0 10px;">
+                                    <label>État Sanitaire Type</label>
+                                    <ion-select name="etatSanitaire" [(ngModel)]="EOS.objectDoc.etatSanitaireId">
+                                        <ion-select-option
+                                                *ngFor="let etatSanitaire of EOS.refs.RefEtatSanitaireVegetation"
+                                                [value]="etatSanitaire.id">
+                                            {{formatOptionText(etatSanitaire)}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                            </div>
+
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation()
+                                 && (EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation')">
+                                <div fxFlex="100" style="margin: 0 10px;">
+                                    <label>Hauteur</label>
+                                    <ion-select name="hauteurId" [(ngModel)]="EOS.objectDoc.hauteurId">
+                                        <ion-select-option
+                                                *ngFor="let refHauteur of EOS.refs.RefHauteurVegetation"
+                                                [value]="refHauteur.id">
+                                            {{formatOptionText(refHauteur)}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation()
+                                 && (EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation')">
+                                <div fxFlex="100" style="margin: 0 10px;">
+                                    <label>Diamètre</label>
+                                    <ion-select name="diametreId" [(ngModel)]="EOS.objectDoc.diametreId">
+                                        <ion-select-option
+                                                *ngFor="let refDiametre of EOS.refs.RefDiametreVegetation"
+                                                [value]="refDiametre.id">
+                                            {{formatOptionText(refDiametre)}}
+                                        </ion-select-option>
+                                    </ion-select>
+                                </div>
+                            </div>
+                            <div class="row"
+                                 *ngIf="EOS.isVegetation()
+                                 && (EOS.objectDoc['@class'] === 'fr.sirs.core.model.InvasiveVegetation')">
+                                <div fxFlex="100" style="margin: 0 10px;">
+                                    <label>Densité</label>
+                                    <ion-select name="densiteId" [(ngModel)]="EOS.objectDoc.densiteId">
+                                        <ion-select-option
+                                                *ngFor="let refDensite of EOS.refs.RefDensiteVegetation"
+                                                [value]="refDensite.id">
+                                            {{formatOptionText(refDensite)}}
+                                        </ion-select-option>
+                                    </ion-select>
                                 </div>
                             </div>
 
@@ -233,7 +401,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" *ngIf="!EOS.isVegetation()">
                                 <div class="sirs-field col col-100">
                                     <label for="date_fin" class="active edit-label">La date de Fin</label>
                                     <input id="date_fin" type="date" [(ngModel)]="EOS.dateWrapper" name="date_fin"
@@ -272,13 +440,14 @@
     </div>
 </div>
 <div class="full-height" *ngIf="view === 'map'">
-    <map-point class="full-height" (slidePathChange)="changeSlidePath($event)"></map-point>
+    <map-point class="full-height" (slidePathChange)="changeSlidePath($event)" [isVegetation]="EOS.isVegetation()"></map-point>
 </div>
 <div class="full-height" *ngIf="view === 'drawLine'">
     <map-line class="full-height" (slidePathChange)="changeSlidePath($event)"></map-line>
 </div>
 <div class="full-height" *ngIf="view === 'drawPolygon'">
-    <map-polygon class="full-height" (slidePathChange)="changeSlidePath($event)"></map-polygon>
+    <map-polygon class="full-height" [isVegetation]="EOS.isVegetation()"
+                 (slidePathChange)="changeSlidePath($event)"></map-polygon>
 </div>
 <div class="full-height" *ngIf="view === 'media'">
     <app-media-form (changeView)="setView($event)"></app-media-form>

@@ -41,7 +41,7 @@ export class ObjectEditComponent implements OnInit {
 
     getStartPositionValue() {
         // Try to get GPS precision info
-        const precisionGPSText = this.geolocationService.getGPSAccuracy() ? ', Précision: +/- ' + this.geolocationService.getGPSAccuracy() + ' m' : '';
+        const precisionGPSText = this.geolocationService.getGPSAccuracy() ? ', précision actuelle du GPS : +/- ' + this.geolocationService.getGPSAccuracy() + ' m' : '';
 
         return this.EOS.getStartPos() + precisionGPSText;
     }
@@ -227,5 +227,21 @@ export class ObjectEditComponent implements OnInit {
             && this.EOS.type !== 'Desordre'
             && this.EOS.type !== 'Berge'
             && !this.EOS.isDependance()
+            && !this.EOS.isVegetation()
+    }
+
+    formatOptionText(obj) {
+        switch (this.EOS.showTextConfig) {
+            case 'fullName':
+                return obj.libelle;
+            case 'abstract':
+                return obj.abrege ? obj.abrege
+                    : (obj.designation + ' : ' + obj.libelle);
+            default:
+                return obj.abrege
+                    ? (obj.abrege + ' : ' + obj.libelle)
+                    : (obj.designation + ' : ' + obj.libelle);
+        }
+
     }
 }

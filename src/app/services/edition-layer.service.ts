@@ -74,7 +74,7 @@ export class EditionLayerService {
         olSource.clear();
 
         return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition7/objetsModeEdition7', { include_docs: false });
+            let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
 
             // Filter edited objects by the favorites selection of troncon
             const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
@@ -187,7 +187,7 @@ export class EditionLayerService {
         let geometry;
         const dataProjection = this.sirsDataService.sirsDoc.epsgCode;
 
-        if (featureDoc.geometry && (PluginUtils.isDependanceAhClass(featureDoc['@class']) || featureDoc['@class'] === 'fr.sirs.core.model.TronconDigue')) {
+        if (featureDoc.geometry && (PluginUtils.isDependanceAhClass(featureDoc['@class']) || PluginUtils.isVegetationClass(featureDoc['@class']) || featureDoc['@class'] === 'fr.sirs.core.model.TronconDigue')) {
             geometry = this.wktFormat.readGeometry(featureDoc.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
@@ -220,9 +220,11 @@ export class EditionLayerService {
         }
 
         const feature = new Feature({ geometry });
-        const style = featureDoc['@class'] === 'fr.sirs.core.model.TronconDigue' ?
-            this.editionLayerStyle.tronconStyle() : this.editionLayerStyle.style(this.mapService.selection, feature, geometry.getType());
-        feature.setStyle(style);
+        if (geometry) {
+            const style = featureDoc['@class'] === 'fr.sirs.core.model.TronconDigue' ?
+                this.editionLayerStyle.tronconStyle() : this.editionLayerStyle.style(this.mapService.selection, feature, geometry.getType());
+            feature.setStyle(style);
+        }
         feature.set('id', featureDoc._id);
         feature.set('rev', featureDoc._rev);
         feature.set('author', featureDoc.author);

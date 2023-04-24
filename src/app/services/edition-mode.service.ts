@@ -57,7 +57,11 @@ export class EditionModeService {
         {name: 'TronconDigue', include_docs: false},
         {name: 'PrestationAmenagementHydraulique', include_docs: false},
         {name: 'Contact', include_docs: false},
-        {name: 'Marche', include_docs: false}
+        {name: 'Marche', include_docs: false},
+        {name: 'RefEtatSanitaireVegetation', include_docs: false},
+        {name: 'RefHauteurVegetation', include_docs: false},
+        {name: 'RefDiametreVegetation', include_docs: false},
+        {name: 'RefDensiteVegetation', include_docs: false}
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
@@ -89,7 +93,7 @@ export class EditionModeService {
             ));
     }
 
-    updateObject(objectDoc) {
+    updateObject(objectDoc, visible = true) {
         return (this.localDB.save(objectDoc)
             .then(
                 () => {
@@ -102,7 +106,10 @@ export class EditionModeService {
                             break;
                         }
                     }
-                    source.addFeature(this.editionLayerService.createEditionFeatureInstance(objectDoc));
+                    // Draw the feature in the map only if the layer model is visible
+                    if (visible) {
+                        source.addFeature(this.editionLayerService.createEditionFeatureInstance(objectDoc));
+                    }
                     return objectDoc;
                 }
             ));
@@ -129,7 +136,7 @@ export class EditionModeService {
     }
 
     getEditionModeObjects5() {
-        return (this.localDB.query('objetsModeEdition7/objetsModeEdition7', {
+        return (this.localDB.query('objetsModeEdition8/objetsModeEdition8', {
             include_docs: true
         }));
     }

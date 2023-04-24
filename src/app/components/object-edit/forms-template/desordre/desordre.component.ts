@@ -1,6 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { FormsTemplateService } from 'src/app/services/formstemplate.service';
-import { LabelService } from 'src/app/services/label.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 import { FilterPipe } from '../../../right-panel/create-object/create-object.component';
 
@@ -14,7 +13,7 @@ export class DesordreComponent implements OnInit {
   filteredTypeDesordreList = [];
 
   constructor(public EOS: EditObjectService, public filterPipe: FilterPipe,
-              private FT: FormsTemplateService, private labelService: LabelService) { }
+              private FT: FormsTemplateService) { }
 
   ngOnInit() {
     this.FT.initPosition();

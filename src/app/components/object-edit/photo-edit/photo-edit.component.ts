@@ -18,10 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { transform } from 'ol/proj';
 import { LocalDatabase } from 'src/app/services/local-database.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
-import { LabelService } from 'src/app/services/label.service';
 import {DatabaseModel} from "../../database-connection/models/database.model";
 import {DatabaseService} from "../../../services/database.service";
-import { error } from "protractor";
 
 @Component({
     selector: 'app-photo-edit',
@@ -61,7 +59,6 @@ export class PhotoEditComponent implements OnInit {
         private positionService: PositionService,
         private localDB: LocalDatabase,
         private editionModeService: EditionModeService,
-        private labelService: LabelService,
                 private databaseService: DatabaseService) {
     }
 

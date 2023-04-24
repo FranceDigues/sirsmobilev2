@@ -11,12 +11,10 @@ export class ObservationsGenericComponent {
     constructor(public detailsObject: ObjectDetails) {
     }
 
-    byDate() {
-        return (obj1: any, obj2: any) => {
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
-            return new Date(obj2.date).getTime() - new Date(obj1.date).getTime();
-        }
+    byDate(obj1: any, obj2: any) {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(obj1.date).getTime() - new Date(obj2.date).getTime();
     }
 
 }

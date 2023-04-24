@@ -22,6 +22,7 @@ import { SelectedObjectsService } from "./selected-objects.service";
 import { SirsDataService } from "./sirs-data.service";
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { DatabaseService } from "./database.service";
+import { error } from "protractor";
 
 @Injectable({
     providedIn: 'root'
@@ -84,19 +85,13 @@ export class MapManagerService {
     }
 
     private async createAppLayer(): Promise<LayerGroup> {
-        const promises: VectorLayer<any>[] = [];
+        const promises: Promise<VectorLayer<any>>[] = [];
         const appLayers: FavoritesLayersModel[] = this.appLayersService.getFavorites();
-        let layers: VectorLayer<any>[] = [];
 
-        if (appLayers && appLayers.length > 0) {
-            appLayers.forEach((layerModel) => {
-                this.createAppLayerInstance(layerModel)
-                    .then(response => {
-                        promises.push(response);
-                    });
-            });
-            layers = await Promise.all(promises)
-        }
+        appLayers?.forEach(layerModel => {
+            promises.push(this.createAppLayerInstance(layerModel));
+        });
+        const layers = await Promise.all(promises)
 
         const layerGroup = new LayerGroup({
             layers: layers,
@@ -122,71 +117,56 @@ export class MapManagerService {
         }
     }
 
-    setAppLayerFeatures(olLayer) {
+    setAppLayerFeatures(olLayer): Promise<any> {
         return new Promise(async resolve => {
             const layerModel = olLayer.get('model');
             const olSource = olLayer.getSource();
             // Try to get the promise of a previous query.
-            let promise = null;
-            if (layerModel.filterValue !== 'fr.sirs.core.model.BorneDigue' &&
-                layerModel.filterValue !== 'fr.sirs.core.model.TronconDigue') {
-                if (PluginUtils.isDependanceAhClass(layerModel.filterValue)) {
-                    promise = this.localDB.query('Element/byClassAndLinear', {
-                        startkey: [layerModel.filterValue],
-                        endkey: [layerModel.filterValue, {}],
-                        include_docs: true
-                    }).then(
-                        (results) => {
-                            return results.filter((item) => {
-                                return item.doc.valid;
-                            }).map(this.createAppFeatureModel.bind(this));
-                        },
-                        (error) => {
-                            console.error(error);
-                        }
-                    ).catch((error) => {
-                        console.error(error);
-                    });
-                    //Specific case of troncon photo
-                } else if (layerModel.filterValue === 'fr.sirs.core.model.Photo' && layerModel.title === 'Photos des tronçons') {
-                    const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
-                    promise = this.localDB.query('TronconDigue/streamLight', {
-                        keys: tmp === null ? [] : tmp.map((item) => {
-                            return item.id;
-                        })
-                    }).then(
-                        (results) => {
-                            const collectPhotos = [];
-                            results.map(obj => obj.value).forEach(troncon => {
-                                if (troncon.photos) {
-                                    troncon.photos.forEach(photo => {
-                                        if (photo.valid) {
-                                            photo.parent = troncon._id;
-                                            collectPhotos.push(photo);
-                                        }
-                                    });
-                                }
-                            });
-                            return collectPhotos.map(this.createAppFeatureModelFromObject.bind(this));
-                        },
-                        (error) => {
-                            console.error(error);
-                        }
+            let promise;
+            switch (layerModel.filterValue){
+                case 'fr.sirs.core.model.TronconDigue':
+                    // Get favorite selected Troncons
+                    const keys = await this.getTronconsFavoritesIds();
+                    promise = this.localDB.query('TronconDigue/streamLight', { keys })
+                        .then(
+                            (results) => {
+                                return results.filter((item) => {
+                                    return item.value.valid;
+                                }).map(this.createAppFeatureModel.bind(this));
+                            },
+                            (error) => {
+                                console.error(error);
+                            }
                     );
-                } else {
-                    // Get all the favorites tronçons ids
-                    const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
-                    const keys = [];
-                    if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
-                        favorites.forEach((key) => {
-                            keys.push([layerModel.filterValue, key.id]);
-                        });
+                    break;
 
-                        promise = this.localDB.query('ElementSpecial3', {
-                            keys
+                case 'fr.sirs.core.model.BorneDigue':
+                    // Get favorite selected Troncons
+                    const keys2 = await this.getTronconsFavoritesIds();
+                    promise = this.localDB.query('getBornesFromTronconID', { keys2 }).then(
+                        (results) => {
+                            return this.localDB.query('getBornesIdsHB', {
+                                keys: results.map((obj) => {
+                                    return obj.value;
+                                })
+                            }).then(
+                                (results2) => {
+                                    return results2.map(this.createAppFeatureModel.bind(this));
+                                });
+                        },
+                        (error) => {
+                            console.error(error);
+                        });
+                    break;
+                default:
+                    if (PluginUtils.isDependanceAhClass(layerModel.filterValue) || PluginUtils.isVegetationClass(layerModel.filterValue)) {
+                        promise = this.localDB.query('Element/byClassAndLinear', {
+                            startkey: [layerModel.filterValue],
+                            endkey: [layerModel.filterValue, {}],
+                            include_docs: true
                         }).then(
                             (results) => {
-                                return results.map(this.createAppFeatureModel.bind(this));
+                                return results.filter(item => item.doc.valid).map(this.createAppFeatureModel.bind(this));
                             },
                             (error) => {
                                 console.error(error);
@@ -194,56 +174,61 @@ export class MapManagerService {
                         ).catch((error) => {
                             console.error(error);
                         });
-                    } else {
-                        promise = new Promise((resolve2) => { // TODO : should not reach this else or at least do something...
-                            resolve2([]);
-                        }).then(
-                            () => {
-                                return [];
+                        //Specific case of troncon photo
+                    } else if (layerModel.filterValue === 'fr.sirs.core.model.Photo' && layerModel.title === 'Photos des tronçons') {
+                        // Get favorite selected Troncons
+                        const keys = await this.getTronconsFavoritesIds();
+                        promise = this.localDB.query('TronconDigue/streamLight', { keys }).then(
+                            (results) => {
+                                const collectPhotos = [];
+                                results.map(obj => obj.value).forEach(troncon => {
+                                    if (troncon.photos) {
+                                        troncon.photos.forEach(photo => {
+                                            if (photo.valid) {
+                                                photo.parent = troncon._id;
+                                                collectPhotos.push(photo);
+                                            }
+                                        });
+                                    }
+                                });
+                                return collectPhotos.map(this.createAppFeatureModelFromObject.bind(this));
+                            },
+                            (error) => {
+                                console.error(error);
                             }
-                        ), (error) => {
-                            console.error(error);
-                        };
-                    }
-                }
-            } else if (layerModel.filterValue === 'fr.sirs.core.model.TronconDigue') {
-                const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
-                promise = this.localDB.query('TronconDigue/streamLight', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-                }).then(
-                    (results) => {
-                        return results.filter((item) => {
-                            return item.value.valid;
-                        }).map(this.createAppFeatureModel.bind(this));
-                    },
-                    (error) => {
-                        console.error(error);
-                    }
-                );
-            } else {
-                // Case fr.sirs.core.model.BorneDigue
-                const tmp: any = await this.storageService.getItem('AppTronconsFavorities');
-                promise = this.localDB.query('getBornesFromTronconID', {
-                    keys: tmp === null ? [] : tmp.map((item) => {
-                        return item.id;
-                    })
-                }).then(
-                    (results) => {
-                        return this.localDB.query('getBornesIdsHB', {
-                            keys: results.map((obj) => {
-                                return obj.value;
-                            })
-                        }).then(
-                            (results2) => {
-                                return results2.map(this.createAppFeatureModel.bind(this));
+                        );
+                    } else {
+                        // Get all the favorites tronçons ids
+                        const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
+                        const keys = [];
+                        if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
+                            favorites.forEach((key) => {
+                                keys.push([layerModel.filterValue, key.id]);
                             });
-                    },
-                    (error) => {
-                        console.error(error);
-                    });
+
+                            promise = this.localDB.query('ElementSpecial3', {
+                                keys
+                            }).then(
+                                (results) => {
+                                    return results.map(this.createAppFeatureModel.bind(this));
+                                },
+                                (error) => {
+                                    console.error(error);
+                                }
+                            ).catch((error) => {
+                                console.error(error);
+                            });
+                        } else {
+                            promise = new Promise((resolve2) => { // TODO : should not reach this else or at least do something...
+                                resolve2([]);
+                            }).then(
+                                () => [], error => console.error(error)
+                            );
+                        }
+                    }
+
             }
+
             // Wait for promise resolution or rejection.
             promise.then((featureModels) => {
                     olSource.addFeatures(this.createAppFeatureInstances(featureModels, layerModel));
@@ -255,6 +240,11 @@ export class MapManagerService {
                 }
             );
         });
+    }
+
+    private async getTronconsFavoritesIds() {
+        const tmp = await this.storageService.getItem('AppTronconsFavorities');
+        return !tmp ? [] : (tmp as Array<any>).map((item) => item.id);
     }
 
     private createAppFeatureModelFromObject(obj) {
@@ -272,7 +262,7 @@ export class MapManagerService {
         let projGeometry;
         let realGeometry;
 
-        if (obj.geometry && obj['@class'] && PluginUtils.isDependanceAhClass(obj['@class'])) {
+        if (obj.geometry && obj['@class'] && (PluginUtils.isDependanceAhClass(obj['@class']) || PluginUtils.isVegetationClass(obj['@class']))) {
             projGeometry = this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
@@ -317,7 +307,7 @@ export class MapManagerService {
             title: obj.libelle,
             projGeometry,
             realGeometry,
-            archive: obj.date_fin ? true : false,
+            archive: !!obj.date_fin,
             parent: obj.parent
         };
     }

@@ -63,7 +63,7 @@
                             <label>Orientations</label>
                             <select id="orientationList" class="browser-default" [(ngModel)]="photoDoc.orientationPhoto">
                                 <option *ngFor="let o of orientationList || []" [selected]="o.id === photoDoc.orientationPhoto" [value]="o.id">
-                                    {{ labelService.doc2String(o.value) }}
+                                    {{ o.value | docToString | async }}
                                 </option>
                             </select>
                         </div>
@@ -71,7 +71,7 @@
                             <label>Côté</label>
                             <select id="coteList" class="browser-default" [(ngModel)]="photoDoc.coteId">
                                 <option *ngFor="let c of coteList || []" [selected]="c.id === photoDoc.coteId" [value]="c.id">
-                                    {{ labelService.doc2String(c.value) }}
+                                    {{c.value | docToString | async }}
                                 </option>
                             </select>
                         </div>

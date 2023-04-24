@@ -1,5 +1,3 @@
-
-
 export class PluginUtils {
 
     static reseauOuvrageObjectType = [
@@ -27,6 +25,22 @@ export class PluginUtils {
             return PluginUtils.isDependanceAhClass(doc['@class']);
         } else {
             console.warn("isDependanceAhDoc: the object provide does not contains the attribut @class");
+            return false;
+        }
+    }
+
+    static isVegetationClass(strClass: string): boolean {
+        return strClass === 'fr.sirs.core.model.ArbreVegetation'
+            || strClass === 'fr.sirs.core.model.HerbaceeVegetation'
+            || strClass === 'fr.sirs.core.model.InvasiveVegetation'
+            || strClass === 'fr.sirs.core.model.PeuplementVegetation';
+    }
+
+    static isVegetationDoc(doc) {
+        if (doc['@class']) {
+            return PluginUtils.isVegetationClass(doc['@class']);
+        } else {
+            console.warn("The object provided does not contain the attribut @class");
             return false;
         }
     }

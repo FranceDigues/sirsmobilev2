@@ -16,7 +16,6 @@ import { DatabaseModel } from '../components/database-connection/models/database
 import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
-import { error } from "protractor";
 import Point from "ol/geom/Point";
 
 @Injectable({
@@ -33,6 +32,7 @@ export class EditObjectService {
     objectDoc = null;
     isLinear = false;
     objDependanceType = null;
+    objVegetationType = null;
     dependances = [];
     amenagementHydrauliques = [];
     linearPosEditionHandler = {
@@ -41,6 +41,7 @@ export class EditObjectService {
     };
     showTextConfig;
     troncons = [];
+    parcelles = [];
     allTroncons = [];
     geoloc = undefined;
     refs = null;
@@ -52,15 +53,15 @@ export class EditObjectService {
     isClosed;
 
     constructor(private databaseService: DatabaseService,
-        private loadingCtrl: LoadingController,
-        private sirsDataService: SirsDataService,
-        private editionModeService: EditionModeService,
-        private route: Router,
-        private toastCtrl: ToastController,
-        private geolocationService: GeolocationService,
-        private positionService: PositionService,
-        private storageService: StorageService,
-        private localDB: LocalDatabase) {
+                private loadingCtrl: LoadingController,
+                private sirsDataService: SirsDataService,
+                private editionModeService: EditionModeService,
+                private route: Router,
+                private toastCtrl: ToastController,
+                private geolocationService: GeolocationService,
+                private positionService: PositionService,
+                private storageService: StorageService,
+                private localDB: LocalDatabase) {
     }
 
     init(type, id) {
@@ -93,6 +94,7 @@ export class EditObjectService {
             await this.initReferences();
             this.initTronconList();
             if (this.isDependance()) await this.initDependance();
+            if (this.isVegetation()) await this.initVegetation();
             await this.initStartPosBorne();
             await this.initEndPosBorne();
             this.initIsLinear();
@@ -117,6 +119,7 @@ export class EditObjectService {
         this.objectDoc = null;
         this.isLinear = false;
         this.objDependanceType = null;
+        this.objVegetationType = null;
         this.dependances = [];
         this.amenagementHydrauliques = [];
         this.linearPosEditionHandler = {
@@ -125,6 +128,7 @@ export class EditObjectService {
         };
         this.showTextConfig = null;
         this.troncons = [];
+        this.parcelles = [];
         this.allTroncons = [];
         this.geoloc = undefined;
         this.refs = null;
@@ -235,6 +239,10 @@ export class EditObjectService {
         return PluginUtils.isDependanceAhClass(this.objectDoc['@class']);
     }
 
+    isVegetation() {
+        return PluginUtils.isVegetationClass(this.objectDoc['@class']);
+    }
+
     private async initReferences() {
         const refs = await this.editionModeService.getReferenceTypes();
         const res = {};
@@ -277,10 +285,10 @@ export class EditObjectService {
         const promises = [];
         if (this.objectDoc['@class'] === 'fr.sirs.core.model.DesordreDependance') {
             promises.push(this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
-                startkey: ['fr.sirs.core.model.CheminAccesDependance'],
-                endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
-                include_docs: true
-            }),
+                    startkey: ['fr.sirs.core.model.CheminAccesDependance'],
+                    endkey: ['fr.sirs.core.model.CheminAccesDependance', {}],
+                    include_docs: true
+                }),
                 this.databaseService.getLocalDB().query('Element/byClassAndLinear', {
                     startkey: ['fr.sirs.core.model.OuvrageVoirieDependance'],
                     endkey: ['fr.sirs.core.model.OuvrageVoirieDependance', {}],
@@ -330,8 +338,34 @@ export class EditObjectService {
         })
     }
 
+    private async initVegetation() {
+        //Determines the type of geometry
+        if (this.objectDoc?.geometry?.toUpperCase()?.indexOf('POLYGON') > -1 || this.objectDoc?.geometry?.toUpperCase()?.indexOf('MULTIPOLYGON') > -1) {
+            this.objVegetationType = 'polygon';
+        } else if (this.objectDoc?.geometry?.toUpperCase()?.indexOf('POINT') > -1 || this.objectDoc?.geometry?.toUpperCase()?.indexOf('MULTIPOINT') > -1) {
+            this.objVegetationType = 'point';
+        }
+
+        await new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.localDB.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.ParcelleVegetation'],
+                    endkey: ['fr.sirs.core.model.ParcelleVegetation', {}],
+                    include_docs: false
+                }).then(
+                    (results) => {
+                        this.parcelles = results;
+                        resolve();
+                    }, (error) => {
+                        console.error(error);
+                        reject(error);
+                    });
+            }, 100);
+        })
+    }
+
     save() {
-        if (!this.isDependance() && !this.objectDoc.linearId) {
+        if (!this.isDependance() && !this.isVegetation() && !this.objectDoc.linearId) {
             this.toastCtrl.create({
                 message: 'Veuillez choisir un tronçon de rattachement pour cet objet',
                 duration: 2000
@@ -341,13 +375,14 @@ export class EditObjectService {
             return;
         }
 
-        if ((!this.isDependance() && !this.objectDoc.positionDebut && !this.objectDoc.borneDebutId)
-            || (this.isDependance() && !this.objectDoc.geometry)) {
+        if ((!this.isDependance() && !this.isVegetation() && !this.objectDoc.positionDebut && !this.objectDoc.borneDebutId)
+            || (this.isDependance() && !this.objectDoc.geometry)
+            || (this.isVegetation() && !this.objectDoc.geometry)) {
             this.toastCtrl.create({
                 message: 'Veuillez choisir une position pour cet objet, avant de continuer',
                 duration: 2000
             }).then((toast) => {
-                toast.present();
+                toast.present().then();
             });
             return;
         }
@@ -563,6 +598,23 @@ export class EditObjectService {
         delete this.objectDoc.geometry;
     }
 
+    changeObjectTypeVegetation() {
+        if (this.objVegetationType === 'line') {
+            delete this.objectDoc.positionFin;
+            delete this.objectDoc.approximatePositionFin;
+        } else if (this.objVegetationType === 'point') {
+            this.objectDoc.positionFin = this.objectDoc.positionDebut;
+            this.objectDoc.approximatePositionFin = this.objectDoc.approximatePositionDebut;
+        } else {
+            delete this.objectDoc.positionFin;
+            delete this.objectDoc.positionDebut;
+            this.watchDocPositionDebut();
+            delete this.objectDoc.approximatePositionFin;
+            delete this.objectDoc.approximatePositionDebut;
+        }
+        delete this.objectDoc.geometry;
+    }
+
     getStartPos() {
         if (this.objectDoc.positionDebut) {
             let coordinates = this.positionService.getLatLongFromWKT(this.objectDoc.positionDebut);
@@ -662,7 +714,7 @@ export class EditObjectService {
                         this.handlePos(position);
                     }
                 },
-                (error) =>{
+                (error) => {
                     console.error(error);
                     this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
                 }
@@ -675,7 +727,7 @@ export class EditObjectService {
                 (position) => {
                     this.handlePosDependanceEnd(position);
                 },
-                (error) =>{
+                (error) => {
                     console.error(error);
                     this.geolocationService.openModal('Erreur lors de la localisation GPS', error.message).then();
                 }
