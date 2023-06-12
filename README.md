@@ -162,10 +162,6 @@ ionic cordova platform rm android
 
 ionic cordova build android --release -- -- --packageType=bundle
 
-// Il faut ajouter android:exported="true" dans la balise <activity> 
-// et xmlns:tools="http://schemas.android.com/tools" dans la balise <manifest>
-// du fichier : platforms/android/app/src/main/AndroidManifest.xml
-
 // Rebuilder pour appliquer les modifications
 ionic cordova build android --release -- -- --packageType=bundle
 
