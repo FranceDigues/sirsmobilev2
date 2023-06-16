@@ -19,7 +19,7 @@ export class DatabaseSyncComponent implements OnInit {
   launch() {
     const isFirstSync = false;
 
-    this.syncService.sync(isFirstSync);
+    this.syncService.sync(isFirstSync).then();
   }
 
   cancelSync() {
@@ -27,6 +27,6 @@ export class DatabaseSyncComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigateByUrl('/main');
+    this.router.navigateByUrl('/main').then();
   }
 }
