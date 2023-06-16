@@ -7,12 +7,13 @@ import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionb
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {CameraService} from '@ionic-lib/lib-camera/camera.service';
 import {Camera} from '@ionic-native/camera/ngx';
-import {File, Entry, Metadata, DirectoryEntry} from '@ionic-native/file/ngx';
+import { File, Entry, Metadata, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
 import {UuidUtils} from 'src/app/utils/uuid-utils';
 import {formatDate} from '@angular/common';
 import {DatabaseService} from '../../../../services/database.service';
 import {DatabaseModel} from '../../../database-connection/models/database.model';
 import {SirsDataService} from "../../../../services/sirs-data.service";
+import { PluginUtils } from "../../../../utils/plugin-utils";
 
 @Component({
     selector: 'observation-media',
@@ -185,7 +186,7 @@ export class ObservationMediaComponent implements OnInit {
                         const valueTmp = value.replace('data:image/jpeg;base64,', '');
                         this.file.resolveLocalFilesystemUrl(valueTmp)
                             .then(
-                                (file: Entry) => {
+                                (file: FileEntry) => {
                                     this.savePicture(file);
                                 }
                             );
@@ -195,7 +196,7 @@ export class ObservationMediaComponent implements OnInit {
             .catch(err => console.error("Error while taking a photo: " + err));
     }
 
-    savePicture(file: Entry) {
+    savePicture(file: FileEntry) {
         file.getMetadata((metadata: Metadata) => {
             if (metadata.size > 1048576) {
                 this.OES.warningSizeMessage();
@@ -211,10 +212,18 @@ export class ObservationMediaComponent implements OnInit {
                             file.copyTo(targetDir, fileName, () => {
                                 // Store the photo in the object document.
                                 this.fillMediaOptions(photoId, fileName);
-                                // Set Photo Path
-                                this.OES.importPhotoData = this.OES.getPhotoPath(this.OES.mediaOptions);
-                                // Force Image to change
-                                this.cdr.detectChanges();
+                                // Set Photo base64
+
+                                file.file((f) => {
+                                    this.cameraService.convertBlobToBase64(f)
+                                        .then((res) => {
+                                            this.OES.importPhotoData = res;
+                                            // Force Image to change
+                                            this.cdr.detectChanges();
+                                        });
+                                });
+
+
                             })
                         }
                     );
@@ -232,7 +241,7 @@ export class ObservationMediaComponent implements OnInit {
     fillMediaOptions(photoId: string, fileName: string) {
         // Store the photo in the object document.
         this.OES.mediaOptions['id'] = photoId;
-        this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (this.isDependance(this.OES.objectType) ? '.PhotoDependance' : '.Photo');
+        this.OES.mediaOptions['@class'] = 'fr.sirs.core.model' + (PluginUtils.isDependanceAhClass(this.OES.objectType) ? '.PhotoDependance' : '.Photo');
         this.OES.mediaOptions['date'] = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
         this.OES.mediaOptions['chemin'] = '/' + fileName;
         this.OES.mediaOptions['valid'] = false;
@@ -289,20 +298,6 @@ export class ObservationMediaComponent implements OnInit {
 
     changeContact() {
         this.OES.mediaOptions.photographeId = this.OES.contact;
-    }
-
-    private isDependance(clazz) {
-        // Only dependances or AHs that have photos.
-        return clazz === 'DesordreDependance'
-            || clazz === 'OuvrageVoirieDependance'
-            || clazz === 'AireStockageDependance'
-            || clazz === 'CheminAccesDependance'
-            || clazz === 'AutreDependance'
-            || clazz === 'AmenagementHydraulique'
-            || clazz === 'PrestationAmenagementHydraulique'
-            || clazz === 'StructureAmenagementHydraulique'
-            || clazz === 'OuvrageAssocieAmenagementHydraulique'
-            || clazz === 'OrganeProtectionCollective';
     }
 
     parseContactName(contact) {

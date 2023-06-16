@@ -189,7 +189,7 @@ export class ObservationDetailsComponent implements OnInit {
     }
 
     addPhotoInArray(imageData) {
-        if (this.calculateImageSize(imageData) > 1048576) {
+        if (this.cameraService.calculateImageSize(imageData) > 1048576) {
             this.OES.warningSizeMessage();
             return;
         }
@@ -220,21 +220,8 @@ export class ObservationDetailsComponent implements OnInit {
                 () => {
                     this.mapManagerService.syncAllAppLayer();
                     this.photos.push(photo);
-                    // TODO HILMI RELOAD COMPONENT
                 }
             )
-    }
-
-    calculateImageSize(base64String) {
-        let padding = 0;
-
-        if (base64String.endsWith('==')) {
-            padding = 2;
-        } else if (base64String.endsWith('=')) {
-            padding = 1;
-        }
-        const base64StringLength = base64String.length;
-        return (base64StringLength / 4) * 3 - padding;
     }
 
     isReseauEtOuvrage() {

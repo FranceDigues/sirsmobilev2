@@ -342,7 +342,7 @@ export class PhotoEditComponent implements OnInit {
         this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
-                    if (this.calculateImageSize(imageData) > 1048576) {
+                    if (this.cameraService.calculateImageSize(imageData) > 1048576) {
                         this.toastCtrl.create({
                             message: 'Veuillez choisir une photo de taille inférieur à 1.2Mo',
                             duration: 3000
@@ -366,23 +366,6 @@ export class PhotoEditComponent implements OnInit {
     private fillPhotoDoc(photoId: string, fileName: string) {
         this.photoDoc.id = photoId;
         this.photoDoc.chemin = '/' + fileName;
-    }
-
-    private calculateImageSize(base64String) {
-        let padding;
-        let inBytes;
-        let base64StringLength;
-        if (base64String.endsWith('==')) {
-            padding = 2;
-        } else if (base64String.endsWith('=')) {
-            padding = 1;
-        } else {
-            padding = 0;
-        }
-
-        base64StringLength = base64String.length;
-        inBytes = (base64StringLength / 4) * 3 - padding;
-        return inBytes;
     }
 
     private getPosition() {

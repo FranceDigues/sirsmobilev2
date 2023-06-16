@@ -259,7 +259,7 @@ export class MediaFormComponent implements OnInit {
         this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
-                    if (this.calculateImageSize(imageData) > 1048576) {
+                    if (this.cameraService.calculateImageSize(imageData) > 1048576) {
                         this.toastCtrl.create({
                             message: 'Veuillez choisir une photo de taille inférieur à 1.2Mo',
                             duration: 3000
@@ -287,23 +287,6 @@ export class MediaFormComponent implements OnInit {
         this.mediaOptions.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
         this.mediaOptions.chemin = '/' + fileName;
         this.mediaOptions.valid = false;
-    }
-
-    calculateImageSize(base64String) {
-        let padding;
-        let inBytes;
-        let base64StringLength;
-        if (base64String.endsWith('==')) {
-            padding = 2;
-        } else if (base64String.endsWith('=')) {
-            padding = 1;
-        } else {
-            padding = 0;
-        }
-
-        base64StringLength = base64String.length;
-        inBytes = (base64StringLength / 4) * 3 - padding;
-        return inBytes;
     }
 
     formatOptionText(orientation) {
