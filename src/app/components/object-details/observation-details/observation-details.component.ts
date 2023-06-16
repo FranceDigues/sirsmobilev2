@@ -178,12 +178,7 @@ export class ObservationDetailsComponent implements OnInit {
     }
 
     addPhotoFromAlbum() {
-        const options: Options = {
-            quality: 50,
-            encodingType: this.camera.EncodingType.JPEG,
-            destinationType: this.camera.DestinationType.DATA_URL,
-        };
-        this.cameraService.getPhotoFromGallery(options)
+        this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
                     if (imageData) {

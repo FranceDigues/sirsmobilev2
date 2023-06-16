@@ -194,12 +194,9 @@ export class MediaFormComponent implements OnInit {
     takePhoto() {
         this.mediaOptions.id = '';
         this.mediaOptions.chemin = '';
-        const options: Options = {
-            quality: 50,
-            destinationType: this.camera.DestinationType.FILE_URI,
-            encodingType: this.camera.EncodingType.JPEG
-        };
-        this.cameraService.takePhoto(options)
+        this.cameraService.takePhoto({
+            destinationType: this.camera.DestinationType.FILE_URI
+        })
             .then(
                 (value: string) => {
                     const valueTmp = value.replace('data:image/jpeg;base64,', '');
@@ -220,7 +217,7 @@ export class MediaFormComponent implements OnInit {
         file.getMetadata((metadata: Metadata) => {
             if (metadata.size > 1048576) {
                 this.toastCtrl.create({
-                    message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+                    message: 'Veuillez choisir une photo de taille inférieur à 1.2Mo',
                     duration: 3000
                 }).then(toast => toast.present());
                 file.remove(() => console.debug('File has been removed correctly'));
@@ -259,17 +256,12 @@ export class MediaFormComponent implements OnInit {
     }
 
     getPicFromGallery() {
-        const options: Options = {
-            quality: 50,
-            encodingType: this.camera.EncodingType.JPEG,
-            destinationType: this.camera.DestinationType.DATA_URL,
-        };
-        this.cameraService.getPhotoFromGallery(options)
+        this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
                     if (this.calculateImageSize(imageData) > 1048576) {
                         this.toastCtrl.create({
-                            message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+                            message: 'Veuillez choisir une photo de taille inférieur à 1.2Mo',
                             duration: 3000
                         }).then(toast => toast.present());
                         return;

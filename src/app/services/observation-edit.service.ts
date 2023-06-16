@@ -423,7 +423,7 @@ export class ObservationEditService {
 
     warningSizeMessage() {
         this.toastCtrl.create({
-            message: 'Veuillez choisir une photo de taille infèrieur à 1.2 Mo',
+            message: 'Veuillez choisir une photo de taille inférieur à 1.2 Mo',
             duration: 3000
         }).then(toast => toast.present());
     }

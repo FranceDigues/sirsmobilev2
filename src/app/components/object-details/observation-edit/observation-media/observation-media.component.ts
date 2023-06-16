@@ -6,7 +6,6 @@ import { ToastNotification } from '../../../../shared/models/toast-notification.
 import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionbyborne-modal2.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {CameraService} from '@ionic-lib/lib-camera/camera.service';
-import {Options} from '@ionic-lib/lib-camera/interface.model';
 import {Camera} from '@ionic-native/camera/ngx';
 import {File, Entry, Metadata, DirectoryEntry} from '@ionic-native/file/ngx';
 import {UuidUtils} from 'src/app/utils/uuid-utils';
@@ -28,7 +27,7 @@ export class ObservationMediaComponent implements OnInit {
     showTextConfig: string;
     pendingContactList: boolean;
 
-    // Some elements of ObservationEditService are Promises so we have to wait until they are ready.
+    // Some elements of ObservationEditService are Promises, so we have to wait until they are ready.
     contactList;
     refOrientationPhoto;
     refCote;
@@ -153,15 +152,10 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     getPhotoFromGallery() {
-        const options: Options = {
-            quality: 50,
-            encodingType: this.camera.EncodingType.JPEG,
-            destinationType: this.camera.DestinationType.DATA_URL,
-        };
-        this.cameraService.getPhotoFromGallery(options)
+        this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
-                    if (this.calculateImageSize(imageData) > 1048576) {
+                    if (this.cameraService.calculateImageSize(imageData) > 1048576) {
                         this.toastCtrl.create({
                             message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
                             duration: 3000
@@ -177,34 +171,14 @@ export class ObservationMediaComponent implements OnInit {
             );
     }
 
-    calculateImageSize(base64String) {
-        let padding;
-        let inBytes;
-        let base64StringLength;
-        if (base64String.endsWith('==')) {
-            padding = 2;
-        } else if (base64String.endsWith('=')) {
-            padding = 1;
-        } else {
-            padding = 0;
-        }
-
-        base64StringLength = base64String.length;
-        inBytes = (base64StringLength / 4) * 3 - padding;
-        return inBytes;
-    }
-
     saveNoteEdit(file) {
         this.savePicture(file);
     }
 
     takePhoto() {
-        const options: Options = {
-            quality: 50,
-            destinationType: this.camera.DestinationType.FILE_URI,
-            encodingType: this.camera.EncodingType.JPEG
-        };
-        this.cameraService.takePhoto(options)
+        this.cameraService.takePhoto({
+            destinationType: this.camera.DestinationType.FILE_URI
+        })
             .then(
                 (value: string) => {
                     if (value) {
@@ -250,7 +224,7 @@ export class ObservationMediaComponent implements OnInit {
 
     warningSizeMessage() {
         this.toastCtrl.create({
-            message: 'Veuillez choisir une photo de taille infèrieur à 1.2Mo',
+            message: 'Veuillez choisir une photo de taille inférieur à 1.2Mo',
             duration: 3000
         }).then(toast => toast.present());
     }
@@ -300,7 +274,8 @@ export class ObservationMediaComponent implements OnInit {
                                     saveBase64(reader.result);
                                 }
                             }
-                        }
+                        },
+                        error => console.error(error)
                     );
                 }
             }
