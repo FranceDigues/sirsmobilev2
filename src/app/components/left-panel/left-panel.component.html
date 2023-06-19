@@ -24,6 +24,9 @@
     <div class="full-height" *ngSwitchCase="'GPSSettings'">
         <app-gps-settings (slidePathChange)="changeSlidePath($event)"></app-gps-settings>
     </div>
+    <div class="full-height" *ngSwitchCase="'PhotoSettings'">
+        <app-photo-settings (slidePathChange)="changeSlidePath($event)"></app-photo-settings>
+    </div>
     <div class="full-height" *ngSwitchCase="'shapeLayerManager'">
         <app-shapes-layers-manager (slidePathChange)="changeSlidePath($event)"></app-shapes-layers-manager>
     </div>

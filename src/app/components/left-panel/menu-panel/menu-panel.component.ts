@@ -81,4 +81,7 @@ export class MenuPanelComponent implements OnInit {
         this.slidePathChange.emit('GPSSettings');
     }
 
+    goPhotoSettings() {
+        this.slidePathChange.emit('PhotoSettings');
+    }
 }

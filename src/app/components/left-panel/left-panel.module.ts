@@ -21,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ObservationEditModule } from "../object-details/observation-edit/observation-edit.module";
 import { AppSettings2Component } from "./app-settings2/app-settings2.component";
 import { GpsSettingsComponent } from "./gps-settings/gps-settings.component";
+import { PhotoSettingsComponent } from "./photo-settings/photo-settings.component";
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { GpsSettingsComponent } from "./gps-settings/gps-settings.component";
         AppSettingsComponent,
         AppSettings2Component,
         GpsSettingsComponent,
+        PhotoSettingsComponent,
         ShapesLayersManagerComponent,
         AddShapesLayersComponent,
         LeftSlideBackmapComponent,
