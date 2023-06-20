@@ -780,6 +780,41 @@ export class EditObjectService {
         }
     }
 
+    calculateApproximatePosition(borneId: string, borne_aval: string, borne_distance: number, systemeReperageBornes: Array<any>, tronconGeometry: string) {
+        const index = systemeReperageBornes.findIndex((item) => {
+            return item.borneId === borneId;
+        });
+
+        const srb = systemeReperageBornes[index];
+
+        // Calculate approximate position
+        const x = (this.wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
+        let y;
+
+        if (borne_aval === 'true') {
+            y = (index === 0)
+                ? (this.wktFormat.readGeometry(systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+                : (this.wktFormat.readGeometry(systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
+        } else {
+            y = (index === systemeReperageBornes.length - 1)
+                ? (this.wktFormat.readGeometry(systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
+                : (this.wktFormat.readGeometry(systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
+        }
+
+        const v = glMatrix.vec2.sub([], y, x);
+
+        const vn = glMatrix.vec2.normalize(v, v);
+
+        const vs = glMatrix.vec2.scale(vn, vn, borne_distance);
+
+        const o = glMatrix.vec2.add([], x, vs);
+
+        // Try to find the closest point in Tronçon
+        const o1 = this.wktFormat.readGeometry(tronconGeometry).getClosestPoint(o);
+
+        return 'POINT(' + o1[0] + ' ' + o1[1] + ')';
+    }
+
     private initIsLinear() {
         if (this.isNew) {
             this.isLinear = false;
