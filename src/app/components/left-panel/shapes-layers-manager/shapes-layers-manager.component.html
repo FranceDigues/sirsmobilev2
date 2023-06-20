@@ -9,9 +9,8 @@
 
 <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
 
-  <div style="height: 100%" fxLayout="column">
-    <div fxFlex="75">
-
+  <div style="height: calc(100% - 64px);" fxLayout="column">
+    <div fxFlex>
       <ion-list>
         <ion-item-sliding *ngFor="let layer of shapesLayersManagerService.getAllLayers(); let i = index" side="end">
           <ion-item>
@@ -26,10 +25,9 @@
         </ion-item-sliding>
         <ion-item lines="none"></ion-item>
       </ion-list>
-
     </div>
   
-    <div fxFlex="25" fxLayout="row" fxLayoutAlign="end start">
+    <div style="height: 80px;" fxLayout="row" fxLayoutAlign="end start">
       <ion-fab style="margin: 25px 10px;">
         <ion-fab-button color="danger" (click)="goToAddBackLayer()">
           <ion-icon name="add"></ion-icon>

@@ -45,12 +45,6 @@
         </select>
       </div>
     </ion-item>
-
-    <ion-fab class="position-absolute" style="top: 85%;" horizontal="end" vertical="end" slot="fixed">
-      <ion-fab-button color="danger" (click)="wfsRequest()">
-        <ion-icon name="checkmark-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
   </div>
 
   <div *ngIf="selectedType === layerTypes[1] || selectedType === layerTypes[2]" fxLayout="column" fxLayoutAlign=" center" style="margin-top: 10%">
