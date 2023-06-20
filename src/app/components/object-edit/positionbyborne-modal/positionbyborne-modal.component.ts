@@ -112,51 +112,25 @@ export class PositionByBorneModalComponent implements OnInit {
     }
   }
 
-  private calculateApproximatePosition(borneId, borne_aval, borne_distance) {
-    const index = this.systemeReperage.value.systemeReperageBornes.findIndex((item) => {
-      return item.borneId === borneId;
-    });
-
-    const srb = this.systemeReperage.value.systemeReperageBornes[index];
-
-    // Calculate approximate position
-    const x = (this.wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
-    let y;
-
-    if (borne_aval === 'true') {
-        y = (index === this.systemeReperage.value.systemeReperageBornes.length - 1)
-            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
-            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
-    } else {
-        y = (index === 0)
-            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
-            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
-    }
-
-    const v = glMatrix.vec2.sub([], y, x);
-
-    const vn = glMatrix.vec2.normalize(v, v);
-
-    const vs = glMatrix.vec2.scale(vn, vn, borne_distance);
-
-    const o = glMatrix.vec2.add([], x, vs);
-
-    // Try to find the closest point in Tronçon
-    const o1 = this.wktFormat.readGeometry(this.troncon.geometry).getClosestPoint(o);
-
-    return 'POINT(' + o1[0] + ' ' + o1[1] + ')';
-  }
-
   validate() {
     if (this.canValidate()) {
       if (!this.EOS.isLinear) {
-        this.data.approximatePositionDebut = this.calculateApproximatePosition(this.data.borneDebutId,
-          this.data.borne_debut_aval, this.data.borne_debut_distance);
+        this.data.approximatePositionDebut = this.EOS.calculateApproximatePosition(this.data.borneDebutId,
+            this.data.borne_debut_aval,
+            this.data.borne_debut_distance,
+            this.systemeReperage.value.systemeReperageBornes,
+            this.troncon.geometry);
       } else {
-        this.data.approximatePositionDebut = this.calculateApproximatePosition(this.data.borneDebutId,
-          this.data.borne_debut_aval, this.data.borne_debut_distance);
-        this.data.approximatePositionFin = this.calculateApproximatePosition(this.data.borneFinId,
-          this.data.borne_fin_aval, this.data.borne_fin_distance);
+        this.data.approximatePositionDebut = this.EOS.calculateApproximatePosition(this.data.borneDebutId,
+            this.data.borne_debut_aval,
+            this.data.borne_debut_distance,
+            this.systemeReperage.value.systemeReperageBornes,
+            this.troncon.geometry);
+        this.data.approximatePositionFin = this.EOS.calculateApproximatePosition(this.data.borneFinId,
+            this.data.borne_fin_aval,
+            this.data.borne_fin_distance,
+            this.systemeReperage.value.systemeReperageBornes,
+            this.troncon.geometry);
       }
       this.EOS.handlePosByBorne(this.data);
       this.closeModal();

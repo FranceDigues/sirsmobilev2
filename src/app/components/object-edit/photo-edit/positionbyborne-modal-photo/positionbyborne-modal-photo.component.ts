@@ -72,36 +72,13 @@ export class PositionbyborneModalPhotoComponent implements OnInit {
         && this.data.borne_distance > -1;
   }
 
-  private calculateApproximatePosition(borneId, borne_aval, borne_distance) {
-    const index = this.systemeReperage.value.systemeReperageBornes.findIndex(item => item.borneId === borneId);
-    const srb = this.systemeReperage.value.systemeReperageBornes[index];
-    const x = (this.wktFormat.readGeometry(srb.borneGeometry) as Point).getCoordinates();
-    let y;
-
-    if (borne_aval === 'true') {
-        y = (index === this.systemeReperage.value.systemeReperageBornes.length - 1)
-            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
-            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index + 1].borneGeometry) as Point).getCoordinates();
-    } else {
-        y = (index === 0)
-            ? (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index].borneGeometry) as Point).getCoordinates()
-            : (this.wktFormat.readGeometry(this.systemeReperage.value.systemeReperageBornes[index - 1].borneGeometry) as Point).getCoordinates();
-    }
-
-    const v = glMatrix.vec2.sub([], y, x);
-    const vn = glMatrix.vec2.normalize(v, v);
-    const vs = glMatrix.vec2.scale(vn, vn, borne_distance);
-    const o = glMatrix.vec2.add([], x, vs);
-
-      // Try to find the closest point in Tronçon
-      const o1 = this.wktFormat.readGeometry(this.troncon.geometry).getClosestPoint(o);
-
-      return 'POINT(' + o1[0] + ' ' + o1[1] + ')';
-  }
-
   validate() {
     if (this.canValidate()) {
-      this.data.approximatePosition = this.calculateApproximatePosition(this.data.borneId, this.data.borne_aval, this.data.borne_distance);
+      this.data.approximatePosition = this.EOS.calculateApproximatePosition(this.data.borneId,
+          this.data.borne_aval,
+          this.data.borne_distance,
+          this.systemeReperage.value.systemeReperageBornes,
+          this.troncon.geometry);
       this.modalCtrl.dismiss(this.data);
     } else {
       this.alertCtrl.create({
