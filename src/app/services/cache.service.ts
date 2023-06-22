@@ -2,11 +2,11 @@
 
 import { Injectable } from '@angular/core';
 import ScaleLine from 'ol/control/ScaleLine';
-import { getWidth } from 'ol/extent';
+import {getCenter, getHeight, getWidth} from 'ol/extent.js';
 import Feature from 'ol/Feature';
 import MultiPoint from 'ol/geom/MultiPoint';
 import Polygon, { fromExtent } from 'ol/geom/Polygon';
-import { defaults } from 'ol/interaction';
+import { defaults, Modify, Translate } from 'ol/interaction';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import Map from 'ol/Map';
@@ -22,83 +22,214 @@ import Style from 'ol/style/Style';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import { MapService } from 'src/app/services/map.service';
 import Point from "ol/geom/Point";
+import { never } from "ol/events/condition";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CacheMapManager {
-
-    targetLayer: TileLayer<any>;
-
-    previousAreaLayer: VectorLayer<any>;
-
+    targetLayer: TileLayer<any> = new TileLayer({});
     currentAreaLayer: VectorLayer<any>;
+    modifyInteraction : Modify;
+    translateInteraction:Translate;
 
     constructor(private mapService: MapService) {
-        this.targetLayer = null;
-        this.previousAreaLayer = null;
-        this.currentAreaLayer = null;
-        const radius = 5;
-        const width = 2;
-
-        const previousAreaLayerStyle1 = new Style({
-            fill: new Fill({ color: [255, 0, 0, 0.1] }),
-            stroke: new Stroke({ color: [255, 0, 0, 1], width: width })
-        });
-        const previousAreaLayerStyle2 = new Style({
-            image: new CircleStyle({
-                radius: radius,
-                fill: new Fill({ color: [255, 0, 0, 1] })
-            }),
-            geometry: this.geometryFunctionStyle
-        });
-
-        const currentAreaLayerStyle1 = new Style({
-            fill: new Fill({ color: [0, 0, 255, 0.1] }),
-            stroke: new Stroke({ color: [0, 0, 255, 1], width: width })
-        });
-        const currentAreaLayerStyle2 = new Style({
-            image: new CircleStyle({
-                radius: radius,
-                fill: new Fill({ color: [0, 0, 255, 1] })
-            }),
-            geometry: this.geometryFunctionStyle
-        });
-
-        this.targetLayer = new TileLayer({});
-
         this.targetLayer.set('name', 'Target');
 
-        this.previousAreaLayer = new VectorLayer({
-            source: new VectorSource(),
-            style: [previousAreaLayerStyle1, previousAreaLayerStyle2]
+        const style = new Style({
+            geometry:  (feature)=> {
+                const modifyGeometry = feature.get('modifyGeometry');
+                return modifyGeometry ? modifyGeometry.geometry : feature.getGeometry();
+            },
+            fill: new Fill({
+                color: 'rgba(255, 255, 255, 0.2)',
+            }),
+            stroke: new Stroke({
+                color: '#ffcc33',
+                width: 2,
+            }),
+            image: new CircleStyle({
+                radius: 7,
+                fill: new Fill({
+                    color: '#ffcc33',
+                }),
+            }),
         });
-
-        this.previousAreaLayer.set('name', 'Previous Area');
 
         this.currentAreaLayer = new VectorLayer({
             source: new VectorSource(),
-            style: [currentAreaLayerStyle1, currentAreaLayerStyle2]
+            style:  (feature)=> {
+                const styles = [style];
+                const modifyGeometry = feature.get('modifyGeometry');
+                const geometry = modifyGeometry
+                    ? modifyGeometry.geometry
+                    : feature.getGeometry();
+                const result = this.calculateCenter(geometry);
+                const center = result.center;
+                if (center) {
+                    styles.push(
+                        new Style({
+                            geometry: new Point(center),
+                            image: new CircleStyle({
+                                radius: 4,
+                                fill: new Fill({
+                                    color: '#ff3333',
+                                }),
+                            }),
+                        })
+                    );
+                    const coordinates = result.coordinates;
+                    if (coordinates) {
+                        const minRadius = result.minRadius;
+                        const sqDistances = result.sqDistances;
+                        const rsq = minRadius * minRadius;
+                        const points = coordinates.filter( (coordinate, index) => sqDistances[index] > rsq);
+                        styles.push(
+                            new Style({
+                                geometry: new MultiPoint(points),
+                                image: new CircleStyle({
+                                    radius: 10,
+                                    fill: new Fill({
+                                        color: '#33cc33',
+                                    }),
+                                }),
+                            })
+                        );
+                    }
+                }
+                return styles;
+            },
         });
 
         this.currentAreaLayer.set('name', 'Current Area');
-    }
 
-    geometryFunctionStyle(feature) {
-        // return the coordinates of the first ring of the polygon
+        const defaultStyle = new Modify({ source: this.currentAreaLayer.getSource() })
+            .getOverlay()
+            .getStyleFunction();
 
-        const coordinates = (feature as Feature<Polygon>).getGeometry().getCoordinates()[0];
-        return new MultiPoint(coordinates);
+        this.modifyInteraction = new Modify({
+            source: this.currentAreaLayer.getSource(),
+            deleteCondition: never,
+            insertVertexCondition: never,
+            style: (feature) => {
+                feature.get('features').forEach(modifyFeature => {
+                    const modifyGeometry = modifyFeature.get('modifyGeometry');
+                    if (modifyGeometry) {
+                        const point = feature.getGeometry().getCoordinates();
+                        let modifyPoint = modifyGeometry.point;
+                        if (!modifyPoint) {
+                            // save the initial geometry and vertex position
+                            modifyPoint = point;
+                            modifyGeometry.point = modifyPoint;
+                            modifyGeometry.geometry0 = modifyGeometry.geometry;
+                            // get anchor and minimum radius of vertices to be used
+                            const result = this.calculateCenter(modifyGeometry.geometry0);
+                            modifyGeometry.center = result.center;
+                            modifyGeometry.minRadius = result.minRadius;
+                        }
+
+                        const center = modifyGeometry.center;
+                        const minRadius = modifyGeometry.minRadius;
+                        let dx, dy;
+                        dx = modifyPoint[0] - center[0];
+                        dy = modifyPoint[1] - center[1];
+                        const initialRadius = Math.sqrt(dx * dx + dy * dy);
+                        if (initialRadius > minRadius) {
+                            const initialAngle = Math.atan2(dy, dx);
+                            dx = point[0] - center[0];
+                            dy = point[1] - center[1];
+                            const currentRadius = Math.sqrt(dx * dx + dy * dy);
+                            if (currentRadius > 0) {
+                                const currentAngle = Math.atan2(dy, dx);
+                                const geometry = modifyGeometry.geometry0.clone();
+                                geometry.scale(currentRadius / initialRadius, undefined, center);
+                                geometry.rotate(currentAngle - initialAngle, center);
+                                modifyGeometry.geometry = geometry;
+                            }
+                        }
+                    }
+                });
+                // @ts-ignore
+                return defaultStyle(feature);
+            },
+        });
+
+        this.translateInteraction = new Translate({
+            layers: [this.currentAreaLayer],
+        });
+
+        this.modifyInteraction.on('modifystart', (event) => {
+            event.features.forEach(feature => {
+                feature.set(
+                    'modifyGeometry',
+                    { geometry: feature.getGeometry().clone() },
+                    true
+                );
+            });
+        });
+
+        this.modifyInteraction.on('modifyend', (event) => {
+            event.features.forEach(feature => {
+                const modifyGeometry = feature.get('modifyGeometry');
+                if (modifyGeometry) {
+                    feature.setGeometry(modifyGeometry.geometry);
+                    feature.unset('modifyGeometry', true);
+                }
+            });
+        });
     }
 
     createFeatureInstance(extent) {
         return new Feature({ geometry: fromExtent(extent) });
     }
 
+    calculateCenter(geometry) {
+        let center, coordinates, minRadius;
+        const type = geometry.getType();
+        if (type === 'Polygon') {
+            let x = 0;
+            let y = 0;
+            let i = 0;
+            coordinates = geometry.getCoordinates()[0].slice(1);
+            coordinates.forEach(function (coordinate) {
+                x += coordinate[0];
+                y += coordinate[1];
+                i++;
+            });
+            center = [x / i, y / i];
+        } else if (type === 'LineString') {
+            center = geometry.getCoordinateAt(0.5);
+            coordinates = geometry.getCoordinates();
+        } else {
+            center = getCenter(geometry.getExtent());
+        }
+        let sqDistances;
+        if (coordinates) {
+            sqDistances = coordinates.map(function (coordinate) {
+                const dx = coordinate[0] - center[0];
+                const dy = coordinate[1] - center[1];
+                return dx * dx + dy * dy;
+            });
+            minRadius = Math.sqrt(Math.max.apply(Math, sqDistances)) / 3;
+        } else {
+            minRadius =
+                Math.max(
+                    getWidth(geometry.getExtent()),
+                    getHeight(geometry.getExtent())
+                ) / 3;
+        }
+        return {
+            center: center,
+            coordinates: coordinates,
+            minRadius: minRadius,
+            sqDistances: sqDistances,
+        };
+    }
+
     buildConfig(): Map {
         return new Map({
             view: this.mapService.currentView,
-            layers: [this.targetLayer, this.previousAreaLayer, this.currentAreaLayer],
+            layers: [this.targetLayer, this.currentAreaLayer],
             controls: [
                 new ScaleLine({
                     minWidth: 100
@@ -108,7 +239,7 @@ export class CacheMapManager {
             interactions: defaults({
                 altShiftDragRotate: false,
                 shiftDragZoom: false
-            })
+            }).extend([this.translateInteraction, this.modifyInteraction])
         });
     }
 
@@ -125,22 +256,16 @@ export class CacheMapManager {
                     url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 });
         }
-        ;
     }
 
     clearTargetLayer() {
         this.targetLayer.setSource(null);
-        this.previousAreaLayer.getSource().clear();
         this.currentAreaLayer.getSource().clear();
     }
 
     setTargetLayer(layerModel) {
         const source = this.handleTypesSource(layerModel);
         this.targetLayer.setSource(source);
-
-        if (layerModel.cache instanceof Object) {
-            this.previousAreaLayer.getSource().addFeatures([this.createFeatureInstance(layerModel.cache.extent)]);
-        }
     }
 
     setCurrentArea(extent) {

@@ -207,7 +207,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sirs-field-inline" *ngIf="EOS.isVegetation()" fxLayout="row"
+                                <div class="sirs-field-inline" *ngIf="EOS.isVegetation() && EOS.objectDoc.parcelleId" fxLayout="row"
                                      fxLayoutAlign="space-between center">
                                     <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
                                          class="sirs-field-title" *ngIf="EOS.objVegetationType === 'polygon'">
@@ -253,7 +253,7 @@
 
                             <div class="row" *ngIf="EOS.isVegetation()">
                                 <div class="sirs-field col col-100">
-                                    <label for="parcelle" class="active edit-label">La liste des Parcelles Vegetation</label>
+                                    <label for="parcelle" class="active edit-label">La liste des parcelles végétation</label>
                                     <select id="parcelle" class="browser-default" [(ngModel)]="EOS.objectDoc.parcelleId"
                                             name="parcelle">
                                         <option *ngFor="let parcelle of EOS.parcelles" [ngValue]="parcelle.value.id">

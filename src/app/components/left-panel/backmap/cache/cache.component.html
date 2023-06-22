@@ -31,12 +31,12 @@
         occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau
         de zoom maximum.
       </p>
-      <ion-fab class="position-absolute" style="top: 75%; padding-left: 15px;" horizontal="start" vertical="end" slot="fixed">
+      <ion-fab class="position-absolute" style="bottom: 80px; padding-left: 15px;" horizontal="start" vertical="end" slot="fixed">
         <ion-fab-button color="danger" (click)="validate()">
-          <ion-icon name="add"></ion-icon>
+          <ion-icon name="checkmark-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
-      <ion-fab class="position-absolute" style="top: 75%;" horizontal="end" vertical="end" slot="fixed">
+      <ion-fab class="position-absolute" style="bottom: 80px;" horizontal="end" vertical="end" slot="fixed">
         <ion-fab-button [disabled]="!layerModel.cache" color="danger" (click)="deleteCache()">
           <ion-icon name="trash"></ion-icon>
         </ion-fab-button>
@@ -44,30 +44,7 @@
     </div>
     <div class="cache-right">
       <div id="mapCache" #mapCache></div>
-      <ion-icon *ngIf="selectedCorner" class="map-viewer" name="ellipse-outline"></ion-icon>
     </div>
   </div>
-  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button color="secondary">
-      <ion-icon md="caret-up" ios="chevron-up-circle-outline"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('br')" (click)="editCorner($event, 'br')" color="light">
-        <ion-icon name="logo-google"></ion-icon>
-        <img src="../../../../../assets/img/cache-bottomright.png" alt="Bottom Right" />
-      </ion-fab-button>
-      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('bl')" (click)="editCorner($event, 'bl')" color="light">
-        <ion-icon name="logo-vimeo"></ion-icon>
-        <img src="../../../../../assets/img/cache-bottomleft.png" alt="Bottom Left" />
-      </ion-fab-button>
-      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('tr')" (click)="editCorner($event, 'tr')" color="light">
-        <ion-icon name="logo-twitter"></ion-icon>
-        <img src="../../../../../assets/img/cache-topright.png" alt="Top Right" />
-      </ion-fab-button>
-      <ion-fab-button class="fab-button-square" [activated]="ifSelectedCorner('tl')" (click)="editCorner($event, 'tl')" color="light">
-        <img src="../../../../../assets/img/cache-topleft.png" alt="Top Left" />
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
 </div>
 

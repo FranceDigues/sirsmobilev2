@@ -340,9 +340,9 @@ export class EditObjectService {
 
     private async initVegetation() {
         //Determines the type of geometry
-        if (this.objectDoc?.geometry?.toUpperCase()?.indexOf('POLYGON') > -1 || this.objectDoc?.geometry?.toUpperCase()?.indexOf('MULTIPOLYGON') > -1) {
+        if (this.objectDoc['@class'] !== 'fr.sirs.core.model.ArbreVegetation') {
             this.objVegetationType = 'polygon';
-        } else if (this.objectDoc?.geometry?.toUpperCase()?.indexOf('POINT') > -1 || this.objectDoc?.geometry?.toUpperCase()?.indexOf('MULTIPOINT') > -1) {
+        } else {
             this.objVegetationType = 'point';
         }
 

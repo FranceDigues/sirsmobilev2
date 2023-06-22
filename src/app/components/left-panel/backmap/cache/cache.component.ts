@@ -2,7 +2,6 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy } from '@angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { File } from '@ionic-native/file/ngx';
 import { AlertController } from '@ionic/angular';
-import { getHeight, getWidth } from 'ol/extent';
 import { transformExtent } from 'ol/proj';
 import View from 'ol/View';
 import { BackLayerService } from 'src/app/services/back-layer.service';
@@ -17,7 +16,6 @@ import { CacheMapManager } from 'src/app/services/cache.service';
   styleUrls: ['./cache.component.scss'],
 })
 export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
-
   id;
   selectedCorner;
   minZoom;
@@ -58,9 +56,8 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
                 };
 
                 this.cacheMapManager.setTargetLayer(this.layerModel);
-
-                this.currentView.on('change:center', (event) => this.onCenterChanged(event));
-              }
+                this.cacheMapManager.translateInteraction.on("translateend",(event) => this.onCenterChanged(event));
+  }
 
   ngAfterViewInit() {
     this.ol.map = this.cacheMapManager.buildConfig();
@@ -71,10 +68,11 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.cacheMapManager.clearTargetLayer();
     this.currentView.un('change:center', this.onCenterChanged);
+    this.cacheMapManager.translateInteraction.un("translateend", (event) => this.onCenterChanged(event));
   }
 
   goBack() {
-    this.route.navigateByUrl('/main');
+    this.route.navigateByUrl('/main').then();
   }
 
   updateTileCount() {
@@ -92,50 +90,10 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     } else {
         // Create default area.
         const extent = map.getView().calculateExtent(map.getSize());
-        const wDelta = getWidth(extent) / 10;
-        const hDelta = getHeight(extent) / 10;
-        extent[0] = extent[0] + wDelta;
-        extent[1] = extent[1] + hDelta;
-        extent[2] = extent[2] - wDelta;
-        extent[3] = extent[3] - hDelta;
         this.cacheMapManager.setCurrentArea(extent);
     }
     // Compute the number of tiles.
     this.updateTileCount();
-  }
-
-  ifSelectedCorner(status: string) {
-    const selectedCornerHasExpectedStatus = this.selectedCorner && this.selectedCorner === status;
-
-    return selectedCornerHasExpectedStatus;
-  }
-
-  editCorner(event, corner) {
-    event.stopPropagation();
-    if (corner === this.selectedCorner) {
-        this.selectedCorner = null;
-    } else {
-        this.selectedCorner = corner;
-
-        // Center view on target corner.
-        const extent = this.cacheMapManager.getCurrentArea();
-        let center = null;
-        switch (corner) {
-            case 'tl':
-                center = [extent[0], extent[3]];
-                break;
-            case 'bl':
-                center = [extent[0], extent[1]];
-                break;
-            case 'br':
-                center = [extent[2], extent[1]];
-                break;
-            case 'tr':
-                center = [extent[2], extent[3]];
-                break;
-        }
-        this.currentView.setCenter(center);
-    }
   }
 
   getCurrentZoom() {
@@ -147,30 +105,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   }
 
   onCenterChanged(event) {
-    if (this.selectedCorner) {
-      const extent = this.cacheMapManager.getCurrentArea();
-      const center = event.target.getCenter();
-      switch (this.selectedCorner) {
-          case 'tl':
-              extent[0] = center[0];
-              extent[3] = center[1];
-              break;
-          case 'bl':
-              extent[0] = center[0];
-              extent[1] = center[1];
-              break;
-          case 'br':
-              extent[2] = center[0];
-              extent[1] = center[1];
-              break;
-          case 'tr':
-              extent[2] = center[0];
-              extent[3] = center[1];
-              break;
-      }
-      this.cacheMapManager.setCurrentArea(extent);
       this.updateTileCount();
-    }
   }
 
   setNewCacheInGoodLayerInBackLayerList(cache) {
