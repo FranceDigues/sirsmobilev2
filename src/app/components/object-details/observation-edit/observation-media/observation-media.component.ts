@@ -303,4 +303,8 @@ export class ObservationMediaComponent implements OnInit {
     parseContactName(contact) {
         return contact.doc.nom ? `${contact.doc.nom} ${contact.doc.prenom ? contact.doc.prenom : ''}` : contact.doc.designation;
     }
+
+    isDependance(objectType) {
+        return PluginUtils.isDependanceAhClass(objectType);
+    }
 }
