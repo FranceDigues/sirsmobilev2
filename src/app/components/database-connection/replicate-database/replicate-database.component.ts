@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Output, EventEmitter, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { forkJoin, Subject } from 'rxjs';
@@ -31,7 +31,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   constructor(private nativeStorage: NativeStorage, private dbService: DatabaseService,
               private router: Router, private route: ActivatedRoute, private alertCtrl: AlertController,
-              private insomnia: Insomnia) {
+              private insomnia: Insomnia, private zone: NgZone) {
       this.step = 0;
       this.description = 'Loading...';
       this.percent = 0;
@@ -47,7 +47,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
         this.activeDb = this.databases[this.databaseIndex];
         this.localDB = await this.dbService.getLocalDB();
         this.remoteDB = await this.dbService.getRemoteDB();
-        this.firstStep();
+        this.zone.run(() => this.firstStep());
       },
       (error) => {
         console.error('no databases in HardDisk ' + error);
@@ -67,19 +67,17 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.remoteDB.info()
     .then(
       (result) => {
-        this.firstStepComplete(result.doc_count + result.doc_del_count);
+        this.zone.run(() => this.firstStepComplete(result.doc_count + result.doc_del_count));
       },
       (err) => {
-        this.firstStepError(err);
+        this.zone.run(() => this.firstStepError(err));
       }
     );
   }
 
   firstStepComplete(docCount) {
     this.percent = 100;
-    setTimeout(() => {
-      this.secondStep(docCount);
-    }, 1000);
+    this.zone.run(() =>  this.secondStep(docCount));
   }
 
   async firstStepError(error) {
@@ -133,9 +131,15 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     });
 
     subject.subscribe({
-      next: (state) => { this.secondStepProgress(state.repCount, state.docCount); },
-      complete: () => { this.secondStepComplete(); },
-      error: (error) => { this.secondStepError(error); }
+      next: (state) => {
+        this.zone.run(() => this.secondStepProgress(state.repCount, state.docCount));
+      },
+      complete: () => {
+        this.zone.run(() => this.secondStepComplete());
+      },
+      error: (error) => {
+        this.zone.run(() => this.secondStepError(error));
+      }
     });
   }
 

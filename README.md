@@ -183,13 +183,13 @@ Lignes de commande pour générer l'APK:
 ```
 ionic cordova platform rm android
 
-ionic cordova build android --release
+ionic cordova build android --release -- -- --packageType=apk
 
-$ANDROID_HOME/build-tools/32.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_<version>_<test/prod>.apk
+$ANDROID_HOME/build-tools/33.0.2/zipalign -v 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_<version>_<test/prod>.apk
 ```
 A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
 ```
-$ANDROID_HOME/build-tools/32.0.0/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true sirsmobile_<version>_<test/prod>.apk
+$ANDROID_HOME/build-tools/33.0.2/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true sirsmobile_<version>_<test/prod>.apk
 
 rm sirsmobile_<version>_<test/prod>.apk.idsig
 ```

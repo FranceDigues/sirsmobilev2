@@ -14,6 +14,7 @@ import {DatabaseService} from '../../../../services/database.service';
 import {DatabaseModel} from '../../../database-connection/models/database.model';
 import {SirsDataService} from "../../../../services/sirs-data.service";
 import { PluginUtils } from "../../../../utils/plugin-utils";
+import { error } from "protractor";
 
 @Component({
     selector: 'observation-media',
@@ -168,7 +169,8 @@ export class ObservationMediaComponent implements OnInit {
                     this.fillMediaOptions(photoId, fileName);
                     this.OES.importPhotoData = imageData;
                     this.cdr.detectChanges();
-                }
+                },
+                error => console.error(error)
             );
     }
 
