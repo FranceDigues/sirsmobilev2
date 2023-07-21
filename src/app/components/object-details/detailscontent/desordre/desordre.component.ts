@@ -10,6 +10,8 @@ export class DesordreComponent {
 
   @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
-  constructor(public detailsObject: ObjectDetails) { }
+  constructor(public detailsObject: ObjectDetails) {
+    console.log(detailsObject);
+  }
 
 }

@@ -17,13 +17,15 @@ export PATH=${PATH}:$ANDROID_HOME/platform-tools
 export PATH=${PATH}:$ANDROID_HOME/tools
 ```
 
-Install **Gradle 6.5.1** :
+* Install **Gradle 6.5.1** :
 ```bash
 curl -s "https://get.sdkman.io" | bash
 sdk install gradle 6.5.1
 ```
 
-Install **NodeJs 12.15.0** or greater
+* Install **NodeJs 16**
+
+* JAVA 11
 
 Install **Ionic 6.10.1** and **Cordova 9.0.0**:
 ```bash
