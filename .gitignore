@@ -15,6 +15,7 @@ $RECYCLE.BIN/
 
 *.apk
 *.aab
+*.idsig
 *.iml
 *.log
 log.txt

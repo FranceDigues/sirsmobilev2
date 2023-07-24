@@ -69,6 +69,8 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     this.cacheMapManager.clearTargetLayer();
     this.currentView.un('change:center', this.onCenterChanged);
     this.cacheMapManager.translateInteraction.un("translateend", (event) => this.onCenterChanged(event));
+    this.ol.map.setTarget();
+    this.ol.map = null;
   }
 
   goBack() {
