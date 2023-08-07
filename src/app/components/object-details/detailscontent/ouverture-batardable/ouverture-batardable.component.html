@@ -25,11 +25,11 @@
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Type de seuil</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeSeuil"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeSeuil | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Type de glissière</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeGlissiere"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeGlissiere | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Ouvrage associé</span>
@@ -37,11 +37,11 @@
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Position</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Côté</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Commentaire</span>

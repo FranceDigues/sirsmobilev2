@@ -14,7 +14,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Dépendance</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.dependance"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.dependance | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Commentaire</span>
@@ -26,11 +26,11 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Auteur</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.author | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Aménagement hydraulique</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Date de fin</span>
@@ -58,19 +58,19 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Source</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.source"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.source | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Catégorie</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.categorieDesordre"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.categorieDesordre | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type de désordre</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordre"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordre | async"></span>
             </div>
         </div>
     </div>

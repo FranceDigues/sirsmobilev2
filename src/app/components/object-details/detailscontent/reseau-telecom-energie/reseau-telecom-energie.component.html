@@ -13,11 +13,11 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type de réseau</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeReseauTelecomEnergie"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeReseauTelecomEnergie | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Implantation</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.implantation"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.implantation | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Hauteur</span>
@@ -29,11 +29,11 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Côté</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Commentaire</span>
@@ -41,7 +41,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Sécurité</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.securite"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.securite | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Dimension verticale/diamètre (mm)</span>

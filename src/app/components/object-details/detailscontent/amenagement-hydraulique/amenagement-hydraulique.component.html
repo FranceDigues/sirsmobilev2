@@ -14,7 +14,7 @@
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Auteur</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author | async"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Date de fin</span>
@@ -46,11 +46,11 @@
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Collectivité compétente</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.organisme"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.organisme | async"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Fonctionnement</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionnement"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionnement | async"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Type</span>

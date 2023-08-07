@@ -22,19 +22,19 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Ecoulement</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.ecoulement"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.ecoulement | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Implantation</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.implantation"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.implantation | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type de réseau</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeConduiteFermee"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeConduiteFermee | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Utilisation</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.utilisationConduite"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.utilisationConduite | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Réseau hydraulique associé</span>

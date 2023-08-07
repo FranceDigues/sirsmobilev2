@@ -13,7 +13,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type d'ouvrage</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeOuvrageTelecomEnergie"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeOuvrageTelecomEnergie | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Réseau télécom ou énergie associé</span>
@@ -21,11 +21,11 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Côté</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Commentaire</span>
@@ -33,7 +33,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Sécurité</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.securite"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.securite | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Dimension verticale/diamètre (mm)</span>

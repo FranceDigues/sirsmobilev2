@@ -21,19 +21,19 @@
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Usage</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.usage"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.usage | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Nature</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.nature"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.nature | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Position</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Côté</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote"></span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Commentaire</span>
