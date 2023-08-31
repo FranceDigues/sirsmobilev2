@@ -22,7 +22,6 @@ import { SelectedObjectsService } from "./selected-objects.service";
 import { SirsDataService } from "./sirs-data.service";
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { DatabaseService } from "./database.service";
-import { error } from "protractor";
 
 @Injectable({
     providedIn: 'root'

@@ -1,7 +1,7 @@
 <div class="full-height" *ngIf="status === 'general'">
   <ion-header translucent>
     <ion-toolbar class="header-slide">
-      <ion-title style="text-align: center;">Objets séléctionnés</ion-title>
+      <ion-title style="text-align: center;">Objets sélectionnés</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content class="scroll-contents">
@@ -15,6 +15,7 @@
     <ion-list *ngIf="features.length > 0">
       <ion-item *ngFor="let feat of features" (click)="openDetails(feat)"
       [ngClass]="{ 'visited': feat.get('visited') }">
+        <ion-icon slot="start" *ngIf="feat.get('edition')" name="create-outline"></ion-icon>
         <div class="layer-title">{{ feat.get('designation') }}</div>
         <div *ngIf="!feat.get('designation')" class="layer-title">Temp {{ feat.get('id') }}</div>
         <div *ngIf="feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>

@@ -230,6 +230,7 @@ export class EditionLayerService {
         feature.set('author', featureDoc.author);
         feature.set('designation', featureDoc.designation);
         feature.set('@class', featureDoc['@class']);
+        feature.set('edition', true);
         return feature;
     }
 
