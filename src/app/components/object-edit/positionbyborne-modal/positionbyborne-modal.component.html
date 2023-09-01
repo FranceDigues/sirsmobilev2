@@ -55,7 +55,7 @@
       </div>
 
       <div *ngIf="systemeReperage && !EOS.isLinear">
-        <label for="pos" class="active">Position : </label>
+        <label for="pos" class="active">Position de l'élément par rapport à la borne : </label>
         <select id="pos" class="browser-default" [(ngModel)]="data.borne_debut_aval" name="pos">
           <option [value]="'false'" [selected]="data.borne_debut_aval === 'false'">
             Aval
@@ -66,7 +66,7 @@
         </select>
       </div>
       <div *ngIf="systemeReperage && EOS.isLinear">
-        <label for="posDebut" class="active">Position Début : </label>
+        <label for="posDebut" class="active">Position Début de l'élément par rapport à la borne : </label>
         <select id="posDebut" class="browser-default" [(ngModel)]="data.borne_debut_aval" name="posDebut">
           <option [value]="'false'" [selected]="data.borne_debut_aval === 'false'">
             Aval
@@ -75,7 +75,7 @@
             Amont
           </option>
         </select>
-        <label for="posFin" class="active">Position Fin : </label>
+        <label for="posFin" class="active">Position Fin de l'élément par rapport à la borne : </label>
         <select id="posFin" class="browser-default" [(ngModel)]="data.borne_fin_aval" name="posFin">
           <option [value]="'false'" [selected]="data.borne_fin_aval === 'false'">
             Aval
