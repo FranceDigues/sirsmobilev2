@@ -122,7 +122,7 @@ export class MapManagerService {
             const olSource = olLayer.getSource();
             // Try to get the promise of a previous query.
             let promise;
-            switch (layerModel.filterValue){
+            switch (layerModel.filterValue) {
                 case 'fr.sirs.core.model.TronconDigue':
                     // Get favorite selected Troncons
                     const keys = await this.getTronconsFavoritesIds();
@@ -136,13 +136,12 @@ export class MapManagerService {
                             (error) => {
                                 console.error(error);
                             }
-                    );
+                        );
                     break;
-
                 case 'fr.sirs.core.model.BorneDigue':
                     // Get favorite selected Troncons
-                    const keys2 = await this.getTronconsFavoritesIds();
-                    promise = this.localDB.query('getBornesFromTronconID', { keys2 }).then(
+                    const tronconsFavoritesIds = await this.getTronconsFavoritesIds();
+                    promise = this.localDB.query('getBornesFromTronconID', { keys: tronconsFavoritesIds }).then(
                         (results) => {
                             return this.localDB.query('getBornesIdsHB', {
                                 keys: results.map((obj) => {
