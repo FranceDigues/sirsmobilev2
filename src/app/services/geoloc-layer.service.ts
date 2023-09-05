@@ -67,7 +67,7 @@ export class GeolocLayerService {
                 name: 'Location Pointer'
             }),
             new Feature({
-                geometry: new Circle(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'), 40)
+                geometry: new Circle(transform([coords.longitude, coords.latitude], 'EPSG:4326', 'EPSG:3857'), coords.accuracy)
             })
         ];
     }
