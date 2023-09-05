@@ -43,6 +43,7 @@ export class AuthService {
       .then(
         (database: DatabaseModel) => {
           database.context.authUser = null;
+          this.dbService.removeDB$.next("DB changed");
           this.dbService.setCurrentDatabaseSettings(database)
             .then(() => this.route.navigateByUrl('/'));
         }
