@@ -36,6 +36,10 @@ export class PluginUtils {
             || strClass === 'fr.sirs.core.model.PeuplementVegetation';
     }
 
+    static isParcelleVegetationClass(strClass: string): boolean {
+        return strClass === 'fr.sirs.core.model.ParcelleVegetation'
+    }
+
     static isVegetationDoc(doc) {
         if (doc['@class']) {
             return PluginUtils.isVegetationClass(doc['@class']);

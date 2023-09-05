@@ -26,7 +26,7 @@
                                 </div>
 
 
-                                <div *ngIf="((!EOS.isDependance() && !EOS.isVegetation())  || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
+                                <div *ngIf="((!EOS.isDependance() && !EOS.isVegetation() && !EOS.isParcelleVegetation())  || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
                                      class="switch">
                                     <label class="label-edit">
                                         Objet ponctuel
@@ -247,6 +247,16 @@
                                             name="trancon">
                                         <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
                                             {{ troncon.libelle }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="EOS.isParcelleVegetation">
+                                <div class="sirs-field col col-100">
+                                    <label for="plans" class="active edit-label">La liste des plans de gestion</label>
+                                    <select id="plans" class="browser-default" [(ngModel)]="EOS.objectDoc.planId"
+                                            name="plans">
+                                        <option *ngFor="let plan of EOS.plans" [ngValue]="plan.id">
+                                            {{ plan.value.libelle || plan.value.designation}}</option>
                                     </select>
                                 </div>
                             </div>

@@ -41,6 +41,7 @@ export class EditObjectService {
     };
     showTextConfig;
     troncons = [];
+    plans = [];
     parcelles = [];
     allTroncons = [];
     geoloc = undefined;
@@ -95,6 +96,7 @@ export class EditObjectService {
             this.initTronconList();
             if (this.isDependance()) await this.initDependance();
             if (this.isVegetation()) await this.initVegetation();
+            if (this.isParcelleVegetation()) await this.initPlansList();
             await this.initStartPosBorne();
             await this.initEndPosBorne();
             this.initIsLinear();
@@ -128,6 +130,7 @@ export class EditObjectService {
         };
         this.showTextConfig = null;
         this.troncons = [];
+        this.plans = [];
         this.parcelles = [];
         this.allTroncons = [];
         this.geoloc = undefined;
@@ -243,6 +246,10 @@ export class EditObjectService {
         return PluginUtils.isVegetationClass(this.objectDoc['@class']);
     }
 
+    isParcelleVegetation() {
+        return PluginUtils.isParcelleVegetationClass(this.objectDoc['@class']);
+    }
+
     private async initReferences() {
         const refs = await this.editionModeService.getReferenceTypes();
         const res = {};
@@ -264,6 +271,14 @@ export class EditObjectService {
                     }
                 }
             );
+    }
+
+    async initPlansList() {
+        this.plans = await this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.PlanVegetation'],
+            endkey: ['fr.sirs.core.model.PlanVegetation', {}],
+            include_docs: false
+        });
     }
 
     private async initDependance() {
@@ -816,6 +831,11 @@ export class EditObjectService {
     }
 
     private initIsLinear() {
+        if (this.isParcelleVegetation()) {
+            this.isLinear = true;
+            return;
+        }
+
         if (this.isNew) {
             this.isLinear = false;
         } else {
