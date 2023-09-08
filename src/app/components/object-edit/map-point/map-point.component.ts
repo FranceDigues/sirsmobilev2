@@ -167,7 +167,7 @@ export class MapPointComponent implements OnInit {
 
             if (!containsExtent(drawingAreaExtent, geometry.getExtent())) {
                 const toast = await this.toastCtrl.create({
-                    message: 'Vous devez définir un polygone dans la zone marquée autour de parcelle sélectionné',
+                    message: 'Vous devez définir un polygone dans la zone marquée autour de parcelle sélectionnée',
                     duration: 3000,
                     position: 'top'
                 });

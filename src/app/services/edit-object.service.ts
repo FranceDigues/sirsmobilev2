@@ -380,26 +380,28 @@ export class EditObjectService {
     }
 
     save() {
-        if (!this.isDependance() && !this.isVegetation() && !this.objectDoc.linearId) {
-            this.toastCtrl.create({
-                message: 'Veuillez choisir un tronçon de rattachement pour cet objet',
-                duration: 2000
-            }).then((toast) => {
-                toast.present();
-            });
+        if (!this.isDependance() && !this.isVegetation()) {
+            if (!this.objectDoc.linearId) {
+                this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
+                return;
+            }
+
+            if (!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId) {
+                this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
+                return;
+            }
+        }
+
+        if (this.isDependance() && !this.objectDoc.geometry) {
+            this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
             return;
         }
 
-        if ((!this.isDependance() && !this.isVegetation() && !this.objectDoc.positionDebut && !this.objectDoc.borneDebutId)
-            || (this.isDependance() && !this.objectDoc.geometry)
-            || (this.isVegetation() && !this.objectDoc.geometry)) {
-            this.toastCtrl.create({
-                message: 'Veuillez choisir une position pour cet objet, avant de continuer',
-                duration: 2000
-            }).then((toast) => {
-                toast.present().then();
-            });
-            return;
+        if (this.isVegetation()) {
+            if (!this.objectDoc.geometry && !this.objectDoc.positionDebut && !this.objectDoc.positionDebut) {
+                this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
+                return;
+            }
         }
 
         // Add the source of the Desordre
@@ -420,14 +422,23 @@ export class EditObjectService {
         if (this.isNew) {
             this.editionModeService.createObject(this.objectDoc).then(
                 () => {
-                    this.route.navigateByUrl('/main');
+                    this.route.navigateByUrl('/main').then();
                 });
         } else {
             this.editionModeService.updateObject(this.objectDoc).then(
                 () => {
-                    this.route.navigateByUrl('/main');
+                    this.route.navigateByUrl('/main').then();
                 });
         }
+    }
+
+    private messageErrorHandler(msg: string) {
+        this.toastCtrl.create({
+            message: msg,
+            duration: 2000
+        }).then((toast) => {
+            toast.present().then();
+        });
     }
 
     handlePos(pos, posEnd?) {
@@ -855,5 +866,25 @@ export class EditObjectService {
     // 7 decimal places according GPS location accuracy
     private roundGPSCoordinate(x) {
         return Number.parseFloat(x).toFixed(7);
+    }
+
+    // ??
+    public isAhObjectType() {
+        return this.objectType === 'DesordreDependance'
+            || this.objectType === 'PrestationAmenagementHydraulique'
+            || this.objectType === 'StructureAmenagementHydraulique'
+            || this.objectType === 'OuvrageAssocieAmenagementHydraulique'
+            || this.objectType === 'OrganeProtectionCollective'
+            || this.objectType === 'TraitAmenagementHydraulique';
+    }
+
+    // ??
+    public itChange(a) {
+        this.objectDoc.amenagementHydrauliqueId = a.id;
+    }
+
+    // ??
+    public ahSelected(a) {
+        return this.objectDoc.amenagementHydrauliqueId === a.id;
     }
 }

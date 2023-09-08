@@ -18,7 +18,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { PhotoEditComponent } from './photo-edit/photo-edit.component';
 import { PositionbyborneModalPhotoComponent } from './photo-edit/positionbyborne-modal-photo/positionbyborne-modal-photo.component';
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
+import { DocToStringPipeModule } from "../../pipe/doc-to-string/doc-to-string.pipe.module";
+import { VegetationFormComponent } from "./components/vegetation-form/vegetation-form.component";
+import { FormatOptionTextPipeModule } from "../../pipe/format-option-text/format-option-text.pipe.module";
+import { DependenceFormComponent } from "./components/dependence-form/dependence-form.component";
+import { DefaultFormComponent } from "./components/default-form/default-form.component";
 
 @NgModule({
     imports: [
@@ -32,7 +36,8 @@ import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
         PhotoQuicklookModule,
         MatButtonModule,
         MatCheckboxModule,
-        DocToStringPipeModule
+        DocToStringPipeModule,
+        FormatOptionTextPipeModule
     ],
     providers: [],
     declarations: [
@@ -40,7 +45,8 @@ import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
         MapLineComponent, MapPointComponent,
         MapPolygonComponent, PositionByBorneModalComponent,
         MediaDetailsComponent,
-        MediaFormComponent, PhotoEditComponent, PositionbyborneModalPhotoComponent
+        MediaFormComponent, PhotoEditComponent, PositionbyborneModalPhotoComponent,
+        VegetationFormComponent, DependenceFormComponent, DefaultFormComponent
     ],
     exports: [ObjectEditComponent, MapPointComponent]
 })

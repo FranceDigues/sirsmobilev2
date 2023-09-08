@@ -44,7 +44,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit() {
-        this.mapEditObject.initMap();
+        this.mapEditObject.initMap(this.isVegetation);
         this.source = new VectorSource({wrapX: false});
         this.vector = new VectorLayer({
             source: this.source,
@@ -65,6 +65,8 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
         }
         // Handle the case of Vegetation
         if (this.isVegetation) {
+            // Add edition layer to show previous created objects
+
             const parcelle = this.EOS.parcelles.find(item => item.id === this.EOS.objectDoc.parcelleId);
             if (parcelle?.value?.geometry) {
                 const sourceParcelle = new VectorSource({wrapX: false});
@@ -169,7 +171,7 @@ export class MapPolygonComponent implements OnInit, AfterViewInit {
 
             if (!containsExtent(drawingAreaExtent, geometry.getExtent())) {
                 const toast = await this.toastCtrl.create({
-                    message: 'Vous devez définir un polygone dans la zone marquée autour de parcelle sélectionné',
+                    message: 'Vous devez définir un polygone dans la zone marquée autour de parcelle sélectionnée',
                     duration: 3000,
                     position: 'top'
                 });

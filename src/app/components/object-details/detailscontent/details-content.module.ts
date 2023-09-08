@@ -49,6 +49,12 @@ import { TraitAmenagementHydrauliqueComponent } from './trait-amenagement-hydrau
 import {MatIconModule} from "@angular/material/icon";
 import { ObservationItemComponent } from "./observations/observation-item/observation-item.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { VegetationDetailsComponent } from "./vegetation-details/vegetation-details.component";
+import {
+    ParcelleVegetationDetailsComponent
+} from "./parcelle-vegetation-details/parcelle-vegetation-details.component";
+import { FormatOptionTextPipeModule } from "../../../pipe/format-option-text/format-option-text.pipe.module";
+import { GetByIdPipeModule } from "../../../pipe/get-by-id/get-by-id.pipe.module";
 
 @NgModule({
     imports: [
@@ -59,6 +65,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
         MatButtonModule,
         MatIconModule,
         MatProgressSpinnerModule,
+        FormatOptionTextPipeModule,
+        GetByIdPipeModule
     ],
   providers: [
   ],
@@ -76,7 +84,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     TalusDigueComponent, TalusRisbermeComponent, TronconDigueComponent, VoieAccesComponent,
     VoieDigueComponent, AmenagementHydrauliqueComponent, OrganeProtectionCollectiveComponent,
     OuvrageAssocieAmenagementHydrauliqueComponent, PrestationAmenagementHydrauliqueComponent,
-    StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent, ObservationItemComponent
+    StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent, ObservationItemComponent,
+      VegetationDetailsComponent, ParcelleVegetationDetailsComponent
   ],
   exports: [DetailsContentComponent]
 })

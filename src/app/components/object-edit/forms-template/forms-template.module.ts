@@ -39,7 +39,7 @@ import { TronconDigueComponent } from './troncon-digue/troncon-digue.component';
 import { UsageIdGenericComponent } from './usage-id/usage-id.component';
 import { VoieAccesComponent } from './voie-acces/voie-acces.component';
 import { VoieDigueComponent } from './voie-digue/voie-digue.component';
-import { DocToStringPipeModule } from "../../../pipe/doc-to-string.pipe.module";
+import { DocToStringPipeModule } from "../../../pipe/doc-to-string/doc-to-string.pipe.module";
 
 
 @NgModule({

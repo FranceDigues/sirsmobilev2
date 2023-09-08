@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DatabaseService } from "../services/database.service";
-import { DatabaseModel } from "../components/database-connection/models/database.model";
+import { DatabaseService } from "../../services/database.service";
+import { DatabaseModel } from "../../components/database-connection/models/database.model";
 
 @Pipe({
     name: 'docToString'

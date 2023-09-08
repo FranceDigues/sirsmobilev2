@@ -49,8 +49,9 @@ import { GeolocLayerService } from './services/geoloc-layer.service';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { SirsDataService } from './services/sirs-data.service';
-import { DocToStringPipeModule } from "./pipe/doc-to-string.pipe.module";
-import { DocToStringPipe } from "./pipe/doc-to-string.pipe";
+import { DocToStringPipeModule } from "./pipe/doc-to-string/doc-to-string.pipe.module";
+import { DocToStringPipe } from "./pipe/doc-to-string/doc-to-string.pipe";
+import { FormatOptionTextPipeModule } from "./pipe/format-option-text/format-option-text.pipe.module";
 
 @NgModule({
     declarations: [AppComponent],
@@ -61,7 +62,7 @@ import { DocToStringPipe } from "./pipe/doc-to-string.pipe";
         AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
         DatabaseConnectionPageModule, LibCameraModule,
         NgbCollapseModule, FlexLayoutModule, DirectiveModule,
-        ObjectEditModule, DocToStringPipeModule
+        ObjectEditModule, DocToStringPipeModule, FormatOptionTextPipeModule
     ],
     providers: [
         StatusBar, OLService, SplashScreen, NativeStorage,

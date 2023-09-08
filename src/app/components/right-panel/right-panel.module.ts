@@ -16,7 +16,7 @@ import { DetailsContentModule } from '../object-details/detailscontent/details-c
 import { ObservationEditModule } from '../object-details/observation-edit/observation-edit.module';
 import { TraitComponent } from './trait/trait.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { DocToStringPipeModule } from "../../pipe/doc-to-string.pipe.module";
+import { DocToStringPipeModule } from "../../pipe/doc-to-string/doc-to-string.pipe.module";
 
 @NgModule({
     imports: [

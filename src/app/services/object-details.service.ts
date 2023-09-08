@@ -6,7 +6,7 @@ import { MapManagerService } from './map-manager.service';
 import { AlertController } from '@ionic/angular';
 import { FormsTemplateService } from './formstemplate.service';
 import { PluginUtils } from '../utils/plugin-utils';
-import { DocToStringPipe } from "../pipe/doc-to-string.pipe";
+import { DocToStringPipe } from "../pipe/doc-to-string/doc-to-string.pipe";
 import { AppLayersService } from "./app-layers.service";
 
 @Injectable({

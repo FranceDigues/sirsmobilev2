@@ -21,12 +21,12 @@ export class MapEditObjectService {
     constructor(private olService: OLService, private geoloc: GeolocationService,
                 private geolocLayer: GeolocLayerService) {}
 
-    initMap() {
+    initMap(isVegetation?: boolean) {
         const arrayLayer = this.olService.getLayers();
 
         this.defaultVisibleValueArrayLayer = Object.assign([], arrayLayer);
         arrayLayer[0].setVisible(true); // BackLayer
-        arrayLayer[1].setVisible(false);
+        arrayLayer[1].setVisible(isVegetation); // Edition layer
         arrayLayer[2].setVisible(false);
         arrayLayer[3].setVisible(true); // GeolocLayer
     }

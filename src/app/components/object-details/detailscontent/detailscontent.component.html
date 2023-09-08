@@ -114,4 +114,20 @@
     <div class="full-height" *ngSwitchCase="'TraitAmenagementHydraulique'">
         <object-details-content-trait-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-trait-amenagement-hydraulique>
     </div>
+    <!-- Module Végétation -->
+    <div class="full-height" *ngSwitchCase="'ArbreVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'HerbaceeVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'InvasiveVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'PeuplementVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'ParcelleVegetation'">
+        <parcelle-vegetation-details class="full-height" [activeTab]="activeTab"></parcelle-vegetation-details>
+    </div>
 </ion-content>
