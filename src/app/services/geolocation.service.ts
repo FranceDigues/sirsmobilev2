@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Coordinates, Geolocation, GeolocationOptions, Geoposition } from '@ionic-native/geolocation/ngx';
 import { AlertController, LoadingController } from '@ionic/angular';
 import * as moment from 'moment';
-import { Observable, Subject } from 'rxjs';
+import { Observable, pipe, Subject } from 'rxjs';
 import { GeolocLayerService } from './geoloc-layer.service';
+import { throttleTime } from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,10 @@ export class GeolocationService {
     private lastGPSUpdate: string = null;
     private enabled: boolean = false;
     private updateIntervalId: any;
+    private positionWatcher$: any;
     private onPositionUpdatedSubject: Subject<Coordinates> = new Subject<Coordinates>();
     public updateTimeout: number; // gps update timeout in ms
+    public ultraAccuracy :boolean;
     public gpsOptions: GeolocationOptions;
     alertGPS;
 
@@ -26,6 +29,7 @@ export class GeolocationService {
                 private alertController: AlertController) {
         this.update = this.update.bind(this);
         this.updateTimeout = localStorage.getItem('gpsUpdateTimout') ? +localStorage.getItem('gpsUpdateTimout') : (30 * 1000); // gps update timeout in ms
+        this.ultraAccuracy = localStorage.getItem('ultraAccuracy') ? !!localStorage.getItem('ultraAccuracy') : false; // gps update timeout in ms
         this.gpsOptions = JSON.parse(localStorage.getItem('gpsConfig')) || {
             maximumAge: 60000,
             timeout: 10000,
@@ -55,12 +59,7 @@ export class GeolocationService {
         }
         try {
             const position: Geoposition = await this.geolocation.getCurrentPosition(this.gpsOptions);
-            this.coords = position.coords;
-            this.gpsAccuracy = Math.round(position.coords.accuracy);
-            this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');
-            if (!silent) await loading.dismiss();
-            this.onPositionUpdatedSubject.next(this.coords);
-            return position.coords;
+            return this.handlePosition(position);
         } catch (e) {
             if (!silent) await loading.dismiss();
             throw e;
@@ -74,11 +73,16 @@ export class GeolocationService {
     set isEnabled(flag: boolean) {
         this.enabled = flag;
         if (this.enabled) {
-            this.update();
-            this.updateIntervalId = setInterval(this.update, this.updateTimeout);
-        } else if (this.updateIntervalId !== undefined) {
-            clearInterval(this.updateIntervalId);
-            this.updateIntervalId = undefined;
+            // Ultra High Accuracy config
+            if (this.ultraAccuracy) {
+                this.enableUltraHighAccuracy();
+            } else {
+                this.update();
+                this.updateIntervalId = setInterval(this.update, this.updateTimeout);
+            }
+        } else {
+            this.clearIntervalGeolocation();
+            this.clearHighAccuracyGeolocation();
             this.geolocLayerService.clearGeolocLayer();
         }
     }
@@ -106,5 +110,34 @@ export class GeolocationService {
         });
 
         await this.alertGPS.present();
+    }
+
+    handlePosition(position: Geoposition): Coordinates {
+        this.coords = position.coords;
+        this.gpsAccuracy = Math.round(position.coords.accuracy);
+        this.lastGPSUpdate = moment().format('DD/MM/YYYY à HH:mm:ss');
+        this.onPositionUpdatedSubject.next(this.coords);
+        return position.coords;
+    }
+
+    enableUltraHighAccuracy() {
+        this.positionWatcher$ = this.geolocation.watchPosition(this.gpsOptions)
+            .pipe(throttleTime(this.updateTimeout))
+            .subscribe({
+                next: position => this.handlePosition(position as Geoposition),
+                error: console.error
+            });
+    }
+
+    clearHighAccuracyGeolocation() {
+        this.positionWatcher$?.unsubscribe();
+        this.positionWatcher$ = null;
+    }
+
+    private clearIntervalGeolocation() {
+        if (this.updateIntervalId !== undefined) {
+            clearInterval(this.updateIntervalId);
+            this.updateIntervalId = undefined;
+        }
     }
 }

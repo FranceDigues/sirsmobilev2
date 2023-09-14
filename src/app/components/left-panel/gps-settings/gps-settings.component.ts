@@ -30,6 +30,7 @@ export class GpsSettingsComponent implements OnInit {
         }
 
         localStorage.setItem('gpsUpdateTimout', JSON.stringify(this.geolocationService.updateTimeout));
+        localStorage.setItem('ultraAccuracy', JSON.stringify(this.geolocationService.ultraAccuracy));
         localStorage.setItem('gpsConfig', JSON.stringify(this.geolocationService.gpsOptions));
         const toast = await this.toastCtrl.create({
             message: 'Les paramètres GPS ont été mis à jour avec succès',
