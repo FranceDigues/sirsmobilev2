@@ -39,7 +39,7 @@ npm install -g native-run
 Run :
 
 ```bash
-npm install
+npm install -f
 ```
 
 ## 3 - Launch App on device

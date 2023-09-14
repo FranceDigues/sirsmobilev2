@@ -93,7 +93,7 @@
     "cordova-base64-to-gallery": "^4.1.3",
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.3",
-    "cordova-plugin-camera": "github:apache/cordova-plugin-camera#pull/814",
+    "cordova-plugin-camera": "7.0.0",
     "cordova-plugin-device": "^2.1.0",
     "cordova-plugin-file": "7.0.0",
     "cordova-plugin-file-opener2": "4.0.0",

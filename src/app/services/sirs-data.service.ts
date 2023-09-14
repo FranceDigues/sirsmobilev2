@@ -174,25 +174,20 @@ export class SirsDataService {
         });
     }
 
-    getRefSuiteApporter() {
-        return new Promise((resolve, reject) => {
-            if (!this.refSuiteApporter) {
-                this.localDB.query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.RefSuiteApporter'],
-                    endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
-                    include_docs: true
-                }).then((list) => {
-                    this.refSuiteApporter = list.map(item => {
-                        return item.value;
-                    });
-                    resolve(this.refSuiteApporter);
-                }, (error) => {
-                    reject(error);
-                });
-            } else {
-                resolve(this.refSuiteApporter);
-            }
-        });
+    async getRefSuiteApporter() {
+        try {
+            const result = await this.localDB.query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.RefSuiteApporter'],
+                endkey: ['fr.sirs.core.model.RefSuiteApporter', {}],
+                include_docs: true
+            });
+            this.refSuiteApporter = result.map(item => {
+                return item.value;
+            });
+            return this.refSuiteApporter;
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     getEtatOuvAccGCList() {

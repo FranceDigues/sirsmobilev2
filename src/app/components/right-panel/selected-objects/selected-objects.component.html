@@ -18,7 +18,8 @@
         <ion-icon slot="start" *ngIf="feat.get('edition')" name="create-outline"></ion-icon>
         <div class="layer-title">{{ feat.get('designation') }}</div>
         <div *ngIf="!feat.get('designation')" class="layer-title">Temp {{ feat.get('id') }}</div>
-        <div *ngIf="feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
+        <div *ngIf="feat.get('subTitle')" class="layer-categories">{{ feat.get('subTitle') }}</div>
+        <div *ngIf="!feat.get('subTitle') && feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
       </ion-item>
     </ion-list>
   </ion-content>
