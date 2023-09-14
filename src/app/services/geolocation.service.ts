@@ -18,7 +18,7 @@ export class GeolocationService {
     private positionWatcher$: any;
     private onPositionUpdatedSubject: Subject<Coordinates> = new Subject<Coordinates>();
     public updateTimeout: number; // gps update timeout in ms
-    public ultraAccuracy :boolean;
+    public ultraAccuracy: boolean;
     public gpsOptions: GeolocationOptions;
     alertGPS;
 
@@ -59,7 +59,9 @@ export class GeolocationService {
         }
         try {
             const position: Geoposition = await this.geolocation.getCurrentPosition(this.gpsOptions);
-            return this.handlePosition(position);
+            const coordinates = this.handlePosition(position);
+            if (!silent) await loading.dismiss();
+            return coordinates;
         } catch (e) {
             if (!silent) await loading.dismiss();
             throw e;
