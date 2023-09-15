@@ -1,4 +1,4 @@
-<ion-content [ngSwitch]="activeTab">
+<div [ngSwitch]="activeTab" class="scrolling-block">
     <!-- Content / Description -->
     <div *ngSwitchCase="'description'">
         <div class="sirs-panel">
@@ -33,4 +33,4 @@
     <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
         <prestations-generic></prestations-generic>
     </div>
-</ion-content>
+</div>

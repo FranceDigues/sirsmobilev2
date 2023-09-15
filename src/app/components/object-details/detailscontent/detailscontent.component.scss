@@ -11,8 +11,9 @@
 
 /* section */
 .sirs-section {
-    padding: 0 16px;
     margin-bottom: 10px;
+    padding: 0 16px 5px;
+
 }
 
 /* field */
@@ -42,4 +43,9 @@
 .sirs-button-item {
     height: 35px;
     width: 35px;
+}
+
+.scrolling-block {
+    overflow-y: auto;
+    max-height: calc(100% - 100px);
 }

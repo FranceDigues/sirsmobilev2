@@ -1,4 +1,4 @@
-<ion-content [ngSwitch]="activeTab">
+<div [ngSwitch]="activeTab" class="scrolling-block">
     <!-- Content / Description -->
     <div *ngSwitchCase="'description'">
         <div class="sirs-panel">
@@ -21,7 +21,6 @@
                               disabled="true"
                               [(ngModel)]="detailsObject.selectedObject.contactEau"></ion-checkbox>
             </div>
-
             <div class="sirs-field">
                 <span class="sirs-field-title">Position Type</span>
                 <ng-container *ngIf="(detailsObject.selectedObject.typePositionId | getById | async) as typePositionRef">
@@ -86,4 +85,4 @@
             </div>
         </div>
     </div>
-</ion-content>
+</div>
