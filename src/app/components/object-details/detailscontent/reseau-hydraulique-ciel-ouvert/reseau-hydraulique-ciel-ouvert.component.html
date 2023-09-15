@@ -14,7 +14,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Type de réseau</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeReseauHydroCielOuvert"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeReseauHydroCielOuvert | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Réseau hydraulique associé</span>
@@ -22,7 +22,7 @@
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
-                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position"></span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Côté</span>

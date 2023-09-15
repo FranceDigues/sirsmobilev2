@@ -14,11 +14,11 @@
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Auteur</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author | async"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Aménagement hydraulique</span>
-        <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique | async"></span>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Date de fin</span>
