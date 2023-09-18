@@ -52,6 +52,7 @@ import { SirsDataService } from './services/sirs-data.service';
 import { DocToStringPipeModule } from "./pipe/doc-to-string/doc-to-string.pipe.module";
 import { DocToStringPipe } from "./pipe/doc-to-string/doc-to-string.pipe";
 import { FormatOptionTextPipeModule } from "./pipe/format-option-text/format-option-text.pipe.module";
+import { Diagnostic } from "@ionic-native/diagnostic/ngx";
 
 @NgModule({
     declarations: [AppComponent],
@@ -76,7 +77,7 @@ import { FormatOptionTextPipeModule } from "./pipe/format-option-text/format-opt
         Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
         FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
         ObservationEditService, Network, FileChooser, FilePath,DocToStringPipe,
-        SirsDataService, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+        SirsDataService, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}, Diagnostic
     ],
     bootstrap: [AppComponent]
 })

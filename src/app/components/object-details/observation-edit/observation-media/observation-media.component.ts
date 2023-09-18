@@ -14,7 +14,7 @@ import {DatabaseService} from '../../../../services/database.service';
 import {DatabaseModel} from '../../../database-connection/models/database.model';
 import {SirsDataService} from "../../../../services/sirs-data.service";
 import { PluginUtils } from "../../../../utils/plugin-utils";
-import { error } from "protractor";
+import { Diagnostic } from "@ionic-native/diagnostic/ngx";
 
 @Component({
     selector: 'observation-media',
@@ -45,7 +45,8 @@ export class ObservationMediaComponent implements OnInit {
                 private toastService: ToastService,
                 private cdr: ChangeDetectorRef,
                 private databaseService: DatabaseService,
-                private sirsDataService: SirsDataService) {
+                private sirsDataService: SirsDataService,
+                private diagnostic: Diagnostic) {
         this.view = 'media';
         this.pendingContactList = true;
 
@@ -179,6 +180,32 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     takePhoto() {
+        // @ts-ignore
+        if (window.device && Number(window.device.version) < 13) {
+            this.diagnostic.requestRuntimePermission(this.diagnostic.permission.READ_EXTERNAL_STORAGE)
+                .then((status) => {
+                    if (status !== this.diagnostic.permissionStatus.GRANTED) {
+                        this.diagnostic.getPermissionAuthorizationStatus(this.diagnostic.permission.READ_EXTERNAL_STORAGE)
+                            .then((status) => {
+                                console.log(status);
+                                this.takePhotoFromCamera();
+                            })
+                            .catch((error) => {
+                                console.error("The following error occurred: " + error);
+                            });
+                    }else{
+                        this.takePhotoFromCamera();
+                    }
+                })
+                .catch((error) => {
+                    console.error("The following error occurred: " + error);
+                });
+        } else {
+            this.takePhotoFromCamera();
+        }
+    }
+
+    private takePhotoFromCamera() {
         this.cameraService.takePhoto({
             destinationType: this.camera.DestinationType.FILE_URI
         })

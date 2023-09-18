@@ -28,6 +28,7 @@
     "@ionic-native/base64-to-gallery": "5.36.0",
     "@ionic-native/camera": "5.36.0",
     "@ionic-native/core": "5.36.0",
+    "@ionic-native/diagnostic": "^5.36.0",
     "@ionic-native/file": "5.36.0",
     "@ionic-native/file-chooser": "^5.36.0",
     "@ionic-native/file-opener": "^5.36.0",
@@ -144,7 +145,8 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-filechooser": {},
       "cordova-plugin-filepath": {},
-      "cordova-sqlite-storage": {}
+      "cordova-sqlite-storage": {},
+      "cordova.plugins.diagnostic": {}
     },
     "platforms": [
       "android"
