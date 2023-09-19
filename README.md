@@ -91,9 +91,9 @@ androidx.core.content.FileProvider
 android:usesCleartextTraffic="true"
 ```
 
-### Very Important : Problem with cordova-camera permissions with old android versions
+### Problem with cordova-camera permissions with old android versions
 
-After the building of the android platform of the app, you should add inside the `<manifest>` tag of the generated file `platforms/android/app/src/main/AndroidManifest.xml` the following lines in :
+If you have problems with old android version with camera plugin for permissions like `READ_EXTERNAL_STORAGE` or `WRITE_EXTERNAL_STORAGE` you can add inside the `<manifest>` tag of the generated file `platforms/android/app/src/main/AndroidManifest.xml` the following lines in :
 
 ```
  <uses-permission android:maxSdkVersion="32" android:name="android.permission.CAMERA" />
@@ -101,7 +101,7 @@ After the building of the android platform of the app, you should add inside the
  <uses-permission android:maxSdkVersion="32" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
-And retry to build or run the application
+And retry to build and run the application
 
 ## 4 - Project images
 
