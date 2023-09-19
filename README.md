@@ -50,6 +50,8 @@ npm install -f
 ionic cordova run android
 ```
 
+**Not forget to check the Troubleshooting section**
+
 ### Troubleshooting:
 
 ### Reset platform Android
@@ -88,6 +90,18 @@ androidx.core.content.FileProvider
 ```
 android:usesCleartextTraffic="true"
 ```
+
+### Very Important : Problem with cordova-camera permissions with old android versions
+
+After the building of the android platform of the app, you should add inside the `<manifest>` tag of the generated file `platforms/android/app/src/main/AndroidManifest.xml` the following lines in :
+
+```
+ <uses-permission android:maxSdkVersion="32" android:name="android.permission.CAMERA" />
+ <uses-permission android:maxSdkVersion="32" android:name="android.permission.READ_EXTERNAL_STORAGE" />
+ <uses-permission android:maxSdkVersion="32" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
+And retry to build or run the application
 
 ## 4 - Project images
 

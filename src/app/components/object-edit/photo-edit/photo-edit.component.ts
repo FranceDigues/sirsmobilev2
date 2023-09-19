@@ -20,6 +20,7 @@ import { LocalDatabase } from 'src/app/services/local-database.service';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
 import {DatabaseModel} from "../../database-connection/models/database.model";
 import {DatabaseService} from "../../../services/database.service";
+import { PermissionsService } from "../../../services/permissions.service";
 
 @Component({
     selector: 'app-photo-edit',
@@ -59,7 +60,8 @@ export class PhotoEditComponent implements OnInit {
         private positionService: PositionService,
         private localDB: LocalDatabase,
         private editionModeService: EditionModeService,
-                private databaseService: DatabaseService) {
+                private databaseService: DatabaseService,
+                private permissionsService: PermissionsService) {
     }
 
     ngOnInit() {
@@ -282,23 +284,27 @@ export class PhotoEditComponent implements OnInit {
     }
 
     private takePhoto() {
-        this.cameraService.takePhoto({
-            destinationType: this.camera.DestinationType.FILE_URI
-        })
-            .then(
-                (value: string) => {
-                    const valueTmp = value.replace('data:image/jpeg;base64,', '');
-                    this.file.resolveLocalFilesystemUrl(valueTmp)
-                        .then(
-                            (file: Entry) => {
-                                this.savePicture(file);
-                            }
-                        );
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
+        this.permissionsService
+            .handleCameraPermissions()
+            .then(() => {
+                this.cameraService.takePhoto({
+                    destinationType: this.camera.DestinationType.FILE_URI
+                })
+                    .then(
+                        (value: string) => {
+                            const valueTmp = value.replace('data:image/jpeg;base64,', '');
+                            this.file.resolveLocalFilesystemUrl(valueTmp)
+                                .then(
+                                    (file: Entry) => {
+                                        this.savePicture(file);
+                                    }
+                                );
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    );
+            }, console.error);
     }
 
     private savePicture(file: Entry) {

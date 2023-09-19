@@ -7,14 +7,14 @@ import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionb
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {CameraService} from '@ionic-lib/lib-camera/camera.service';
 import {Camera} from '@ionic-native/camera/ngx';
-import { File, Entry, Metadata, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
+import { File, Metadata, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
 import {UuidUtils} from 'src/app/utils/uuid-utils';
 import {formatDate} from '@angular/common';
 import {DatabaseService} from '../../../../services/database.service';
 import {DatabaseModel} from '../../../database-connection/models/database.model';
 import {SirsDataService} from "../../../../services/sirs-data.service";
 import { PluginUtils } from "../../../../utils/plugin-utils";
-import { Diagnostic } from "@ionic-native/diagnostic/ngx";
+import { PermissionsService } from "../../../../services/permissions.service";
 
 @Component({
     selector: 'observation-media',
@@ -46,7 +46,7 @@ export class ObservationMediaComponent implements OnInit {
                 private cdr: ChangeDetectorRef,
                 private databaseService: DatabaseService,
                 private sirsDataService: SirsDataService,
-                private diagnostic: Diagnostic) {
+                private permissionsService: PermissionsService) {
         this.view = 'media';
         this.pendingContactList = true;
 
@@ -180,29 +180,9 @@ export class ObservationMediaComponent implements OnInit {
     }
 
     takePhoto() {
-        // @ts-ignore
-        if (window.device && Number(window.device.version) < 13) {
-            this.diagnostic.requestRuntimePermission(this.diagnostic.permission.READ_EXTERNAL_STORAGE)
-                .then((status) => {
-                    if (status !== this.diagnostic.permissionStatus.GRANTED) {
-                        this.diagnostic.getPermissionAuthorizationStatus(this.diagnostic.permission.READ_EXTERNAL_STORAGE)
-                            .then((status) => {
-                                console.log(status);
-                                this.takePhotoFromCamera();
-                            })
-                            .catch((error) => {
-                                console.error("The following error occurred: " + error);
-                            });
-                    }else{
-                        this.takePhotoFromCamera();
-                    }
-                })
-                .catch((error) => {
-                    console.error("The following error occurred: " + error);
-                });
-        } else {
-            this.takePhotoFromCamera();
-        }
+        this.permissionsService
+            .handleCameraPermissions()
+            .then(() => this.takePhotoFromCamera(), console.error);
     }
 
     private takePhotoFromCamera() {

@@ -17,6 +17,7 @@ import { PositionService } from '../../../services/position.service';
 import { Coordinates } from '@ionic-native/geolocation/ngx';
 import { SirsDataService } from '../../../services/sirs-data.service';
 import { error } from "protractor";
+import { PermissionsService } from "../../../services/permissions.service";
 
 @Component({
     selector: 'app-media-form',
@@ -46,7 +47,8 @@ export class MediaFormComponent implements OnInit {
                 private geolocation: GeolocationService,
                 public alertController: AlertController,
                 public modalController: ModalController,
-                private positionService: PositionService) {
+                private positionService: PositionService,
+                private permissionsService: PermissionsService) {
     }
 
     ngOnInit() {
@@ -194,23 +196,27 @@ export class MediaFormComponent implements OnInit {
     takePhoto() {
         this.mediaOptions.id = '';
         this.mediaOptions.chemin = '';
-        this.cameraService.takePhoto({
-            destinationType: this.camera.DestinationType.FILE_URI
-        })
-            .then(
-                (value: string) => {
-                    const valueTmp = value.replace('data:image/jpeg;base64,', '');
-                    this.file.resolveLocalFilesystemUrl(valueTmp)
-                        .then(
-                            (file: Entry) => {
-                                this.savePicture(file);
-                            }
-                        );
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
+        this.permissionsService
+            .handleCameraPermissions()
+            .then(() => {
+                this.cameraService.takePhoto({
+                    destinationType: this.camera.DestinationType.FILE_URI
+                })
+                    .then(
+                        (value: string) => {
+                            const valueTmp = value.replace('data:image/jpeg;base64,', '');
+                            this.file.resolveLocalFilesystemUrl(valueTmp)
+                                .then(
+                                    (file: Entry) => {
+                                        this.savePicture(file);
+                                    }
+                                );
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    );
+            }, console.error);
     }
 
     savePicture(file: Entry) {
