@@ -17,6 +17,7 @@ import { ObservationEditModule } from '../object-details/observation-edit/observ
 import { TraitComponent } from './trait/trait.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DocToStringPipeModule } from "../../pipe/doc-to-string/doc-to-string.pipe.module";
+import { SubTitleVegetationPipeModule } from "../../pipe/sub-title-vegetation/sub-title-vegetation.pipe.module";
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { DocToStringPipeModule } from "../../pipe/doc-to-string/doc-to-string.pi
         ObjectDetailsModule,
         DirectiveModule,
         FlexLayoutModule,
-        DocToStringPipeModule
+        DocToStringPipeModule,
+        SubTitleVegetationPipeModule
     ],
     providers: [],
     declarations: [

@@ -4,9 +4,8 @@ import { GetByIdPipe } from "./get-by-id.pipe";
 
 
 @NgModule({
-    declarations: [GetByIdPipe, GetByIdPipe],
+    declarations: [GetByIdPipe],
     exports: [
-        GetByIdPipe,
         GetByIdPipe
     ],
     imports: [

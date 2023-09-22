@@ -412,12 +412,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
                                 // Ensure that the layer has a vector source.
                                 if (source instanceof VectorSource) {
-                                    // Handle vegetation sub-title in selected object
-                                    if (PluginUtils.isVegetationClass(layer.get('model').filterValue)) {
-                                        callback.call(this, source, { 'subTitle': layer.get('name') });
-                                    } else {
-                                        callback.call(this, source);
-                                    }
+                                    callback.call(this, source);
                                 } else if (source instanceof ImageSource) {
                                     // @ts-ignore
                                     callback.call(this, source.getSource());
@@ -427,10 +422,11 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                     });
                 };
                 // Identify features which have at least one point in the circle.
-                forEachVectorSources(this.olService.getLayers(), (source, extra?) => {
-                    source.forEachFeatureIntersectingExtent(circleExtent, (feature) => {
-                        if (extra) {
-                            feature.setProperties(Object.assign(feature.getProperties(), extra))
+                forEachVectorSources(this.olService.getLayers(), source => {
+                    source.forEachFeatureIntersectingExtent(circleExtent,  (feature) => {
+                        // Handle vegetation sub-title in selected object
+                        if (PluginUtils.isVegetationClass(feature.get('@class'))) {
+                            feature.setProperties(Object.assign(feature.getProperties(), { 'subTitle': true }))
                         }
                         const properties = feature.getProperties();
                         if (properties.geometry && properties.id && properties['@class']) {

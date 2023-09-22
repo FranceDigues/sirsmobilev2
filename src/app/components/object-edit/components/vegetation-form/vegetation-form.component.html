@@ -101,6 +101,19 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="sirs-field col col-100">
+        <label for="typeVegetation" class="active">Type Végétation</label>
+        <select id="typeVegetation" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.typeVegetationId"
+                name="typeVegetation">
+            <option *ngFor="let type of EOS.refs.RefTypeInvasiveVegetation" [ngValue]="type.id">
+                {{type | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>
+
 <div class="row"
      *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
     <div class="sirs-field col col-100">
