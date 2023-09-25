@@ -1,30 +1,9 @@
-<label for="damSide" class="active">Côté de la digue</label>
-<div *ngIf="EOS.showText('fullName')">
-    <select id="damSide" class="browser-default"
-            name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-            <option *ngFor="let r of refCote" [value]="r.id"
-              [selected]="EOS.objectDoc.coteId === r.id">
-              {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-            </option>
-    </select>
-</div>
-<div *ngIf="EOS.showText('abstract')">
-    <select id="damSide" class="browser-default"
-      name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-        <option *ngFor="let r of refCote"
-                [ngValue]="r.id"
-                [selected]="EOS.objectDoc.coteId === r.id">
-            {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-        </option>
-    </select>
-</div>
-<div *ngIf="EOS.showText('both')">
-  <select id="damSide" class="browser-default"
-  name="damSide" [(ngModel)]="EOS.objectDoc.coteId">
-    <option *ngFor="let r of refCote"
-      [ngValue]="r.id"
-      [selected]="EOS.objectDoc.coteId === r.id">
-          {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+<label for="cote" class="active">Côté de la digue</label>
+<select id="cote" name="cote" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.coteId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.coteId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.refCote | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.coteId === r.id">
+        {{ r | docToString | async }}
     </option>
-  </select>
-</div>
+</select>

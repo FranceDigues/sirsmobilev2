@@ -14,13 +14,6 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
   ngOnInit() {
     this.initDiameter();
     this.initAllowed();
-    this.initFlow();
-    this.initImplantation();
-    this.initNetworkType();
-    this.initUtilisation();
-    this.initSecuriteId();
-    this.FT.initPosition();
-    this.FT.initCote();
   }
 
   initDiameter() {
@@ -31,23 +24,4 @@ export class ReseauHydrauliqueFermeComponent implements OnInit {
     this.EOS.objectDoc.autorise = true;
   }
 
-  initFlow() {
-    this.EOS.setupRef('ecoulementId', this.EOS.refs.RefEcoulement[0]);
-  }
-
-  initImplantation() {
-    this.EOS.setupRef('implantationId', this.EOS.refs.RefImplantation[0]);
-  }
-
-  initNetworkType() {
-    this.EOS.setupRef('typeConduiteFermeeId', this.EOS.refs.RefConduiteFermee[0]);
-  }
-
-  initUtilisation() {
-    this.EOS.setupRef('utilisationConduiteId', this.EOS.refs.RefUtilisationConduite[0]);
-  }
-
-  initSecuriteId() {
-    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
-  }
 }
