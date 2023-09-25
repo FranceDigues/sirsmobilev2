@@ -5,40 +5,18 @@
   </div>
 </div>
 <div class="rox">
-  <div class="sirs-field col col-100">
+  <div class="sirs-field col col-100" *ngIf="EOS.objectDoc.reseauHydrauliqueFermeIds && EOS.objectDoc.reseauHydrauliqueFermeIds.length>0">
     <label class="active">Réseau hydraulique fermé associé</label>
     <div class="row sirs-field-multi" *ngFor="let v of EOS.objectDoc.reseauHydrauliqueFermeIds; index as index">
       <div class="col col-75">
-        <div *ngIf="EOS.showText('fullName')">
           <select class="browser-default"
-                  name="" [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
-                  <option *ngFor="let r of EOS.refs.ReseauHydrauliqueFerme"
-                    [ngValue]="r.id"
-                    [selected]="EOS.objectDoc.reseauHydrauliqueFermeIds[index] === r.id">
-                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                  </option>
+                  [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
+              <option [value]="undefined" [selected]="EOS.objectDoc.reseauHydrauliqueFermeIds[index] === undefined" selected>Non renseigné</option>
+              <option *ngFor="let r of EOS.refs.ReseauHydrauliqueFerme | refSort: EOS.showText('fullName');" [value]="r.id"
+                      [selected]="EOS.objectDoc.reseauHydrauliqueFermeIds[index] === r.id">
+                  {{ r | docToString | async }}
+              </option>
           </select>
-        </div>
-        <div *ngIf="EOS.showText('abstract')">
-            <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
-                <option *ngFor="let r of EOS.refs.ReseauHydrauliqueFerme"
-                        [ngValue]="r.id"
-                        [selected]="EOS.objectDoc.reseauHydrauliqueFermeIds[index] === r.id">
-                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-                </option>
-            </select>
-        </div>
-        <div *ngIf="EOS.showText('both')">
-          <select class="browser-default" name="" [(ngModel)]="EOS.objectDoc.reseauHydrauliqueFermeIds[index]">
-            <option *ngFor="let r of EOS.refs.ReseauHydrauliqueFerme"
-                    [ngValue]="r.id"
-                    [selected]="EOS.objectDoc.reseauHydrauliqueFermeIds[index] === r.id">
-                <span *ngIf="!r.abrege">
-                  {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-                </span>
-            </option>
-          </select>
-        </div>
       </div>
       <div class="col col-25">
         <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.reseauHydrauliqueFermeIds.length === 1"

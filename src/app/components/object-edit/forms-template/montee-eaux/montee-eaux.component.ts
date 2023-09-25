@@ -18,9 +18,6 @@ export class MonteeEauxComponent implements OnInit {
 
     ngOnInit() {
         this.EOS.objectDoc.mesures = [this.createMeasure()];
-        this.initEchelleLimnimetrique();
-        this.FT.initDamPosition();
-        this.FT.initDamSide();
 
         this.editionModeService.getReferenceTypes()
             .then((refs) => {
@@ -39,10 +36,6 @@ export class MonteeEauxComponent implements OnInit {
             referenceHauteurId: defaultRef ? defaultRef.id : undefined,
             hauteur: 0
         };
-    }
-
-    initEchelleLimnimetrique() {
-        this.EOS.setupRef('echelleLimnimetriqueId', this.refs.EchelleLimnimetrique[0]);
     }
 
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 
 @Component({
@@ -9,16 +8,9 @@ import { EditObjectService } from '../../../../services/edit-object.service';
 })
 export class StationPompageComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initReseauHydraulique();
-    this.FT.initDamPosition();
-    this.FT.initDamSide();
-  }
-
-  initReseauHydraulique() {
-    this.EOS.setupRef('reseauHydrauliqueFermeIds', this.EOS.refs.ReseauHydrauliqueFerme[0], true);
   }
 
 }

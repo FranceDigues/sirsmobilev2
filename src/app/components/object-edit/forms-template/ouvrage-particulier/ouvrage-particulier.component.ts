@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 
 @Component({
   selector: 'form-ouvrage-particulier',
@@ -9,20 +8,8 @@ import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 })
 export class OuvrageParticulierComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initTypeOuvrageParticulier();
-    this.initSecuriteId();
-    this.FT.initDamPosition();
-    this.FT.initDamSide();
-  }
-
-  initTypeOuvrageParticulier() {
-    this.EOS.setupRef('typeOuvrageParticulierId', this.EOS.refs.RefOuvrageParticulier[0]);
-  }
-
-  initSecuriteId() {
-    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
   }
 }

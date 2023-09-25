@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 
 @Component({
@@ -9,16 +8,9 @@ import { EditObjectService } from '../../../../services/edit-object.service';
 })
 export class OuvrageVoirieComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initTypeOuvrageVoirie();
-    this.FT.initPosition();
-    this.FT.initCote();
-  }
-
-  initTypeOuvrageVoirie() {
-    this.EOS.setupRef('typeOuvrageVoirieId', this.EOS.refs.RefOuvrageVoirie[0]);
   }
 
 }

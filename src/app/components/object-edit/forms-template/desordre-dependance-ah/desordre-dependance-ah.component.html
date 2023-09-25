@@ -19,6 +19,7 @@
     <label [for]="s.name" class="active">{{s.label}}</label>
     <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]"
       (change)="changeCategorie()">
+      <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
       <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
         [selected]="isSelected(s, r)">
         {{ r | docToString | async }}
@@ -31,6 +32,7 @@
       <label [for]="s.name" class="active">{{s.label}}</label>
       <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]"
         (change)="changeType()">
+        <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
         <option *ngFor="let r of filteredTypeDesordreList | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
           [selected]="isSelected(s, r)">
           {{ r | docToString | async }}
@@ -43,6 +45,7 @@
     <div class="sirs-field col col-100">
       <label [for]="s.name" class="active">{{s.label}}</label>
       <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
+        <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
         <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
           [selected]="isSelected(s, r)">
           {{ r | docToString | async }}

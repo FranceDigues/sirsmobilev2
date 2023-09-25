@@ -1,34 +1,13 @@
 <div class="row">
   <div class="sirs-field col col-100">
       <label for="width" class="active">Largeur</label>
-      <div *ngIf="EOS.showText('fullName')">
-            <select id="width" class="browser-default"
-                  name="width" [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
-                <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName')" [value]="r.id"
-                [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
-                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                </option>
-            </select>
-      </div>
-      <div *ngIf="EOS.showText('abstract')">
-          <select id="width" class="browser-default"
-                name="width" [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
-                <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName')"
-                        [value]="r.id"
-                        [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
-                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-                </option>
-          </select>
-      </div>
-      <div *ngIf="EOS.showText('both')">
-          <select id="width" class="browser-default" name="" [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
-              <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName')"
-                      [value]="r.id"
-                      name="width" [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord"
-                      [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
-                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-              </option>
-          </select>
-      </div>
+      <select id="width" name="width" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeLargeurFrancBord === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
   </div>
 </div>

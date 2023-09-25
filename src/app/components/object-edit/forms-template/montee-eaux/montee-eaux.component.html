@@ -12,35 +12,14 @@
   </div>
   <div class="mesure-values row" *ngFor="let m of EOS.objectDoc.mesures; index as index">
     <div class="sirs-field col">
-      <div *ngIf="EOS.showText('fullName')">
-            <select id="width" class="browser-default"
-                  name="width" [(ngModel)]="m.referenceHauteurId">
-                <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')" [value]="r.id"
-                [selected]="m.referenceHauteurId === r.id">
-                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                </option>
-            </select>
-      </div>
-      <div *ngIf="EOS.showText('abstract')">
-          <select id="width" class="browser-default"
-                name="width" [(ngModel)]="m.referenceHauteurId">
-                <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
-                        [value]="r.id"
-                        [selected]="m.referenceHauteurId === r.id">
-                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-                </option>
-          </select>
-      </div>
-      <div *ngIf="EOS.showText('both')">
-          <select id="width" class="browser-default" name="" [(ngModel)]="m.referenceHauteurId">
-              <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName')"
-                      [value]="r.id"
-                      name="width" [(ngModel)]="m.referenceHauteurId"
-                      [selected]="m.referenceHauteurId === r.id">
-                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-              </option>
-          </select>
-      </div>
+        <select id="width" name="width" class="browser-default"
+                [(ngModel)]="m.referenceHauteurId">
+            <option [value]="undefined" [selected]="m.referenceHauteurId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName');" [value]="r.id"
+                    [selected]="m.referenceHauteurId === r.id">
+                {{ r | docToString | async }}
+            </option>
+        </select>
     </div>
     <div class="sirs-field col">
       <input type="number" [(ngModel)]="m.hauteur"/>
@@ -60,35 +39,14 @@
 <div class="row">
   <div class="sirs-field col col-50">
       <label for="scale" class="active">Echelle limnimétrique</label>
-      <div *ngIf="EOS.showText('fullName')">
-            <select id="scale" class="browser-default"
-                  name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-                <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')" [value]="r.id"
-                [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
-                    {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-                </option>
-            </select>
-      </div>
-      <div *ngIf="EOS.showText('abstract')">
-          <select id="scale" class="browser-default"
-                name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-                <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
-                        [value]="r.id"
-                        [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
-                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-                </option>
-          </select>
-      </div>
-      <div *ngIf="EOS.showText('both')">
-          <select id="scale" class="browser-default" name="" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
-              <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName')"
-                      [value]="r.id"
-                      name="scale" [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId"
-                      [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
-                  {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-              </option>
-          </select>
-      </div>
+      <select id="scale" name="scale" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.echelleLimnimetriqueId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
   </div>
 </div>
 <div class="row">

@@ -16,8 +16,6 @@ export class DesordreComponent implements OnInit {
               private FT: FormsTemplateService) { }
 
   ngOnInit() {
-    this.FT.initPosition();
-    this.FT.initCote();
     this.initfilteredTypeDesordreList();
   }
 

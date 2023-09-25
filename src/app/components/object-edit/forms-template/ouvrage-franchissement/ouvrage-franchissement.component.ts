@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 
 @Component({
   selector: 'form-ouvrage-franchissement',
@@ -9,18 +8,10 @@ import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 })
 export class OuvrageFranchissementComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
     this.EOS.objectDoc.largeur = this.EOS.objectDoc.largeur || 0;
-    this.FT.initOrientationOuvrage();
-    this.FT.initUsage();
-    this.FT.initRevetementHaut();
-    this.FT.initRevetementBas();
-    this.FT.initTypeOuvrage();
-    this.FT.initPositionHaut();
-    this.FT.initPositionBas();
-    this.FT.initCote();
   }
 
 }

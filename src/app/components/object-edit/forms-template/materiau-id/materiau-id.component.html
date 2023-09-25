@@ -1,30 +1,9 @@
 <label for="material" class="active">Matériau</label>
-<div *ngIf="EOS.showText('fullName')">
-      <select id="material" class="browser-default"
-            name="material" [(ngModel)]="EOS.objectDoc.materiauId">
-          <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName')" [value]="r.id"
-          [selected]="EOS.objectDoc.materiauId === r.id">
-              {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-          </option>
-      </select>
-</div>
-<div *ngIf="EOS.showText('abstract')">
-    <select id="material" class="browser-default"
-          name="material" [(ngModel)]="EOS.objectDoc.materiauId">
-          <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName')"
-                  [value]="r.id"
-                  [selected]="EOS.objectDoc.materiauId === r.id">
-              {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-          </option>
-    </select>
-</div>
-<div *ngIf="EOS.showText('both')">
-    <select id="material" class="browser-default" name="material" [(ngModel)]="EOS.objectDoc.materiauId">
-        <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName')"
-                [value]="r.id"
-                name="material" [(ngModel)]="EOS.objectDoc.materiauId"
-                [selected]="EOS.objectDoc.categorieDesordreId === r.id">
-            {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-        </option>
-    </select>
-</div>
+<select id="material" name="material" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.materiauId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.materiauId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.materiauId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

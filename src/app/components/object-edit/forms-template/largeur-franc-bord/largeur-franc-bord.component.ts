@@ -11,7 +11,6 @@ export class LargeurFrancBordComponent implements OnInit {
   constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.EOS.setupRef('typeLargeurFrancBord', this.EOS.refs.RefLargeurFrancBord[0]);
   }
 
 }

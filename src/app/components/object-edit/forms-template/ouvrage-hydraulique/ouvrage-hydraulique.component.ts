@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 
 @Component({
   selector: 'form-ouvrage-hydraulique',
@@ -9,25 +8,9 @@ import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 })
 export class OuvrageHydrauliqueComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService, private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initTypeOuvrageHydroAssocieID();
-    this.initReadeauHydrauliqueFerme();
-    this.initSecuriteId();
-    this.FT.initPosition();
-    this.FT.initCote();
-  }
 
-  initTypeOuvrageHydroAssocieID() {
-    this.EOS.setupRef('typeOuvrageHydroAssocieId', this.EOS.refs.RefOuvrageHydrauliqueAssocie[0]);
-  }
-
-  initReadeauHydrauliqueFerme() {
-    this.EOS.setupRef('reseauHydrauliqueFermeIds', this.EOS.refs.ReseauHydrauliqueFerme[0], true);
-  }
-
-  initSecuriteId() {
-    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
   }
 }

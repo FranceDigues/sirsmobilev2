@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
 import { EditObjectService } from '../../../../services/edit-object.service';
 
 @Component({
@@ -9,31 +8,8 @@ import { EditObjectService } from '../../../../services/edit-object.service';
 })
 export class ReseauTelecomEnergieComponent implements OnInit {
 
-  constructor(public EOS: EditObjectService,  private FT: FormsTemplateService) { }
+  constructor(public EOS: EditObjectService) { }
 
   ngOnInit() {
-    this.initNetworkType();
-    this.initImplantation();
-    this.initOuvrageTelecomEnergie();
-    this.initSecuriteId();
-    this.FT.initHeight();
-    this.FT.initPosition();
-    this.FT.initCote();
-  }
-
-  initNetworkType() {
-    this.EOS.setupRef('typeReseauTelecomEnergieId', this.EOS.refs.RefReseauTelecomEnergie[0]);
-  }
-
-  initImplantation() {
-    this.EOS.setupRef('implantationId', this.EOS.refs.RefImplantation[0]);
-  }
-
-  initOuvrageTelecomEnergie() {
-    this.EOS.setupRef('ouvrageTelecomEnergieIds', this.EOS.refs.OuvrageTelecomEnergie[0], true);
-  }
-
-  initSecuriteId() {
-    this.EOS.setupRef('securiteId', this.EOS.refs.RefSecurite[0]);
   }
 }

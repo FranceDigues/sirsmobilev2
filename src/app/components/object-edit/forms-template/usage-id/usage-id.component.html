@@ -1,29 +1,9 @@
 <label for="use" class="active">Usage</label>
-<div *ngIf="EOS.showText('fullName')">
-    <select id="use" class="browser-default"
-            name="use" [(ngModel)]="EOS.objectDoc.usageId">
-            <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
-              [ngValue]="r.id"
-              [selected]="EOS.objectDoc.usageId === r.id">
-                  {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
-            </option>
-    </select>
-</div>
-<div *ngIf="EOS.showText('abstract')">
-    <select id="use" class="browser-default" name="use" [(ngModel)]="EOS.objectDoc.usageId">
-        <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
-                [ngValue]="r.id"
-                [selected]="EOS.objectDoc.usageId === r.id">
-            {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
-        </option>
-    </select>
-</div>
-<div *ngIf="EOS.showText('both')">
-  <select id="use" class="browser-default" name="use" [(ngModel)]="EOS.objectDoc.usageId">
-      <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName')"
-              [ngValue]="r.id"
-              [selected]="EOS.objectDoc.usageId === r.id">
-              {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
-      </option>
-  </select>
-</div>
+<select id="use" name="use" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.usageId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.usageId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefUsageVoie | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.usageId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

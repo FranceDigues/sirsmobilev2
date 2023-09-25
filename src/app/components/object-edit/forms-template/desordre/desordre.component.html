@@ -3,6 +3,7 @@
         <label for="categorie" class="active">Catégorie du désordre</label>
         <select id="categorie" class="browser-default" name="categorie" [(ngModel)]="EOS.objectDoc.categorieDesordreId"
             (change)="changeCategorie()">
+            <option [value]="undefined" [selected]="EOS.objectDoc.categorieDesordreId === undefined" selected>Non renseigné</option>
             <option *ngFor="let r of EOS.refs.RefCategorieDesordre | refSort: EOS.showText('fullName')" [value]="r.id"
                 [selected]="EOS.objectDoc.categorieDesordreId === r.id">
                 {{ r | docToString | async }}
@@ -13,6 +14,7 @@
         <label for="type" class="active">Type du désordre</label>
         <select id="type" class="browser-default" name="type" [(ngModel)]="EOS.objectDoc.typeDesordreId"
             (change)="changeType()">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typeDesordreId === undefined" selected>Non renseigné</option>
             <option *ngFor="let r of filteredTypeDesordreList | refSort: EOS.showText('fullName')" [value]="r._id"
                 [selected]="EOS.objectDoc.typeDesordreId === r._id">
                 {{ r | docToString | async }}
