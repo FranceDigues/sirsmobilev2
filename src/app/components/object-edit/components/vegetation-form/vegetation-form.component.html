@@ -64,6 +64,7 @@
         </label>
         <select id="parcelle" class="browser-default" [(ngModel)]="EOS.objectDoc.parcelleId"
                 name="parcelle">
+            <option [value]="undefined" [selected]="EOS.objectDoc.parcelleId === undefined" selected>Non renseigné</option>
             <option *ngFor="let parcelle of EOS.parcelles" [ngValue]="parcelle.value.id">
                 {{ parcelle.value.designation || parcelle.value.id }}</option>
         </select>
@@ -84,6 +85,7 @@
         <select id="positionType" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.typePositionId"
                 name="positionType">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typePositionId === undefined" selected>Non renseigné</option>
             <option *ngFor="let position of EOS.refs.RefPosition" [ngValue]="position.id">
                 {{position | formatOptionText}}
             </option>
@@ -94,6 +96,7 @@
         <select id="coteType" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.typeCoteId"
                 name="coteType">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typeCoteId === undefined" selected>Non renseigné</option>
             <option *ngFor="let cote of EOS.refs.RefCote" [ngValue]="cote.id">
                 {{cote | formatOptionText}}
             </option>
@@ -107,6 +110,7 @@
         <select id="typeVegetation" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.typeVegetationId"
                 name="typeVegetation">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typeVegetationId === undefined" selected>Non renseigné</option>
             <option *ngFor="let type of EOS.refs.RefTypeInvasiveVegetation" [ngValue]="type.id">
                 {{type | formatOptionText}}
             </option>
@@ -146,6 +150,7 @@
         <select id="etat-sanitaire-type" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.etatSanitaireId"
                 name="etat-sanitaire-type">
+            <option [value]="undefined" [selected]="EOS.objectDoc.etatSanitaireId === undefined" selected>Non renseigné</option>
             <option *ngFor="let etatSanitaire of EOS.refs.RefEtatSanitaireVegetation" [ngValue]="etatSanitaire.id">
                 {{etatSanitaire | formatOptionText}}
             </option>
@@ -159,6 +164,7 @@
         <select id="hauteurId" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.hauteurId"
                 name="hauteurId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.hauteurId === undefined" selected>Non renseigné</option>
             <option *ngFor="let refHauteur of EOS.refs.RefHauteurVegetation" [ngValue]="refHauteur.id">
                 {{refHauteur | formatOptionText}}
             </option>
@@ -172,6 +178,7 @@
         <select id="diametreId" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.diametreId"
                 name="diametreId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.diametreId === undefined" selected>Non renseigné</option>
             <option *ngFor="let refDiametre of EOS.refs.RefDiametreVegetation" [ngValue]="refDiametre.id">
                 {{refDiametre | formatOptionText}}
             </option>
@@ -185,6 +192,7 @@
         <select id="densiteId" class="browser-default"
                 [(ngModel)]="EOS.objectDoc.densiteId"
                 name="densiteId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.densiteId === undefined" selected>Non renseigné</option>
             <option *ngFor="let refDensite of EOS.refs.RefDensiteVegetation" [ngValue]="refDensite.id">
                 {{refDensite | formatOptionText}}
             </option>

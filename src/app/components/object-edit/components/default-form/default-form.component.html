@@ -111,6 +111,7 @@
         <label for="trancon" class="active edit-label">La liste des Tronçons</label>
         <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
                 name="trancon">
+            <option [value]="undefined" [selected]="EOS.objectDoc.linearId === undefined" selected>Non renseigné</option>
             <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
                 {{ troncon.libelle }}</option>
         </select>
@@ -122,6 +123,7 @@
         <label for="plans" class="active edit-label">La liste des plans de gestion</label>
         <select id="plans" class="browser-default" [(ngModel)]="EOS.objectDoc.planId"
                 name="plans">
+            <option [value]="undefined" [selected]="EOS.objectDoc.planId === undefined" selected>Non renseigné</option>
             <option *ngFor="let plan of EOS.plans" [ngValue]="plan.id">
                 {{ plan.value.libelle || plan.value.designation}}</option>
         </select>

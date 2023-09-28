@@ -84,6 +84,7 @@
         <label for="dependance" class="active edit-label">Liste des Dependances</label>
         <select id="dependance" name="dependance" class="browser-default"
                 [(ngModel)]="EOS.objectDoc['dependanceId']">
+            <option [value]="undefined" [selected]="EOS.objectDoc['dependanceId'] === undefined" selected>Non renseigné</option>
             <option *ngFor="let d of EOS.dependances"
                     [selected]="EOS.objectDoc.dependanceId === d.id"
                     (change)="EOS.objectDoc.dependanceId = d.id" [value]="d.id">
@@ -99,6 +100,7 @@
             hydrauliques</label>
         <select id="ah" name="ah" class="browser-default"
                 [(ngModel)]="EOS.objectDoc['amenagementHydrauliqueId']">
+            <option [value]="undefined" [selected]="EOS.objectDoc['amenagementHydrauliqueId'] === undefined" selected>Non renseigné</option>
             <option *ngFor="let a of EOS.amenagementHydrauliques" [selected]="EOS.ahSelected(a)"
                     (change)="EOS.itChange(a)" [value]="a.id">
                 {{ a.doc.libelle ? a.doc.libelle : (a.doc.designation ? a.doc.designation : a.id)}}
