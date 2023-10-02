@@ -4,6 +4,7 @@ import { AppLayersService } from '../../../services/app-layers.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from "@ionic/angular";
+import { EditObjectService } from "../../../services/edit-object.service";
 
 @Component({
   selector: 'create-object',
@@ -18,13 +19,16 @@ export class CreateObjectComponent implements OnInit {
               private authService: AuthService,
               private router: Router,
               private loadingControler: LoadingController,
-              private toastCtrl: ToastController) { }
+              private toastCtrl: ToastController,
+              private editObjectService: EditObjectService) {
+  }
 
   ngOnInit() {
   }
 
   selectLayer(layer) {
     this.selectedLayer = layer;
+    this.editObjectService.selectedLayer = layer;
     const type = this.getSelectLayerType();
     if (type === 'BorneDigue' || type === 'TronconDigue') {
       this.toastCtrl.create({
@@ -42,7 +46,7 @@ export class CreateObjectComponent implements OnInit {
   addObject() {
     this.loadingControler.create({message: 'Chargement'})
       .then((loading) => {
-        loading.present();
+        loading.present().then();
         const type = this.getSelectLayerType();
         const t = encodeURIComponent(type);
         this.router.navigateByUrl('/object/' + t + '/')

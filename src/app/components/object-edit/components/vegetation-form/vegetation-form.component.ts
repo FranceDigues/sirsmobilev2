@@ -14,6 +14,24 @@ export class VegetationFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (this.EOS.objectType === 'PeuplementVegetation') {
+            const find = this.EOS.refs.RefTypePeuplementVegetation.find(item => item.libelle === this.EOS.selectedLayer.title);
+            if (find && find.id) {
+                this.EOS.objectDoc.typeVegetationId = find.id;
+            }
+
+        } else if (this.EOS.objectType === 'InvasiveVegetation') {
+            const find = this.EOS.refs.RefTypeInvasiveVegetation.find(item => item.libelle === this.EOS.selectedLayer.title);
+            if (find && find.id) {
+                this.EOS.objectDoc.typeVegetationId = find.id;
+            }
+        } else if (this.EOS.objectType === 'ArbreVegetation') {
+            const find = this.EOS.refs.RefEspeceArbreVegetation.find(item => item.libelle === this.EOS.selectedLayer.title);
+            if (find && find.id) {
+                this.EOS.objectDoc.especeId = find.id;
+            }
+        }
+        // else if (this.EOS.objectType === 'HerbaceeVegetation') {}
     }
 
     drawPolygon() {

@@ -19,6 +19,13 @@ export class SubTitleVegetationPipe implements PipeTransform {
                 return result2.libelle;
             }
         }
+
+        if (results['especeId']) {
+            const result2 = await this.db.getLocalDB().get(results['especeId']);
+            if (result2 && result2.libelle) {
+                return result2.libelle;
+            }
+        }
         return results['@class'].split(".")[4] || 'Sans catégorie';
 
     }

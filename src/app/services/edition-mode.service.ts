@@ -62,7 +62,9 @@ export class EditionModeService {
         {name: 'RefHauteurVegetation', include_docs: false},
         {name: 'RefDiametreVegetation', include_docs: false},
         {name: 'RefDensiteVegetation', include_docs: false},
-        {name: 'RefTypeInvasiveVegetation', include_docs: false}
+        {name: 'RefTypeInvasiveVegetation', include_docs: false},
+        {name: 'RefTypePeuplementVegetation', include_docs: false},
+        {name: 'RefEspeceArbreVegetation', include_docs: false}
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,

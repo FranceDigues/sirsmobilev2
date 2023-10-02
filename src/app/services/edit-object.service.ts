@@ -52,6 +52,7 @@ export class EditObjectService {
     startPosBorneLabel: Promise<string> | string | null = null;
     endPosBorneLabel: Promise<string> | string | null = null;
     isClosed;
+    selectedLayer;
 
     constructor(private databaseService: DatabaseService,
                 private loadingCtrl: LoadingController,
