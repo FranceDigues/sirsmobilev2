@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { AuthService } from '../../../services/auth.service';
 import { EditObjectService } from '../../../services/edit-object.service';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
-import { DirectoryEntry, Entry, File, Metadata } from '@ionic-native/file/ngx';
+import { DirectoryEntry, Entry, File, FileEntry, Metadata } from '@ionic-native/file/ngx';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { Camera } from '@ionic-native/camera/ngx';
 import { UuidUtils } from '../../../utils/uuid-utils';
@@ -198,28 +198,30 @@ export class MediaFormComponent implements OnInit {
         this.mediaOptions.chemin = '';
         this.permissionsService
             .handleCameraPermissions()
-            .then(() => {
-                this.cameraService.takePhoto({
-                    destinationType: this.camera.DestinationType.FILE_URI
-                })
-                    .then(
-                        (value: string) => {
-                            const valueTmp = value.replace('data:image/jpeg;base64,', '');
-                            this.file.resolveLocalFilesystemUrl(valueTmp)
-                                .then(
-                                    (file: Entry) => {
-                                        this.savePicture(file);
-                                    }
-                                );
-                        },
-                        (error) => {
-                            console.error(error);
-                        }
-                    );
-            }, console.error);
+            .then(() => this.takePhotoFromCamera(), console.error);
     }
 
-    savePicture(file: Entry) {
+    private takePhotoFromCamera() {
+        this.cameraService.takePhoto({
+            destinationType: this.camera.DestinationType.FILE_URI
+        })
+            .then(
+                (value: string) => {
+                    if (value) {
+                        const valueTmp = value.replace('data:image/jpeg;base64,', '');
+                        this.file.resolveLocalFilesystemUrl(valueTmp)
+                            .then(
+                                (file: FileEntry) => {
+                                    this.savePicture(file);
+                                }
+                            );
+                    }
+                }
+            )
+            .catch(err => console.error("Error while taking a photo: " + err));
+    }
+
+    savePicture(file: FileEntry) {
         file.getMetadata((metadata: Metadata) => {
             if (metadata.size > 1048576) {
                 this.toastCtrl.create({
@@ -240,9 +242,15 @@ export class MediaFormComponent implements OnInit {
                             file.copyTo(targetDir, fileName, () => {
                                 // Store the photo in the object document.
                                 this.fillMediaOptions(photoId, fileName);
-                                // Force Image to change
-                                // ??
-                                this.cdr.detectChanges();
+                                // Set Photo base64
+                                file.file((f) => {
+                                    this.cameraService.convertBlobToBase64(f)
+                                        .then((res) => {
+                                            this.importPhotoData = res;
+                                            // Force Image to change
+                                            this.cdr.detectChanges();
+                                        });
+                                });
                             });
                         },
                         (error) => {
