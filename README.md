@@ -178,9 +178,6 @@ ionic cordova platform rm android
 
 ionic cordova build android --release -- -- --packageType=bundle
 
-// Rebuilder pour appliquer les modifications
-ionic cordova build android --release -- -- --packageType=bundle
-
 $ANDROID_HOME/build-tools/32.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/bundle/release/app-release.aab sirsmobile_<version>_<test/prod>.aab
 ```
 
