@@ -48,8 +48,6 @@
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/icon/drawable-xxxhdpi-icon.png" />
         <config-file parent="/manifest" target="AndroidManifest.xml">
             <uses-permission android:maxSdkVersion="32" android:name="android.permission.CAMERA" />
-            <uses-permission android:maxSdkVersion="32" android:name="android.permission.READ_EXTERNAL_STORAGE" />
-            <uses-permission android:maxSdkVersion="32" android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
     </platform>
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />

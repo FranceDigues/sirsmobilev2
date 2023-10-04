@@ -120,7 +120,9 @@
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-camera": {},
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
+      },
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
       },
