@@ -1,0 +1,91 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide">
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Shapes & WFS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+
+  <ion-item>
+    <div class="add-back-layer col s12">
+      <label for="type" class="active">Type de service</label>
+      <select class="browser-default" [(ngModel)]="selectedType">
+        <option *ngFor="let type of layerTypes" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+    </div>
+  </ion-item>
+
+  <div style="height: 100%;" *ngIf="selectedType === layerTypes[0]">
+    <ion-item>
+      <div class="add-back-layer col s12">
+        <label for="version" class="active">URL</label>
+        <input type="url" class="validate" [(ngModel)]="wfsInputs.url" required/>
+      </div>
+    </ion-item>
+  
+    <ion-item>
+      <div class="add-back-layer col s12">
+        <label for="version" class="active">Nom de la couche</label>
+        <input class="validate" [(ngModel)]="wfsInputs.layerName" required/>
+      </div>
+    </ion-item>
+  
+    <ion-item>
+      <div class="add-back-layer col s12">
+        <label for="version" class="active">Version du WFS</label>
+        <select class="browser-default" [(ngModel)]="wfsInputs.version">
+          <option *ngFor="let version of ['1.1.0', '2.0.0']" [value]="version">
+            {{ version }}
+          </option>
+        </select>
+      </div>
+    </ion-item>
+  </div>
+
+  <div *ngIf="selectedType === layerTypes[1] || selectedType === layerTypes[2]" fxLayout="column" fxLayoutAlign=" center" style="margin-top: 10%">
+    <ion-button color="tertiary" *ngIf="selectedType === layerTypes[2]" (click)="importGeoJson()">Importer un fichier geojson</ion-button> <!-- TODO : file explorer to get the path. -->
+    <ion-button color="tertiary" *ngIf="selectedType === layerTypes[1]" (click)="importShapefile()">Importer un fichier shapefile</ion-button> <!-- TODO : file explorer to get the path. -->
+  </div>
+  <ion-item *ngIf="selectedType === layerTypes[0]">
+    <div class="add-back-layer col s12">
+      <label for="version" class="active">URL</label>
+      <input type="url" class="validate" [(ngModel)]="wfsInputs.url" required/>
+    </div>
+  </ion-item>
+
+  <ion-item *ngIf="selectedType === layerTypes[0]">
+    <div class="add-back-layer col s12">
+      <label for="version" class="active">Nom de la couche</label>
+      <input class="validate" [(ngModel)]="wfsInputs.layerName" required/>
+    </div>
+  </ion-item>
+
+  <ion-item *ngIf="selectedType === layerTypes[0]">
+    <div class="add-back-layer col s12">
+      <label for="version" class="active">Version du WFS</label>
+      <select class="browser-default" [(ngModel)]="wfsInputs.version">
+        <option *ngFor="let version of ['1.1.0', '2.0.0']" [value]="version">
+          {{ version }}
+        </option>
+      </select>
+    </div>
+  </ion-item>
+
+  <ion-item *ngIf="selectedType === layerTypes[1] || selectedType === layerTypes[2]">
+    <div class="add-back-layer col s12">
+      <label for="version" class="active">Chemin vers le fichier</label>
+      <input type="url" class="validate" required/> <!-- TODO : file explorer to get the path. -->
+    </div>
+  </ion-item>
+
+  <ion-fab *ngIf="selectedType === layerTypes[0]" class="position-absolute" style="top: 85%;" horizontal="end" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="wfsRequest()">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

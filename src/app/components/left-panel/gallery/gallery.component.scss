@@ -1,0 +1,66 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  .wrapper {
+    height: 100%;
+    width: 100%;
+  }
+
+  .selected {
+    background-color: cadetblue;
+  }
+
+  .tabs-inner {
+    flex: 0 !important;
+  }
+
+  .gallery-content {
+    padding-top: 58px;
+  }
+
+  /* tabs */
+  .tabs-striped .tabs.tabs-sirs {
+    border-bottom: none;
+  }
+
+  .tabs-striped > .tabs.tabs-sirs > .tab-item {
+    color: #00BCD0;
+    border-color: #00BCD0;
+  }
+
+  .tabs-striped > .tabs.tabs-sirs > .tab-item.active,
+  .tabs-striped > .tabs.tabs-sirs > .tab-item.activated,
+  .tabs-striped > .tabs.tabs-sirs > .tab-item-active {
+    color: #0098A6;
+    border-color: #0098A6;
+    border-bottom-width: 3px !important;
+  }
+
+  /* tabs */
+  .tabs-striped .tabs.tabs-sirs {
+    border-bottom: none;
+  }
+
+  .tabs-striped > .tabs.tabs-sirs > .tab-item {
+    color: #00BCD0;
+    border-color: #00BCD0;
+  }
+
+  .tabs-striped > .tabs.tabs-sirs > .tab-item.active,
+  .tabs-striped > .tabs.tabs-sirs > .tab-item.activated,
+  .tabs-striped > .tabs.tabs-sirs > .tab-item-active {
+    color: #0098A6;
+    border-color: #0098A6;
+    border-bottom-width: 3px !important;
+  }
+
+  /* Empty. Add your own CSS if you like */
+  .tabs .tab-item .icon.ol {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    height: 100%;
+    background-size: contain;
+  }
+}

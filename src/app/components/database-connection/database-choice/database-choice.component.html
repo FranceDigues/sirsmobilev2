@@ -1,0 +1,57 @@
+<div [ngSwitch]="status">
+
+    <div *ngSwitchCase="0">
+        <div class="sirs-card-content">
+            <h2 class="sirs-card-title">Choix de la base de données</h2>
+            <p>Sélectionnez une base de données puis appuyez sur "connexion".</p>
+            <ul class="collection">
+                <li class="collection-item avatar" *ngFor="let db of databases"
+                    [class.selected]="db === selectedDatabase" (click)="selectDB(db)">
+                    <span class="circle pink letter-circle">{{db.name[0].toUpperCase()}}</span>
+                    <span class="title">{{db.name}}</span>
+                    <p>{{db.url}}</p>
+                    <span class="secondary-content db-checked" *ngIf="selectedDatabase === db"><ion-icon
+                            name="checkmark-outline"></ion-icon></span>
+                </li>
+            </ul>
+        </div>
+        <div class="sirs-card-action text-right" fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-button (click)="addDatabase()">
+                <ion-icon name="add-circle-outline"></ion-icon>
+                <span>&nbsp;&nbsp;Ajouter une base</span>
+            </button>
+            <div>
+                <button mat-button [disabled]="!selectedDatabase" (click)="editDatabase()">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                    <span>&nbsp;&nbsp;Edition</span>
+                </button>
+                <button mat-button [disabled]="!selectedDatabase" (click)="removeDatabase()">
+                    <ion-icon name="trash-outline"></ion-icon>
+                    <span>&nbsp;&nbsp;Supprimer</span>
+                </button>
+                <button mat-raised-button [disabled]="!selectedDatabase" (click)="validateDatabase()">
+                    <ion-icon name="checkmark-outline"></ion-icon>
+                    <span>&nbsp;&nbsp;Valider</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngSwitchCase="1">
+        <app-add-database (statusChange)="changeStatus($event)"></app-add-database>
+    </div>
+
+    <div *ngSwitchCase="2">
+        <app-edit-database [databaseIndex]="databaseIndex" (statusChange)="changeStatus($event)"></app-edit-database>
+    </div>
+
+    <div *ngSwitchCase="3">
+        <app-replicate-database [databaseIndex]="databaseIndex"
+                                (statusChange)="changeStatus($event)"></app-replicate-database>
+    </div>
+
+    <div *ngSwitchCase="4">
+        <app-login-database (statusChange)="changeStatus($event)"></app-login-database>
+    </div>
+
+</div>

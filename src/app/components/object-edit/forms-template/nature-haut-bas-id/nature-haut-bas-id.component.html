@@ -1,0 +1,22 @@
+<div class="sirs-field col col-50">
+  <label for="topNature" class="active">Nature haut</label>
+    <select id="topNature" name="topNature" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.natureHautId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.natureHautId === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.natureHautId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>
+<div class="sirs-field col col-50">
+  <label for="lowNature" class="active">Nature bas</label>
+    <select id="lowNature" name="lowNature" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.natureBasId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.natureBasId === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.natureBasId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>

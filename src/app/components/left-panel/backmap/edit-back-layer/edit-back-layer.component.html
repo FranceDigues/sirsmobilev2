@@ -1,0 +1,71 @@
+<form class="form-group full-height" #layerForm="ngForm">
+  <ion-header translucent>
+      <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Modifier une couche</ion-title>
+      </ion-toolbar>
+  </ion-header>
+  <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+      <ion-list>
+          <ion-item class="full-height">
+              <div class="add-back-layer col s12">
+              <label for="name">Titre</label>
+              <input id="name" type="text" name="name" class="validate" required  [(ngModel)]="backLayerForm.name" readonly/>
+              </div>
+          </ion-item>
+          <ion-item class="full-height">
+              <div class="add-back-layer col s12">
+              <label for="type" class="active">Type de service</label>
+                  <select id="type" name="type" class="browser-default" [(ngModel)]="backLayerForm.source.type">
+                      <option *ngFor="let service of servicesTypes" [value]="service.value">
+                          {{ service.label }}
+                      </option>
+                  </select>
+              </div>
+          </ion-item>
+          <ion-item class="full-height">
+              <div class="add-back-layer col s12">
+                  <label for="url" class="active">URL du service</label>
+                  <input id="url" type="url" class="validate" name="url" required [(ngModel)]="backLayerForm.source.url"/>
+              </div>
+          </ion-item>
+          <ion-item *ngIf="backLayerForm.source.type === 'TileWMS'">
+              <div class="add-back-layer col s12">
+                  <label for="version" class="active">Version du service</label>
+                  <select id="version" name="version" class="browser-default"
+                  [(ngModel)]="backLayerForm.source.params.version" (change)="prepareType()">
+                  <option *ngFor="let version of ['1.1.1', '1.3.0']" [value]="version" >
+                      {{ version }}
+                  </option>
+                  </select>
+              </div>
+          </ion-item>
+          <ion-item *ngIf="backLayerForm.source.type === 'TileWMS'">
+              <div class="add-back-layer col s12">
+                  <label for="layers">Couche(s) WMS</label>
+                  <input id="layers" type="text" name="layers" class="validate" required [(ngModel)]="backLayerForm.source.params.layers"/>
+              </div>
+          </ion-item>
+          <ion-item class="full-height">
+              <div class="add-back-layer col s12">
+                  <label for="logina">Identifiant dans le cas d'un WMS sécurisé</label>
+                  <input id="logina" type="text" name="logina" class="validate" [(ngModel)]="backLayerForm.authorization.login"/>
+              </div>
+          </ion-item>
+          <ion-item class="full-height">
+              <div class="add-back-layer col s12">
+                  <label for="pw">Mot de passe dans le cas d'un WMS sécurisé</label>
+                  <input id="password" type="password" name="password" class="validate" [(ngModel)]="backLayerForm.authorization.pw"/>
+              </div>
+          </ion-item>
+          <ion-item lines="none"></ion-item>
+      </ion-list>
+  </ion-content>
+  <ion-fab class="position-absolute" style="top: 85%;" horizontal="end" vertical="end" slot="fixed">
+      <ion-fab-button [disabled]="layerForm.invalid" color="danger" (click)="addBackLayer()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </ion-fab-button>
+  </ion-fab>
+</form>

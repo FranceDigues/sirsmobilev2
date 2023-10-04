@@ -1,0 +1,25 @@
+<div class="row">
+    <form-template-materiau-haut-bas-id></form-template-materiau-haut-bas-id>
+</div>
+<div class="row">
+    <form-template-nature-haut-bas-id></form-template-nature-haut-bas-id>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="height" class="active">Hauteur de la murette</label>
+      <input id="height" type="number" name="height" [(ngModel)]="EOS.objectDoc.hauteurMurette"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="width" class="active">Largeur</label>
+      <input id="width" type="number" name="width" [(ngModel)]="EOS.objectDoc.largeur"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>
+

@@ -1,0 +1,48 @@
+<div class="full-height" *ngIf="path === 'select'">
+  <ion-header translucent>
+    <ion-toolbar class="header-slide">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Fonds de carte</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+    <ion-list>
+      <ion-item-sliding *ngFor="let layer of backLayersList" side="end">
+        <ion-item (click)="backLayerService.setActiveBackLayer(layer)">
+          {{ layer.name }}
+          <span *ngIf="layer.cache && layer.cache.active"> (hors ligne)</span>
+          <ion-icon slot="end" *ngIf="layer.name === backLayerService.getActive().name" name="checkmark-outline"></ion-icon>
+        </ion-item>
+        <ion-item-options>
+          <ion-item-option style="width: 50px" color="light" [disabled]="!layer.cache" (click)="toggleOnlineMode(layer)">
+            <ion-icon *ngIf="showingDownloadCloudIcon(layer)" name="cloud-download-outline"></ion-icon>
+            <ion-icon *ngIf="showingOfflineCloudIcon(layer)" name="cloud-offline-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option style="width: 50px" color="light" (click)="goToCache(layer)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option *ngIf="layer.source.type!=='OSM'" style="width: 50px" color="light" (click)="goToEdit(layer)">
+            <ion-icon name="color-wand-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option *ngIf="layer.source.type!=='OSM'" style="width: 50px" color="danger" (click)="removeLayer(layer)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <ion-item lines="none"></ion-item>
+    </ion-list>
+  </ion-content>
+  <ion-fab class="position-absolute" style="top: 90%;" horizontal="end" vertical="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="goToAddBackLayer()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</div>
+<div class="full-height" *ngIf="path === 'addBackLayer'">
+  <left-slide-addbacklayer (slidePathChange)="changeSlidePath($event)"></left-slide-addbacklayer>
+</div>
+<div class="full-height" *ngIf="path === 'editBackLayer'">
+  <left-slide-editbacklayer (slidePathChange)="changeSlidePath($event)"></left-slide-editbacklayer>
+</div>

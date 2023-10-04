@@ -1,0 +1,76 @@
+<div class="sirs-sync">
+    <div fxLayout="column" fxLayoutAlign="center">
+        <div class="sirs-card">
+            <div class="sirs-card-content">
+                <h2 class="sirs-card-title">Synchronisation avec la base distante</h2>
+                <div *ngIf="syncService.status === 0">
+                    <div class="sirs-field">
+                        <span class="sirs-field-title">Nom</span>
+                        <p>{{ dbService.activeDB.name }}</p>
+                    </div>
+                    <div class="sirs-field">
+                        <span class="sirs-field-title">URL</span>
+                        <p>{{ dbService.activeDB.url }}</p>
+                    </div>
+                    <div class="sirs-field">
+                        <span class="sirs-field-title">Dernière synchronisation</span>
+                        <p>{{ (dbService.activeDB.lastSync | date:'dd/MM/yyyy HH:mm:ss') || 'Aucune' }}</p>
+                    </div>
+                </div>
+                <div style="height: 20%;" *ngIf="syncService.status === 1">
+                    <div>Cette opération peut prendre quelques minutes...</div>
+                    <div style="text-align: center;">
+                        <ion-spinner name="crescent"></ion-spinner>
+                    </div>
+                    <!-- <div class="progress">
+                        <div class="determinate" [style.width.%]="syncService.percent"></div>
+                    </div> -->
+                    <div fxLayout="row" fxLayoutAlign="space-between center" > 
+                        <span>Synchronisation avec la base de données...</span>
+                        <!-- <span class="right">{{ syncService.completion }}</span> -->
+                    </div>
+                </div>
+                <div *ngIf="syncService.status === 2">
+                    <p>Synchronisation effectuée avec succès.</p>
+                </div>
+                <div *ngIf="syncService.status === 3">
+                    <p>{{syncService.error}}</p>
+                </div>
+                <div class="sirs-card-action">
+                    <div *ngIf="syncService.status === 0" fxLayout="row" fxLayoutAlign="space-between center">
+                        <button mat-button (click)="goBack()">
+                            <ion-icon name="arrow-back"></ion-icon>
+                            <span>&nbsp;&nbsp;Retour</span>
+                        </button>
+                        <button mat-raised-button (click)="launch()">
+                            <ion-icon name="cloud-upload"></ion-icon>
+                            <span>LANCER LA SYNCHRONISATION</span>
+                        </button>
+                    </div>
+                    <div *ngIf="syncService.status === 1" class="text-right">
+                        <button mat-raised-button (click)="cancelSync()">
+                            <ion-icon name="close-outline"></ion-icon>
+                            <span>ANNULER LA SYNCHRONISATION</span>
+                        </button>
+                    </div>
+                    <div *ngIf="syncService.status === 2" class="text-right">
+                        <button mat-raised-button (click)="goBack()">
+                            <ion-icon name="checkmark-outline"></ion-icon>
+                            <span>TERMINER</span>
+                        </button>
+                    </div>
+                    <div *ngIf="syncService.status === 3" class="text-right">
+                        <button mat-button (click)="goBack()">
+                            <ion-icon name="arrow-back"></ion-icon>
+                            <span>&nbsp;&nbsp;Abandonner</span>
+                        </button>
+                        <button mat-raised-button color="warn" (click)="launch()">
+                            <ion-icon name="sync-outline"></ion-icon>
+                            <span>Réessayer</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <div class="full-height" *ngSwitchCase="'description'">
+    <div class="sirs-panel">
+      <div class="sirs-field-inline">
+          <span class="sirs-field-title">Numéro de désignation : </span>
+          <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+      </div>
+    </div>
+    <div class="sirs-section">
+        <div class="sirs-field">
+            <span class="sirs-field-title">Type</span>
+            <span class="sirs-field-value">Autre dépendance</span>
+        </div>
+        <div class="sirs-field">
+            <span class="sirs-field-title">Dépendance</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dependanceId"></span>
+        </div>
+        <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut === detailsObject.selectedObject.positionFin">
+            <span class="sirs-field-title">Position</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+        </div>
+        <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+            <span class="sirs-field-title">Position de début</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionDebut"></span>
+        </div>
+        <div class="sirs-field" *ngIf="detailsObject.selectedObject.positionDebut !== detailsObject.selectedObject.positionFin">
+            <span class="sirs-field-title">Position de fin</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionFin"></span>
+        </div>
+        <div class="sirs-field">
+            <span class="sirs-field-title">Commentaire</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+        </div>
+    </div>
+  </div>
+</div>

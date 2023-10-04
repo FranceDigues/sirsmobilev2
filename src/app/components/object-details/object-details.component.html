@@ -1,0 +1,68 @@
+<div *ngIf="objectDetails.detailsType === 'objectDetails'" class="full-height full-width">
+    <div>
+        <ion-toolbar class="header-slide">
+            <ion-buttons slot="start">
+                <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+            </ion-buttons>
+            <ion-title>Détail de l'objet</ion-title>
+        </ion-toolbar>
+    </div>
+
+    <div class="tabs-striped tabs-top">
+        <ul #tabs class="tabs tabs-sirs">
+            <li class="tab"><a [ngClass]="{active: activeTab === 'description'}" (click)="setActiveTab('description')">
+                    Description
+                </a></li>
+            <li class="tab" *ngIf="canShowObservationsTab()"><a [ngClass]="{active: activeTab === 'observations'}"
+                    (click)="setActiveTab('observations')">
+                    Observations
+                </a></li>
+            <li class="tab" *ngIf="canShowPrestationsTab()"><a [ngClass]="{active: activeTab === 'prestations'}"
+                    (click)="setActiveTab('prestations')">
+                    Prestations
+                </a></li>
+            <li class="tab" *ngIf="canShowDesordresTab()"><a [ngClass]="{active: activeTab === 'desordres'}"
+                    (click)="setActiveTab('desordres')">
+                    Désordres
+                </a></li>
+            <li class="tab" *ngIf="canShowPhotosTab()"><a [ngClass]="{active: activeTab === 'photos'}"
+                    (click)="setActiveTab('photos')">
+                    Photos
+                </a></li>
+        </ul>
+    </div>
+
+    <details-content [objectType]="objectType" [activeTab]="activeTab"></details-content>
+
+    <div *ngIf="isEditableLayer() && canShowEditionButtons() && activeTab === 'description'"
+        style="position: absolute; bottom: 0; right: 0; display:flex">
+        <ion-fab-button color="danger" (click)="editObject()" style="margin: 8px;">
+            <ion-icon name="pencil-outline"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button *ngIf="objectDetails.isDeletable" color="danger" (click)="removeObject()" style="margin: 8px;">
+            <ion-icon name="trash-outline"></ion-icon>
+        </ion-fab-button>
+    </div>
+
+    <div *ngIf="canAddObservation()">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+            <ion-fab-button color="danger" (click)="addObservation()">
+                <ion-icon name="add-outline"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    </div>
+    <div *ngIf="canAddPhoto()">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+            <ion-fab-button color="danger" (click)="addPhoto()">
+                <ion-icon name="add-outline"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    </div>
+</div>
+<div *ngIf="objectDetails.detailsType === 'observationDetails'" class="full-height full-width">
+    <observation-details (detailsTypeChange)="objectDetails.detailsType = 'objectDetails'"></observation-details>
+</div>
+
+<div *ngIf="objectDetails.detailsType === 'photoDetails'" class="full-height full-width">
+    <photo-details (detailsTypeChange)="objectDetails.detailsType = 'objectDetails'"></photo-details>
+</div>

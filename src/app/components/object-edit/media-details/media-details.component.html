@@ -1,0 +1,14 @@
+<div class="wrap" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="15px">
+    <div style="overflow-x: auto;" fxLayout="row" fxLayoutAlign="start center"
+         fxLayoutGap="10px">
+        <div *ngFor="let photo of photos;let index=index">
+            <photo-quicklook [photo]="photo" [objectDoc]="objectDoc" (removePhotoEvent)="removePhoto($event)"></photo-quicklook>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <ion-button color="medium" (click)="openMediaForm()">
+            <mat-icon>perm_media</mat-icon>
+            <span>&nbsp;&nbsp;Ajouter un media</span>
+        </ion-button>
+    </div>
+</div>

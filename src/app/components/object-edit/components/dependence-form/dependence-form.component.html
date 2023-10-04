@@ -1,0 +1,118 @@
+<div class="common">
+    <div class="sirs-field">
+        <label for="designation" class="active label-edit">Désignation</label>
+        <input id="designation" type="text" class="validate"
+               [(ngModel)]="EOS.objectDoc.designation" name="designation"
+               placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
+    </div>
+
+    <div *ngIf="EOS.objectType !== 'TraitAmenagementHydraulique' && (EOS.isNew || EOS.isClosed)"
+         class="switch">
+        <select id="objectType" class="browser-default" [(ngModel)]="EOS.objDependanceType"
+                name="objectType" (change)="EOS.changeObjectTypeDependance()">
+            <option [value]="'point'" [selected]="EOS.objDependanceType === 'point'">
+                Objet ponctuel
+            </option>
+            <option [value]="'line'" [selected]="EOS.objDependanceType === 'line'">
+                Objet linéaire
+            </option>
+            <option [value]="'polygon'" [selected]="EOS.objDependanceType === 'polygon'">
+                Objet polygonale
+            </option>
+        </select>
+    </div>
+
+
+    <div class="sirs-field-inline" fxLayout="row"
+         fxLayoutAlign="space-between center">
+        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+             class="sirs-field-title" *ngIf="EOS.objDependanceType === 'polygon'">
+            <div>
+                Dessiner un polygone
+            </div>
+            <button class="option-button" (click)="drawPolygon()">
+                <ion-icon class="option-button-icon" name="triangle-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+             class="sirs-field-title" *ngIf="EOS.objDependanceType === 'point'">
+            <div>
+                Position : {{ EOS.getStartPosDependance() }}
+            </div>
+            <div>
+                <button class="option-button" (click)="EOS.locateMe()"
+                        *ngIf="EOS.objDependanceType === 'point'">
+                    <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                </button>
+                <button class="option-button" (click)="selectPos()"
+                        *ngIf="EOS.objDependanceType === 'point'">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+
+        <div style="width: 100%" class="sirs-field-title"
+             *ngIf="EOS.objDependanceType === 'line'">
+            <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center">
+                <div>
+                    Position de début : {{ EOS.getStartPosDependance() }}
+                </div>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
+                        *ngIf="EOS.objDependanceType === 'line'">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+            </div>
+            <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center">
+                <div>
+                    Position de fin : {{ EOS.getEndPosDependance() }}
+                </div>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                        *ngIf="EOS.objDependanceType === 'line'">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" *ngIf="EOS.objectType === 'DesordreDependance'">
+    <div class="sirs-field col col-100">
+        <label for="dependance" class="active edit-label">Liste des Dependances</label>
+        <select id="dependance" name="dependance" class="browser-default"
+                [(ngModel)]="EOS.objectDoc['dependanceId']">
+            <option [value]="undefined" [selected]="EOS.objectDoc['dependanceId'] === undefined" selected>Non renseigné</option>
+            <option *ngFor="let d of EOS.dependances"
+                    [selected]="EOS.objectDoc.dependanceId === d.id"
+                    (change)="EOS.objectDoc.dependanceId = d.id" [value]="d.id">
+                {{ d.doc.libelle ? d.doc.libelle : (d.doc.designation ? d.doc.designation : d.id)}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="row" *ngIf="EOS.isAhObjectType()">
+    <div class="sirs-field col col-100">
+        <label for="ah" class="active edit-label">Liste des Aménagaments
+            hydrauliques</label>
+        <select id="ah" name="ah" class="browser-default"
+                [(ngModel)]="EOS.objectDoc['amenagementHydrauliqueId']">
+            <option [value]="undefined" [selected]="EOS.objectDoc['amenagementHydrauliqueId'] === undefined" selected>Non renseigné</option>
+            <option *ngFor="let a of EOS.amenagementHydrauliques" [selected]="EOS.ahSelected(a)"
+                    (change)="EOS.itChange(a)" [value]="a.id">
+                {{ a.doc.libelle ? a.doc.libelle : (a.doc.designation ? a.doc.designation : a.id)}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="sirs-field col col-100">
+        <label for="date_fin" class="active edit-label">La date de Fin</label>
+        <input id="date_fin" type="date" [(ngModel)]="EOS.dateWrapper" name="date_fin"
+               (change)="EOS.formatDate()"/>
+    </div>
+</div>

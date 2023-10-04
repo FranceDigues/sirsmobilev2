@@ -1,0 +1,59 @@
+<div class="mesures">
+  <div class="mesure-labels row">
+      <div class="sirs-field col">
+          <label class="active">Référence hauteur</label>
+      </div>
+      <div class="sirs-field col">
+          <label class="active">Hauteur</label>
+      </div>
+      <div class="sirs-field col col-25">
+          <!-- Empty -->
+      </div>
+  </div>
+  <div class="mesure-values row" *ngFor="let m of EOS.objectDoc.mesures; index as index">
+    <div class="sirs-field col">
+        <select id="width" name="width" class="browser-default"
+                [(ngModel)]="m.referenceHauteurId">
+            <option [value]="undefined" [selected]="m.referenceHauteurId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let r of refs.RefReferenceHauteur | refSort: EOS.showText('fullName');" [value]="r.id"
+                    [selected]="m.referenceHauteurId === r.id">
+                {{ r | docToString | async }}
+            </option>
+        </select>
+    </div>
+    <div class="sirs-field col">
+      <input type="number" [(ngModel)]="m.hauteur"/>
+    </div>
+    <div class="sirs-field col col-25">
+      <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.mesures.length === 1"
+              (click)="EOS.objectDoc.mesures.splice(index, 1)">
+        <ion-icon name="remove-outline"></ion-icon>
+      </button>
+      <button class="btn pink waves-effect waves-teal"
+              (click)="EOS.objectDoc.mesures.splice(index + 1, 0, createMeasure())">
+            <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="scale" class="active">Echelle limnimétrique</label>
+      <select id="scale" name="scale" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.echelleLimnimetriqueId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.echelleLimnimetriqueId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of refs.EchelleLimnimetrique | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.echelleLimnimetriqueId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+      <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>

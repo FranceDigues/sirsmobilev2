@@ -1,0 +1,56 @@
+<!--Simple type-->
+<div class="row" *ngFor="let p of primitives">
+  <div class="sirs-field col col-100">
+    <label [for]="p.name" class="active">{{ p.label }}</label>
+    <div *ngIf="p.type === 'checkbox'; else elseBlock">
+      <ion-checkbox [id]="p.name" [name]="p.name" [(ngModel)]="EOS.objectDoc[p.name]" style="--background: white;">
+      </ion-checkbox>
+    </div>
+    <ng-template #elseBlock>
+      <input [id]="p.name" [name]="p.name" [type]="p.type" [min]="p.min" [(ngModel)]="EOS.objectDoc[p.name]" />
+    </ng-template>
+  </div>
+</div>
+
+<!--Single reference type-->
+<div class="row" *ngFor="let s of singleReferences">
+  <!--Specific treatment for categorieDesordreId-->
+  <div *ngIf="s.name === 'categorieDesordreId'; else second" class="sirs-field col col-100">
+    <label [for]="s.name" class="active">{{s.label}}</label>
+    <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]"
+      (change)="changeCategorie()">
+      <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
+      <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+        [selected]="isSelected(s, r)">
+        {{ r | docToString | async }}
+      </option>
+    </select>
+  </div>
+  <!--Specific treatment for typeDesordreId-->
+  <ng-template #second>
+    <div *ngIf="s.name === 'typeDesordreId'; else third" class="sirs-field col col-100">
+      <label [for]="s.name" class="active">{{s.label}}</label>
+      <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]"
+        (change)="changeType()">
+        <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of filteredTypeDesordreList | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+          [selected]="isSelected(s, r)">
+          {{ r | docToString | async }}
+        </option>
+      </select>
+    </div>
+  </ng-template>
+  <!--All other cases-->
+  <ng-template #third>
+    <div class="sirs-field col col-100">
+      <label [for]="s.name" class="active">{{s.label}}</label>
+      <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
+        <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+          [selected]="isSelected(s, r)">
+          {{ r | docToString | async }}
+        </option>
+      </select>
+    </div>
+  </ng-template>
+</div>

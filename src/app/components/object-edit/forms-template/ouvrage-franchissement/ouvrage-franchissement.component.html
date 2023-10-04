@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="width" class="active">Largeur</label>
+      <input id="width" type="number" name="width" [(ngModel)]="EOS.objectDoc.largeur"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="orientation" class="active">Orientation de l'ouvrage</label>
+      <select id="orientation" name="orientation" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.orientationOuvrageId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.orientationOuvrageId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefOrientationOuvrage | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.orientationOuvrageId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-usage-id></form-template-usage-id>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="topCoating" class="active">Revêtement Haut</label>
+      <select id="topCoating" name="topCoating" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.revetementHautId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.revetementHautId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.revetementHautId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="lowCoating" class="active">Revêtement Bas</label>
+      <select id="lowCoating" name="lowCoating" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.revetementBasId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.revetementBasId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefRevetement | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.revetementBasId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="workType" class="active">Type d'ouvrage</label>
+      <select id="workType" name="workType" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeOuvrageFranchissementId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeOuvrageFranchissementId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefOuvrageFranchissement | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeOuvrageFranchissementId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="topPosition" class="active">Position haut</label>
+      <select id="topPosition" name="topPosition" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.positionHautId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.positionHautId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.positionHautId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="lowPosition" class="active">Position bas</label>
+      <select id="lowPosition" name="lowPosition" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.positionBasId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.positionBasId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.positionBasId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>

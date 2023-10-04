@@ -1,0 +1,29 @@
+<div class="full-height" *ngIf="status === 'general'">
+  <ion-header translucent>
+    <ion-toolbar class="header-slide">
+      <ion-title style="text-align: center;">Objets sélectionnés</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="scroll-contents">
+    <ion-list *ngIf="featuresCollection.length > 0">
+      <ion-item *ngFor="let feat of featuresCollection" (click)="openDetails(feat)"
+      [ngClass]="{ 'visited': feat.get('visited') }">
+        <div class="layer-title">{{ feat.get('designation') }}</div>
+        <div class="layer-categories">{{ feat.get('categories').join('/') || 'Sans catégorie' }}</div>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngIf="features.length > 0">
+      <ion-item *ngFor="let feat of features" (click)="openDetails(feat)"
+      [ngClass]="{ 'visited': feat.get('visited') }">
+        <ion-icon slot="start" *ngIf="feat.get('edition')" name="create-outline"></ion-icon>
+        <div class="layer-title">{{ feat.get('designation') }}</div>
+        <div *ngIf="!feat.get('designation')" class="layer-title">Temp {{ feat.get('id') }}</div>
+        <div *ngIf="feat.get('subTitle')" class="layer-categories">{{ feat.get('id') | subTitleVegetation | async }}</div>
+        <div *ngIf="!feat.get('subTitle') && feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</div>
+<div class="full-height" *ngIf="status === 'details'">
+  <right-slide-details-objects (statusChange)="changeStatus($event)"></right-slide-details-objects>
+</div>

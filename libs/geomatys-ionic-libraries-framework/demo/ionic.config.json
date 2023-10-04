@@ -1,0 +1,8 @@
+{
+  "name": "Geomatys Ionic Libraries",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

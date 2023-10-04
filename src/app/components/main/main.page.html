@@ -1,0 +1,71 @@
+<ion-menu swipeGesture="false" side="start" menuId="left-slider" contentId="slide" type="push">
+    <left-panel class="full-height"></left-panel>
+</ion-menu>
+
+<ion-menu swipeGesture="false" side="end" menuId="right-slider" contentId="slide" type="push">
+    <right-panel [slidePath]="pathRightSlide" class="full-height"></right-panel>
+</ion-menu>
+
+<div class="map full-height" id="slide">
+    <div class="nav-wrapper">
+        <nav class="navbar-custom">
+            <ul id="navbarToggler" class="left">
+                <li>
+                    <a *ngIf="editionLayerService.editionLayer && editionLayerService.editionLayer.getVisible()">Mode
+                        Edition</a>
+                </li>
+                <li>
+                    <div class="gps-infos" *ngIf="geolocationService.getLastGPSUpdate()">
+                        <span class="gps-text">Précision du signal GPS :
+                            {{ geolocationService.getGPSAccuracy() }}&nbsp;m<br>&nbsp;{{ geolocationService.getLastGPSUpdate() }}</span>
+                    </div>
+                </li>
+            </ul>
+            <ul id="navbar-buttons" class="right">
+                <li>
+                    <a *ngIf="geolocationService.isEnabled" class="header-icon" (click)="locateMe()">
+                        <ion-icon name="navigate-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="zoomToCurrentLocation()">
+                        <ion-icon name="flag-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="refresh()">
+                        <ion-icon name="refresh-outline"></ion-icon>
+                    </a>
+                </li>
+                <li>
+                    <a class="header-icon" (click)="logout()">
+                        <ion-icon name="power-outline"></ion-icon>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="map">
+        <div id="map" #map></div>
+        <div class="left-slider">
+            <img src="../../../assets/img/slider1.png" (click)="handleSliderLeft()" alt="Left side slide" />
+        </div>
+        <div class="right-slider">
+            <img src="../../../assets/img/slider2.png" (click)="handleSliderRight()" alt="Right side slide" />
+        </div>
+    </div>
+    <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+        <ion-fab-button color="danger">
+            <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="start">
+            <ion-fab-button color="secondary">
+                <ion-icon name="add" (click)="openObjectsCreate()"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="secondary">
+                <ion-icon name="analytics-outline" (click)="openShoreLine()"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+</div>

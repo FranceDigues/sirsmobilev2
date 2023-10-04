@@ -1,0 +1,64 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Définir une position via une borne</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+  <div>
+    <label>Système de repérage: </label>
+    <select id="sr" class="browser-default" *ngIf="!endSR"
+    [(ngModel)]="systemeReperageId" name="sr" (change)="selectSR()" >
+    <!-- ! Take care between systemReperage and systemeReperage which are not the same -->
+      <option *ngFor="let systemReperage of systemeReperageList" [value]="systemReperage.value._id"
+      (change)="selectSR()" [selected]="systemeReperageId === systemReperage.value._id">
+        {{ systemReperage.value.libelle }}
+      </option>
+    </select>
+    <p *ngIf="endSR">{{ endSR }}</p>
+  </div>
+
+  <div *ngIf="systemeReperage">
+    <label>Borne du système de repérage : </label>
+    <select id="bsr" class="browser-default" [(ngModel)]="data.borneId"
+    (change)="updateBorneLibelle()" name="bsr">
+      <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
+      [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
+      [selected]="data.borneId === systemeReperageBorne.borneId">
+        {{ systemeReperageBorne.libelle }}
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="systemeReperage">
+    <label for="distance" class="active">Distance à la borne (en mètre): </label>
+    <input id="distance" type="number" class="validate"
+           [(ngModel)]="data.borne_distance" name="distance"
+           placeholder=""/>
+  </div>
+
+  <div *ngIf="systemeReperage">
+    <label for="pos" class="active">Position de l'élément par rapport à la borne : </label>
+    <select id="pos" class="browser-default"
+            [(ngModel)]="data.borne_aval" name="pos">
+        <option [value]="'false'"
+                [selected]="data.borne_aval === 'false'">
+            Aval
+        </option>
+        <option [value]="'true'"
+                [selected]="data.borne_aval === 'true'">
+            Amont
+        </option>
+    </select>
+  </div>
+</ion-content>
+<ion-footer slot="end">
+  <div class="right" style="padding: 0;">
+    <button class="waves-effect waves-light btn" (click)="validate()">
+      Valider le choix
+      <ion-icon slot="end" name="thumbs-up-outline"></ion-icon>
+    </button>
+  </div>
+</ion-footer>

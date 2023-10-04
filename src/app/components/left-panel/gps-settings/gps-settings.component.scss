@@ -1,0 +1,20 @@
+.gps-settings-block {
+  padding: 10px;
+
+  .tgl-block {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+  .btn-block {
+    display: flex;
+    justify-content: end;
+  }
+
+  .warning-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

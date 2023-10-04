@@ -1,0 +1,24 @@
+<div fxLayout="column" class="full-height">
+    <ion-header translucent>
+        <ion-toolbar class="header-slide">
+            <ion-title style="text-align: center;">Création d'Objets</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div fxFlex class="full-height">
+        <ion-content class="scroll-contents">
+            <ion-list>
+                <ion-radio-group>
+                    <ion-item
+                            *ngFor="let layer of (appLayersService.getFavorites() | filterPipe: {editable: true})">
+                        {{ layer.title }}
+                        <ion-radio color="secondary" slot="end" (click)="selectLayer(layer)"></ion-radio>
+                    </ion-item>
+                    <ion-item lines="none"></ion-item>
+                </ion-radio-group>
+            </ion-list>
+        </ion-content>
+        <ion-button class="button-footer" *ngIf="showAddButtons()" expand="full" color="tertiary"
+                    (click)="addObject()">Ajouter un objet
+        </ion-button>
+    </div>
+</div>

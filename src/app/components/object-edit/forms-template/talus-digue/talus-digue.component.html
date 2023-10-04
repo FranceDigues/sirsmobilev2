@@ -1,0 +1,34 @@
+<div class="row">
+  <form-template-materiau-haut-bas-id></form-template-materiau-haut-bas-id>
+</div>
+<div class="row">
+    <form-template-nature-haut-bas-id></form-template-nature-haut-bas-id>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="topThickness" class="active">Epaisseur du sommet</label>
+      <input id="topThickness" type="number" name="topThickness" [(ngModel)]="EOS.objectDoc.epaisseurSommet"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="innerSlope" class="active">Pente intérieure</label>
+      <input id="innerSlope" type="number" name="innerSlope" [(ngModel)]="EOS.objectDoc.penteInterieure"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="topLength" class="active">Longueur rampant haut</label>
+      <input id="topLength" type="number" name="topLength" [(ngModel)]="EOS.objectDoc.longueurRampantHaut"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="lowLength" class="active">Longueur rampant bas</label>
+      <input id="lowLength" type="number" name="lowLength" [(ngModel)]="EOS.objectDoc.longueurRampantBas"/>
+  </div>
+</div>
+<div class="row">
+  <form-template-fonction-haut-bas-id></form-template-fonction-haut-bas-id>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>

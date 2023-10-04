@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle" />
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="damSide" class="active">Type d'ouvrage</label>
+    <select id="damSide" name="damSide" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.typeOuvrageTelecomEnergieId">
+      <option [value]="undefined" [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === undefined" selected>Non renseigné</option>
+      <option *ngFor="let r of EOS.refs.RefOuvrageTelecomEnergie | refSort: EOS.showText('fullName');" [value]="r.id"
+              [selected]="EOS.objectDoc.typeOuvrageTelecomEnergieId === r.id">
+        {{ r | docToString | async }}
+      </option>
+    </select>
+  </div>
+</div>
+<div class="sirs-field col col-100" *ngIf="EOS.objectDoc.reseauTelecomEnergieIds && EOS.objectDoc.reseauTelecomEnergieIds.length>0">
+  <label class="active">Réseau télécom. ou énergie associé</label>
+  <div class="row sirs-field-multi" *ngFor="let v of EOS.objectDoc.reseauTelecomEnergieIds; index as index">
+    <div class="col col-75">
+      <select class="browser-default"
+              [(ngModel)]="EOS.objectDoc.reseauTelecomEnergieIds[index]">
+        <option [value]="undefined" [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.ReseauTelecomEnergie | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.reseauTelecomEnergieIds[index] === r.id">
+          {{ r | docToString | async }}
+        </option>
+      </select>
+    </div>
+    <div class="col col-25">
+      <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.reseauTelecomEnergieIds.length === 1"
+        (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index, 1)">
+        <ion-icon name="remove-outline"></ion-icon>
+      </button>
+      <button class="btn pink waves-effect waves-teal"
+        (click)="EOS.objectDoc.reseauTelecomEnergieIds.splice(index + 1, 0, EOS.refs.ReseauTelecomEnergie[0].id)">
+        <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>
+<div class="sirs-field">
+  <label class="active">Sécurité</label>
+  <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.securiteId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
+      [selected]="EOS.objectDoc.securiteId === r.id">
+      {{ r | docToString | async }}
+    </option>
+  </select>
+</div>
+<div class="sirs-field">
+  <label for="dimensionVerticale" class="active">Dimension vertical/diamètre (mm)</label>
+  <input id="dimensionVerticale" name="dimensionVerticale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionVerticale" />
+</div>
+<div class="sirs-field">
+  <label for="dimensionHorizontale" class="active">Dimension horizontale (mm)</label>
+  <input id="dimensionHorizontale" name="dimensionHorizontale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionHorizontale" />
+</div>

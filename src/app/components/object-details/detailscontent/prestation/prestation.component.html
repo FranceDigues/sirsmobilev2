@@ -1,0 +1,66 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <div *ngSwitchCase="'description'">
+      <div class="sirs-panel">
+          <div class="sirs-field-inline">
+              <span class="sirs-field-title">Numéro de désignation : </span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation || 'Non définie'"></span>
+          </div>
+      </div>
+      <div class="sirs-section">
+          <div class="sirs-field">
+              <span class="sirs-field-title">Libelle</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de début</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de fin</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Position Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Source Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.sourceId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Tronçon Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.linearId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Type de Prestation Id</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.typePrestationId || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Commentaire</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Coût Globale</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutGlobal || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Coût Metre</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutMetre || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Réalisation Interne</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.realisationInterne || 'Non définie'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Réalisation Interne</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.realisationInterne || 'Non définie'"></span>
+          </div>
+      </div>
+  </div>
+  <div *ngSwitchCase="'observations'">
+      <observations-generic></observations-generic>
+  </div>
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+      <desordres-generic></desordres-generic>
+  </div>
+</div>

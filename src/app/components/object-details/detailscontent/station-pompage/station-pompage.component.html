@@ -1,0 +1,42 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+      <div class="sirs-panel">
+          <div class="sirs-field-inline">
+              <span class="sirs-field-title">Numéro de désignation : </span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+          </div>
+      </div>
+      <div class="sirs-section">
+          <div class="sirs-field">
+              <span class="sirs-field-title">Libellé</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Réseau hydraulique associé</span>
+              <span class="sirs-field-value" [textContent]=""></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Position</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Côté</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Commentaire</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+          </div>
+      </div>
+  </div>
+  <div *ngSwitchCase="'observations'">
+      <observations-generic></observations-generic>
+  </div>
+  <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+      <prestations-generic></prestations-generic>
+  </div>
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+      <desordres-generic></desordres-generic>
+  </div>
+</div>

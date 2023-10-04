@@ -1,0 +1,133 @@
+<ion-content class="full-height" [ngSwitch]="objectType">
+    <div class="full-height" *ngSwitchCase="'AireStockageDependance'">
+        <object-details-content-aire-stockage-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-aire-stockage-dependance>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageRevanche'">
+        <object-details-content-ouvrage-revanche class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-revanche>
+    </div>
+    <div class="full-height" *ngSwitchCase="'AutreDependance'">
+        <object-details-content-autre-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-autre-dependance>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageTelecomEnergie'">
+        <object-details-content-ouvrage-telecom-energie class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-telecom-energie>
+    </div>
+    <div class="full-height" *ngSwitchCase="'BorneDigue'">
+        <object-details-content-borne-digue class="full-height" [activeTab]="activeTab" ></object-details-content-borne-digue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageVoirieDependance'">
+        <object-details-content-ouvrage-voirie-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-voirie-dependance>
+    </div>
+    <div class="full-height" *ngSwitchCase="'CheminAccesDependance'">
+        <object-details-content-chemin-acces-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-chemin-acces-dependance>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageVoirie'">
+        <object-details-content-ouvrage-voirie class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-voirie>
+    </div>
+    <div class="full-height" *ngSwitchCase="'Crete'">
+        <object-details-content-crete class="full-height" [activeTab]="activeTab" ></object-details-content-crete>
+    </div>
+    <div class="full-height" *ngSwitchCase="'PiedDigue'">
+        <object-details-content-pied-digue class="full-height" [activeTab]="activeTab" ></object-details-content-pied-digue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'DesordreDependance'">
+        <object-details-content-desordre-dependance class="full-height" [activeTab]="activeTab" ></object-details-content-desordre-dependance>
+    </div>
+    <div class="full-height" *ngSwitchCase="'Prestation'">
+        <object-details-content-prestation class="full-height" [activeTab]="activeTab" ></object-details-content-prestation>
+    </div>
+    <!-- THIS HEIGHT PROBLEM IS FOUND EVERYWHERE AND SHOULD BE FIXED ON A BIGGER SCALE !!! -->
+    <div style="height: 88%; overflow: scroll;" *ngSwitchCase="'Desordre'"> <!-- height of 88% as 100% gets out of screen and the list of observations might be very long -->
+        <object-details-content-desordre class="full-height"  [activeTab]="activeTab" ></object-details-content-desordre>
+    </div>
+    <div class="full-height" *ngSwitchCase="'ReseauHydrauliqueCielOuvert'">
+        <object-details-content-reseau-hydraulique-ciel-ouvert class="full-height" [activeTab]="activeTab" ></object-details-content-reseau-hydraulique-ciel-ouvert>
+    </div>
+    <div class="full-height" *ngSwitchCase="'EchelleLimnimetrique'">
+        <object-details-content-echelle-limnimetrique class="full-height" [activeTab]="activeTab" ></object-details-content-echelle-limnimetrique>
+    </div>
+    <div class="full-height" *ngSwitchCase="'ReseauHydrauliqueFerme'">
+        <object-details-content-reseau-hydraulique-ferme class="full-height" [activeTab]="activeTab" ></object-details-content-reseau-hydraulique-ferme>
+    </div>
+    <div class="full-height" *ngSwitchCase="'LaisseCrue'">
+        <object-details-content-laisse-crue class="full-height" [activeTab]="activeTab" ></object-details-content-laisse-crue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'ReseauTelecomEnergie'">
+        <object-details-content-reseau-telecom-energie class="full-height" [activeTab]="activeTab" ></object-details-content-reseau-telecom-energie>
+    </div>
+    <div class="full-height" *ngSwitchCase="'LargeurFrancBord'">
+        <object-details-content-largeur-franc-bord class="full-height" [activeTab]="activeTab" ></object-details-content-largeur-franc-bord>
+    </div>
+    <div class="full-height" *ngSwitchCase="'SommetRisberme'">
+        <object-details-content-sommet-risberne class="full-height" [activeTab]="activeTab" ></object-details-content-sommet-risberne>
+    </div>
+    <div class="full-height" *ngSwitchCase="'MonteeEaux'">
+        <object-details-content-montee-eaux class="full-height" [activeTab]="activeTab" ></object-details-content-montee-eaux>
+    </div>
+    <div class="full-height" *ngSwitchCase="'StationPompage'">
+        <object-details-content-station-pompage class="full-height" [activeTab]="activeTab" ></object-details-content-station-pompage>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvertureBatardable'">
+        <object-details-content-ouverture-batardable class="full-height" [activeTab]="activeTab" ></object-details-content-ouverture-batardable>
+    </div>
+    <div class="full-height" *ngSwitchCase="'TalusDigue'">
+        <object-details-content-talus-digue class="full-height" [activeTab]="activeTab" ></object-details-content-talus-digue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageFranchissement'">
+        <object-details-content-ouvrage-franchissement class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-franchissement>
+    </div>
+    <div class="full-height" *ngSwitchCase="'TalusRisberme'">
+        <object-details-content-talus-risberme class="full-height" [activeTab]="activeTab" ></object-details-content-talus-risberme>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageHydrauliqueAssocie'">
+        <object-details-content-ouvrage-hydraulique-associe class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-hydraulique-associe>
+    </div>
+    <div class="full-height" *ngSwitchCase="'TronconDigue'">
+        <object-details-content-troncon-digue class="full-height" [activeTab]="activeTab" ></object-details-content-troncon-digue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageHydroAssocie'">
+        <object-details-content-ouvrage-hydro-associe class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-hydro-associe>
+    </div>
+    <div class="full-height" *ngSwitchCase="'VoieAcces'">
+        <object-details-content-voie-acces class="full-height" [activeTab]="activeTab" ></object-details-content-voie-acces>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageParticulier'">
+        <object-details-content-ouvrage-particulier class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-particulier>
+    </div>
+    <div class="full-height" *ngSwitchCase="'VoieDigue'">
+        <object-details-content-voie-digue class="full-height" [activeTab]="activeTab" ></object-details-content-voie-digue>
+    </div>
+    <div class="full-height" *ngSwitchCase="'AmenagementHydraulique'">
+        <object-details-content-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-amenagement-hydraulique>
+    </div>
+    <div class="full-height" *ngSwitchCase="'PrestationAmenagementHydraulique'">
+        <object-details-content-prestation-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-prestation-amenagement-hydraulique>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OuvrageAssocieAmenagementHydraulique'">
+        <object-details-content-ouvrage-associe-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-ouvrage-associe-amenagement-hydraulique>
+    </div>
+    <div class="full-height" *ngSwitchCase="'StructureAmenagementHydraulique'">
+        <object-details-content-structure-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-structure-amenagement-hydraulique>
+    </div>
+    <div class="full-height" *ngSwitchCase="'OrganeProtectionCollective'">
+        <object-details-content-organe-protection-collective class="full-height" [activeTab]="activeTab" ></object-details-content-organe-protection-collective>
+    </div>
+    <div class="full-height" *ngSwitchCase="'TraitAmenagementHydraulique'">
+        <object-details-content-trait-amenagement-hydraulique class="full-height" [activeTab]="activeTab" ></object-details-content-trait-amenagement-hydraulique>
+    </div>
+    <!-- Module Végétation -->
+    <div class="full-height" *ngSwitchCase="'ArbreVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'HerbaceeVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'InvasiveVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'PeuplementVegetation'">
+        <vegetation-details class="full-height" [activeTab]="activeTab" [objectType]="objectType"></vegetation-details>
+    </div>
+    <div class="full-height" *ngSwitchCase="'ParcelleVegetation'">
+        <parcelle-vegetation-details class="full-height" [activeTab]="activeTab"></parcelle-vegetation-details>
+    </div>
+</ion-content>

@@ -1,0 +1,47 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tronçon</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cleanAll()" class="garbage-button">
+          <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="systemeEndiguementService.systemEndiguements">
+  <div *ngIf="view === 'SE'">
+    <p style="padding: 5px;"><b>Choisir un système d'endiguement : </b></p>
+    <!--La liste de tous les systéme d'endigument dans la base-->
+    <ion-list>
+      <ion-item *ngFor="let SystemeEndiguement of systemeEndiguementService.systemEndiguements | sortByLibelleValue" (click)="changeView('D'); putSE(SystemeEndiguement.id)">
+        {{ SystemeEndiguement.value.libelle }}
+      </ion-item>
+      <ion-item lines="none"></ion-item>
+    </ion-list>
+  </div>
+  <div *ngIf="view === 'D'">
+    <p style="padding: 5px;"><b>Choisir une Digue : </b></p>
+      <!--La liste de tous les digues  de ce systéme d'endigument-->
+      <ion-list>
+        <ion-item *ngFor="let digue of digueController.digues | sortByLibelleValue" (click)="changeView('T'); putD(digue.id)">
+          {{ digue.value.libelle }}
+        </ion-item>
+        <ion-item lines="none"></ion-item>
+      </ion-list>
+  </div>
+  <div *ngIf="view === 'T'">
+    <p style="padding: 5px;"><b>Choisir les tronçons favoris</b></p>
+    <!--La liste de tous les tronçons d'un digue-->
+    <ion-list >
+      <ion-item *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue" (click)="tronconCtrl.toggleLayer(troncon)">
+        {{troncon.value.libelle}}
+        <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" slot="end">
+        </ion-checkbox>
+      </ion-item>
+      <ion-item lines="none"></ion-item>
+    </ion-list>
+  </div>
+</ion-content>

@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="heightRef" class="active">Référence hauteur</label>
+      <select id="heightRef" name="heightRef" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.referenceHauteurId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.referenceHauteurId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefReferenceHauteur | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.referenceHauteurId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="height" class="active">Hauteur</label>
+      <input id="height" name="height" type="number" [(ngModel)]="EOS.objectDoc.hauteur"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="height" class="active">Position de la laisse</label>
+    <input id="height" name="height" type="text" [(ngModel)]="EOS.objectDoc.positionLaisse"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>

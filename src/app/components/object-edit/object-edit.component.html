@@ -1,0 +1,76 @@
+<!-- Form -->
+<div class="full-height edit-screen" *ngIf="view === 'form' && EOS.objectDoc && EOS.refs">
+    <div class="edit-object">
+        <ion-content [scrollEvents]="tab === 'fields'">
+            <div fxLayout="column" fxLayoutAlign="center">
+                <form class="sirs-card" #objectForm="ngForm" style="overflow-x: hidden;">
+                    <div class="sirs-card-content">
+                        <h2 *ngIf="EOS.isNew" class="sirs-card-title">Nouveau/Nouvelle {{ displayName(EOS.type) }}</h2>
+                        <h2 *ngIf="!EOS.isNew && EOS.isClosed" class="sirs-card-title">Détail
+                            d'un(e) {{ EOS.type }}</h2>
+                        <!-- Tabs -->
+                        <div class="sirs-nav-tabs" *ngIf="isActiveTabs()">
+                            <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'fields'}"
+                                  (click)="setTab('fields')">Attributs</span>
+                            <span class="sirs-tab waves-effect waves-teal" [ngClass]="{active: tab === 'medias'}"
+                                  (click)="setTab('medias')">Medias</span>
+                        </div>
+                        <!-- Fields Part -->
+                        <div class="full-height full-width" *ngIf="tab === 'fields'">
+
+                            <ng-container *ngIf="EOS.isDependance()">
+                                <app-dependence-form (drawPolygonEvent)="drawPolygon()" (selectPosEvent)="selectPos()"></app-dependence-form>
+                            </ng-container>
+
+                            <ng-container *ngIf="EOS.isVegetation()">
+                                <app-vegetation-form (drawPolygonEvent)="drawPolygon()" (selectPosEvent)="selectPos()"></app-vegetation-form>
+                            </ng-container>
+
+                            <ng-container *ngIf="!EOS.isDependance() && !EOS.isVegetation()">
+                                <app-default-form (selectPosBySREvent)="selectPosBySR()" (selectPosEvent)="selectPos()"></app-default-form>
+                            </ng-container>
+
+                            <forms-template class="full-height" [type]="EOS.type"></forms-template>
+
+                            <div class="sirs-field">
+                                <label for="commentaire" class="active edit-label">Commentaire</label>
+                                <textarea id="commentaire" class="materialize-textarea" name="commentaire"
+                                          [(ngModel)]="EOS.objectDoc.commentaire"></textarea>
+                            </div>
+
+                        </div>
+                        <!-- Medias Part -->
+                        <div class="full-height full-width" *ngIf="tab === 'medias'">
+                            <app-media-details [photos]="EOS.objectDoc.photos" [objectDoc]="EOS.objectDoc"
+                                               (changeView)="setView($event)"></app-media-details>
+                        </div>
+                    </div>
+                    <div class="sirs-card-action">
+                        <a (click)="backToMain()" class="btn-flat waves-effect waves-teal">
+                            <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>
+                            Annuler
+                        </a>
+                        <button mat-raised-button color="warn" [disabled]="!objectForm.valid" (click)="EOS.save()">
+                            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
+                            <span>Terminer</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </ion-content>
+    </div>
+</div>
+<div class="full-height" *ngIf="view === 'map'">
+    <map-point class="full-height" (slidePathChange)="changeSlidePath($event)"
+               [isVegetation]="EOS.isVegetation()"></map-point>
+</div>
+<div class="full-height" *ngIf="view === 'drawLine'">
+    <map-line class="full-height" (slidePathChange)="changeSlidePath($event)"></map-line>
+</div>
+<div class="full-height" *ngIf="view === 'drawPolygon'">
+    <map-polygon class="full-height" [isVegetation]="EOS.isVegetation()"
+                 (slidePathChange)="changeSlidePath($event)"></map-polygon>
+</div>
+<div class="full-height" *ngIf="view === 'media'">
+    <app-media-form (changeView)="setView($event)"></app-media-form>
+</div>

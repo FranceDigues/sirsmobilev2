@@ -1,0 +1,13 @@
+<div>
+  <h2 class="sirs-card-title">Réplication initiale</h2>
+  <p>Cette opération peut prendre quelques minutes ...</p>
+  <div class="progress" *ngIf="step !== 4">
+    <div class="determinate" [style.width.%]="percent"></div>
+  </div>
+  <div *ngIf="step === 4">
+    <mat-spinner style="margin: auto"></mat-spinner>
+  </div>
+  <p>Étape {{step}}/5 : {{description}}
+    <span class="right">{{completion}}</span>
+  </p>
+</div>

@@ -1,0 +1,176 @@
+@import '~materialize-css/dist/css/materialize.css';
+
+ion-spinner {
+  color: #00BCD0;
+  transform: scale(2);
+}
+
+.tabs .tab a {
+  color: #00BCD0;
+  border-color: #00BCD0;
+}
+
+.tabs .tab a.active {
+  color: #00545c;
+  border-color: #00545c;
+  font-weight: bold;
+}
+
+.tabs .indicator {
+  background-color: #0098A6 !important;
+}
+
+.sirs-card {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  padding: 20px;
+  overflow: scroll;
+  margin-top: 30px;
+  background-color: #ffffff;
+  transition: box-shadow .25s;
+  border-radius: 2px;
+  color: #333333;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* field */
+.sirs-field {
+  margin: 10px;
+  width: 90%;
+}
+
+.tabs {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex
+}
+
+.sirs-card > .sirs-card-content {
+  padding-bottom: 20px;
+  padding-top: 20px;
+  border-radius: 0 0 2px 2px;
+}
+
+.sirs-card > .sirs-card-content > h2.sirs-card-title {
+  margin-top: 0;
+  font-size: 24px;
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+
+.sirs-card > .sirs-card-action {
+  padding-top: 15px;
+  border-top: 1px solid rgba(160, 160, 160, 0.2);
+  overflow: hidden;
+}
+
+div {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+ion-content {
+  --background: #00bcd0;
+}
+
+.observation-general {
+  background-color: #00bcd0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.observation-form .sirs-nav-tabs {
+  background-color: #f8f8f8;
+}
+
+.observation-form .input-field > label {
+  color: #444444;
+}
+
+.observation-form .medias .pics > .pic > .pic-quicklook {
+  position: relative;
+  height: 110px;
+  text-align: center;
+  background-color: #f5f5f5;
+}
+
+.observation-form .medias .pics > .pic > .pic-quicklook > img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.pic-quicklook {
+  height: 110px
+}
+
+.pic-quicklook > img {
+  height: 100%;
+}
+
+.margin10 {
+  margin: 10px;
+}
+
+.overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.savingStyle {
+  color: white;
+  font-weight: bold;
+}
+
+.sirs-nav-tabs {
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0;
+}
+
+.sirs-nav-tabs > .sirs-tab {
+  display: inline-block;
+  padding: 14px 50px;
+  overflow: hidden;
+  color: #00bcd0;
+  font-size: 1rem;
+  box-shadow: inset 0 0 0 rgb(0, 188, 208);
+}
+
+.sirs-tab {
+  text-align: center;
+  color: #00bcd0;
+  height: 50px;
+  padding-top: 15px;
+}
+.sirs-tab.active {
+  box-shadow: inset 0 -4px 0 rgb(0, 188, 208);
+}
+
+.waves-effect.waves-cyan .waves-ripple{
+  background-color: rgba(31,188,206,0.65)
+}
+
+.pic-item {
+  position: relative;
+  height: fit-content;
+
+  ion-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    font-size: 20px;
+  }
+}

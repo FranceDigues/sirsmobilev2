@@ -1,0 +1,57 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+    <div class="sirs-panel">
+      <div class="sirs-field-inline">
+        <span class="sirs-field-title">Numéro de désignation : </span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+      </div>
+    </div>
+    <div class="sirs-section">
+      <div class="sirs-field">
+        <span class="sirs-field-title">Valide</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Auteur</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Aménagement hydraulique</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de fin</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de debut</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de mise à jour</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dateMaj"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Commentaire</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Type</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.type"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">État</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.etat"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Côté</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.cote"></span>
+      </div>
+    </div>
+  </div>
+  <!-- Content / Observations -->
+  <div *ngSwitchCase="'observations'">
+    <observations-generic></observations-generic>
+  </div>
+</div>

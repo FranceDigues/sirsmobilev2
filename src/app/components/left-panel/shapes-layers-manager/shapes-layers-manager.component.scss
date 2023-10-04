@@ -1,0 +1,27 @@
+.icon-layer-selected{
+    color:#FF4081;
+}
+
+.icon-layer-unselected{
+    color: #b8b8b8;
+}
+
+.layer-state {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+ion-item-sliding .layer-state .couches-metiers-icons {
+    margin-left: 10px;
+}
+
+.ion-icon-options {
+    font-size: 20px;
+}
+
+.couches-metiers-title {
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+}

@@ -1,0 +1,9 @@
+<label for="type" class="active">Nature</label>
+<select id="type" name="type" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.natureId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.natureId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefNature | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.natureId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

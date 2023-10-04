@@ -1,0 +1,147 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~font-awesome/css/font-awesome.css';
+
+/* Import Material Icons */
+$font-path: "assets/fonts";
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url($font-path + '/MaterialIcons-Regular.eot'); /* For IE6-8 */
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url($font-path + '/MaterialIcons-Regular.woff2') format('woff2'),
+  url($font-path + '/MaterialIcons-Regular.woff') format('woff'),
+  url($font-path + '/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+.tabs .indicator {
+  background-color: #0098A6 !important;
+}
+
+.full-height {
+  height: 100%;
+}
+
+ion-toolbar {
+  --min-height: 64px;
+}
+
+ion-reorder-group {
+  touch-action: none;
+}
+
+ion-reorder {
+  touch-action: none;
+}
+
+ion-modal {
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+}
+
+.menu-content-open {
+  pointer-events: auto; // if menu is active, the map stays interactive
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.header-slide {
+  height: 64px;
+  --background: #0098A6;
+  --color: white;
+}
+
+.scroll-all-content {
+  padding-bottom: 20px;
+  height: calc(100% - 15px);
+}
+
+.modal-css .modal-wrapper {
+  width: 80%;
+  height: 80%;
+  position: fixed;
+}
+
+.mat-raised-button[disabled][disabled] {
+  pointer-events: none;
+  background-color: #DFDFDF !important;
+  box-shadow: none;
+  color: #9F9F9F !important;
+  cursor: default;
+}
+
+.mat-raised-button {
+  background-color: #e91e63;
+}
+
+.mat-button[disabled] {
+  color: #b3b2b2 !important;
+}
+
+.md .menu-content-push {
+  box-shadow: 0 0 4px rgb(0 0 0 / 18%);
+}
+
+.sirs-toast {
+  width: 250px;
+  text-align: center;
+  left: calc(50% - 135px);
+  height: 65px;
+}
+
+.alert-radio-label.sc-ion-alert-md {
+  white-space: normal !important;
+}
+
+.gps {
+  .alert-wrapper {
+    z-index: 9999999999999999 !important;
+  }
+}

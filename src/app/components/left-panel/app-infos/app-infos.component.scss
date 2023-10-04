@@ -1,0 +1,11 @@
+ion-toolbar {
+    --min-height: 64px;
+}
+
+.header-slide {
+    height: 64px;
+}
+
+.scoll-contents {
+    height: calc(100% - 10px);
+}

@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="label" class="active">Libellé</label>
+    <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle"/>
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="damSide" class="active">Type d'ouvrage</label>
+      <select id="damSide" name="damSide" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeOuvrageVoirieId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeOuvrageVoirieId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefOuvrageVoirie | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeOuvrageVoirieId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>
+

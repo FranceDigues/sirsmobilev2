@@ -1,0 +1,88 @@
+.layer-state {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+.ion-icon-options {
+    font-size: 20px;
+}
+
+ion-item-sliding .layer-state .couches-metiers-icons {
+    margin-left: 10px;
+}
+
+.couches-metiers-title {
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.layer-state > i {
+    display: inline-block;
+    font-size: 16px;
+    height: 20px;
+    width: 20px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.layer-color {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 20px;
+}
+
+.icon-layer-selected{
+    color:#FF4081;
+}
+
+.icon-layer-unselected{
+    color: #b8b8b8;
+}
+
+
+.has-fab-bottom {
+    padding-bottom: 80px;
+    height: calc(100% - 75px);
+}
+
+.square-container {
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.square {
+    width: calc(100% / 5);
+    float: left;
+    position: relative;
+    padding-bottom: calc(100% / 5);
+    box-sizing: border-box;
+}
+
+.square .content {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    margin: 8px;
+    padding: 16px;
+    position: absolute;
+    color: white;
+    background-color: #0095ff;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+}
+
+.refresh-button {
+    background-position: center;
+    transition: background 0.8s;
+}
+
+.refresh-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-color: #7ac7ff;
+    background-size: 100%;
+    transition: background 0s;
+}

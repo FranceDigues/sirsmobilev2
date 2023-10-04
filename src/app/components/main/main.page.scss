@@ -1,0 +1,77 @@
+#map {
+  height: calc(100% - 63px);
+  width: 100%;
+}
+
+#id {
+  height: 100%;
+  width: 100%;
+}
+
+#navbar-buttons {
+  height: 100%;
+}
+
+#navbarToggler {
+  //height: 100%;
+}
+
+ion-icon {
+  font-size: 20px;
+}
+
+ion-menu {
+  --width: 350px;
+}
+
+ion-toolbar {
+  --min-height: 64px;
+}
+
+.full-height {
+  height: 100% !important;
+}
+
+.header-slide {
+  height: 64px;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}
+
+.gps-infos {
+  padding: 0 60px;
+  line-height: 30px !important;
+}
+
+.gps-text {
+  height: 30px;
+}
+
+.navbar-custom {
+  background-color: #00bcd0;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  height: fit-content;
+  justify-content: space-between;
+}
+
+.left-slider {
+  position: absolute;
+  top: calc(50% - 64px);
+  left: 0;
+}
+
+.right-slider {
+  position: absolute;
+  top: calc(50% - 64px);
+  right: 0;
+}
+
+a:hover {
+  color: unset;
+}

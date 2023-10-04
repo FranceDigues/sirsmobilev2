@@ -1,0 +1,104 @@
+<div [ngSwitch]="view" class="wrapper">
+    <div class="object-form" *ngSwitchCase="'media-form'" fxLayout="row" fxLayoutAlign="center start">
+        <div class="sirs-card" fxFlex="80">
+            <div class="sirs-card-wrapper" fxLayout="column" fxLayoutAlign="start stretch">
+                <div class="sirs-card-content" fxFlex style="overflow-y: auto;">
+                    <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
+                    <div class="text-center">
+                        <ion-button color="medium" (click)="takePhoto()">
+                            <ion-icon name="camera-outline"></ion-icon>&nbsp;&nbsp;Prendre une photo
+                        </ion-button>
+                        <ion-button color="medium" (click)="drawNote()">
+                            <ion-icon name="pencil-outline"></ion-icon>&nbsp;&nbsp;Déssiner une note
+                        </ion-button>
+                        <ion-button color="medium" (click)="getPicFromGallery()">
+                            <mat-icon>perm_media</mat-icon>&nbsp;&nbsp;Importer un media
+                        </ion-button>
+                    </div>
+                    <div class="pics row" *ngIf="mediaOptions.id !== ''">
+                        <div class="pic col col-25">
+                            <div class="pic-quicklook" fxLayout="row" fxLayoutAlign="center center">
+                                <ion-img style="height: 100px; width: 100px;" alt="Photo non disponible sur le mobile"
+                                         [src]="importPhotoData ? importPhotoData : getPhotoPath(mediaOptions)"></ion-img>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="blue-text text-darken-2">Depuis un appareil externe</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div>
+                        <input type="text" [ngModel]="mediaOptions.designation"
+                               placeholder="Numéro de photo">
+                    </div>
+                    <div class="spacer"></div>
+                    <span class="blue-text text-darken-2">Position</span><br>
+                    <div class="spacer"></div>
+                    <ion-button color="medium" (click)="locateMe()">
+                        <ion-icon name="locate-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium" (click)="selectPosition()">
+                        <ion-icon name="location-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium"
+                                *ngIf="EOS.isDependance()"
+                                (click)="selectPositionByReferralSystem()">
+                        <ion-icon name="analytics-outline"></ion-icon>
+                    </ion-button>
+                    <div *ngIf="mediaOptions.positionDebut" class="sirs-field-inline">
+                        <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+                        <span class="sirs-field-value">{{ getPosition()}}</span>
+                    </div>
+                    <div *ngIf="mediaOptions.borneDebutId" class="sirs-field-inline">
+                        <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
+                        <span class="sirs-field-value">{{mediaOptions.borneDebutId ? 'à ' + mediaOptions.borne_debut_distance + ' m de la borne ' +
+                            mediaOptions.borneDebutLibelle + ' en ' + (mediaOptions.borne_debut_aval ? 'amont' : 'aval') : 'à definir'}}</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxFlex="50">
+                            <label>Orientations</label>
+                            <ion-select [ngModel]="mediaOptions.orientationPhoto">
+                                <ion-select-option *ngFor="let orientation of orientationList"
+                                                   [value]="orientation.id">
+                                    {{formatOptionText(orientation)}}
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+                        <div fxFlex="50">
+                            <label>Côté</label>
+                            <ion-select [ngModel]="mediaOptions.coteId">
+                                <ion-select-option *ngFor="let cote of coteList"
+                                                   [value]="cote.id">
+                                    {{formatOptionText(cote)}}
+                                </ion-select-option>
+                            </ion-select>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" [ngModel]="mediaOptions.commentaire" placeholder="Commentaire">
+                    </div>
+                </div>
+                <div class="sirs-card-action">
+                    <button mat-button (click)="back()">
+                        <ion-icon name="arrow-back"></ion-icon>
+                        <span>&nbsp;&nbsp;Annuler</span>
+                    </button>
+                    <button mat-raised-button color="warn" [disabled]="!mediaOptions.id" (click)="save()">
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                        <span>Terminer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--     Position Map -->
+    <div class="full-height" *ngSwitchCase="'media-map'">
+        <map-point class="full-height" (slidePathChange)="setView('media-form')"
+                   (successData)="handlePos($event)"></map-point>
+    </div>
+    <!-- Note -->
+    <div class="full-height" *ngSwitchCase="'media-note'" ng-init="save = saveNote; exit = backToForm">
+        <edit-note (slidePathChange)="setView('form-media')" (successData)="saveNote($event)"></edit-note>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+.database-connection {
+    background-color: #00bcd0;
+    height: 100%;
+    width: 100%;
+    // .collection > .collection-item.avatar {
+    //     min-height: 62px;
+    // }
+    // .collection > .collection-item.avatar.selected {
+    //     background-color: #f5f5f5;
+    // }
+    // .collection > .collection-item.avatar > p {
+    //     color: #777777;
+    // }
+}
+
+ion-content {
+    --ion-background-color: #00bcd0;
+}
+
+
+.database-connection-add {
+    background-color: #00bcd0;
+}
+
+.sirs-card {
+    position: relative;
+    overflow: scroll;
+    margin-top: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    padding: 14px 20px 20px;
+    background-color: #ffffff;
+    transition: box-shadow .25s;
+    border-radius: 2px;
+    color: #333333;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.sirs-card > .sirs-card-content {
+    padding: 20px;
+    border-radius: 0 0 2px 2px;
+}
+
+.sirs-card > .sirs-card-content > h2.sirs-card-title {
+    line-height: 48px;
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 12px;
+}
+
+.sirs-card > .sirs-card-action {
+    padding: 14px 20px 20px;
+    margin-bottom: 10px;
+    border-top: 1px solid rgba(160, 160, 160, 0.2);
+    overflow: hidden;
+}

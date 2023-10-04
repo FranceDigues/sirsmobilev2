@@ -1,0 +1,37 @@
+<ion-header translucent>
+    <ion-toolbar class="header-slide">
+        <ion-title style="text-align: center;">Menu Principal</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+    <ion-list>
+        <ion-item (click)="goCraftLayers()">Couches métiers</ion-item>
+        <ion-item (click)="goChoiceOfSectionsDigues()">Choix des Tronçons/Digues</ion-item>
+        <ion-item (click)="goBackMap()">Fonds de carte</ion-item>
+        <ion-item (click)="goSuperficialLayers()">Couches additionnelles</ion-item>
+        <ion-item (click)="goGallery()">Galerie</ion-item>
+        <ion-item (click)="goSynchronisation()">Synchronisation</ion-item>
+        <ion-item>
+            Localisation GPS
+            <ion-toggle slot="end" [checked]="geolocationService.isEnabled"
+                        (ionChange)="changeLocationGPS()"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            Mode Edition
+            <ion-toggle slot="end" [checked]="databaseService.activeDB.context.settings.edition"
+                        (ionChange)="changeEditionMode($event)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            Afficher les objets archivés
+            <ion-toggle slot="end" checked={{mapService.archiveObjectsFlag}}
+                        (ionChange)="changeShowArchivedObjects()"></ion-toggle>
+        </ion-item>
+        <ion-item (click)="goAppInfos()">Informations application</ion-item>
+        <ion-item (click)="goAppSettings2()">Paramètres Carte</ion-item>
+        <ion-item (click)="goAppSettings()">Paramètres avancés</ion-item>
+        <ion-item (click)="goGPSSettings()">Paramètres GPS</ion-item>
+        <ion-item (click)="goPhotoSettings()">Paramètres Photo</ion-item>
+    </ion-list>
+    <ion-item lines="none"></ion-item>
+    <!-- All ion-item with property lines equal to 'none' is to secure the good scroll visualisation (see all the items) -->
+</ion-content>

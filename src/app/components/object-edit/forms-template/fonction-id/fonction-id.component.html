@@ -1,0 +1,11 @@
+<label for="function" class="active">Fonction</label>
+
+<select id="function" class="browser-default"
+        name="function" [(ngModel)]="EOS.objectDoc.fonctionId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.fonctionId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName')"
+            [value]="r.id"
+            [selected]="EOS.objectDoc.fonctionId === r.id">
+        {{r | docToString | async}}
+    </option>
+</select>

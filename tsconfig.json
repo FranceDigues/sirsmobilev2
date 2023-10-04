@@ -1,0 +1,38 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es5",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@ionic-lib": [
+        "libs/geomatys-ionic-libraries-framework/libs"
+      ],
+      "@ionic-lib/*": [
+        "libs/geomatys-ionic-libraries-framework/libs/*"
+      ],
+      "@plugins": [
+        "libs/plugins"
+      ],
+      "@plugins/*": [
+        "libs/plugins/*"
+      ],
+    },
+    "skipLibCheck": true
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

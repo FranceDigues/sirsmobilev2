@@ -1,0 +1,38 @@
+= Geomatys Libraries
+Doc Writer <alexandre.juan@geomatys.com>
+v1.0, 04-08-2020
+:icons: font
+
+Vous pouvez cloner ce répertoire et travailler à partir de ce dernier.
+
+Une fois le repo cloné, n'oubliez pas de mettre à jour les packets au cas où.
+
+[source, bash]
+----
+npm i
+----
+
+WARNING: Pour ajouter des librairies, vous devez vous assurer que :
+****
+<1> Votre dossier se nomme de la façon suivate : lib-{fonctionnalité}.
+<2> Dans le fichier tsconfig.json, vous devez rajouter votre chemin avec le raccourci de la façon suivante : @lib-{fonctionnalité}.
+<3> Votre librairie doit avoir été testée de manière fonctionnelle et elle doit présenter au moins 4 tests unitaires.
+****
+
+'''
+
+You can clone this repository and work from this.
+
+Once you cloned, don't forget to update packages in case of.
+
+[source, bash]
+----
+npm i
+----
+
+WARNING: To add librairies, you need to make sure that :
+****
+<1> Your folder is nammed like this : lib-{fonctionnality}.
+<2> In the tsconfig.json file, you must add the path of you folder and the shortcut like this way : @lib-{fonctionnalité}.
+<3> Your librarie need to be tested with functional tests and it needs to have at least 4 unit tests.
+****

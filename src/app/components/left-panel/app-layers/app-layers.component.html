@@ -1,0 +1,74 @@
+<div class="full-height" *ngIf="path === 0">
+    <ion-header translucent>
+        <ion-toolbar class="header-slide">
+            <ion-buttons slot="start">
+        <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Couches métiers</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="clearAll()" class="refresh-button">
+                <ion-icon name="refresh-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+    </ion-header>
+    <ion-content class="has-header has-fab-bottom">
+        <ion-list>
+            <ion-reorder-group (ionItemReorder)="onRenderItems($event)" [disabled]="order === false">
+                <ion-item-sliding *ngFor="let layer of layers" side="end">
+                    <ion-item>
+                        <div class="layer-color" *ngIf="!order" [ngStyle]="getStyleColor(layer)"></div>
+                        <div class="layer-state">
+                            <ion-icon class="couches-metiers-icons" name="git-merge-outline" [ngClass]="getClassIcon(layer.realPosition)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="eye-outline" [ngClass]="getClassIcon(layer.visible)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="pencil-outline" [ngClass]="getClassIcon(layer.editable)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)"></ion-icon>
+                            <ion-icon class="couches-metiers-icons" name="color-palette-outline"></ion-icon>
+                        </div>
+                        <h5 class="couches-metiers-title">{{ layer.title }}</h5>
+                        <ion-reorder slot="end"></ion-reorder>
+                    </ion-item>
+                    <ion-item-options (click)="updateFavorites()">
+                        <ion-item-option color="light" (click)="togglePosition(layer)">
+                            <ion-icon class="ion-icon-options" name="git-merge-outline" [ngClass]="getClassIcon(layer.realPosition)">call_merge</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="toggleVisibility(layer)">
+                            <ion-icon class="ion-icon-options" name="eye-outline" [ngClass]="getClassIcon(layer.visible)">visibility</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="layer.editable = !layer.editable">
+                            <ion-icon class="ion-icon-options" name="pencil-outline" [ngClass]="getClassIcon(layer.editable)">edit</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="layer.selectable = !layer.selectable">
+                            <ion-icon class="ion-icon-options" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)">accessibility_new</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="featureLabels(layer)">
+                            <ion-icon class="ion-icon-options" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)">textsms</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="openColorModal(layer)">
+                            <ion-icon class="ion-icon-options" name="color-palette-outline">brush</ion-icon>
+                        </ion-item-option>
+                        <ion-item-option color="light" (click)="mapManagerService.forceRefresh(layer)">
+                            <ion-icon class="ion-icon-options" name="refresh-outline"></ion-icon>
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-reorder-group>
+            <ion-item lines="none"></ion-item>
+        </ion-list>
+    </ion-content>
+    <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="start" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="order = !order">
+            <ion-icon *ngIf="!order" name="list-outline"></ion-icon>
+            <ion-icon *ngIf="order" name="lock-closed-outline"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab class="position-absolute" style="bottom: 10px;" horizontal="end" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="goToLayerList()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</div>
+<div class="full-height" *ngIf="path === 1">
+    <left-slide-disponible-layers class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-disponible-layers>
+</div>

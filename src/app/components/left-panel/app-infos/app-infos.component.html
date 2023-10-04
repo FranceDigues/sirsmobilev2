@@ -1,0 +1,20 @@
+<ion-header translucent>
+    <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Versions Composants</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content class="scoll-contents" [scrollEvents]="true" fullscreen *ngIf="versionsObject">
+    <ion-list *ngFor="let item of versionsObject | keyvalue">
+        <ion-item>{{ item.key }}: {{ item.value }}</ion-item>
+    </ion-list>
+    <ion-item lines="none"></ion-item>
+</ion-content>
+<div *ngIf="!versionsObject"
+     fxLayout="column"
+     fxLayoutAlign="center center"
+     style="height: 100%;">
+    <ion-spinner name="crescent"></ion-spinner>
+</div>

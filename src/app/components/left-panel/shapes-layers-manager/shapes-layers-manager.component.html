@@ -1,0 +1,39 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide">
+      <ion-buttons slot="start">
+          <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Shapes & WFS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
+
+  <div style="height: calc(100% - 64px);" fxLayout="column">
+    <div fxFlex>
+      <ion-list>
+        <ion-item-sliding *ngFor="let layer of shapesLayersManagerService.getAllLayers(); let i = index" side="end">
+          <ion-item>
+            <div class="layer-state">
+              <ion-icon class="couches-metiers-icons" name="eye-outline" (click)="toggleVisibility(layer, i)"
+                [ngClass]="getClassIcon(layer.getProperties().visible)"></ion-icon>
+              <ion-icon class="couches-metiers-icons" name="trash-outline" (click)="removeLayer(layer, i)"></ion-icon>
+            </div>
+            <h5 class="couches-metiers-title">{{ retrieveLayerName(layer) }}</h5>
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item>
+        </ion-item-sliding>
+        <ion-item lines="none"></ion-item>
+      </ion-list>
+    </div>
+  
+    <div style="height: 80px;" fxLayout="row" fxLayoutAlign="end start">
+      <ion-fab style="margin: 25px 10px;">
+        <ion-fab-button color="danger" (click)="goToAddBackLayer()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+  </div>
+
+</ion-content>

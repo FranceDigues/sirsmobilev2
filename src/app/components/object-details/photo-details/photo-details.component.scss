@@ -1,0 +1,23 @@
+/* section */
+.sirs-section {
+    padding: 10px 16px;
+    margin-bottom: 10px;
+}
+
+/* field */
+.sirs-field,
+.sirs-field-inline {
+    margin-bottom: 10px;
+}
+.sirs-field:last-child,
+.sirs-field-inline:last-child {
+    margin-bottom: 0;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field-inline > span.sirs-field-title {
+    font-weight: bold;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field > span.sirs-field-value {
+    display: block;
+}

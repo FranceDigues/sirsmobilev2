@@ -1,0 +1,12 @@
+= README Librairie Storage
+Doc Writer <alexandre.juan@geomatys.com>
+v1.0, 03-08-2020
+
+Afin de pouvoir utiliser cette librairie, vous devez avant ajouter dans votre projet ionic les dependances suivantes :
+
+[source, json]
+package.json
+----
+"@ionic-native/native-storage": "^5.27.0",
+"@ionic/storage": "^2.2.0"
+----

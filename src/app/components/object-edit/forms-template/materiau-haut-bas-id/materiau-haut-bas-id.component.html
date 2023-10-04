@@ -1,0 +1,22 @@
+<div class="sirs-field col col-50">
+  <label for="topMaterial" class="active">Matériau haut</label>
+    <select id="topMaterial" name="topMaterial" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.materiauHautId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.materiauHautId === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.materiauHautId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>
+<div class="sirs-field col col-50">
+  <label for="lowMaterial" class="active">Matériau bas</label>
+    <select id="lowMaterial" name="lowMaterial" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.materiauBasId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.materiauBasId === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.materiauBasId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>

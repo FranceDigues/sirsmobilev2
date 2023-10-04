@@ -1,0 +1,77 @@
+<!--Simple type-->
+<div class="row" *ngFor="let p of primitives">
+  <div class="sirs-field col col-100">
+    <label [for]="p.name" class="active">{{ p.label }}</label>
+    <div *ngIf="p.type === 'checkbox'; else elseBlock">
+      <ion-checkbox [id]="p.name" [name]="p.name" [(ngModel)]="EOS.objectDoc[p.name]" style="--background: white;">
+      </ion-checkbox>
+    </div>
+    <ng-template #elseBlock>
+      <input [id]="p.name" [name]="p.name" [type]="p.type" [min]="p.min" [(ngModel)]="EOS.objectDoc[p.name]" />
+    </ng-template>
+  </div>
+</div>
+
+<!--Single reference type-->
+<div class="row" *ngFor="let s of singleReferences">
+  <div class="sirs-field col col-100">
+    <label [for]="s.name" class="active">{{s.label}}</label>
+    <select [id]="s.name" class="browser-default" [name]="s.name" [(ngModel)]="EOS.objectDoc[s.name]">
+      <option [value]="undefined" [selected]="EOS.objectDoc[s.name] === undefined" selected>Non renseigné</option>
+      <option *ngFor="let r of refList(s.type) | refSort: EOS.showText('fullName')" [value]="optionValue(r)"
+        [selected]="isSelected(s, r)">
+        {{ r | docToString | async }}
+      </option>
+    </select>
+  </div>
+</div>
+
+<!--Not sure to supporte it here-->
+<!--Multiple link type-->
+<!-- <div class="row" *ngFor="let m of multipleReferences">
+  <div class="sirs-field col col-100">
+    <label class="active">{{m.label}}</label>
+    <div class="row sirs-field-multi" *ngFor="let v of EOS.objectDoc[m.name]; index as index">
+      <div class="col col-75">
+        <div *ngIf="EOS.showText('fullName')">
+          <select class="browser-default"
+                  [name]="m.name" [(ngModel)]="EOS.objectDoc[m.name][index]">
+                  <option *ngFor="let r of EOS.refs[m.type] | refSort: EOS.showText('fullName')"
+                    [ngValue]="r.id"
+                    [selected]="EOS.objectDoc[m.name][index] === r.id">
+                        {{ r.libelle ? r.libelle : 'labelle undefined / id:  ' + r.id }}
+                  </option>
+          </select>
+        </div>
+        <div *ngIf="EOS.showText('abstract')">
+            <select class="browser-default" [name]="m.name" [(ngModel)]="EOS.objectDoc[m.name][index]">
+                <option *ngFor="let r of EOS.refs[m.type] | refSort: EOS.showText('fullName')"
+                        [ngValue]="r.id"
+                        [selected]="EOS.objectDoc[m.name][index] === r.id">
+                    {{r.abrege ? r.abrege : r.designation + ' : ' + r.libelle}}
+                </option>
+            </select>
+        </div>
+        <div *ngIf="EOS.showText('both')">
+          <select class="browser-default" [name]="m.name" [(ngModel)]="EOS.objectDoc[m.name][index]">
+              <option *ngFor="let r of EOS.refs[m.name] | refSort: EOS.showText('fullName')"
+                      [ngValue]="r.id"
+                      [selected]="EOS.objectDoc[m.name][index] === r.id">
+                      {{r.abrege ? (r.abrege + ' : ' + r.libelle) : (r.designation + ' : ' + r.libelle)}}
+              </option>
+          </select>
+        </div>
+      </div>
+      <div class="col col-25">
+        <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc[m.name].length === 1"
+                (click)="EOS.objectDoc[m.name].splice(index, 1)">
+            <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <button class="btn pink waves-effect waves-teal"
+                (click)="EOS.objectDoc[m.name].splice(index + 1, 0, EOS.refs[m.name][0].id)">
+            <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div> -->

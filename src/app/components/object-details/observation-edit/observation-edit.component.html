@@ -1,0 +1,264 @@
+<div class="full-height observation-general" [ngSwitch]="view">
+    <div fxLayout="column" fxLayoutAlign="center">
+        <div class="observation-form" *ngSwitchCase="'form'">
+            <ion-content>
+                <form class="sirs-card" #observationForm="ngForm">
+                    <div class="sirs-card-content" [ngSwitch]="tab">
+                        <h2 class="sirs-card-title" *ngIf="isNewObject">Nouvelle observation</h2>
+                        <h2 class="sirs-card-title" *ngIf="!isNewObject">Éditer une observation</h2>
+                        <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
+                            fxLayoutAlign="center center">
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Évolution</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'observateur'}"
+                                (click)="setTab('observateur')">Observateur</span>
+                            <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab('suiteApporter')">Suite à
+                                apporter</span>
+                            <span fxFlex="70" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter
+                                (complément)</span>
+                        </div>
+                        <div class="medias" *ngSwitchCase="'medias'">
+                            <div class="pics row" fxLayout="row" *ngIf="observationEditService.showContent">
+
+                                <mat-grid-list cols="4" rowHeight="110px" fxFlexFill *ngIf="sirsDataService.mediaPath">
+                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos" (ngInit)="observationEditService.loadImage(photo)">
+                                        <div class="progress" *ngIf="!observationEditService.loaded[photo.id]">
+                                            <div class="indeterminate"></div>
+                                        </div>
+                                        <div *ngIf="observationEditService.loaded[photo.id]" class="pic-item">
+                                            <img alt="Photo non disponible" (click)="observationEditService.open(photo)"
+                                                 [src]="observationEditService.getPhotoPath(photo)" />
+                                            <ion-icon name="close" (click)="observationEditService.remove(photo)"></ion-icon>
+                                        </div>
+                                    </mat-grid-tile>
+                                </mat-grid-list>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-large waves-effect waves-teal"
+                                    (click)="goToMedia()">
+                                    <ion-icon name="images-outline"></ion-icon>
+                                    Ajouter un media
+                                </button>
+                            </div>
+                        </div>
+                        <div class="evolution" *ngSwitchCase="'evolution'">
+                            <div class="sirs-field">
+                                <label for="description" class="active">Description</label>
+                                <textarea id="description" class="materialize-textarea"
+                                    [(ngModel)]="observation.evolution" name="description"></textarea>
+                            </div>
+                        </div>
+                        <div class="urgence" *ngSwitchCase="'urgence'">
+                            <div class="sirs-field" *ngIf="refUrgence">
+                                <select class="browser-default" name="urgenceList" [(ngModel)]="observation.urgenceId">
+                                    <option *ngFor="let urgence of refUrgence.sort(compareRef())" [value]="urgence.id"
+                                        [selected]="urgence.id === observation.urgenceId">
+                                        {{ parseUrgenceText(urgence)}}
+                                    </option>
+                                </select>
+                                <div *ngIf="!refUrgence" fxLayout="column" fxLayoutAlign="center center"
+                                    style="padding-top: 20px;">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nombre" *ngSwitchCase="'nombre'">
+                            <div class="sirs-field">
+                                <label for="nombre_Desordres" class="active">Nombre Desordres</label>
+                                <input type="number" id="nombre_Desordres" class="materialize-textarea"
+                                    [(ngModel)]="observation.nombreDesordres" name="nombre_Desordres" />
+                            </div>
+                        </div>
+                        <div class="observateur" *ngSwitchCase="'observateur'">
+                            <div class="sirs-field">
+                                <select name="contactList" class="browser-default"
+                                    *ngIf="contactList && contactList.length > 0"
+                                    [(ngModel)]="observation.observateurId">
+                                    <option *ngFor="let observateur of contactList | sortByDocNom"
+                                        [value]="observateur.id"
+                                        [selected]="observateur.id === observation.observateurId">
+                                        {{ parseContactName(observateur) }}
+                                    </option>
+                                </select>
+                                <div style="padding-top: 20px;" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent" *ngIf="!contactList"></ion-spinner>
+                                    <span *ngIf="contactList && contactList.length === 0">La liste des observateurs est
+                                        vide</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="suite" *ngSwitchCase="'suiteApporter'">
+                            <div class="sirs-field">
+                                <select name="suiteApporterList" class="browser-default"
+                                    *ngIf="refSuiteApporter && refSuiteApporter.length > 0"
+                                    [(ngModel)]="observation.suiteApporterId">
+                                    <option *ngFor="let suiteApporter of refSuiteApporter.sort(compareRef())"
+                                        [value]="suiteApporter.id"
+                                        [selected]="suiteApporter.id === observation.suiteApporterId">
+                                        {{ parseSuiteApportertext(suiteApporter) }}
+                                    </option>
+                                </select>
+                                <div fxLayout="column" style="padding-top: 20px;" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent" *ngIf="!refSuiteApporter"></ion-spinner>
+                                    <span *ngIf="refSuiteApporter && refSuiteApporter.length === 0">La liste des suites
+                                        à apporter est vide</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="suite" *ngSwitchCase="'suite'">
+                            <div class="sirs-field">
+                                <label for="suite_field" class="active">Suite à apporter (complément)</label>
+                                <textarea id="suite_field" class="materialize-textarea" [(ngModel)]="observation.suite"
+                                    name="suite_field"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--SPECIFICATION RESEAU ET OUVRAGE-->
+                    <div class="sirs-card-content" *ngIf="isReseauEtOuvrage()" [ngSwitch]="tabSpecification">
+                        <h2 class="sirs-card-title">Spécifications Réseaux et Ouvrages</h2>
+                        <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
+                            fxLayoutAlign="center center">
+                            <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tabSpecification === 'etatOuvrageId'}" (click)="setTabSpecification('etatOuvrageId')">Etat de
+                                l'ouvrage</span>
+                            <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tabSpecification === 'etatAccessoireId'}"
+                                (click)="setTabSpecification('etatAccessoireId')">Etat
+                                des accessoires</span>
+                            <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tabSpecification === 'etatGenieCivilId'}"
+                                (click)="setTabSpecification('etatGenieCivilId')">Etat du génie civil</span>
+                            <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
+                                [ngClass]="{active: tabSpecification === 'manoeuvreOuvrageId'}"
+                                (click)="setTabSpecification('manoeuvreOuvrageId')">Manoeuvre de l'ouvrage</span>
+                        </div>
+                        <div *ngSwitchCase="'etatOuvrageId'">
+                            <div class="sirs-field">
+                                <label for="etatOuvrageCom_field" class="active">Type</label>
+                                <select id="etatOuvrageList" class="browser-default"
+                                    *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
+                                    [(ngModel)]="observation.etatOuvrageId" name="etatOuvrageList">
+                                    <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())" [value]="etat.id"
+                                        [selected]="etat.id === observation.etatOuvrageId">
+                                        {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                    fxLayoutAlign="center center">
+                                    <span>Aucun Etat d'ouvrage trouvé</span>
+                                </div>
+                                <label for="etatOuvrageCom_field" class="active">Commentaire</label>
+                                <textarea id="etatOuvrageCom_field" class="materialize-textarea"
+                                    [(ngModel)]="observation.etatOuvrageCom" name="etatOuvrageCom_field"></textarea>
+                            </div>
+                        </div>
+                        <div *ngSwitchCase="'etatAccessoireId'">
+                            <div class="sirs-field">
+                                <label for="etatOuvrageCom_field" class="active">Type</label>
+                                <select id="etatAccessoireList" class="browser-default"
+                                    *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
+                                    [(ngModel)]="observation.etatAccessoireId" name="etatAccessoireList">
+                                    <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())" [value]="etat.id"
+                                        [selected]="etat.id === observation.etatAccessoireId">
+                                        {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                    fxLayoutAlign="center center">
+                                    <span>Aucun Etat d'accessoire trouvé</span>
+                                </div>
+                                <label for="etatAccessoireCom_field" class="active">Commentaire</label>
+                                <textarea id="etatAccessoireCom_field" class="materialize-textarea"
+                                    [(ngModel)]="observation.etatAccessoireCom"
+                                    name="etatAccessoireCom_field"></textarea>
+                            </div>
+                        </div>
+                        <div *ngSwitchCase="'etatGenieCivilId'">
+                            <div class="sirs-field">
+                                <label for="etatOuvrageCom_field" class="active">Type</label>
+                                <select id="etatGenieCivilList" class="browser-default"
+                                    *ngIf="etatOuvAccGCList && etatOuvAccGCList.length > 0"
+                                    [(ngModel)]="observation.etatGenieCivilId" name="etatGenieCivilList">
+                                    <option *ngFor="let etat of etatOuvAccGCList.sort(compareRef())" [value]="etat.id"
+                                        [selected]="etat.id === observation.etatGenieCivilId">
+                                        {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                    fxLayoutAlign="center center">
+                                    <span>Aucun Etat de génie civil trouvé</span>
+                                </div>
+                                <label for="etatGenieCivilCom_field" class="active">Commentaire</label>
+                                <textarea id="etatGenieCivilCom_field" class="materialize-textarea"
+                                    [(ngModel)]="observation.etatGenieCivilCom"
+                                    name="etatGenieCivilCom_field"></textarea>
+                            </div>
+                        </div>
+                        <div *ngSwitchCase="'manoeuvreOuvrageId'">
+                            <div class="sirs-field">
+                                <label for="etatOuvrageCom_field" class="active">Type</label>
+                                <select id="manoeuvreOuvrageList" class="browser-default"
+                                    *ngIf="manoeuvreOuvrageList && manoeuvreOuvrageList.length > 0"
+                                    [(ngModel)]="observation.manoeuvreOuvrageId" name="manoeuvreOuvrageList">
+                                    <option *ngFor="let manoeuvreOuvrage of manoeuvreOuvrageList.sort(compareRef())"
+                                        [value]="manoeuvreOuvrage.id"
+                                        [selected]="manoeuvreOuvrage.id === observation.manoeuvreOuvrageId">
+                                        {{ manoeuvreOuvrage.libelle ? manoeuvreOuvrage.libelle : 'libelle undefined / id: ' + manoeuvreOuvrage.id }}
+                                    </option>
+                                </select>
+                                <div *ngIf="pendingManoeuvreOuvrageList" fxLayout="column"
+                                    fxLayoutAlign="center center">
+                                    <ion-spinner name="crescent"></ion-spinner>
+                                </div>
+                                <div *ngIf="!pendingManoeuvreOuvrageList && manoeuvreOuvrageList.length == 0"
+                                    fxLayout="column" fxLayoutAlign="center center">
+                                    <span>Aucune Manoeuvre de l'ouvrage trouvé</span>
+                                </div>
+                                <label for="manoeuvreOuvrageCom_field" class="active">Commentaire</label>
+                                <textarea id="manoeuvreOuvrageCom_field" class="materialize-textarea"
+                                    [(ngModel)]="observation.manoeuvreOuvrageCom"
+                                    name="manoeuvreOuvrageCom_field"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sirs-card-action">
+                        <a (click)="goMain()" class="margin10 btn-flat waves-effect waves-teal">
+                            <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>
+                            Annuler
+                        </a>
+                        <button type="button" class="margin10 btn pink waves-effect waves-teal right" (click)="save()">
+                            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
+                            Terminer
+                        </button>
+                    </div>
+                </form>
+            </ion-content>
+        </div>
+        <div class="full-height full-width" *ngSwitchCase="'media'">
+            <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" *ngIf="saving" fxLayout="column" fxLayoutAlign="center center">
+    <ion-spinner name="crescent"></ion-spinner>
+    <span class="savingStyle">SAUVEGARDE DES MODIFICATIONS EN COURS...</span>
+</div>

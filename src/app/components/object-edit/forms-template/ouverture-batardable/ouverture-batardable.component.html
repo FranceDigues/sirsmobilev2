@@ -1,0 +1,79 @@
+<div class="sirs-field">
+  <label for="label" class="active">Libellé</label>
+  <input id="label" name="label" type="text" [(ngModel)]="EOS.objectDoc.libelle"/>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="width" class="active">Largeur</label>
+      <input id="width" name="width" type="number" [(ngModel)]="EOS.objectDoc.largeur"/>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="height" class="active">Hauteur</label>
+      <input id="height" name="height" type="number" [(ngModel)]="EOS.objectDoc.hauteur"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="zThreshold" class="active">Z du seuil</label>
+    <input id="zThreshold" name="zThreshold" type="number" [(ngModel)]="EOS.objectDoc.zSeuil"/>
+  </div>
+  <div class="sirs-field col col-50">
+    <label for="thresholdType" class="active">Type de seuil</label>
+      <select id="thresholdType" name="thresholdType" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeSeuilId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeSeuilId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefSeuil | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeSeuilId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="slideType" class="active">Type de seuil</label>
+      <select id="slideType" name="slideType" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeGlissiereId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeGlissiereId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefTypeGlissiere | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeGlissiereId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-100">
+    <div class="row sirs-field-multi" *ngFor="let v of EOS.objectDoc.ouvrageRevancheIds; index as index">
+        <label class="active">Ouvrage de revanche associé</label>
+        <div class="col col-75">
+          <select class="browser-default"
+                  [(ngModel)]="EOS.objectDoc.ouvrageRevancheIds[index]">
+              <option [value]="undefined" [selected]="EOS.objectDoc.ouvrageRevancheIds[index] === undefined" selected>Non renseigné</option>
+              <option *ngFor="let r of EOS.refs.OuvrageRevanche | refSort: EOS.showText('fullName');" [value]="r.id"
+                      [selected]="EOS.objectDoc.ouvrageRevancheIds[index] === r.id">
+                  {{ r | docToString | async }}
+              </option>
+          </select>
+      </div>
+      <div class="col col-25">
+        <button class="btn pink waves-effect waves-teal" [disabled]="EOS.objectDoc.ouvrageRevancheIds.length === 1"
+                (click)="EOS.objectDoc.ouvrageRevancheIds.splice(index, 1)">
+            <ion-icon name="remove-outline"></ion-icon>
+        </button>
+        <button class="btn pink waves-effect waves-teal"
+                (click)="EOS.objectDoc.ouvrageRevancheIds.splice(index + 1, 0, EOS.refs.OuvrageRevanche[0].id)">
+            <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>

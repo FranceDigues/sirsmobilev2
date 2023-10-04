@@ -1,0 +1,9 @@
+<label for="damPosition" class="active">Position sur la digue</label>
+<select id="damPosition" name="damPosition" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.positionId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.positionId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefPosition | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.positionId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

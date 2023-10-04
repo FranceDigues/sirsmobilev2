@@ -1,0 +1,29 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <div *ngSwitchCase="'description'">
+    <div class="sirs-panel">
+      <div class="sirs-field-inline">
+        <span class="sirs-field-title">Numéro de désignation : </span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+      </div>
+    </div>
+    <div class="sirs-section">
+      <div class="sirs-field">
+        <span class="sirs-field-title">Digue</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.digue | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Type rive</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeRive | async"></span>
+      </div>
+    </div>
+  </div>
+  <div *ngSwitchCase="'photos'">
+    <ion-list>
+      <ion-item (click)="detailsObject.openPhotoDetails(photo)" *ngFor="let photo of detailsObject.selectedObject.photos">
+          <span *ngIf="photo.date">{{ photo.date|date:'dd/MM/yyyy' }}</span>
+          <span *ngIf="!photo.date && photo.designation">{{ photo.designation }}</span>
+          <span *ngIf="!photo.date && !photo.designation && photo.id">{{ photo.id }}</span>
+      </ion-item>
+    </ion-list>
+  </div>
+</div>

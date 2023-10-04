@@ -1,0 +1,24 @@
+ion-toolbar {
+    --min-height: 64px;
+}
+
+.header-slide {
+    height: 64px;
+}
+
+.full-height {
+    height: 100% !important;
+}
+
+.garbage-button {
+    background-position: center;
+    transition: background 0.8s;
+}
+
+.garbage-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    background-color: #7ac7ff;
+    background-size: 100%;
+    transition: background 0s;
+}

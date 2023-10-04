@@ -1,0 +1,9 @@
+<label for="cote" class="active">Côté de la digue</label>
+<select id="cote" name="cote" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.coteId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.coteId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefCote | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.coteId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

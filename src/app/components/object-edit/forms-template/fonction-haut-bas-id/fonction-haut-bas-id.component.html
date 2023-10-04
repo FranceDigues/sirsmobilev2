@@ -1,0 +1,24 @@
+<div class="sirs-field col col-50">
+  <label for="topFunction" class="active">Fonction haut</label>
+    <select id="topFunction" name="topFunction" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.fonctionHautId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.fonctionHautId === undefined" selected>Non
+            renseigné
+        </option>
+        <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.fonctionHautId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>
+<div class="sirs-field col col-50">
+  <label for="lowFunction" class="active">Fonction bas</label>
+    <select id="lowFunction" name="lowFunction" class="browser-default"
+            [(ngModel)]="EOS.objectDoc.fonctionBasId">
+        <option [value]="undefined" [selected]="EOS.objectDoc.fonctionBasId === undefined" selected>Non renseigné</option>
+        <option *ngFor="let r of EOS.refs.RefFonction | refSort: EOS.showText('fullName');" [value]="r.id"
+                [selected]="EOS.objectDoc.fonctionBasId === r.id">
+            {{ r | docToString | async }}
+        </option>
+    </select>
+</div>

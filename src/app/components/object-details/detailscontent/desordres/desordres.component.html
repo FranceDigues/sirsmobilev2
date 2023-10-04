@@ -1,0 +1,31 @@
+<label for="desordreList" class="active">Ajouter un desordre</label>
+<div style="display: flex;">
+        <select id="desordreList" name="desordreList" class="browser-default" [(ngModel)]="detailsObject.tempDesordre">
+            <option *ngFor="let d of detailsObject.desordreList"
+                    [value]="d.id">
+                {{ d.designation ? d.designation : d.id }}
+            </option>
+        </select>
+    <div class="sirs-ion-fab-button">
+      <ion-fab slot="fixed">
+        <ion-fab-button color="danger"
+            (click)="detailsObject.addDesordre()">
+            <ion-icon name="add-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+</div>
+<label>La liste des desordres associés</label>
+<ion-list>
+    <ion-item *ngFor="let desordreId of detailsObject.selectedObject.desordreIds; let index = index"
+              (click)="detailsObject.openDesordreLink(desordreId)"
+              style="display:flex;">
+        <span>{{ !detailsObject.desordreList ? desordreId : detailsObject.desordreMap[desordreId] }}</span>
+        <ion-fab horizontal="end">
+          <ion-fab-button class="sirs-button-item" color="dark"
+              (click)="detailsObject.removeDesordre(index);$event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+    </ion-item>
+</ion-list>

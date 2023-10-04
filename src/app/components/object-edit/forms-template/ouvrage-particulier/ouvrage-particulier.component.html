@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="label" class="active">Libellé</label>
+      <input id="label" type="text" name="label" [(ngModel)]="EOS.objectDoc.libelle"/>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+    <label for="workType" class="active">Type d'ouvrage</label>
+      <select id="workType" name="workType" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeOuvrageParticulierId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeOuvrageParticulierId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefOuvrageParticulier | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeOuvrageParticulierId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>
+<div class="sirs-field">
+  <label class="active">Sécurité</label>
+  <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
+      <option [value]="undefined" [selected]="EOS.objectDoc.securiteId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
+      [selected]="EOS.objectDoc.securiteId === r.id">
+      {{ r | docToString | async }}
+    </option>
+  </select>
+</div>
+<div class="sirs-field">
+  <label for="dimensionVerticale" class="active">Dimension vertical/diamètre (mm)</label>
+  <input id="dimensionVerticale" name="dimensionVerticale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionVerticale" />
+</div>
+<div class="sirs-field">
+  <label for="dimensionHorizontale" class="active">Dimension horizontale (mm)</label>
+  <input id="dimensionHorizontale" name="dimensionHorizontale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionHorizontale" />
+</div>

@@ -1,0 +1,12 @@
+<ion-list>
+  <ion-item *ngIf="detailsObject.selectedObject.date_debut">
+      <span><b>La date de début: </b></span>{{ detailsObject.selectedObject.date_debut | date: 'dd/MM/yyyy' }}</ion-item>
+  <ion-item *ngIf="detailsObject.selectedObject.designation">
+      <span><b>La désignation: </b></span>{{ detailsObject.selectedObject.designation }}</ion-item>
+  <ion-item *ngIf="detailsObject.selectedObject.fictive !== undefined">
+      <span><b>Fictive: </b></span>{{ detailsObject.selectedObject.fictive }}</ion-item>
+  <ion-item *ngIf="detailsObject.selectedObject.libelle">
+      <span><b>Libelle: </b></span>{{ detailsObject.selectedObject.libelle }}</ion-item>
+  <ion-item *ngIf="detailsObject.selectedObject.commentaire">
+      <span><b>Commentaire: </b></span>{{ detailsObject.selectedObject.commentaire }}</ion-item>
+</ion-list>

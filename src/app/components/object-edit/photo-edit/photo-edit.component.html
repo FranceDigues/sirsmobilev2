@@ -1,0 +1,116 @@
+<div [ngSwitch]="view" class="wrapper">
+    <div class="object-form" *ngSwitchCase="'photo-form'" fxLayout="row" fxLayoutAlign="center start">
+        <div class="sirs-card" fxFlex="80">
+            <ion-content class="sirs-card-wrapper scroll-contents" fxLayout="column" fxLayoutAlign="start stretch">
+                <div class="sirs-card-content" fxFlex>
+                    <span class="blue-text text-darken-2 ">Prendre une photo ou une note</span><br>
+                    <div class="text-center">
+                        <ion-button color="medium" (click)="takePhoto()">
+                            <ion-icon name="camera-outline"></ion-icon>&nbsp;&nbsp;Prendre une photo
+                        </ion-button>
+                        <ion-button color="medium" (click)="drawNote()">
+                            <ion-icon name="pencil-outline"></ion-icon>&nbsp;&nbsp;Déssiner une note
+                        </ion-button>
+                        <ion-button color="medium" (click)="getPhotoFromGallery()">
+                            <mat-icon>perm_media</mat-icon>&nbsp;&nbsp;Importer un media
+                        </ion-button>
+                    </div>
+                    <div class="pics row" *ngIf="photoDoc.id !== ''">
+                        <div class="pic col col-25">
+                            <div class="pic-quicklook" fxLayout="row" fxLayoutAlign="center center">
+                                <ion-img style="height: 100px; width: 100px;" alt="Photo non disponible sur le mobile"
+                                         [src]="getImage()"></ion-img>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="blue-text text-darken-2">Depuis un appareil externe</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div>
+                        <input type="text" [(ngModel)]="photoDoc.designation"
+                               placeholder="Numéro de photo">
+                    </div>
+                    <div class="spacer"></div>
+                    <div>
+                        <input type="text" [(ngModel)]="photoDoc.libelle"
+                               placeholder="Libellé">
+                    </div>
+                    <div class="spacer"></div>
+                    <span class="blue-text text-darken-2">Position</span><br>
+                    <div class="spacer"></div>
+                    <ion-button color="medium" (click)="locateMe()">
+                        <ion-icon name="locate-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium" (click)="selectPosition()">
+                        <ion-icon name="location-outline"></ion-icon>
+                    </ion-button>
+                    <ion-button color="medium" (click)="selectPositionBySR()">
+                        <ion-icon name="options-outline"></ion-icon>
+                    </ion-button>
+                    <div *ngIf="photoDoc.positionDebut" class="sirs-field-inline">
+                        <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+                        <span class="sirs-field-value">{{ getPosition() }}</span>
+                    </div>
+                    <div *ngIf="photoDoc.borneDebutId" class="sirs-field-inline">
+                        <span class="sirs-field-value">&nbsp;&nbsp;Position via borne&nbsp; : &nbsp;</span>
+                        <span class="sirs-field-value">{{photoDoc.borneDebutId ? 'à ' + photoDoc.borne_debut_distance + ' m de la borne ' +
+                            photoDoc.borneDebutLibelle + ' en ' + (photoDoc.borne_debut_aval ? 'amont' : 'aval') : 'à definir'}}</span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <div fxFlex="50">
+                            <label>Orientations</label>
+                            <select id="orientationList" class="browser-default" [(ngModel)]="photoDoc.orientationPhoto">
+                                <option *ngFor="let o of orientationList || []" [selected]="o.id === photoDoc.orientationPhoto" [value]="o.id">
+                                    {{ o.value | docToString | async }}
+                                </option>
+                            </select>
+                        </div>
+                        <div fxFlex="50">
+                            <label>Côté</label>
+                            <select id="coteList" class="browser-default" [(ngModel)]="photoDoc.coteId">
+                                <option *ngFor="let c of coteList || []" [selected]="c.id === photoDoc.coteId" [value]="c.id">
+                                    {{c.value | docToString | async }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" [(ngModel)]="photoDoc.commentaire" placeholder="Commentaire">
+                    </div>
+                    <div>
+                        <label>Photographe</label>
+                        <div class="sirs-field">
+                            <select class="browser-default" [(ngModel)]="photoDoc.photographeId">
+                                <option *ngFor="let c of contactList || []" [selected]="c.id === photoDoc.photographeId" [value]="c.id">
+                                    {{ c.doc.nom }} {{ c.doc.prenom ? c.doc.prenom : '' }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="sirs-card-action">
+                    <button mat-button (click)="back()">
+                        <ion-icon name="arrow-back"></ion-icon>
+                        <span>&nbsp;&nbsp;Annuler</span>
+                    </button>
+                    <button mat-raised-button color="warn" [disabled]="!photoDoc.id" (click)="save()">
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                        <span>Terminer</span>
+                    </button>
+                </div>
+                <div style="height: 200px;"></div>
+            </ion-content>
+        </div>
+    </div>
+    <!--     Position Map -->
+    <div class="full-height" *ngSwitchCase="'photo-map'">
+        <map-point class="full-height" (slidePathChange)="setView('photo-form')"
+                   (successData)="handlePos($event)" notNeedEOS=true></map-point>
+    </div>
+    <!-- Note -->
+    <div class="full-height" *ngSwitchCase="'photo-note'" ng-init="save = savePicture; exit = backToForm">
+        <edit-note (slidePathChange)="setView('photo-form')" (successData)="savePicture($event)"></edit-note>
+    </div>
+</div>

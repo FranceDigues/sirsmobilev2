@@ -1,0 +1,15 @@
+<ion-header translucent>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="validate()">Valider</ion-button>
+    </ion-buttons>
+    <ion-title>Définir une position</ion-title>
+  </ion-toolbar>
+</ion-header>
+<div id="mapPoint" #mapPoint></div>
+<div *ngIf="isVegetation" class="vegetation-msg">
+  Vous devez définir un point dans la zone marquée autour de parcelle sélectionnée
+</div>

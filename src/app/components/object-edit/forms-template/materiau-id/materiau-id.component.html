@@ -1,0 +1,9 @@
+<label for="material" class="active">Matériau</label>
+<select id="material" name="material" class="browser-default"
+        [(ngModel)]="EOS.objectDoc.materiauId">
+    <option [value]="undefined" [selected]="EOS.objectDoc.materiauId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefMateriau | refSort: EOS.showText('fullName');" [value]="r.id"
+            [selected]="EOS.objectDoc.materiauId === r.id">
+        {{ r | docToString | async }}
+    </option>
+</select>

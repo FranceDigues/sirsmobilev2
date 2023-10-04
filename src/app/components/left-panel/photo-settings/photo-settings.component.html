@@ -1,0 +1,40 @@
+<ion-header translucent="">
+    <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Paramètres Photo</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" fullscreen="" class="scroll-all-content">
+    <div class="settings-block">
+        <label class="block-title">Qualité Photo : {{quality}}</label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="quality"
+                   [step]="10"
+                   [min]="0"
+                   [max]="100"></ion-range>
+
+        <div class="sirs-field col col-100">
+            <label for="resolution" class="active edit-label">Résolution de photo : {{resolution}}</label>
+            <select id="resolution"
+                    class="browser-default"
+                    [(ngModel)]="resolution"
+                    (ngModelChange)="updateResolution($event)"
+                    name="resolution">
+                <option *ngFor="let resolutionDef of resolutionList"
+                        [ngValue]="resolutionDef.label"
+                        [selected]="resolution === resolutionDef.label">
+                    {{ resolutionDef.label }}</option>
+            </select>
+        </div>
+        <div class="btn-block">
+            <ion-button color="medium" (click)="validate()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span style="margin-left: 10px">Valider</span>
+            </ion-button>
+        </div>
+    </div>
+</ion-content>

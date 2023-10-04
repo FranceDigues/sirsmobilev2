@@ -1,0 +1,74 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+    <div class="sirs-panel">
+      <div class="sirs-field-inline">
+        <span class="sirs-field-title">Numéro de désignation : </span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+      </div>
+    </div>
+    <div class="sirs-section">
+      <div class="sirs-field">
+        <span class="sirs-field-title">Valide</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Auteur</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de fin</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de debut</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Commentaire</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Libellé</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Superficie</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.superficie"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Capacité de stockage</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.capaciteStockage"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Profondeur moyenne</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.profondeurMoyenne"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Collectivité compétente</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.organisme | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Fonctionnement</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionnement | async"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Type</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.type | async"></span>
+      </div>
+
+    </div>
+  </div>
+  <!-- Content / Observations -->
+  <div *ngSwitchCase="'observations'">
+    <observations-generic></observations-generic>
+  </div>
+  <!-- Content / Prestations -->
+  <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+    <prestations-generic></prestations-generic>
+  </div>
+  <!-- Content / Désordres -->
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+    <desordres-generic></desordres-generic>
+  </div>
+</div>

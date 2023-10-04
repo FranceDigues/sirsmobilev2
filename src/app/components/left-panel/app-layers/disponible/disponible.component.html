@@ -1,0 +1,21 @@
+<ion-header translucent>
+  <ion-toolbar class="header-slide">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Couches disponibles</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="scroll-all-content" [scrollEvents]="true" fullscreen>
+  <ion-list>
+    <ion-item *ngFor="let layer of available" (click)="toggleLayer(layer)">
+      <h5 class="couches-metiers-title">{{ layer.title }}</h5>
+      <div class="layer-state">
+        <div class="couches-metiers-description">{{layer.categories.join(' / ') || 'Sans catégorie'}}</div>
+      </div>
+      <ion-checkbox [checked]="isActive(layer)" slot="start">
+      </ion-checkbox>
+    </ion-item>
+    <ion-item lines="none"></ion-item>
+  </ion-list>
+</ion-content>

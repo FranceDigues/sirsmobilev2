@@ -1,0 +1,50 @@
+<ion-header translucent>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot=start>
+      <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mise en cache</ion-title>
+  </ion-toolbar>
+</ion-header>
+<div class="full-height">
+  <div class="row full-height">
+    <div class="cache-left center">
+      <div class="sirs-field">
+        <span class="sirs-field-title">
+          Niveaux de zoom<br />
+          {{ minZoom }} / {{ maxZoom }}
+        </span>
+        <ion-range class="cacheSlider" min="0" max="18" pin dualKnobs="true" color="secondary"
+        [(ngModel)]="knobValues" (ionChange)="updateTileCount()">
+        </ion-range>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Niveau de zoom actuel</span>
+        <p class="text-right">{{ getCurrentZoom() }}</p>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Nombre de tuiles</span>
+        <p class="text-right">{{ tileCount | number }}</p>
+      </div>
+      <p *ngIf="tileCount > 20000">
+        <i class="icon ion-alert-circled"></i>&nbsp;Nombre de tuiles élevé. Afin de limiter l'espace disque
+        occupé par la mise en cache, il est conseillé de réduire l'étendu géographique ou encore le niveau
+        de zoom maximum.
+      </p>
+      <ion-fab class="position-absolute" style="bottom: 80px; padding-left: 15px;" horizontal="start" vertical="end" slot="fixed">
+        <ion-fab-button color="danger" (click)="validate()">
+          <ion-icon name="checkmark-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-fab class="position-absolute" style="bottom: 80px;" horizontal="end" vertical="end" slot="fixed">
+        <ion-fab-button [disabled]="!layerModel.cache" color="danger" (click)="deleteCache()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+    <div class="cache-right">
+      <div id="mapCache" #mapCache></div>
+    </div>
+  </div>
+</div>
+

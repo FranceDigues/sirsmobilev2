@@ -1,0 +1,113 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Définir une position via une borne</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="width: 100%;" fxLayout="column" fxLayoutAlign=" center">
+    <div style="width: 92%;">
+      <div>
+        <label>Système de repérage: </label>
+        <select id="sr" class="browser-default" *ngIf="!endSR" [(ngModel)]="systemeReperageId" name="sr"
+          (change)="selectSR()">
+          <!-- ! Take care between systemReperage and systemeReperage which are not the same -->
+          <option *ngFor="let systemReperage of systemeReperageList" [value]="systemReperage.value._id"
+            (change)="selectSR()" [selected]="systemeReperageId === systemReperage.value._id">
+            {{ systemReperage.value.libelle }}
+          </option>
+        </select>
+        <p *ngIf="endSR">{{ endSR }}</p>
+      </div>
+    
+      <div *ngIf="systemeReperage && !EOS.isLinear">
+        <label>Borne du système de repérage : </label>
+        <select id="bsr" class="browser-default" [(ngModel)]="data.borneDebutId" (change)="updateBorneLibelle()" name="bsr">
+          <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
+            [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
+            [selected]="data.borneDebutId === systemeReperageBorne.borneId">
+            {{ systemeReperageBorne.libelle }}
+          </option>
+        </select>
+      </div>
+      <div *ngIf="systemeReperage && EOS.isLinear">
+        <label>Borne du système de repérage début: </label>
+        <select id="bsrDebut" class="browser-default" [(ngModel)]="data.borneDebutId" (change)="updateBorneLibelle()"
+          name="bsrDebut">
+          <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
+            [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
+            [selected]="data.borneDebutId === systemeReperageBorne.borneId">
+            {{ systemeReperageBorne.libelle }}
+          </option>
+        </select>
+        <label>Borne du système de repérage fin: </label>
+        <select id="bsrFin" class="browser-default" [(ngModel)]="data.borneFinId" (change)="updateBorneLibelle()"
+          name="bsrFin">
+          <option *ngFor="let systemeReperageBorne of systemeReperage.value.systemeReperageBornes"
+            [value]="systemeReperageBorne.borneId" (change)="updateBorneLibelle()"
+            [selected]="data.borneFinId === systemeReperageBorne.borneId">
+            {{ systemeReperageBorne.libelle }}
+          </option>
+        </select>
+      </div>
+
+      <div *ngIf="systemeReperage && !EOS.isLinear">
+        <label for="pos" class="active">Position de l'élément par rapport à la borne : </label>
+        <select id="pos" class="browser-default" [(ngModel)]="data.borne_debut_aval" name="pos">
+          <option [value]="'false'" [selected]="data.borne_debut_aval === 'false'">
+            Aval
+          </option>
+          <option [value]="'true'" [selected]="data.borne_debut_aval === 'true'">
+            Amont
+          </option>
+        </select>
+      </div>
+      <div *ngIf="systemeReperage && EOS.isLinear">
+        <label for="posDebut" class="active">Position Début de l'élément par rapport à la borne : </label>
+        <select id="posDebut" class="browser-default" [(ngModel)]="data.borne_debut_aval" name="posDebut">
+          <option [value]="'false'" [selected]="data.borne_debut_aval === 'false'">
+            Aval
+          </option>
+          <option [value]="'true'" [selected]="data.borne_debut_aval === 'true'">
+            Amont
+          </option>
+        </select>
+        <label for="posFin" class="active">Position Fin de l'élément par rapport à la borne : </label>
+        <select id="posFin" class="browser-default" [(ngModel)]="data.borne_fin_aval" name="posFin">
+          <option [value]="'false'" [selected]="data.borne_fin_aval === 'false'">
+            Aval
+          </option>
+          <option [value]="'true'" [selected]="data.borne_fin_aval === 'true'">
+            Amont
+          </option>
+        </select>
+      </div>
+    
+      <div *ngIf="systemeReperage && !EOS.isLinear">
+        <label for="distance" class="active">Distance à la borne (en mètre): </label>
+        <input id="distance" type="number" class="validate" [(ngModel)]="data.borne_debut_distance" name="distance"
+          placeholder="" />
+      </div>
+      <div *ngIf="systemeReperage && EOS.isLinear">
+        <label for="distanceDebut" class="active">Distance à la borne début (en mètre): </label>
+        <input id="distanceDebut" type="number" class="validate" [(ngModel)]="data.borne_debut_distance"
+          name="distanceDebut" placeholder="" />
+        <label for="distanceFin" class="active">Distance à la borne fin (en mètre): </label>
+        <input id="distanceFin" type="number" class="validate" [(ngModel)]="data.borne_fin_distance" name="distanceFin"
+          placeholder="" />
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer slot="end" style="padding: 10px;">
+  <div class="right" style="padding: 0;">
+    <button style="background-color: #00a796; color: white; font-weight: bold;" class="waves-effect waves-light btn" (click)="validate()">
+      Valider le choix
+      <ion-icon slot="end" name="checkmark"></ion-icon>
+    </button>
+  </div>
+</ion-footer>

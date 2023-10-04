@@ -1,0 +1,36 @@
+<div [ngSwitch]="slidePath" class="full-height">
+    <div class="full-height" *ngSwitchCase="'menu'">
+        <menu-panel class="full-height" (slidePathChange)="changeSlidePath($event)"></menu-panel>
+    </div>
+    <div class="full-height" *ngSwitchCase="'craftLayers'">
+        <app-layers class="full-height"
+                                (slidePathChange)="changeSlidePath($event)"></app-layers>
+    </div>
+    <div class="full-height" *ngSwitchCase="'choiceOfSectionsDigues'">
+        <left-slide-troncon class="full-height" (slidePathChange)="changeSlidePath($event)"></left-slide-troncon>
+    </div>
+    <div class="full-height" *ngSwitchCase="'backMap'">
+        <left-slide-backmap (slidePathChange)="changeSlidePath($event)"></left-slide-backmap>
+    </div>
+    <div class="full-height" *ngSwitchCase="'appInfos'">
+        <app-infos class="full-height" (slidePathChange)="changeSlidePath($event)"></app-infos>
+    </div>
+    <div class="full-height" *ngSwitchCase="'appSettings'">
+        <app-settings (slidePathChange)="changeSlidePath($event)"></app-settings>
+    </div>
+    <div class="full-height" *ngSwitchCase="'appSettings2'">
+        <app-settings2 (slidePathChange)="changeSlidePath($event)"></app-settings2>
+    </div>
+    <div class="full-height" *ngSwitchCase="'GPSSettings'">
+        <app-gps-settings (slidePathChange)="changeSlidePath($event)"></app-gps-settings>
+    </div>
+    <div class="full-height" *ngSwitchCase="'PhotoSettings'">
+        <app-photo-settings (slidePathChange)="changeSlidePath($event)"></app-photo-settings>
+    </div>
+    <div class="full-height" *ngSwitchCase="'shapeLayerManager'">
+        <app-shapes-layers-manager (slidePathChange)="changeSlidePath($event)"></app-shapes-layers-manager>
+    </div>
+    <div class="full-height" *ngSwitchCase="'addShapeLayer'">
+        <app-add-shapes-layers (slidePathChange)="changeSlidePath($event)"></app-add-shapes-layers>
+    </div>
+</div>

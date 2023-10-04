@@ -1,0 +1,59 @@
+<ion-header translucent="">
+    <ion-toolbar class="header-slide">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main" (click)="goBack()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Paramètres GPS</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" fullscreen="" class="scroll-all-content">
+    <div class="gps-settings-block">
+        <label class="block-title">Délai de mise à jour de la position GPS : {{geolocationService.updateTimeout}} ms
+            : </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.updateTimeout"
+                   [step]="1000"
+                   [min]="5000"
+                   [max]="60000"></ion-range>
+
+        <label class="block-title">Ancienneté maximale de la localisation (en ms)
+            : {{geolocationService.gpsOptions.maximumAge}} </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.gpsOptions.maximumAge"
+                   [step]="1000"
+                   [min]="1000"
+                   [max]="120000"></ion-range>
+        <label class="block-title">Délai d'attente de la réponse d'un GPS : {{geolocationService.gpsOptions.timeout}} ms
+            : </label>
+        <ion-range [ticks]="true"
+                   [snaps]="true"
+                   [pin]="true"
+                   [(ngModel)]="geolocationService.gpsOptions.timeout"
+                   [step]="1000"
+                   [min]="1000"
+                   [max]="120000"></ion-range>
+        <div class="tgl-block">
+            <label class="block-title">Activer la haute précision : </label>
+            <ion-toggle [(ngModel)]="geolocationService.gpsOptions.enableHighAccuracy"></ion-toggle>
+        </div>
+        <div class="tgl-block">
+            <label class="block-title">Mode ultra précis : </label>
+            <ion-toggle [(ngModel)]="geolocationService.ultraAccuracy"></ion-toggle>
+        </div>
+        <div class="warning-block">
+            <mat-icon style="margin-right: 20px;" >warning</mat-icon>
+            Attention en activant ce mode, la consommation des ressources matériels et de la batterie sera augmenter
+        </div>
+        <div class="btn-block">
+            <ion-button color="medium" (click)="validate()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span style="margin-left: 10px">Valider</span>
+            </ion-button>
+        </div>
+    </div>
+
+</ion-content>

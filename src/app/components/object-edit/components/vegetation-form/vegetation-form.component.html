@@ -1,0 +1,187 @@
+<div class="common">
+    <div class="sirs-field">
+        <label for="designation" class="active label-edit">Désignation</label>
+        <input id="designation" type="text" class="validate"
+               [(ngModel)]="EOS.objectDoc.designation" name="designation"
+               placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
+    </div>
+    <div *ngIf="!EOS.objectDoc.parcelleId && (EOS.isNew || EOS.isClosed)">
+        Sélectionner une parcelle afin de positionner l'objet
+    </div>
+
+    <div *ngIf="EOS.objectDoc.parcelleId && (EOS.isNew || EOS.isClosed)"
+         class="switch">
+        <select id="objectType" class="browser-default" [(ngModel)]="EOS.objVegetationType"
+                name="objectType" (change)="EOS.changeObjectTypeVegetation()">
+            <option *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation'"
+                    [value]="'point'" [selected]="EOS.objVegetationType === 'point'">
+                Objet ponctuel
+            </option>
+            <option *ngIf="EOS.objectDoc['@class'] !== 'fr.sirs.core.model.ArbreVegetation'"
+                    [value]="'polygon'" [selected]="EOS.objVegetationType === 'polygon'">
+                Objet polygonale
+            </option>
+        </select>
+    </div>
+
+    <div class="sirs-field-inline" *ngIf="EOS.objectDoc.parcelleId"
+         fxLayout="row"
+         fxLayoutAlign="space-between center">
+        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+             class="sirs-field-title" *ngIf="EOS.objVegetationType === 'polygon'">
+            <div>
+                Dessiner un polygone
+            </div>
+            <button class="option-button" (click)="drawPolygon()">
+                <ion-icon class="option-button-icon" name="triangle-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div style="width: 100%" fxLayout="row" fxLayoutAlign="space-between center"
+             class="sirs-field-title"
+             *ngIf="EOS.objVegetationType === 'point'">
+            <div>
+                Position : {{ EOS.getStartPos() }}
+            </div>
+            <div>
+                <button class="option-button" (click)="EOS.locateMe()"
+                        *ngIf="EOS.objVegetationType === 'point'">
+                    <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                </button>
+                <button class="option-button" (click)="selectPos()"
+                        *ngIf="EOS.objVegetationType === 'point'">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="sirs-field col col-100">
+        <label for="parcelle" class="active edit-label">
+            La liste des parcelles végétation
+        </label>
+        <select id="parcelle" class="browser-default" [(ngModel)]="EOS.objectDoc.parcelleId"
+                name="parcelle">
+            <option [value]="undefined" [selected]="EOS.objectDoc.parcelleId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let parcelle of EOS.parcelles" [ngValue]="parcelle.value.id">
+                {{ parcelle.value.designation || parcelle.value.id }}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="sirs-field col col-100" style="display: flex;gap: 10px;">
+        <ion-checkbox slot="end" name="contactEau"
+                      [(ngModel)]="EOS.objectDoc.contactEau"></ion-checkbox>
+        <label style="margin-top: 3px">Contact Eau</label>
+    </div>
+</div>
+
+<div class="row" style="padding: 0 10px;">
+    <div fxFlex="50">
+        <label>Position Type</label>
+        <select id="positionType" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.typePositionId"
+                name="positionType">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typePositionId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let position of EOS.refs.RefPosition" [ngValue]="position.id">
+                {{position | formatOptionText}}
+            </option>
+        </select>
+    </div>
+    <div fxFlex="50">
+        <label>Côté Type</label>
+        <select id="coteType" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.typeCoteId"
+                name="coteType">
+            <option [value]="undefined" [selected]="EOS.objectDoc.typeCoteId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let cote of EOS.refs.RefCote" [ngValue]="cote.id">
+                {{cote | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+    <div class="sirs-field col col-100">
+        <label for="densite" class="active">Densité</label>
+        <input id="densite" name="densite" type="number" min=0
+               [(ngModel)]="EOS.objectDoc.densite"/>
+    </div>
+</div>
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+    <div class="sirs-field col col-100">
+        <label for="hauteur" class="active">Hauteur</label>
+        <input id="hauteur" name="hauteur" type="number" min=0
+               [(ngModel)]="EOS.objectDoc.hauteur"/>
+    </div>
+</div>
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation'">
+    <div class="sirs-field col col-100">
+        <label for="diametre" class="active">Diamètre</label>
+        <input id="diametre" name="diametre" type="number" min=0
+               [(ngModel)]="EOS.objectDoc.diametre"/>
+    </div>
+</div>
+
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.PeuplementVegetation' || EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation'">
+    <div fxFlex="100" style="margin: 0 10px;">
+        <label>État Sanitaire Type</label>
+        <select id="etat-sanitaire-type" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.etatSanitaireId"
+                name="etat-sanitaire-type">
+            <option [value]="undefined" [selected]="EOS.objectDoc.etatSanitaireId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let etatSanitaire of EOS.refs.RefEtatSanitaireVegetation" [ngValue]="etatSanitaire.id">
+                {{etatSanitaire | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div class="row" *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation'">
+    <div fxFlex="100" style="margin: 0 10px;">
+        <label>Hauteur</label>
+        <select id="hauteurId" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.hauteurId"
+                name="hauteurId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.hauteurId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let refHauteur of EOS.refs.RefHauteurVegetation" [ngValue]="refHauteur.id">
+                {{refHauteur | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.ArbreVegetation'">
+    <div fxFlex="100" style="margin: 0 10px;">
+        <label>Diamètre</label>
+        <select id="diametreId" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.diametreId"
+                name="diametreId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.diametreId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let refDiametre of EOS.refs.RefDiametreVegetation" [ngValue]="refDiametre.id">
+                {{refDiametre | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>
+<div class="row"
+     *ngIf="EOS.objectDoc['@class'] === 'fr.sirs.core.model.InvasiveVegetation'">
+    <div fxFlex="100" style="margin: 0 10px;">
+        <label>Densité</label>
+        <select id="densiteId" class="browser-default"
+                [(ngModel)]="EOS.objectDoc.densiteId"
+                name="densiteId">
+            <option [value]="undefined" [selected]="EOS.objectDoc.densiteId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let refDensite of EOS.refs.RefDensiteVegetation" [ngValue]="refDensite.id">
+                {{refDensite | formatOptionText}}
+            </option>
+        </select>
+    </div>
+</div>

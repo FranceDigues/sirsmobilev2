@@ -1,0 +1,28 @@
+<ion-header translucent>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="validate()">Valider</ion-button>
+    </ion-buttons>
+    <ion-title>Prise de note</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [forceOverscroll]="false" [scrollY]="false">
+  <ion-row>
+    <ion-col *ngFor="let color of colors" [style.background]="color" class="color-block"></ion-col>
+  </ion-row>
+  <ion-radio-group (ionChange)="radioGroupChange($event)">
+    <ion-row>
+      <ion-col *ngFor="let color of colors" class="ion-text-center">
+        <ion-radio value="{{color}}"></ion-radio>
+      </ion-col>
+    </ion-row>
+  </ion-radio-group>
+  <div class="canvas-container">
+    <canvas #imageCanvas (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)"
+      (touchmove)="moved($event)" (mousemove)="moved($event)" (mouseup)="endDrawing()" (touchend)="endDrawing()"></canvas>
+    <ion-button class="canvas-trash-button" color="dark" (click)="clearCanvas()"><ion-icon name="trash"></ion-icon></ion-button>
+  </div>
+</ion-content>

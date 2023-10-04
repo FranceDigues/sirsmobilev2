@@ -1,0 +1,7 @@
+{
+  "name": "SirsMobile",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

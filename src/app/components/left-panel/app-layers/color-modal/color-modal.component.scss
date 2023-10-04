@@ -1,0 +1,25 @@
+.modal-css {
+  height: 20%;
+  top: 80%;
+  position: absolute;
+  display: block;
+}
+
+:host {
+  .square-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    margin-top: 10px;
+
+    .color-block {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 10px;
+
+      .white-icon {
+        color: #ffffff;
+      }
+    }
+  }
+}

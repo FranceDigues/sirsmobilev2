@@ -1,0 +1,223 @@
+ion-toolbar {
+    --min-height: 64px;
+}
+
+.add-back-layer {
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
+}
+
+.header-slide {
+    height: 64px;
+}
+
+/*form */
+.form-view-block {
+    margin-top: 10px;
+}
+
+.form-view-block .label-form {
+    color: #666;
+    text-transform: uppercase;
+}
+
+.form-view-block .list .item.item-input input {
+    padding-top: 0;
+}
+
+.form-view-block .list .item.item-input {
+    width: 99%;
+    margin-left: 1px;
+    background: white;
+}
+
+.form-view-block.form-view-popover .list {
+    border: solid 1px #ddd;
+}
+
+.form-view-block.form-view-popover {
+    padding: 5px 20px;
+}
+
+.button.button-positive.button-form {
+    border-color: #FFEB3B;
+    background-color: #FFEB3B;
+    color: #666;
+}
+.form-entete{
+    background-color:#B2EBF2;
+    padding-top: 10px;
+}
+.form-entete .position-gps{
+    margin-bottom: 0;
+}
+.form-entete .qualite-signal{
+    font-style: italic;
+    color: #888;
+    font-size: 12px;
+}
+.form-entete .btn-mettreajour{
+    position: absolute;
+    top: 110px;
+    left: 300px;
+    background-color: #FF4081;
+}
+.form-entete .toggle-lineaire{
+    position: absolute;
+    left: 120px;
+    top: 90px;
+}
+
+.form-colonnes-50{
+    width: 50%;
+    padding: 0 10px;
+}
+
+/* Cache page */
+.cache-view{
+    background:#00BCD0;
+}
+.cache-view .cache-form{
+    background:#fff;
+    border-radius:2px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.33);
+
+}
+.cache-view rzslider span.bar{
+    background: #00BCD0;
+}
+.cache-view rzslider span.pointer{
+    top: -6px;
+    width: 22px;
+    height: 22px;
+    background: #0098A8;
+}
+.cache-view rzslider span.pointer:after{
+    top: 7px;
+    left: 7px;
+    background:transparent;
+}
+.cache-view rzslider span.bar.selection{
+    background: #0098A8;
+}
+
+.cache-view .item{
+    border: none;
+    padding-top: 5px;
+}
+.cache-view .toggle-small.item-toggle .toggle {
+    top: 8px;
+}
+.cache-view .button.button-positive{
+    border-color: #FFEB3B;
+    background-color: #FFEB3B;
+    color:#666;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    margin: 10px auto;
+    width: 96%;
+}
+.cache-view .button.button-positive.activated{
+    border-color: #FFF176;
+    background-color: #FFF176;
+    color:#666;
+}
+.cache-view .checkbox-square .checkbox-icon:before{
+    margin-top: -2px;
+}
+.cache-view .checkbox input:checked:before, .cache-view .checkbox input:checked + .checkbox-icon:before{
+    background: #00BCD0;
+    border-color: #00BCD0;
+}
+.cache-view progress{
+    margin: 10px auto;
+    width: 96%;
+}
+
+/*//popup*/
+.popup {
+    width: 400px;
+    height: 350px;
+    padding: 0;
+}
+
+/* panel */
+.sirs-panel {
+    padding: 16px;
+    margin-bottom: 10px;
+    color: #FFFFFF;
+    background-color: #2DC7D8;
+}
+.sirs-panel *:last-child {
+    margin-bottom: 0;
+}
+
+/* section */
+.sirs-section {
+    padding: 0 16px;
+    margin-bottom: 10px;
+}
+
+/* field */
+.sirs-field,
+.sirs-field-inline {
+    margin-bottom: 10px;
+}
+.sirs-field:last-child,
+.sirs-field-inline:last-child {
+    margin-bottom: 0;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field-inline > span.sirs-field-title {
+    font-weight: bold;
+}
+.sirs-field > span.sirs-field-title,
+.sirs-field > span.sirs-field-value {
+    display: block;
+}
+
+/* tabs */
+.tabs-striped .tabs.tabs-sirs {
+    border-bottom: none;
+}
+.tabs-striped > .tabs.tabs-sirs > .tab-item {
+    color: #00BCD0;
+    border-color: #00BCD0;
+}
+.tabs-striped > .tabs.tabs-sirs > .tab-item.active,
+.tabs-striped > .tabs.tabs-sirs > .tab-item.activated,
+.tabs-striped > .tabs.tabs-sirs > .tab-item-active {
+    color: #0098A6;
+    border-color: #0098A6;
+    border-bottom-width: 3px !important;
+}
+
+/* forms */
+#documents > ion-header-bar,
+#objectEdition > ion-header-bar {
+    background-color: #0098A6;
+}
+#documents > ion-header-bar > h1,
+#documents > ion-header-bar > .button.ion-arrow-left-a,
+#objectEdition > ion-header-bar > h1,
+#objectEdition > ion-header-bar > .button.ion-arrow-left-a {
+    color: #FFFFFF;
+}
+
+div.fixed-button-bar {
+    z-index: 998;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 62px;
+    padding: 4px;
+    text-align: center;
+}
+
+.layer-categories {
+    font-size: 12px;
+    color: #AAAAAA;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

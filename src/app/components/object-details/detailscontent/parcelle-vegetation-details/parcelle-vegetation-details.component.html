@@ -1,0 +1,36 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+    <!-- Content / Description -->
+    <div *ngSwitchCase="'description'">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation : </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Tronçon</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.linearId | getById | async) as troncon">
+                    <span class="sirs-field-value" [textContent]="troncon.libelle || troncon.designation"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Plan de gestion</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.planId | getById | async) as plan">
+                    <span class="sirs-field-value" [textContent]="plan.libelle || plan.designation"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Content / Observations -->
+    <div *ngSwitchCase="'observations'">
+        <observations-generic></observations-generic>
+    </div>
+    <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+        <prestations-generic></prestations-generic>
+    </div>
+</div>

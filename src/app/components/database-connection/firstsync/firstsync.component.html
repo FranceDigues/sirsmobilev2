@@ -1,0 +1,33 @@
+<h2 class="sirs-card-title">Première synchronisation avec la base distante</h2>
+<div *ngIf="syncService.status === 0">
+  <div class="sirs-field">
+    <span class="sirs-field-title">Nom</span>
+    <p>{{ dbService.activeDB.name }}</p>
+  </div>
+  <div class="sirs-field">
+    <span class="sirs-field-title">URL</span>
+    <p>{{ dbService.activeDB.url }}</p>
+  </div>
+
+</div>
+<div *ngIf="syncService.status === 1">
+  <p>Cette opération peut prendre quelques minutes...</p>
+  <div class="progress">
+    <div class="determinate" [style.width.%]="syncService.percent"></div>
+  </div>
+  <p>
+    <span class="right">{{ syncService.completion }}</span>
+  </p>
+</div>
+<div *ngIf="syncService.status === 2">
+  <p>Synchronisation effectuée avec succès.</p>
+</div>
+<div *ngIf="syncService.status === 3">
+  <p>Une erreur s'est produite pendant la synchronisation.</p>
+  <p>Vous allez être rediriger au menu des bases de données...</p>
+  <div class="sirs-card-action">
+    <button type="button" (click)="onBackPressed()" class="btn-flat waves-effect waves-teal">
+      <ion-icon name="arrow-back-outline"></ion-icon>Retour
+    </button>
+  </div>
+</div>

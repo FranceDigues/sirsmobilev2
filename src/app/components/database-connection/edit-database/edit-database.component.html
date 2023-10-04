@@ -1,0 +1,38 @@
+<div>
+    <h2 class="sirs-card-title">Edition base de données</h2>
+    <p>Veuillez saisir les paramètres de connexions à la base de donées.</p>
+    <form *ngIf="databaseForm" [formGroup]="databaseForm">
+
+        <div class="form-group">
+            <label>Titre</label>
+            <input formControlName="name" type="text" required/>
+        </div>
+
+        <div cs="form-group">
+            <label>URL</label>
+            <input class="form-control" formControlName="url" type="text" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Identifiant utilisateur</label>
+            <input class="form-control" formControlName="userId" type="text" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input class="form-control" formControlName="password" type="password" required/>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-button (click)="onBack()">
+                <ion-icon name="arrow-back-outline"></ion-icon>
+                <span>&nbsp;&nbsp;Retour</span>
+            </button>
+            <button mat-raised-button color="warn" [disabled]="!databaseForm.valid" (click)="editStorage()">
+                <ion-icon name="add-outline"></ion-icon>
+                <span>&nbsp;&nbsp;Modifier les informations de la base</span>
+            </button>
+        </div>
+
+    </form>
+</div>

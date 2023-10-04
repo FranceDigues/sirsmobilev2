@@ -1,0 +1,139 @@
+<div class="common">
+    <div class="sirs-field">
+        <label for="designation" class="active label-edit">Désignation</label>
+        <input id="designation" type="text" class="validate"
+               [(ngModel)]="EOS.objectDoc.designation" name="designation"
+               placeholder="Ne pas remplir la désignation si vous souhaitez appliquer l'auto-incrémentation."/>
+    </div>
+
+
+    <div *ngIf="(!EOS.isParcelleVegetation()  || EOS.objectType === 'TraitAmenagementHydraulique') && (EOS.isNew || EOS.isClosed)"
+         class="switch">
+        <label class="label-edit">
+            Objet ponctuel
+            <input type="checkbox" id="checkbox" [(ngModel)]="EOS.isLinear" name="checkbox"
+                   (ngModelChange)="EOS.changeObjectType()"/>
+            <span class="lever"></span>
+            Objet linéaire
+        </label>
+    </div>
+
+
+    <div class="sirs-field-inline" *ngIf="!EOS.isLinear"
+         fxLayout="row" fxLayoutAlign="space-between center">
+        <div>
+            <div class="sirs-field-title"
+                 *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">
+                Position :
+            </div>
+            <div class="sirs-field-value"
+                 *ngIf="EOS.objectDoc.editedGeoCoordinate || (EOS.objectDoc.valid && EOS.objectDoc.positionDebut)">
+                {{getStartPositionValue()}}
+            </div>
+            <div class="sirs-field-title"
+                 *ngIf="!EOS.objectDoc.editedGeoCoordinate">
+                Position : {{ EOS.startPosBorneLabel }}
+            </div>
+        </div>
+        <div *ngIf="!EOS.isLinear" fxLayout="row">
+            <button class="option-button" (click)="EOS.locateMe()"
+                    *ngIf="EOS.activatedGPSPositionButton()">
+                <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+            </button>
+            <button class="option-button" (click)="selectPos()"
+                    *ngIf="EOS.activatedGPSPositionButton()">
+                <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+            </button>
+            <button class="option-button" (click)="selectPosBySR()"
+                    *ngIf="EOS.activatedPositionButton() && !EOS.isDependance()">
+                <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="sirs-field-inline" *ngIf="EOS.isLinear">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
+                Position de début : {{ EOS.getStartPos() }}
+            </div>
+            <div class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                Position de début : {{ EOS.startPosBorneLabel }}
+            </div>
+            <div>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; EOS.locateMe()"
+                        *ngIf="EOS.activatedGPSPositionButton()">
+                    <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                </button>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPos()"
+                        *ngIf="EOS.activatedGPSPositionButton()">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = true; EOS.linearPosEditionHandler.endPoint = false; selectPosBySR()"
+                        *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
+                    <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="sirs-field-title" *ngIf="!EOS.objectDoc.systemeRepId">
+                Position de fin : {{ EOS.getEndPos() }}
+            </div>
+            <div class="sirs-field-title" *ngIf="EOS.objectDoc.systemeRepId">
+                Position de fin : {{ EOS.endPosBorneLabel }}
+            </div>
+            <div>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; EOS.locateMe()"
+                        *ngIf="EOS.activatedGPSPositionButton()">
+                    <ion-icon class="option-button-icon" name="navigate-outline"></ion-icon>
+                </button>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPos()"
+                        *ngIf="EOS.activatedGPSPositionButton()">
+                    <ion-icon class="option-button-icon" name="pencil-outline"></ion-icon>
+                </button>
+                <button class="option-button"
+                        (click)="EOS.linearPosEditionHandler.startPoint = false; EOS.linearPosEditionHandler.endPoint = true; selectPosBySR()"
+                        *ngIf="EOS.activatedPositionButton() && !EOS.isDependance() && EOS.troncons && EOS.troncons.length > 0">
+                    <ion-icon class="option-button-icon" name="options-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="sirs-field col col-100">
+        <label for="trancon" class="active edit-label">La liste des Tronçons</label>
+        <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
+                name="trancon">
+            <option [value]="undefined" [selected]="EOS.objectDoc.linearId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
+                {{ troncon.libelle }}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row" *ngIf="EOS.isParcelleVegetation()">
+    <div class="sirs-field col col-100">
+        <label for="plans" class="active edit-label">La liste des plans de gestion</label>
+        <select id="plans" class="browser-default" [(ngModel)]="EOS.objectDoc.planId"
+                name="plans">
+            <option [value]="undefined" [selected]="EOS.objectDoc.planId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let plan of EOS.plans" [ngValue]="plan.id">
+                {{ plan.value.libelle || plan.value.designation}}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="sirs-field col col-100">
+        <label for="date_fin" class="active edit-label">La date de Fin</label>
+        <input id="date_fin" type="date" [(ngModel)]="EOS.dateWrapper" name="date_fin"
+               (change)="EOS.formatDate()"/>
+    </div>
+</div>

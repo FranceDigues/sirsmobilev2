@@ -1,0 +1,31 @@
+<div style="height: 100%;width: 100%" fxLayout="column" fxLayoutAlign="start stretch">
+    <ion-header translucent>
+        <ion-toolbar>
+            <ion-title style="text-align: center;">Choisissez une couleur</ion-title>
+            <ion-buttons slot="end">
+                <ion-button (click)="closeModal()">Fermer</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fxFlex>
+        <div class="square-container" fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="10px">
+            <div *ngFor="let color of colors; let index=index;"
+                 class="color-block"
+                 (click)="selectColor(colors[index].rgb)"
+                 [ngStyle]="{'background-color': calculateBackGroundColor(colors[index])}">
+                <mat-icon *ngIf="ifSelected(colors[index].rgb)" class="white-icon">
+                    check
+                </mat-icon>
+            </div>
+        </div>
+    </ion-content>
+    <ion-footer slot="end" style="padding: 10px;">
+        <div class="right" style="padding: 0;">
+            <ion-button color="medium" [disabled]="!selectedColor" (click)="validate()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span style="margin-left: 10px">Valider le choix</span>
+            </ion-button>
+        </div>
+    </ion-footer>
+</div>
+

@@ -1,0 +1,88 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+    <!-- Content / Description -->
+    <div *ngSwitchCase="'description'">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation : </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field">
+                <span class="sirs-field-title">Parcelle végétation</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.parcelleId | getById | async) as parcelle">
+                    <span class="sirs-field-value"
+                          [textContent]="parcelle.designation || parcelle.id"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Contact Eau</span>
+                <ion-checkbox slot="end" name="contactEau"
+                              disabled="true"
+                              [(ngModel)]="detailsObject.selectedObject.contactEau"></ion-checkbox>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position Type</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.typePositionId | getById | async) as typePositionRef">
+                    <span class="sirs-field-value"
+                          [textContent]="typePositionRef | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Côté Type</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.typeCoteId | getById | async) as typeCoteRef">
+                    <span class="sirs-field-value"
+                          [textContent]="typeCoteRef | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'PeuplementVegetation'">
+                <span class="sirs-field-title">Densité</span>
+                <span class="sirs-field-value"
+                      [textContent]="detailsObject.selectedObject.densite"></span>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'PeuplementVegetation'">
+                <span class="sirs-field-title">Hauteur</span>
+                <span class="sirs-field-value"
+                      [textContent]="detailsObject.selectedObject.hauteur"></span>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'PeuplementVegetation'">
+                <span class="sirs-field-title">Diamètre</span>
+                <span class="sirs-field-value"
+                      [textContent]="detailsObject.selectedObject.diametre"></span>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'PeuplementVegetation' || objectType === 'ArbreVegetation'">
+                <span class="sirs-field-title">État Sanitaire Type</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.etatSanitaireId | getById | async) as etatSanitaireRef">
+                    <span class="sirs-field-value"
+                          [textContent]="etatSanitaireRef | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'ArbreVegetation'">
+                <span class="sirs-field-title">Hauteur</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.hauteurId | getById | async) as RefHauteurVegetation">
+                    <span class="sirs-field-value"
+                          [textContent]="RefHauteurVegetation | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'ArbreVegetation'">
+                <span class="sirs-field-title">Diamètre</span>
+                <ng-container *ngIf="(detailsObject.selectedObject.diametreId | getById | async) as RefDiametreVegetation">
+                    <span class="sirs-field-value"
+                          [textContent]="RefDiametreVegetation | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field" *ngIf="objectType === 'InvasiveVegetation'">
+                <span class="sirs-field-title">Densité</span>
+
+                <ng-container *ngIf="(detailsObject.selectedObject.densiteId | getById | async) as RefDensiteVegetation">
+                    <span class="sirs-field-value"
+                          [textContent]="RefDensiteVegetation | formatOptionText"></span>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+            </div>
+        </div>
+    </div>
+</div>

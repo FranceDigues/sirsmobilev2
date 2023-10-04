@@ -1,0 +1,25 @@
+<div class="full-height" [ngSwitch]="slidePath">
+  <div class="full-height" *ngSwitchCase="'objectsCreation'">
+    <create-object class="full-height"></create-object>
+  </div>
+  <div class="full-height" *ngSwitchCase="'objectsSelected'">
+    <selected-objects class="full-height"></selected-objects>
+  </div>
+  <div class="full-height" *ngSwitchCase="'trait'">
+    <trait></trait>
+  </div>
+  <div *ngSwitchDefault>
+    <ion-header translucent>
+      <ion-toolbar class="header-slide">
+        <ion-title>Error Default</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-list>
+      <ion-item>Error Default 1</ion-item>
+      <ion-item>Error Default 2</ion-item>
+      <ion-item>Error Default 3</ion-item>
+      <ion-item>Error Default 4</ion-item>
+      <ion-item>Error Default 5</ion-item>
+    </ion-list>
+  </div>
+</div>

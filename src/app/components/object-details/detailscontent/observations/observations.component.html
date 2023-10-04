@@ -1,0 +1,7 @@
+<ion-list>
+  <ion-item (click)="detailsObject.openObservationDetails(obs)"
+            *ngFor="let obs of detailsObject?.selectedObject?.observations?.sort(byDate)">
+      <app-observation-item [observation]="obs"
+                            [selectedObject]="detailsObject.selectedObject"></app-observation-item>
+  </ion-item>
+</ion-list>

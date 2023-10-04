@@ -1,0 +1,90 @@
+<div class="sirs-field">
+  <label for="label" class="active">Libellé</label>
+  <input id="label" name="label" type="text" [(ngModel)]="EOS.objectDoc.libelle"/>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="diameter" class="active">Diamètre global</label>
+      <input id="diameter" name="diameter" type="number" [(ngModel)]="EOS.objectDoc.diametre"/>
+  </div>
+  <div class="sirs-field col col-50 container-checkbox">
+    <ion-checkbox name="autorise" [(ngModel)]="EOS.objectDoc.autorise" style="--background: white;"></ion-checkbox>
+    <ion-label for="allowed" style="padding: 15px;">Autorisé</ion-label>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="flow" class="active">Ecoulement</label>
+      <select id="flow" name="flow" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.ecoulementId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.ecoulementId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefEcoulement | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.ecoulementId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="implantation" class="active">Implantation</label>
+      <select id="implantation" name="implantation" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.implantationId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.implantationId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefImplantation | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.implantationId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <label for="resType" class="active">Type de réseau</label>
+      <select id="resType" name="resType" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeConduiteFermeeId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeConduiteFermeeId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefConduiteFermee | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeConduiteFermeeId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+  <div class="sirs-field col col-50">
+      <label for="conduite" class="active">Utilisation Conduite</label>
+      <select id="conduite" name="conduite" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.utilisationConduiteId">
+          <option [value]="undefined" [selected]="EOS.objectDoc.utilisationConduiteId === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefUtilisationConduite | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.utilisationConduiteId === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>
+<div class="row">
+  <div class="sirs-field col col-50">
+      <form-template-position-digue></form-template-position-digue>
+  </div>
+  <div class="sirs-field col col-50">
+    <form-template-cote-digue></form-template-cote-digue>
+  </div>
+</div>
+<div class="sirs-field">
+  <label class="active">Sécurité</label>
+  <select id="securite" class="browser-default" name="securite" [(ngModel)]="EOS.objectDoc.securiteId">
+      <option [value]="undefined" [selected]="EOS.objectDoc.securiteId === undefined" selected>Non renseigné</option>
+    <option *ngFor="let r of EOS.refs.RefSecurite | refSort: EOS.showText('fullName')" [value]="r.id"
+      [selected]="EOS.objectDoc.securiteId === r.id">
+      {{ r | docToString | async }}
+    </option>
+  </select>
+</div>
+<div class="sirs-field">
+  <label for="dimensionVerticale" class="active">Dimension vertical/diamètre (mm)</label>
+  <input id="dimensionVerticale" name="dimensionVerticale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionVerticale" />
+</div>
+<div class="sirs-field">
+  <label for="dimensionHorizontale" class="active">Dimension horizontale (mm)</label>
+  <input id="dimensionHorizontale" name="dimensionHorizontale" type="number" min=0
+    [(ngModel)]="EOS.objectDoc.dimensionHorizontale" />
+</div>

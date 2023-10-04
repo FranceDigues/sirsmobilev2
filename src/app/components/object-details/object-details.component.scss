@@ -1,0 +1,16 @@
+@import '~materialize-css/dist/css/materialize.css';
+
+.tabs .tab a{
+    color: #00BCD0;
+    border-color: #00BCD0;
+}
+
+.tabs .tab a.active {
+    color: #0098A6;
+    border-color: #0098A6;
+    border-bottom: 3px solid #0098A6;
+}
+
+.tabs .indicator {
+    background-color: #0098A6 !important;
+}

@@ -1,0 +1,179 @@
+<div class="full-height" *ngIf="view === 'media'">
+  <ion-content>
+    <div class="sirs-card">
+      <div class="sirs-card-content">
+        <h2 class="sirs-card-title">Ajouter un média</h2>
+        <div>
+          <label>Prendre une photo ou une note</label>
+          <div class="center">
+            <ion-button size="medium" class="photo-button" (click)="takePhoto()">
+              <ion-icon class="icon-firsts-button" name="camera-outline"></ion-icon>
+              PRENDRE UNE PHOTO
+            </ion-button>
+            <ion-button size="medium" class="photo-button" (click)="editNote()">
+              <ion-icon class="icon-firsts-button" name="create-outline"></ion-icon>
+              EDITER UNE NOTE
+            </ion-button>
+            <ion-button size="medium" class="photo-button" (click)="getPhotoFromGallery()">
+              <ion-icon class="icon-firsts-button" name="images-outline"></ion-icon>
+              IMPORTER UN MEDIA
+            </ion-button>
+          </div>
+        </div>
+        <div class="pics " *ngIf="OES.mediaOptions.id !== ''">
+          <div class="pic col col-25">
+            <div class="pic-quicklook">
+              <ion-img style="height: 100px; width: 100px;" [src]="OES.importPhotoData"></ion-img>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label>Depuis un appareil externe</label>
+          <div class="center">
+            <input [(ngModel)]="OES.mediaOptions.designation" placeholder="Numéro de photo" />
+          </div>
+        </div>
+        <div>
+          <label>Position</label>
+          <div class="edit-position-buttons right">
+            <a class="nav-item nav-link position-button" matRipple (click)="locateMe()">
+              <span>
+                <ion-icon class="option-button-edit-object" name="navigate-outline"></ion-icon>
+              </span>
+            </a>
+            <a class="nav-item nav-link position-button" matRipple (click)="setView('map')">
+              <span>
+                <ion-icon class="option-button-edit-object" name="pencil-outline"></ion-icon>
+              </span>
+            </a>
+            <a class="nav-item nav-link position-button" matRipple *ngIf="OES.troncons.length > 0 && !isDependance(OES.objectType)"
+              (click)="selectPosBySR()">
+              <span>
+                <ion-icon class="option-button-edit-object" name="options-outline"></ion-icon>
+              </span>
+            </a>
+          </div>
+          <div *ngIf="OES.mediaOptions.positionDebut" class="sirs-field-inline">
+            <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
+            <span class="sirs-field-value">{{ OES.mediaOptions.positionDebut }}{{OES.positionPrecision !== undefined ? ', +/- ' + OES.positionPrecision + ' m' : ''}}</span>
+          </div>
+          <div *ngIf="OES.mediaOptions.borneDebutId" class="sirs-field-inline">
+            <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
+            <span class="sirs-field-value">{{ OES.mediaOptions.borneDebutId ? 'à ' +
+              OES.mediaOptions.borne_debut_distance + ' m de la borne ' +
+              OES.mediaOptions.borneDebutLibelle + ' en ' + (OES.mediaOptions.borne_debut_aval ? 'amont' : 'aval') : 'à
+              definir' }}</span>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="space-around center">
+          <!-- ORIENTATIONS -->
+          <div>
+            <label>Orientations :</label>
+            <div>
+              <div *ngIf="showText('fullName')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
+                    [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                    {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="showText('abstract')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
+                    [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                    {{ v.doc.abrege ? v.doc.abrege : 'abrégé indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="showText('both')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                  <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
+                    [selected]="OES.mediaOptions.orientationPhoto === v.id">
+                    {{ v.doc.abrege ? v.doc.abrege + ' : ' + v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- COTES -->
+          <div>
+            <label>Cotes :</label>
+            <div>
+              <div *ngIf="showText('fullName')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                    {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="showText('abstract')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                    {{ v.doc.abrege ? v.doc.abrege : 'abrégé indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="showText('both')">
+                <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
+                  <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
+                    {{ v.doc.abrege ? v.doc.abrege + ' : ' + v.value.libelle : 'abrege indéfini / id: ' + v.id }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- USER COMMENT -->
+        <div>
+          <input type="text" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
+        </div>
+
+        <!-- PHOTOGRAPHER'S NAME -->
+        <div>
+          <label>Photographe</label>
+          <div class="sirs-field">
+            <select class="browser-default" *ngIf="contactList && contactList.length > 0"
+              [(ngModel)]="OES.contact" name="contactList" (ngModelChange)="changeContact()">
+              <option *ngFor="let contact of contactList | sortByDocNom"
+                      [value]="contact.id"
+                      [selected]="contact.id === OES.contact">
+                {{ parseContactName(contact) }}
+              </option>
+            </select>
+            <div *ngIf="pendingContactList" fxLayout="column" fxLayoutAlign="center center">
+              <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div *ngIf="!pendingContactList && contactList.length == 0" fxLayout="column" fxLayoutAlign="center center">
+              <span>Aucun photographe trouvé</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM BUTTONS-->
+        <div class="sirs-card-action bottom-buttons-container">
+          <a (click)="cancel()" class="btn-flat waves-effect waves-teal">
+            <ion-icon class="edit-object-end-buttons" slot="start" name="arrow-back-outline"></ion-icon>Annuler
+          </a>
+          <button type="button" class="btn pink waves-effect waves-teal right" (click)="save()">
+            <ion-icon class="edit-object-end-buttons" name="checkmark-outline"></ion-icon>
+            Terminer
+          </button>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</div>
+
+<!-- CONDITIONNAL OPEN -->
+<div class="full-height" *ngIf="view === 'map'">
+  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event)"
+    notNeedEOS=true></map-point>
+</div>
+<div class="full-height" *ngIf="view === 'note'">
+  <edit-note (slidePathChange)="setView('media')" (successData)="saveNoteEdit($event)"></edit-note>
+</div>

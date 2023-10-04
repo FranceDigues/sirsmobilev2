@@ -1,0 +1,89 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+    <div class="sirs-panel">
+      <div class="sirs-field-inline">
+        <span class="sirs-field-title">Numéro de désignation : </span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+      </div>
+    </div>
+    <div class="sirs-section">
+      <div class="sirs-field">
+        <span class="sirs-field-title">Valide</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Auteur</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Aménagement hydraulique</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de fin</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de debut</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Date de mise à jour</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dateMaj"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Commentaire</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Libellé</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Type</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.typePrestation"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">État</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.etat"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Côté</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.cote"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Côut du mètre</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutMetre"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Côut global</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutGlobal"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Réalisation interne</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.realisationInterne === true ? 'oui' : 'non'"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Source</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.source"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Mesure diverse</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.mesureDiverse"></span>
+      </div>
+      <div class="sirs-field">
+        <span class="sirs-field-title">Marché</span>
+        <span class="sirs-field-value" [textContent]="detailsObject.abstract.marche"></span>
+      </div>
+    </div>
+  </div>
+  <!-- Content / Observations -->
+  <div *ngSwitchCase="'observations'">
+    <observations-generic></observations-generic>
+  </div>
+  <!-- Content / Désordres -->
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+    <desordres-generic></desordres-generic>
+  </div>
+</div>

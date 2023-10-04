@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="sirs-field col col-100">
+      <label for="width" class="active">Largeur</label>
+      <select id="width" name="width" class="browser-default"
+              [(ngModel)]="EOS.objectDoc.typeLargeurFrancBord">
+          <option [value]="undefined" [selected]="EOS.objectDoc.typeLargeurFrancBord === undefined" selected>Non renseigné</option>
+          <option *ngFor="let r of EOS.refs.RefLargeurFrancBord | refSort: EOS.showText('fullName');" [value]="r.id"
+                  [selected]="EOS.objectDoc.typeLargeurFrancBord === r.id">
+              {{ r | docToString | async }}
+          </option>
+      </select>
+  </div>
+</div>

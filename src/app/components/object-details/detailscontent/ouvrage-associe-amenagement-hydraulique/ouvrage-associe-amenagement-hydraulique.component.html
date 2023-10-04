@@ -1,0 +1,109 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+  <!-- Content / Description -->
+  <div *ngSwitchCase="'description'">
+      <div class="sirs-panel">
+          <div class="sirs-field-inline">
+              <span class="sirs-field-title">Numéro de désignation : </span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+          </div>
+      </div>
+      <div class="sirs-section">
+          <div class="sirs-field">
+              <span class="sirs-field-title">Valide</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.valid === true ? 'oui' : 'non'"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Auteur</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.abstract.author"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Aménagement hydraulique</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.amenagementHydraulique"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de fin</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin"></span>
+          </div>
+          <div class="sirs-field">
+              <span class="sirs-field-title">Date de debut</span>
+              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_debut"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Date de mise à jour</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.dateMaj"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Commentaire</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Libellé</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Type</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.type"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">État</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.etat"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Côté</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.cote"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Superficie</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.superficie"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Hauteur</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.hauteur"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Profondeur</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.profondeur"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Nombre</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.nombre"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Ouvrage déversant</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.ouvrageDeversant === true ? 'oui' : 'non'"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Matériau</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiau"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Numéro de couche</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.numCouche"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Source</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.abstract.source"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">diamètre</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.diametre"></span>
+          </div>
+          <div class="sirs-field">
+            <span class="sirs-field-title">Section</span>
+            <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.section"></span>
+          </div>
+      </div>
+  </div>
+  <!-- Content / Observations -->
+  <div *ngSwitchCase="'observations'">
+      <observations-generic></observations-generic>
+  </div>
+  <!-- Content / Prestations -->
+  <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+    <prestations-generic></prestations-generic>
+  </div>
+  <!-- Content / Désordres -->
+  <div *ngSwitchCase="'desordres'" style="padding: 5px 10px;">
+    <desordres-generic></desordres-generic>
+  </div>
+</div>

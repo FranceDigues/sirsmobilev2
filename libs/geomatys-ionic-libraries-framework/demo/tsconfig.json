@@ -1,0 +1,43 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@lib-map": [
+        "src/lib/lib-map"
+      ],
+      "@lib-map/*": [
+        "src/lib/lib-map/*"
+      ],
+      "@lib-storage": [
+        "src/lib/lib-storage"
+      ],
+      "@lib-storage/*": [
+        "src/lib/lib-storage/*"
+      ],
+      "@lib-camera": [
+        "src/lib/lib-camera"
+      ],
+      "@lib-camera/*": [
+        "src/lib/lib-camera/*"
+      ],
+    },
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

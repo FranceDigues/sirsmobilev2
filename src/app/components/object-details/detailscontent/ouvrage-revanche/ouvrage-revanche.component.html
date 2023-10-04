@@ -1,0 +1,44 @@
+<div class="sirs-panel">
+  <div class="sirs-field-inline">
+      <span class="sirs-field-title">Numéro de désignation : </span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+  </div>
+</div>
+<div class="sirs-section">
+  <div class="sirs-field">
+      <span class="sirs-field-title">Matériau haut</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiauHaut | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Matériau bas</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.materiauBas | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Nature haut</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.natureHaut | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Nature bas</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.natureBas | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Hauteur de la murette</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.hauteurMurette"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Largeur</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.largeur"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Position</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Côté</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
+  </div>
+  <div class="sirs-field">
+      <span class="sirs-field-title">Commentaire</span>
+      <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+  </div>
+</div>
