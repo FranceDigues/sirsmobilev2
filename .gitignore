@@ -30,7 +30,11 @@ npm-debug.log*
 /dist
 /node_modules
 /platforms
-/plugins
+/plugins/*
+!/plugins/com.rde.cachemap
+!/plugins/cordova-base64-to-gallery
+!/plugins/cordova-plugin-file
+!/plugins/cordova.plugins.diagnostic
 /www
 coverage
 script.py
