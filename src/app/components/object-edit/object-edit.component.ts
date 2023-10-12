@@ -55,6 +55,11 @@ export class ObjectEditComponent implements OnInit {
     }
 
     displayName(str: string) {
+        // In case of vegetation
+        if (this.EOS.isVegetation()) {
+            return this.EOS.selectedLayer.title;
+        }
+
         for (let i = 1; i < str.length; i++) {
             const char = str.charAt(i);
             if (char !== `'` && i > 0) {
