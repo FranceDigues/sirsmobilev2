@@ -19,6 +19,7 @@ import { formatDate } from '@angular/common';
 import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
 import { AuthService } from "../../../services/auth.service";
+import { Contact } from "../../../shared/models/contact.model";
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -55,7 +56,7 @@ export class ObservationEditComponent implements OnInit {
     tabSpecification: SpecificationTabs;
     showTextConfig: string;
     refUrgence;
-    contactList;
+    contactList: {doc: Contact}[];
     refSuiteApporter;
     saving = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
     etatOuvAccGCList;
@@ -79,7 +80,7 @@ export class ObservationEditComponent implements OnInit {
         this.observationEditService.init(this.objectId, this.obsId);
 
         this.sirsDataService.getContactList().then((list) => {
-            this.contactList = list;
+            this.contactList = list as {doc: Contact}[];
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
@@ -295,16 +296,18 @@ export class ArraySortPipe2 implements PipeTransform {
     }
 
     sortOn() {
-        return (a, b) => {
+        return (a: {doc: Contact}, b: {doc: Contact}): number => {
             if (a.doc.nom && b.doc.nom) {
-                if (a.doc.nom.toLowerCase() < b.doc.nom.toLowerCase()) {
+                const aName = a.doc.nom.trim();
+                const bName = b.doc.nom.trim();
+                if (aName.toLowerCase() < bName.toLowerCase()) {
                     return -1;
-                } else if (a.doc.nom.toLowerCase() > b.doc.nom.toLowerCase()) {
+                } else if (aName.toLowerCase() > bName.toLowerCase()) {
                     return 1;
                 } else {
                     return 0;
                 }
-            } else {
+            } else if (a.doc.designation && b.doc.designation) {
                 if (a.doc.designation.toLowerCase() < b.doc.designation.toLowerCase()) {
                     return -1;
                 } else if (a.doc.designation.toLowerCase() > b.doc.designation.toLowerCase()) {
@@ -312,6 +315,8 @@ export class ArraySortPipe2 implements PipeTransform {
                 } else {
                     return 0;
                 }
+            } else {
+                return 0;
             }
         };
     }
