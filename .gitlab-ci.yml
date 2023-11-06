@@ -59,7 +59,7 @@ build:
   extends: .base-job
   stage: build
   script:
-    - npm ci
+    - npm i
     - npx ionic cordova build android
 
   artifacts:
