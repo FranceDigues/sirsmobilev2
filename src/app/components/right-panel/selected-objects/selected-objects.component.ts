@@ -9,6 +9,11 @@ import { MapService } from "../../../services/map.service";
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { EditionLayerService } from '../../../services/edition-layer.service';
 import VectorLayer from "ol/layer/Vector";
+import { EditObjectService } from "../../../services/edit-object.service";
+import { OLService } from "@ionic-lib/lib-map/ol.service";
+import LayerGroup from "ol/layer/Group";
+import { Layer } from "ol/layer";
+import { AppLayersService } from "../../../services/app-layers.service";
 
 @Component({
     selector: 'selected-objects',
@@ -23,9 +28,12 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
 
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
                 private localDB: LocalDatabase,
+                private appLayerService: AppLayersService,
                 private objectDetails: ObjectDetails,
                 private mapService: MapService,
                 private mapManagerService: MapManagerService,
+                private olService: OLService,
+                private EOS: EditObjectService,
                 private editionLayerService: EditionLayerService) {
     }
 
@@ -69,6 +77,9 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         if (this.mapManagerService.appLayer !== null) {
             this.mapManagerService.appLayer.getLayers().forEach(layer => (layer as VectorLayer<any>).getSource().changed());
         }
+
+        // fixme: Temporary disabled due to layer filter inconsistency. This needs to be fixed soon
+        // this.EOS.selectedLayer = this.getLayer(feature);
 
         this.editionLayerService.editionLayer.getLayersArray().forEach(layer => layer.getSource().changed());
 
@@ -118,6 +129,19 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         this.status = 'details';
         this.cdr.detectChanges();
         this.objectDetails.openPhotoDetails(photo);
+    }
+
+    private getLayer(feature) {
+        const favorites = this.editionLayerService.favorites;
+
+        for (const favorite of favorites) {
+            console.log(`Checking if ${favorite.filterValue} equals ${feature.get('@class')}`, favorite, feature);
+            if (favorite.filterValue === feature.get('@class')) {
+                return favorite;
+            }
+        }
+
+        return undefined;
     }
 
 }

@@ -117,6 +117,9 @@ export class ObjectDetails {
         for (let key in this.selectedObject) {
             if (regex.test(key)) {
                 const value = this.selectedObject[key];
+                if (value === null || value === undefined) {
+                    continue;
+                }
                 this.localDB.get(value).then(
                     (doc) => {
                         this.abstract[key.substr(0, key.length - 2)] = this.docToStringPipe.transform(doc);
