@@ -43,6 +43,14 @@
                 "input": "src/global.scss"
               }
             ],
+            "allowedCommonJsDependencies": [
+              "pbf",
+              "crypto-js/md5",
+              "xml-utils/find-tags-by-name.js",
+              "@petamoriken/float16",
+              "lerc",
+              "lru-cache"
+            ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "node_modules/gl-matrix/gl-matrix.js",
@@ -84,7 +92,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "aot": false,
+            "vendorChunk": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
