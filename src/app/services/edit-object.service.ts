@@ -95,11 +95,16 @@ export class EditObjectService {
 
             await this.initReferences();
             this.initTronconList();
-            if (this.isDependance()) await this.initDependance();
-            if (this.isVegetation()) await this.initVegetation();
-            if (this.isParcelleVegetation()) await this.initPlansList();
-            await this.initStartPosBorne();
-            await this.initEndPosBorne();
+
+            const promises: Promise[] = []
+            if (this.isDependance()) promises.push(this.initDependance());
+            if (this.isVegetation()) promises.push(this.initVegetation());
+            if (this.isParcelleVegetation()) promises.push(this.initPlansList());
+            promises.push(this.initStartPosBorne());
+            promises.push(this.initEndPosBorne());
+
+            await Promise.all(promises);
+
             this.initIsLinear();
 
             await this.databaseService.getCurrentDatabaseSettings()

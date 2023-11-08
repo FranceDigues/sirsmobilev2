@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 import { DatabaseService } from '../../../services/database.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
 import { designDocs } from '../replicate-database/couchDB-Vues';
+import { EditionModeService } from "../../../services/edition-mode.service";
 
 @Component({
     selector: 'app-database-choice',
@@ -29,6 +30,7 @@ export class DatabaseChoiceComponent implements OnInit {
                 private splashScreen: SplashScreen,
                 private statusBar: StatusBar,
                 private sirsDataService: SirsDataService,
+                private editionModeService: EditionModeService,
                 private loadingCtrl: LoadingController) {
         this.init();
     }
@@ -132,6 +134,7 @@ export class DatabaseChoiceComponent implements OnInit {
             && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
             this.status = 4;
         } else {
+            this.editionModeService.clearReferenceTypeCache();
             const loading = await this.loadingCtrl.create({
                 message: 'Déploiement en cours ...'
             });
