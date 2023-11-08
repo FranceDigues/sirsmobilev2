@@ -4,7 +4,7 @@
   "author": "Ionic Framework",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ionic cordova run android -l",
     "build": "ng build",
     "test": "ng test",
     "test:ci": "ng test --browsers=ChromeHeadlessCI --code-coverage=true --watch=false",
@@ -25,8 +25,8 @@
     "@angular/platform-browser": "~10.2.5",
     "@angular/platform-browser-dynamic": "~10.2.5",
     "@angular/router": "~10.2.5",
+    "@awesome-cordova-plugins/camera": "^5.46.0",
     "@ionic-native/base64-to-gallery": "5.36.0",
-    "@ionic-native/camera": "5.36.0",
     "@ionic-native/core": "5.36.0",
     "@ionic-native/diagnostic": "^5.36.0",
     "@ionic-native/file": "5.36.0",
@@ -94,7 +94,7 @@
     "cordova-base64-to-gallery": "^4.1.3",
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.3",
-    "cordova-plugin-camera": "7.0.0",
+    "cordova-plugin-camera": "github:Geomatys/cordova-plugin-camera#geomatys",
     "cordova-plugin-device": "^2.1.0",
     "cordova-plugin-file": "7.0.0",
     "cordova-plugin-file-opener2": "4.0.0",
@@ -120,9 +120,6 @@
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "cordova-plugin-camera": {
-        "ANDROIDX_CORE_VERSION": "1.6.+"
-      },
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
       },
@@ -148,7 +145,10 @@
       "cordova-plugin-filechooser": {},
       "cordova-plugin-filepath": {},
       "cordova-sqlite-storage": {},
-      "cordova.plugins.diagnostic": {}
+      "cordova.plugins.diagnostic": {},
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
+      }
     },
     "platforms": [
       "android"

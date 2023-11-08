@@ -7,7 +7,7 @@ import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
-import { Camera } from '@ionic-native/camera/ngx';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
 import { MapManagerService } from 'src/app/services/map-manager.service';

@@ -1,4 +1,5 @@
 {
+  "@awesome-cordova-plugins/camera": "5.46.0",
   "cordova": "12.0.0",
   "cordova-plugin-filechooser": "1.2.0",
   "cordova-plugin-filepath": "1.6.0",

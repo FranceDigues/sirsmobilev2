@@ -6,7 +6,7 @@ import { ToastNotification } from '../../../../shared/models/toast-notification.
 import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionbyborne-modal2.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {CameraService} from '@ionic-lib/lib-camera/camera.service';
-import {Camera} from '@ionic-native/camera/ngx';
+import {Camera} from '@awesome-cordova-plugins/camera/ngx';
 import { File, Metadata, DirectoryEntry, FileEntry } from '@ionic-native/file/ngx';
 import {UuidUtils} from 'src/app/utils/uuid-utils';
 import {formatDate} from '@angular/common';
