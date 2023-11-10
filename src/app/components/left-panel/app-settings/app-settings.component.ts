@@ -5,6 +5,7 @@ import { SirsDataService } from "../../../services/sirs-data.service";
 import { Contact } from "../../../shared/models/contact.model";
 import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
 import { Memoize } from "typescript-memoize";
+import { ObservationEditService } from "../../../services/observation-edit.service";
 
 @Component({
     selector: 'app-settings',
@@ -16,9 +17,11 @@ export class AppSettingsComponent implements OnInit {
     public showTextConfig?: string;
     public defaultObservateurId?: string;
     public contactList?: {doc: Contact, id: string, key: any, value: any}[];
+    private _prefillObservations?: boolean;
 
     constructor(private databaseService: DatabaseService,
-                public sirsDataService: SirsDataService,
+                private sirsDataService: SirsDataService,
+                private observationEditService: ObservationEditService,
                 private sortByDocNomPipe: ArraySortPipe2) {
     }
 
@@ -34,6 +37,17 @@ export class AppSettingsComponent implements OnInit {
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
+
+        this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
+    }
+
+    public get prefillObservations(): boolean | undefined {
+        return this._prefillObservations;
+    }
+
+    public set prefillObservations(value: boolean) {
+        this._prefillObservations = value;
+        this.observationEditService.setPrefillObservation(value).then();
     }
 
     goBack() {

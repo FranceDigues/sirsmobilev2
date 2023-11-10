@@ -29,3 +29,14 @@ ion-toolbar {
 }
 
 
+.prefill-obs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 15px 0 15px;
+
+  label {
+    font-size: 15px;
+  }
+}

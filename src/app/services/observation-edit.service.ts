@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { transform } from 'ol/proj';
 import {
     StorageService
-} from '../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
+} from '@ionic-lib/lib-storage/storage.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { DatabaseService } from './database.service';
 import WKT from 'ol/format/WKT';
@@ -449,6 +449,16 @@ export class ObservationEditService {
 
     isReseauEtOuvrageType() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
+
+    async getPrefillObservation(): Promise<boolean> {
+        const lsRes: boolean = await this.storageService.getItem<boolean>('prefillObservations');
+        if (lsRes === undefined) return false;
+        return lsRes;
+    }
+
+    async setPrefillObservation(value: boolean): Promise<void> {
+        return this.storageService.setItem<boolean>('prefillObservations', value);
     }
 
     get positionPrecision(): number {
