@@ -291,7 +291,7 @@ export class NgInitDirective implements OnInit {
 })
 export class ArraySortPipe2 implements PipeTransform {
 
-    transform(value: any, exponent: any) {
+    transform(value: any) {
         return value ? value.sort(this.sortOn()) : '';
     }
 

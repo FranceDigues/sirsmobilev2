@@ -30,7 +30,8 @@ import { ObjectEditModule } from '../../object-edit/object-edit.module';
         MatRippleModule,
     ],
     providers: [
-        Base64ToGallery
+        Base64ToGallery,
+        ArraySortPipe2
     ],
     declarations: [
         ObservationEditComponent,

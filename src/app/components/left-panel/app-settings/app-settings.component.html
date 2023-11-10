@@ -38,7 +38,7 @@
         <select name="contactList" class="browser-default"
                 [(ngModel)]="defaultObservateurId"
                 (change)="changeDefaultObservateurId()">
-            <option *ngFor="let observateur of contactList | sortByDocNom"
+            <option *ngFor="let observateur of contactList"
                     [value]="observateur.id"
                     [selected]="observateur.id === defaultObservateurId">
                 {{ parseContactName(observateur) }}

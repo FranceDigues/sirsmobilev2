@@ -2,6 +2,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
 import { SirsDataService } from "../../../services/sirs-data.service";
+import { Contact } from "../../../shared/models/contact.model";
+import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
+import { Memoize } from "typescript-memoize";
 
 @Component({
     selector: 'app-settings',
@@ -10,20 +13,13 @@ import { SirsDataService } from "../../../services/sirs-data.service";
 })
 export class AppSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
-    public showTextConfig;
-    public defaultObservateurId;
-    public contactList;
-
-    get touchSensitivity() {
-        return +localStorage.getItem('touchSensitivity') || 200;
-    }
-
-    set touchSensitivity(value: number) {
-        localStorage.setItem('touchSensitivity', value.toString());
-    }
+    public showTextConfig?: string;
+    public defaultObservateurId?: string;
+    public contactList?: {doc: Contact, id: string, key: any, value: any}[];
 
     constructor(private databaseService: DatabaseService,
-                public sirsDataService: SirsDataService) {
+                public sirsDataService: SirsDataService,
+                private sortByDocNomPipe: ArraySortPipe2) {
     }
 
     ngOnInit() {
@@ -33,8 +29,8 @@ export class AppSettingsComponent implements OnInit {
                 this.defaultObservateurId = config.context.defaultObservateurId;
             });
 
-        this.sirsDataService.getContactList().then((list) => {
-            this.contactList = list;
+        this.sirsDataService.getContactList().then((list: {doc: Contact, id: string, key: any, value: any}[]) => {
+            this.contactList = this.sortByDocNomPipe.transform(list);
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
@@ -53,6 +49,7 @@ export class AppSettingsComponent implements OnInit {
             .changeDefaultObservateurId(this.defaultObservateurId);
     }
 
+    @Memoize()
     parseContactName(observateur) {
         return observateur.doc.nom ? `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}` : observateur.doc.designation;
     }
