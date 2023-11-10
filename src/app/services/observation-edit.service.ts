@@ -32,9 +32,6 @@ export class ObservationEditService {
     doc;
     objectDoc;
     objectType;
-    objectId: string;
-    obsId: string;
-    isNewObject: boolean;
     mediaPath: string;
     showContent: boolean;
     photos: Array<any>;
@@ -89,7 +86,7 @@ export class ObservationEditService {
         this.importPhotoData = null;
     }
 
-    init(objectId: string, obsId: string) {
+    init(doc: any) {
         this.setValuesToDefault();
 
         this.storageService.getItem('AppTronconsFavorities')
@@ -105,11 +102,9 @@ export class ObservationEditService {
         this.objectDoc = this.objectDetails.selectedObject;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
-        this.objectId = objectId;
-        this.obsId = obsId;
-        this.isNewObject = !this.obsId;
 
-        this.doc = this.isNewObject ? this.createNewObservation() : Object.assign({}, this.getTargetObservation());
+
+        this.doc = structuredClone(doc);
         this.photos = this.doc.photos;
         this.contact = this.doc.observateurId;
 

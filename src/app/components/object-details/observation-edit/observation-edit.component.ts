@@ -62,6 +62,7 @@ export class ObservationEditComponent implements OnInit {
     etatOuvAccGCList;
     manoeuvreOuvrageList;
     defaultObservateurId;
+    public prefilled?: boolean;
 
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
@@ -75,9 +76,6 @@ export class ObservationEditComponent implements OnInit {
         this.tab = ObservationEditTabs.medias;
         this.tabSpecification = SpecificationTabs.etatOuvrageId;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
-
-        // Not optimized at all. Look for a way to init this properly or at the right time.
-        this.observationEditService.init(this.objectId, this.obsId);
 
         this.sirsDataService.getContactList().then((list) => {
             this.contactList = list as {doc: Contact}[];
@@ -119,8 +117,45 @@ export class ObservationEditComponent implements OnInit {
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
                 this.defaultObservateurId = config.context.defaultObservateurId;
-                this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
-                this.observation.author = this.authService.user._id;
+
+                if (this.obsId) {
+                    // if editing observation
+                    this.observation = this.getObservationToEdit();
+                    this.observation.author = this.authService.user._id;
+                    this.observationEditService.init(false, this.observation);
+                } else {
+                    // if creating observation, depends on if the user choose to prefill the obs with the latest or not
+                    this.observationEditService.getPrefillObservation().then((shouldPrefill: boolean) => {
+                        this.prefilled = shouldPrefill;
+                        if (this.prefilled) {
+                            // if the user choose to prefill, we copy the details from the last observation
+                            const len = this.objectDetails.selectedObject.observations.length;
+
+                            //if no previous observation, we just create a new one
+                            if (len === 0) {
+                                console.debug(`Cannot prefill, there is no previous observation`)
+                                this.observation = this.createNewObservation();
+                            } else {
+                                const srcObs = (this.objectDetails.selectedObject.observations as any[]).sort((obj1: any, obj2: any) => {
+                                    return new Date(obj1?.date).getTime() - new Date(obj2?.date).getTime();
+                                })[len - 1];
+
+                                console.debug(`Prefilling with`, srcObs);
+
+                                this.observation = structuredClone(srcObs);
+                                this.observation.id = UuidUtils.generateUuid();
+                                this.observation.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
+                                this.observation.photos = [];
+                                this.observation.valid = false;
+                            }
+                        } else {
+                            this.observation = this.createNewObservation();
+                        }
+
+                        this.observationEditService.init(true, this.observation);
+                        this.observation.author = this.authService.user._id;
+                    });
+                }
             });
     }
 
