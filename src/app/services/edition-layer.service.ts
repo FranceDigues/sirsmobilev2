@@ -16,12 +16,13 @@ import { MapService } from './map.service';
 import { SirsDataService } from './sirs-data.service';
 import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
+import { Geometry } from "ol/geom";
 
 @Injectable({
     providedIn: 'root'
 })
 export class EditionLayerService {
-    editionLayer = null;
+    editionLayer?: VectorLayer<VectorSource<Geometry>> = null;
     favorites = [];
     wktFormat = new WKT();
 
@@ -51,7 +52,7 @@ export class EditionLayerService {
     }
 
     /** Call setEditionLayerFeatures after */
-    createEditionLayerInstance() {
+    createEditionLayerInstance(): VectorLayer<VectorSource<Geometry>> {
         return new VectorLayer({
             name: 'Edition',
             model: { selectable: true },
@@ -66,72 +67,71 @@ export class EditionLayerService {
     }
 
     /*
-    * Possibility to improve performances by update objectsModeEdition5 view by including selection by linearId
-    * for classic element and another without for dependance/ah objects.
-    */
-    setEditionLayerFeatures(olLayer, favorites?: any[]) {
+     * Possibility to improve performances by update objectsModeEdition5 view by including selection by linearId
+     * for classic element and another without for dependance/ah objects.
+     */
+    public async setEditionLayerFeatures(olLayer: VectorLayer<VectorSource<Geometry>>, favorites?: any[]): Promise<any> {
         const olSource = olLayer.getSource();
         olSource.clear();
 
-        return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
+        let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
 
-            // Filter edited objects by the favorites selection of troncon
-            const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
-            const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
-            editedObjects = editedObjects.filter(eo => {
-                // TronconDigue cases
-                if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
-                    return tronconIds.indexOf(eo.id) > -1;
-                    // All objects that have linearId attribute case
-                } else if (eo.value.linearId) {
-                    return  tronconIds.indexOf(eo.value.linearId) > -1;
-                    // All other cases namely dependance/AH
-                } else {
-                    return true;
-                }
-            });
-
-            // Photo treatment
-            const editModePhotos = [];
-            function extractPhotos() {
-                editedObjects.forEach(obj => {
-                    if ("fr.sirs.core.model.TronconDigue" === obj.value['@class'] && obj.value.photos) {
-                        const trId = obj.id;
-                        obj.value.photos.forEach(p => {
-                            if (!p.valid) {
-                                p.parent = trId;
-                                editModePhotos.push(p);
-                            }
-                        });
-                    }
-                });
+        // Filter edited objects by the favorites selection of troncon
+        const tronconFavorites: any[] | null = await this.storageService.getItem('AppTronconsFavorities');
+        const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
+        editedObjects = editedObjects.filter(eo => {
+            // TronconDigue cases
+            if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
+                return tronconIds.indexOf(eo.id) > -1;
+                // All objects that have linearId attribute case
+            } else if (eo.value.linearId) {
+                return  tronconIds.indexOf(eo.value.linearId) > -1;
+                // All other cases namely dependance/AH
+            } else {
+                return true;
             }
+        });
 
-            if (favorites && favorites.length > 0) {
-                const visibleFeatures = [];
+        // Photo treatment
+        const editModePhotos = [];
+        const extractPhotos = () => {
 
-                for (const favorite of favorites) {
-                    if (favorite.visible) {
-                        if (favorite.title === 'Photos des tronçons') { //photo treatment
-                            extractPhotos();
-                        } else {
-                            for (const obj of editedObjects) {
-                                if (favorite.filterValue === obj.value['@class']) {
-                                    visibleFeatures.push(obj);
-                                }
+            for (const obj of editedObjects) {
+                if ("fr.sirs.core.model.TronconDigue" === obj.value['@class'] && obj.value.photos) {
+                    const trId = obj.id;
+                    obj.value.photos.forEach(p => {
+                        if (!p.valid) {
+                            p.parent = trId;
+                            editModePhotos.push(p);
+                        }
+                    });
+                }
+            }
+        }
+
+        if (favorites && favorites.length > 0) {
+            const visibleFeatures = [];
+
+            for (const favorite of favorites) {
+                if (favorite.visible) {
+                    if (favorite.title === 'Photos des tronçons') { //photo treatment
+                        extractPhotos();
+                    } else {
+                        for (const obj of editedObjects) {
+                            if (favorite.filterValue === obj.value['@class']) {
+                                visibleFeatures.push(obj);
                             }
                         }
                     }
                 }
-                olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
-            } else {
-                extractPhotos();
-                olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
             }
-            olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
-            resolve();
-        });
+            olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
+        } else {
+            extractPhotos();
+            olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
+        }
+        olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
+
     }
 
     createEditionFeatureInstances(featureDocs) {
