@@ -120,6 +120,7 @@ export class EditionLayerService {
                     } else {
                         for (const obj of editedObjects) {
                             if (favorite.filterValue === obj.value['@class']) {
+                                /* Checking the layer of the vegetation elements since the filter is not enough on them */
                                 if (PluginUtils.isVegetationClass(obj.value['@class'])) {
                                     const refs: any[] = await this.getVegetationRefs(obj.value['@class']);
                                     const refIdx: number = refs.findIndex((ref) => ref._id === obj.value['typeVegetationId']);
