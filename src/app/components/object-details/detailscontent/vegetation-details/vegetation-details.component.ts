@@ -35,6 +35,7 @@ export class VegetationDetailsComponent implements OnInit {
       this.descLoading = false;
       this.changeDetectorRef.markForCheck();
     }).catch(e => {
+      this.descLoading = false;
       this.toastService.show(new ToastNotification('Erreur lors de la récupération des données', 3000));
       console.error(e);
     });
