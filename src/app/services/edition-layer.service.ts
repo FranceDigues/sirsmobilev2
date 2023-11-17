@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import { Injectable } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
@@ -17,6 +16,7 @@ import { SirsDataService } from './sirs-data.service';
 import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
 import { Geometry } from "ol/geom";
+import { Memoize, MemoizeExpiring } from "typescript-memoize";
 
 @Injectable({
     providedIn: 'root'
@@ -32,7 +32,7 @@ export class EditionLayerService {
         private editionLayerStyle: EditionLayerStyle,
         private storageService: StorageService,
         private mapService: MapService,
-                private appTronconsService: AppTronconsService) {
+        private appTronconsService: AppTronconsService) {
         this.appTronconsService.updated
             .subscribe({
                 next: () => {
@@ -54,6 +54,7 @@ export class EditionLayerService {
     /** Call setEditionLayerFeatures after */
     createEditionLayerInstance(): VectorLayer<VectorSource<Geometry>> {
         return new VectorLayer({
+            // @ts-ignore
             name: 'Edition',
             model: { selectable: true },
             zIndex: 1000,
@@ -119,7 +120,20 @@ export class EditionLayerService {
                     } else {
                         for (const obj of editedObjects) {
                             if (favorite.filterValue === obj.value['@class']) {
-                                visibleFeatures.push(obj);
+                                if (PluginUtils.isVegetationClass(obj.value['@class'])) {
+                                    const refs: any[] = await this.getVegetationRefs(obj.value['@class']);
+                                    const refIdx: number = refs.findIndex((ref) => ref._id === obj.value['typeVegetationId']);
+                                    if (refIdx === -1) {
+                                        console.error('Cannot find ref of vegetation', obj);
+                                        continue;
+                                    }
+                                    const layerName = refs[refIdx].libelle;
+                                    if (favorite.title === layerName) {
+                                        visibleFeatures.push(obj);
+                                    }
+                                } else {
+                                    visibleFeatures.push(obj);
+                                }
                             }
                         }
                     }
@@ -132,6 +146,24 @@ export class EditionLayerService {
         }
         olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
 
+    }
+
+    @MemoizeExpiring(30000)
+    private async getVegetationRefs(refName: string): Promise<any[]> {
+        const classNameLastSegment = this.getLastClassSegment(refName);
+        const refs = await this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefType' + classNameLastSegment],
+            endkey: ['fr.sirs.core.model.RefType' + classNameLastSegment, {}],
+            include_docs: true
+        });
+
+        return refs.map(elem => elem.doc);
+    }
+
+    @Memoize()
+    private getLastClassSegment(className: string): string {
+        const segments: string[] = className.split('.');
+        return segments[segments.length - 1];
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -211,6 +243,7 @@ export class EditionLayerService {
                                 dataProjection,
                                 featureProjection: 'EPSG:3857'
                             }
+                            // @ts-ignore
                         ).getFirstCoordinate()
                     ]);
                 }
