@@ -14,6 +14,7 @@ cache:
   paths:
     - $CI_PROJECT_DIR/.npm
     - $CI_PROJECT_DIR/node_modules
+    - .kaniko
 
 #---------------------------------------<  Builder  >-------------------------------------------------
 #
@@ -23,7 +24,7 @@ cache:
 #
 build builder:
   stage: build
-  image: docker:stable
+  image: gcr.io/kaniko-project/executor:debug
   rules:
     # expect a tag like: "builder-vX.Y.Z"
     - if: $CI_COMMIT_TAG =~ /^builder-v\d.\d.\d$/
@@ -32,17 +33,16 @@ build builder:
 
   before_script:
     # Setup docker authentication file
-    - mkdir ~/.docker
-    - echo $DOCKER_AUTH_CONFIG > ~/.docker/config.json
+    - echo $DOCKER_AUTH_CONFIG > /kaniko/.docker/config.json
   script:
     # remove 'builder-v' prefix
     - BUILDER_VERSION=`echo ${CI_COMMIT_TAG//builder-v/}`
+    - mkdir -p .kaniko
 
     # build and push docker
     - cd docker/builder
     - DOCKER_TAG=$DOCKER_REPOSITORY/builder:$BUILDER_VERSION
-    - docker build . --tag $DOCKER_TAG
-    - docker push $DOCKER_TAG
+    - /kaniko/executor --cache-dir=.kaniko --context ./ --dockerfile ./Dockerfile --destination $DOCKER_TAG
 
 #------------------------------<  Base job to be extended  >----------------------------------------
 .base-job:
@@ -60,7 +60,7 @@ build:
   stage: build
   script:
     - npm i
-    - npx ionic cordova build android
+    - npx --package=@ionic/cli ionic cordova build android --prod
 
   artifacts:
     paths:
