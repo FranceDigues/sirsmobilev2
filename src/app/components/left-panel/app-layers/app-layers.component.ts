@@ -138,4 +138,8 @@ export class AppLayersComponent implements OnInit {
     onBack() {
         this.slidePathChange.emit('menu');
     }
+
+    public notifyLayerUpdate() {
+        this.appLayersService.notifyLayerChange();
+    }
 }

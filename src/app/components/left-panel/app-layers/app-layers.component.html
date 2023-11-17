@@ -30,25 +30,25 @@
                         <ion-reorder slot="end"></ion-reorder>
                     </ion-item>
                     <ion-item-options (click)="updateFavorites()">
-                        <ion-item-option color="light" (click)="togglePosition(layer)">
+                        <ion-item-option color="light" (click)="togglePosition(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="git-merge-outline" [ngClass]="getClassIcon(layer.realPosition)">call_merge</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="toggleVisibility(layer)">
+                        <ion-item-option color="light" (click)="toggleVisibility(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="eye-outline" [ngClass]="getClassIcon(layer.visible)">visibility</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="layer.editable = !layer.editable">
+                        <ion-item-option color="light" (click)="layer.editable = !layer.editable; notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="pencil-outline" [ngClass]="getClassIcon(layer.editable)">edit</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="layer.selectable = !layer.selectable">
+                        <ion-item-option color="light" (click)="layer.selectable = !layer.selectable; notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)">accessibility_new</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="featureLabels(layer)">
+                        <ion-item-option color="light" (click)="featureLabels(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)">textsms</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="openColorModal(layer)">
+                        <ion-item-option color="light" (click)="openColorModal(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="color-palette-outline">brush</ion-icon>
                         </ion-item-option>
-                        <ion-item-option color="light" (click)="mapManagerService.forceRefresh(layer)">
+                        <ion-item-option color="light" (click)="mapManagerService.forceRefresh(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="refresh-outline"></ion-icon>
                         </ion-item-option>
                     </ion-item-options>

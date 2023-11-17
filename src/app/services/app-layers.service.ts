@@ -2,11 +2,15 @@ import {Injectable} from '@angular/core';
 import {DatabaseService} from './database.service';
 import {LocalDatabase} from './local-database.service';
 import {Random} from '../utils/uuid-utils';
+import { PluginUtils } from "../utils/plugin-utils";
+import { Observable, Subject } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppLayersService {
+
+    private _layerChangeSubject: Subject<void> = new Subject<void>();
 
     constructor(private localDB: LocalDatabase,
                 private databaseService: DatabaseService) {
@@ -16,9 +20,23 @@ export class AppLayersService {
 
     cachedDescriptions = null;
 
+    /**
+     * Called when an edit in the layers is made in the layers
+     *
+     * For now, it is called only from the layer manager
+     * @private
+     */
+    public get onLayerChange(): Observable<void> {
+        return this._layerChangeSubject.asObservable();
+    }
+
     public dbChanged(): void {
         this.favorites = this.databaseService.activeDB.favorites;
         this.cachedDescriptions = null;
+    }
+
+    public notifyLayerChange(): void {
+        this._layerChangeSubject.next();
     }
 
     moduleDescriptions() {
