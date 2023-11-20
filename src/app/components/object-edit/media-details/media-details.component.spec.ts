@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { MediaDetailsComponent } from './media-details.component';
+import { MatIconTestingModule } from "@angular/material/icon/testing";
+import { MatIconModule } from "@angular/material/icon";
 
 describe('MediaDetailsComponent', () => {
   let component: MediaDetailsComponent;
@@ -10,7 +12,7 @@ describe('MediaDetailsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ MediaDetailsComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), MatIconTestingModule, MatIconModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MediaDetailsComponent);

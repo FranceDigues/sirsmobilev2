@@ -31,14 +31,14 @@ export class PhotoEditComponent implements OnInit {
     private parentId: string;
     private photoId: string;
     private importPhotoData;
-    private view = 'photo-form';
-    private photoDoc;
+    public view = 'photo-form';
+    public photoDoc;
     private mediaPath;
     private dataProjection;
     private isNew: boolean;
-    private contactList;
-    private coteList;
-    private orientationList;
+    public contactList;
+    public coteList;
+    public orientationList;
     private photoIndex;
     private objectDoc;
     public defaultObservateurId;
@@ -131,11 +131,11 @@ export class PhotoEditComponent implements OnInit {
         });
     }
 
-    private back() {
+    public back() {
         this.route.navigateByUrl('/main');
     }
 
-    private async save() {
+    public async save() {
         if (this.photoDoc.id) {
             const currentDateTime = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
 
@@ -193,7 +193,7 @@ export class PhotoEditComponent implements OnInit {
         })
     }
 
-    private async selectPositionBySR() {
+    public async selectPositionBySR() {
         let data;
 
         if (this.photoDoc.systemeRepId) {
@@ -244,7 +244,7 @@ export class PhotoEditComponent implements OnInit {
         }
     }
 
-    private locateMe() {
+    public locateMe() {
         if (this.geolocation.isEnabled) {
             this.geolocation.getCurrentLocation()
                 .then(
@@ -259,7 +259,7 @@ export class PhotoEditComponent implements OnInit {
         }
     }
 
-    private async selectPosition() {
+    public async selectPosition() {
         const alert = await this.alertController.create({
             header: 'Sélectionner une position sur la carte',
             message: `Voulez vous modifier le positionnement de l'objet ? \n Cette opération va écraser les anciennes valeurs`,
@@ -279,11 +279,11 @@ export class PhotoEditComponent implements OnInit {
         await alert.present();
     }
 
-    private drawNote() {
+    public drawNote() {
         this.view = 'photo-note';
     }
 
-    private takePhoto() {
+    public takePhoto() {
         this.permissionsService
             .handleCameraPermissions()
             .then(() => {
@@ -307,7 +307,7 @@ export class PhotoEditComponent implements OnInit {
             }, console.error);
     }
 
-    private savePicture(file: Entry) {
+    public savePicture(file: Entry) {
         file.getMetadata((metadata: Metadata) => {
             if (metadata.size > 1048576) {
                 this.toastCtrl.create({
@@ -340,11 +340,11 @@ export class PhotoEditComponent implements OnInit {
         });
     }
 
-    private setView(view) {
+    public setView(view) {
         this.view = view;
     }
 
-    private getPhotoFromGallery() {
+    public getPhotoFromGallery() {
         this.cameraService.getPhotoFromGallery()
             .then(
                 (imageData: string) => {
@@ -374,11 +374,11 @@ export class PhotoEditComponent implements OnInit {
         this.photoDoc.chemin = '/' + fileName;
     }
 
-    private getPosition() {
+    public getPosition() {
         return this.photoDoc.positionDebut ? this.positionService.getLatLongFromWKT(this.photoDoc.positionDebut) : 'à définir';
     }
 
-    private handlePos(pos) {
+    public handlePos(pos) {
         delete this.photoDoc.systemeRepId;
         delete this.photoDoc.borne_debut_aval;
         delete this.photoDoc.borne_debut_distance;
@@ -425,7 +425,7 @@ export class PhotoEditComponent implements OnInit {
         this.photoDoc.borneFinLibelle = data.borneLibelle;
     }
 
-    private getImage() {
+    public getImage() {
         return this.importPhotoData ? this.importPhotoData : this.getPhotoPath(this.photoDoc)
     }
 

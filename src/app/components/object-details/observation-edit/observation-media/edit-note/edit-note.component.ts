@@ -58,7 +58,7 @@ export class EditNoteComponent implements AfterViewInit {
     );
   }
 
-  private radioGroupChange(event) {
+  public radioGroupChange(event) {
     this.selectedColor = event.detail.value;
   }
 

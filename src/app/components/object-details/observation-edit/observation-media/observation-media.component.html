@@ -171,7 +171,7 @@
 
 <!-- CONDITIONNAL OPEN -->
 <div class="full-height" *ngIf="view === 'map'">
-  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event)"
+  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event, 0)"
     notNeedEOS=true></map-point>
 </div>
 <div class="full-height" *ngIf="view === 'note'">

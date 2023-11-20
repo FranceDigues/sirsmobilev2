@@ -242,11 +242,11 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    private async refresh() {
+    public async refresh() {
         const loading: HTMLIonLoadingElement = await this.loadingCtrl.create({
             message: 'Déploiement de la carte en cours'
         });
-        loading.present();
+        await loading.present();
         this.backLayerService.syncBackLayer();
         let f = this.editionLayerService.favorites
         this.editionLayerService.updateEditionLayerInstance(f);

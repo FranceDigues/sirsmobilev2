@@ -57,9 +57,10 @@ RUN mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
 RUN unzip file.zip -d "${ANDROID_SDK_ROOT}/cmdline-tools"
 RUN rm file.zip
 RUN chmod 755 -R $ANDROID_SDK_ROOT
-ENV PATH="${ANDROID_SDK_ROOT}/platform-tools/bin:${PATH}"
 ENV PATH="${ANDROID_SDK_ROOT}/cmdline-tools/tools/bin:${PATH}"
 RUN yes | sdkmanager --licenses
 RUN yes | sdkmanager "platform-tools"
 RUN yes | sdkmanager "platforms;android-${ANDROID_VERSION}"
 RUN yes | sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}"
+ENV PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
+ENV PATH="${ANDROID_SDK_ROOT}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}:${PATH}"

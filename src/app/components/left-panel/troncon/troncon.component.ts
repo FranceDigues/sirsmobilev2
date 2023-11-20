@@ -67,7 +67,7 @@ export class LeftSlideTronconComponent implements OnInit {
 })
 export class ArraySortPipe  implements PipeTransform {
 
-  transform(value: any, exponent: any) {
+  transform(value: any) {
     const data = value.sort(this.sortOn());
     return data;
   }

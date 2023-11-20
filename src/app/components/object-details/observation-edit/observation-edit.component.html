@@ -9,21 +9,21 @@
                         <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
                             fxLayoutAlign="center center">
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
+                                [ngClass]="{active: tab === 'medias'}" (click)="setTab(observationEditTabs.medias)">Medias</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Évolution</span>
+                                [ngClass]="{active: tab === 'evolution'}" (click)="setTab(observationEditTabs.evolution)">Évolution</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
+                                [ngClass]="{active: tab === 'urgence'}" (click)="setTab(observationEditTabs.urgence)">Urgence</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
+                                [ngClass]="{active: tab === 'nombre'}" (click)="setTab(observationEditTabs.nombre)">Nombre</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tab === 'observateur'}"
-                                (click)="setTab('observateur')">Observateur</span>
+                                (click)="setTab(observationEditTabs.observateur)">Observateur</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab('suiteApporter')">Suite à
+                                [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab(observationEditTabs.suiteApporter)">Suite à
                                 apporter</span>
                             <span fxFlex="70" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter
+                                [ngClass]="{active: tab === 'suite'}" (click)="setTab(observationEditTabs.suite)">Suite à apporter
                                 (complément)</span>
                         </div>
                         <div class="medias" *ngSwitchCase="'medias'">
@@ -128,18 +128,18 @@
                         <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
                             fxLayoutAlign="center center">
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tabSpecification === 'etatOuvrageId'}" (click)="setTabSpecification('etatOuvrageId')">Etat de
+                                [ngClass]="{active: tabSpecification === 'etatOuvrageId'}" (click)="setTabSpecification(specificationTabs.etatOuvrageId)">Etat de
                                 l'ouvrage</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'etatAccessoireId'}"
-                                (click)="setTabSpecification('etatAccessoireId')">Etat
+                                (click)="setTabSpecification(specificationTabs.etatAccessoireId)">Etat
                                 des accessoires</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'etatGenieCivilId'}"
-                                (click)="setTabSpecification('etatGenieCivilId')">Etat du génie civil</span>
+                                (click)="setTabSpecification(specificationTabs.etatGenieCivilId)">Etat du génie civil</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'manoeuvreOuvrageId'}"
-                                (click)="setTabSpecification('manoeuvreOuvrageId')">Manoeuvre de l'ouvrage</span>
+                                (click)="setTabSpecification(specificationTabs.manoeuvreOuvrageId)">Manoeuvre de l'ouvrage</span>
                         </div>
                         <div *ngSwitchCase="'etatOuvrageId'">
                             <div class="sirs-field">
@@ -152,10 +152,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat d'ouvrage trouvé</span>
                                 </div>
@@ -175,10 +172,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat d'accessoire trouvé</span>
                                 </div>
@@ -199,10 +193,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat de génie civil trouvé</span>
                                 </div>
@@ -224,11 +215,7 @@
                                         {{ manoeuvreOuvrage.libelle ? manoeuvreOuvrage.libelle : 'libelle undefined / id: ' + manoeuvreOuvrage.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingManoeuvreOuvrageList" fxLayout="column"
-                                    fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingManoeuvreOuvrageList && manoeuvreOuvrageList.length == 0"
+                                <div *ngIf="manoeuvreOuvrageList.length == 0"
                                     fxLayout="column" fxLayoutAlign="center center">
                                     <span>Aucune Manoeuvre de l'ouvrage trouvé</span>
                                 </div>

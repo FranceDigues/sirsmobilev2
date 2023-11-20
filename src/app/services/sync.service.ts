@@ -10,9 +10,9 @@ import { EditionLayerService } from './edition-layer.service';
 
 @Injectable({providedIn: 'root'})
 export class SyncService {
-    private status: number = 0;
-    private percent: number = 0;
-    private completion: string = '0/1';
+    public status: number = 0;
+    public percent: number = 0;
+    public completion: string = '0/1';
     private synch: any;
     private isFirstSync: boolean = false;
     private _error: string = '';

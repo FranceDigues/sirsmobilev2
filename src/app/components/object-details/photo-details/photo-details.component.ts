@@ -24,7 +24,7 @@ export class PhotoDetailsComponent implements OnInit {
   cote: string;
   photographe: string;
 
-  constructor(private objectDetails: ObjectDetails, private file: File, private localDB: LocalDatabase,
+  constructor(public objectDetails: ObjectDetails, private file: File, private localDB: LocalDatabase,
     private webview: WebView, private fileOpener: FileOpener, private editionModeService: EditionModeService,
     private router: Router, private alertCtrl: AlertController, private authService: AuthService) { }
 
@@ -51,7 +51,7 @@ export class PhotoDetailsComponent implements OnInit {
       this.localDB.get(this.objectDetails.selectedPhoto.photographeId)
         .then((result) => {
           if (result.nom) {
-            this.photographe = result.prenom ? result.nom + ' ' + result.prenom : result.nom; 
+            this.photographe = result.prenom ? result.nom + ' ' + result.prenom : result.nom;
           } else {
             this.photographe = result._id;
           }

@@ -23,7 +23,7 @@ export class DesordreComponent implements OnInit {
     this.filteredTypeDesordreList = this.EOS.refs.RefTypeDesordre;
   }
 
-  private changeType() {
+  public changeType() {
     if (this.EOS.objectDoc.typeDesordreId && this.EOS.objectDoc.typeDesordreId !== '') {
       const typeDesordre = this.EOS.refs.RefTypeDesordre.find(typeDesordre => typeDesordre._id === this.EOS.objectDoc.typeDesordreId);
       if (typeDesordre) {
@@ -32,7 +32,7 @@ export class DesordreComponent implements OnInit {
     }
   }
 
-  private changeCategorie() {
+  public changeCategorie() {
     if (this.EOS.objectDoc.categorieDesordreId && this.EOS.objectDoc.categorieDesordreId !== '') {
       const typesFilteredByCategorie = this.EOS.refs.RefTypeDesordre.filter(
         typeDesordre => typeDesordre.categorieId === this.EOS.objectDoc.categorieDesordreId

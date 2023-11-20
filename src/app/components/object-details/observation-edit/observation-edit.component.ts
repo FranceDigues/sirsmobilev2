@@ -63,6 +63,8 @@ export class ObservationEditComponent implements OnInit {
     manoeuvreOuvrageList;
     defaultObservateurId;
     public prefilled?: boolean;
+    observationEditTabs = ObservationEditTabs;
+    specificationTabs = SpecificationTabs;
 
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
@@ -304,7 +306,7 @@ export class ObservationEditComponent implements OnInit {
         }
     }
 
-    private isReseauEtOuvrage() {
+    public isReseauEtOuvrage() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
     }
 }

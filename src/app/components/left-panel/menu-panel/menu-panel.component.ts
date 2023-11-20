@@ -16,7 +16,7 @@ export class MenuPanelComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
 
     constructor(public editionLayerService: EditionLayerService, public geolocationService: GeolocationService,
-                private databaseService: DatabaseService,
+                public databaseService: DatabaseService,
                 public mapService: MapService, private mapManagerService: MapManagerService, private route: Router) {
     }
 
