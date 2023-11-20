@@ -260,6 +260,7 @@ export class MapManagerService {
         }
         let projGeometry;
         let realGeometry;
+        let additionnalProperties = {};
 
         if (obj.geometry && obj['@class'] && (PluginUtils.isDependanceAhClass(obj['@class']) || PluginUtils.isVegetationClass(obj['@class']))) {
             projGeometry = this.wktFormat.readGeometry(obj.geometry, {
@@ -270,6 +271,10 @@ export class MapManagerService {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
             });
+
+            if (PluginUtils.isVegetationClass(obj['@class'])) {
+                additionnalProperties['typeVegetationId'] = obj['typeVegetationId'];
+            }
         } else {
             projGeometry = obj.geometry ? this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
@@ -307,7 +312,8 @@ export class MapManagerService {
             projGeometry,
             realGeometry,
             archive: !!obj.date_fin,
-            parent: obj.parent
+            parent: obj.parent,
+            ...additionnalProperties,
         };
     }
 
@@ -341,6 +347,11 @@ export class MapManagerService {
                     feature.set('@class', layerModel.filterValue);
                     feature.set('title', featureModel.libelle);
                     feature.set('parent', featureModel.parent);
+
+                    if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
+                        feature.set('typeVegetationId', featureModel['typeVegetationId']);
+                    }
+
                     features.push(feature);
                 } else {
                     // Show only not archived objects
@@ -362,6 +373,11 @@ export class MapManagerService {
                         feature.set('@class', layerModel.filterValue);
                         feature.set('title', featureModel.libelle);
                         feature.set('parent', featureModel.parent);
+
+                        if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
+                            feature.set('typeVegetationId', featureModel['typeVegetationId']);
+                        }
+
                         features.push(feature);
                     }
                 }

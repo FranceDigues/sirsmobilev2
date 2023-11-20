@@ -37,7 +37,6 @@ export class EditionLayerService {
             .subscribe({
                 next: () => {
                     if (this.editionLayer.getVisible()) {
-                        console.log(this.editionLayer);
                         this.redrawEditionLayerAfterSynchronization();
                     }
                 }
@@ -265,6 +264,11 @@ export class EditionLayerService {
         feature.set('designation', featureDoc.designation);
         feature.set('@class', featureDoc['@class']);
         feature.set('edition', true);
+
+        if (PluginUtils.isVegetationClass(featureDoc['@class'])) {
+            feature.set('typeVegetationId', featureDoc['typeVegetationId']);
+        }
+
         return feature;
     }
 
