@@ -131,7 +131,7 @@ export class ObservationEditComponent implements OnInit {
                         this.prefilled = shouldPrefill;
                         if (this.prefilled) {
                             // if the user choose to prefill, we copy the details from the last observation
-                            const len = this.objectDetails.selectedObject.observations.length;
+                            const len = this.objectDetails.selectedObject.observations ? this.objectDetails.selectedObject.observations.length : 0;
 
                             //if no previous observation, we just create a new one
                             if (len === 0) {
