@@ -124,7 +124,7 @@ export class ObservationEditComponent implements OnInit {
                     // if editing observation
                     this.observation = this.getObservationToEdit();
                     this.observation.author = this.authService.user._id;
-                    this.observationEditService.init(false);
+                    this.observationEditService.init(this.observation);
                 } else {
                     // if creating observation, depends on if the user choose to prefill the obs with the latest or not
                     this.observationEditService.getPrefillObservation().then((shouldPrefill: boolean) => {
@@ -154,7 +154,7 @@ export class ObservationEditComponent implements OnInit {
                             this.observation = this.createNewObservation();
                         }
 
-                        this.observationEditService.init(true);
+                        this.observationEditService.init(this.observation);
                         this.observation.author = this.authService.user._id;
                     });
                 }

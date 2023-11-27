@@ -1,4 +1,13 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    OnInit,
+    Output,
+    ViewChild,
+    ElementRef,
+    OnDestroy,
+    ChangeDetectorRef
+} from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -105,6 +114,7 @@ export class ObjectDetailsComponent implements OnInit, OnDestroy {
         private localDB: LocalDatabase,
         private editionLayerService: EditionLayerService,
         private selectedObjectsService: SelectedObjectsService,
+        private changeDetectorRef: ChangeDetectorRef,
         private appLayersService: AppLayersService) {
         this.activeTab = 'description';
         this.objectDetails.detailsType = 'objectDetails';
@@ -132,6 +142,7 @@ export class ObjectDetailsComponent implements OnInit, OnDestroy {
 
     setActiveTab(tab) {
         this.activeTab = tab;
+        this.changeDetectorRef.markForCheck();
     }
 
     canShowTab() {
