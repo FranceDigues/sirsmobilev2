@@ -220,6 +220,7 @@ export class ObservationDetailsComponent implements OnInit {
                 () => {
                     this.mapManagerService.syncAllAppLayer();
                     this.photos.push(photo);
+                    this.OES.loadImage(photo, true);
                 }
             )
     }
