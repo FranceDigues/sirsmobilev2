@@ -249,6 +249,9 @@ export class ObservationEditComponent implements OnInit {
             // Add the new observation to observation list.
             if (!this.objectDoc.observations) this.objectDoc.observations = [];
             this.objectDoc.observations.push(this.observation);
+        } else {
+            this.observation.photos = [];
+            this.observation.photos.push(...this.observationEditService.photos);
         }
         this.objectDoc.valid = false;
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
