@@ -9,7 +9,7 @@ import { EditionLayerService } from './edition-layer.service';
 export class EditionModeService {
 
     // use_cache is true by default
-    refTypes: {name: string, include_docs: boolean, cache?: any, use_cache?: boolean}[] = [
+    refTypes: {name: string, include_docs: boolean}[] = [
         {name: 'Berge', include_docs: false},
         {name: 'EchelleLimnimetrique', include_docs: false},
         {name: 'OuvrageRevanche', include_docs: false},
@@ -30,7 +30,7 @@ export class EditionModeService {
         {name: 'RefOuvrageTelecomEnergie', include_docs: false},
         {name: 'RefOuvrageVoirie', include_docs: false},
         {name: 'RefPosition', include_docs: false},
-        {name: 'RefPrestation', include_docs: false, use_cache: false},
+        {name: 'RefPrestation', include_docs: false},
         {name: 'RefReferenceHauteur', include_docs: false},
         {name: 'RefRevetement', include_docs: false},
         {name: 'RefSeuil', include_docs: false},
@@ -48,10 +48,10 @@ export class EditionModeService {
         {name: 'RefTypeOrganeProtectionCollective', include_docs: false},
         {name: 'RefTypeAmenagementHydraulique', include_docs: false},
         {name: 'RefEtat', include_docs: false},
-        {name: 'RefOuvrageAssocieAH', include_docs: false, use_cache: false},
+        {name: 'RefOuvrageAssocieAH', include_docs: false},
         {name: 'RefFonctionnementOAAH', include_docs: false},
         {name: 'RefSecurite', include_docs: false},
-        {name: 'DesordreDependance', include_docs: false, use_cache: false},
+        {name: 'DesordreDependance', include_docs: false},
         {name: 'StructureAmenagementHydraulique', include_docs: false},
         {name: 'OuvrageAssocieAmenagementHydraulique', include_docs: false},
         {name: 'Organisme', include_docs: false},
@@ -59,13 +59,13 @@ export class EditionModeService {
         {name: 'PrestationAmenagementHydraulique', include_docs: false},
         {name: 'Contact', include_docs: false},
         {name: 'Marche', include_docs: false},
-        {name: 'RefEtatSanitaireVegetation', include_docs: false, use_cache: false},
-        {name: 'RefHauteurVegetation', include_docs: false, use_cache: false},
-        {name: 'RefDiametreVegetation', include_docs: false, use_cache: false},
-        {name: 'RefDensiteVegetation', include_docs: false, use_cache: false},
-        {name: 'RefTypeInvasiveVegetation', include_docs: false, use_cache: false},
-        {name: 'RefTypePeuplementVegetation', include_docs: false, use_cache: false},
-        {name: 'RefEspeceArbreVegetation', include_docs: false, use_cache: false}
+        {name: 'RefEtatSanitaireVegetation', include_docs: false},
+        {name: 'RefHauteurVegetation', include_docs: false},
+        {name: 'RefDiametreVegetation', include_docs: false},
+        {name: 'RefDensiteVegetation', include_docs: false},
+        {name: 'RefTypeInvasiveVegetation', include_docs: false},
+        {name: 'RefTypePeuplementVegetation', include_docs: false},
+        {name: 'RefEspeceArbreVegetation', include_docs: false}
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
@@ -166,18 +166,12 @@ export class EditionModeService {
         });
     }
 
-    /* note: Added cache, this might break something, needs double check */
     getReferenceTypes() {
         const promises = [];
 
         this.refTypes.forEach((refType) => {
             const classPath = 'fr.sirs.core.model.' + refType.name;
             const promise = new Promise((resolve, rejects) => {
-                if (refType.use_cache === undefined || refType.use_cache === true) {
-                    if (refType.cache !== undefined) {
-                        return resolve(refType.cache);
-                    }
-                }
                 this.localDB.query('byClassAndLinearRef', {
                     startkey: [classPath],
                     endkey: [classPath, {}],
@@ -187,9 +181,6 @@ export class EditionModeService {
                         const values = results.map((item) => {
                             return refType.include_docs ? item.doc : item.value;
                         });
-                        if (refType.use_cache === undefined || refType.use_cache === true) {
-                            refType.cache = [refType.name, values];
-                        }
                         resolve([refType.name, values]);
                     },
                     (error) => {
@@ -200,13 +191,6 @@ export class EditionModeService {
             promises.push(promise);
         });
         return Promise.all(promises);
-    }
-
-    public clearReferenceTypeCache(): void {
-        console.debug('Clearing reference types cache');
-        this.refTypes.forEach((refType) => {
-            refType.cache = undefined;
-        });
     }
 
 }

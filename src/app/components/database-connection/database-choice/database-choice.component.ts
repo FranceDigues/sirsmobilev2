@@ -134,7 +134,6 @@ export class DatabaseChoiceComponent implements OnInit {
             && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
             this.status = 4;
         } else {
-            this.editionModeService.clearReferenceTypeCache();
             const loading = await this.loadingCtrl.create({
                 message: 'Déploiement en cours ...'
             });

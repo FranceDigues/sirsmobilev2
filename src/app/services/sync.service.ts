@@ -34,7 +34,6 @@ export class SyncService {
 
     public sync(firstSync): Promise<string> {
         return new Promise<string>(async (resolve, rejects) => {
-            this.editionModeService.clearReferenceTypeCache();
             this.isFirstSync = firstSync;
             this.percent = 0;
             this.completion = '0/1';
