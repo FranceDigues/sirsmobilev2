@@ -8,7 +8,6 @@ import { EditionLayerService } from './edition-layer.service';
 })
 export class EditionModeService {
 
-    // use_cache is true by default
     refTypes: {name: string, include_docs: boolean}[] = [
         {name: 'Berge', include_docs: false},
         {name: 'EchelleLimnimetrique', include_docs: false},
@@ -166,30 +165,33 @@ export class EditionModeService {
         });
     }
 
-    getReferenceTypes() {
-        const promises = [];
+    public async getReferenceTypes(): Promise<[string, any[]][]> {
 
-        this.refTypes.forEach((refType) => {
+        const promises = this.refTypes.map(async (refType): Promise<[string, any[]]> => {
             const classPath = 'fr.sirs.core.model.' + refType.name;
-            const promise = new Promise((resolve, rejects) => {
-                this.localDB.query('byClassAndLinearRef', {
+
+            try {
+
+                const value = await this.localDB.query('byClassAndLinearRef',{
                     startkey: [classPath],
                     endkey: [classPath, {}],
                     include_docs: refType.include_docs
-                }).then(
-                    (results) => {
-                        const values = results.map((item) => {
-                            return refType.include_docs ? item.doc : item.value;
-                        });
-                        resolve([refType.name, values]);
-                    },
-                    (error) => {
-                        rejects([refType.name, error]);
-                    }
-                );
-            });
-            promises.push(promise);
+                });
+
+                return [
+                  refType.name,
+                  value.map((item: any) => {
+                      return refType.include_docs ? item.doc : item.value;
+                  })
+                ];
+
+            } catch (error) {
+
+                throw [refType.name, error];
+
+            }
         });
+
         return Promise.all(promises);
     }
 
