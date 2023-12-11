@@ -7,6 +7,7 @@ import { Subject, noop } from 'rxjs';
 import { Router } from '@angular/router';
 import { MapManagerService } from './map-manager.service';
 import { EditionLayerService } from './edition-layer.service';
+import { EditionModeService } from "./edition-mode.service";
 
 @Injectable({providedIn: 'root'})
 export class SyncService {
@@ -22,6 +23,7 @@ export class SyncService {
                 private route: Router,
                 private mapManagerService: MapManagerService,
                 private editionLayerService: EditionLayerService,
+                private editionModeService: EditionModeService,
                 private http: HttpClient) {
     }
 
@@ -32,6 +34,7 @@ export class SyncService {
 
     public sync(firstSync): Promise<string> {
         return new Promise<string>(async (resolve, rejects) => {
+            this.editionModeService.clearReferenceTypeCache();
             this.isFirstSync = firstSync;
             this.percent = 0;
             this.completion = '0/1';
