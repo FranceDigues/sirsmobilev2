@@ -81,6 +81,8 @@ export class EditObjectService {
                 this.objectDoc = await this.localDB.get(id);
             }
 
+            this.dateWrapper = this.objectDoc.date_fin;
+
             // Hack for borne fin data without borneFinId
             if (typeof (this.objectDoc.borne_fin_aval) !== 'undefined'
                 && typeof (this.objectDoc.borne_fin_distance) !== 'undefined'
