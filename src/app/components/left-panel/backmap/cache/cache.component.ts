@@ -9,6 +9,7 @@ import { MapService } from 'src/app/services/map.service';
 import { ListBackLayer } from 'src/app/components/database-connection/models/database.model';
 import { OLService } from '../../../../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-map/ol.service';
 import { CacheMapManager } from 'src/app/services/cache.service';
+import { MemoizeExpiring } from "typescript-memoize";
 
 @Component({
   selector: 'cache',
@@ -23,7 +24,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   tileCount;
   currentView: View;
   layerModel: ListBackLayer;
-  lastZoom: number;
+  lastZoom: number = NaN;
   knobValues: { lower: number, upper: number };
 
   constructor(private backLayerService: BackLayerService, private activeRoute: ActivatedRoute,
@@ -31,44 +32,49 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
               private route: Router, private file: File,
               private alertCtrl: AlertController, private ol: OLService,
               private cdRef: ChangeDetectorRef) {
-                this.ol.map = null;
+    this.ol.map = null;
 
-                this.id = null;
-                this.selectedCorner = null;
-                this.minZoom = null;
-                this.maxZoom = null;
-                this.tileCount = 0;
-                this.currentView = null;
-                this.layerModel = null;
-                this.lastZoom = 0;
-                this.knobValues = null;
+    this.id = null;
+    this.selectedCorner = null;
+    this.minZoom = null;
+    this.maxZoom = null;
+    this.tileCount = 0;
+    this.currentView = null;
+    this.layerModel = null;
+    this.lastZoom = 0;
 
-                this.knobValues = { lower: 7, upper: 16 }
-                this.id = this.activeRoute.snapshot.paramMap.get('id');
-                this.currentView = this.mapService.currentView;
-                this.layerModel = this.backLayerService.getByName(this.id);
-                this.lastZoom = this.currentView.getZoom();
-                this.minZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.minZoom : 7;
-                this.maxZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.maxZoom : 16;
-                this.knobValues = {
-                  lower: this.minZoom,
-                  upper: this.maxZoom
-                };
+    this.knobValues = {lower: 7, upper: 16}
+    this.id = this.activeRoute.snapshot.paramMap.get('id');
+    this.currentView = this.mapService.currentView;
+    this.layerModel = this.backLayerService.getByName(this.id);
+    this.lastZoom = Math.round(this.currentView.getZoom() * 100) / 100;
+    this.minZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.minZoom : 7;
+    this.maxZoom = typeof this.layerModel.cache === 'object' ? this.layerModel.cache.maxZoom : 16;
+    this.knobValues = {
+      lower: this.minZoom,
+      upper: this.maxZoom
+    };
 
-                this.cacheMapManager.setTargetLayer(this.layerModel);
-                this.cacheMapManager.translateInteraction.on("translateend",(event) => this.onCenterChanged(event));
+    this.updateTileCount = this.updateTileCount.bind(this);
+    this.cacheMapManager.setTargetLayer(this.layerModel);
+    this.cacheMapManager.translateInteraction.on("translateend", this.updateTileCount);
+    this.cacheMapManager.modifyInteraction.on('modifyend', this.updateTileCount)
   }
 
   ngAfterViewInit() {
     this.ol.map = this.cacheMapManager.buildConfig();
     this.setDefaultArea(this.ol.map);
     this.ol.map.updateSize();
+    this.ol.map.on('moveend', () => {
+      this.updateCurrentZoom();
+      this.cdRef.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
     this.cacheMapManager.clearTargetLayer();
-    this.currentView.un('change:center', this.onCenterChanged);
-    this.cacheMapManager.translateInteraction.un("translateend", (event) => this.onCenterChanged(event));
+    this.cacheMapManager.translateInteraction.un("translateend", this.updateTileCount);
+    this.cacheMapManager.modifyInteraction.un('modifyend', this.updateTileCount)
     this.ol.map.setTarget();
     this.ol.map = null;
   }
@@ -77,6 +83,7 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     this.route.navigateByUrl('/main').then();
   }
 
+  @MemoizeExpiring(50)
   updateTileCount() {
     this.minZoom = this.knobValues.lower;
     this.maxZoom = this.knobValues.upper;
@@ -86,28 +93,29 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
 
   setDefaultArea(map) {
     if (typeof this.layerModel.cache === 'object') {
-        // Use previous area.
-        this.cacheMapManager.setCurrentArea(this.layerModel.cache.extent);
-        this.currentView.fit(this.layerModel.cache.extent, map.getSize());
+      // Use previous area.
+      this.cacheMapManager.setCurrentArea(this.layerModel.cache.extent);
+      this.currentView.fit(this.layerModel.cache.extent, map.getSize());
     } else {
-        // Create default area.
-        const extent = map.getView().calculateExtent(map.getSize());
-        this.cacheMapManager.setCurrentArea(extent);
+      // Create default area.
+      const extent = map.getView().calculateExtent(map.getSize());
+      this.cacheMapManager.setCurrentArea(extent);
     }
     // Compute the number of tiles.
     this.updateTileCount();
   }
 
-  getCurrentZoom() {
-    const zoom = this.currentView.getZoom();
-    if (typeof zoom !== 'undefined') {
-        this.lastZoom = zoom;
+  updateCurrentZoom(): number {
+    if (this.ol === undefined || this.ol.map === undefined || this.ol.map === null) {
+      return NaN;
     }
+    const zoom = this.ol.map.getView().getZoom();
+    this.lastZoom = Math.round(zoom * 100) / 100;
     return this.lastZoom;
   }
 
   onCenterChanged(event) {
-      this.updateTileCount();
+    this.updateTileCount();
   }
 
   setNewCacheInGoodLayerInBackLayerList(cache) {
@@ -155,7 +163,9 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
       bbox: [[extent[1], extent[0]], [extent[3], extent[2]]]
     }]);
 
-    setTimeout(() => { this.route.navigateByUrl('/main') }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
+    setTimeout(() => {
+      this.route.navigateByUrl('/main')
+    }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
   }
 
   async deleteCache() {
@@ -172,18 +182,20 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
           handler: () => {
             const cache = this.layerModel.cache;
             CacheMapPlugin.clearOneCache({
-                name: this.layerModel.name,
-                layerSource: null,
-                typeSource: this.layerModel.source.type,
-                zMin: cache.minZoom,
-                zMax: cache.maxZoom,
-                urlSource: this.layerModel.source.url,
-                bbox: cache.extent
+              name: this.layerModel.name,
+              layerSource: null,
+              typeSource: this.layerModel.source.type,
+              zMin: cache.minZoom,
+              zMax: cache.maxZoom,
+              urlSource: this.layerModel.source.url,
+              bbox: cache.extent
             });
 
             delete this.layerModel.cache;
             this.backLayerService.setActiveBackLayer(this.layerModel);
-            setTimeout(() => { this.route.navigateByUrl('/main') }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
+            setTimeout(() => {
+              this.route.navigateByUrl('/main')
+            }, 300); // Hack timeout for 300ms. I don't know why. Proper solution must be found.
           }
         }
       ]
@@ -191,4 +203,5 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     await alert.present();
   }
 
+  protected readonly isNaN = isNaN;
 }
