@@ -2,6 +2,12 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from 'src/app/services/troncon.service';
 import { Pipe, PipeTransform } from '@angular/core';
+import WKT from "ol/format/WKT";
+import { Geometry } from "ol/geom";
+import { OLService } from "@ionic-lib/lib-map/ol.service";
+import { Extent } from "ol/extent";
+import View from "ol/View";
+import { easeOut } from "ol/easing";
 
 
 @Component({
@@ -17,9 +23,11 @@ export class LeftSlideTronconComponent implements OnInit {
   SEID = null;
   DID = null;
 
+  private wkt = new WKT();
+
   constructor(private storageService: StorageService, public systemeEndiguementService: SystemeEndiguement,
               private appTronconsService: AppTronconsService, public digueController: DigueController,
-              public tronconCtrl: TronconController) { }
+              public tronconCtrl: TronconController, public olService: OLService) { }
 
   ngOnInit() {}
 
@@ -60,6 +68,16 @@ export class LeftSlideTronconComponent implements OnInit {
     this.storageService.setItem('AppTronconsFavorities', []);
   }
 
+  public zoomToTroncon(troncon: any): void {
+    const geometry: Geometry = this.wkt.readGeometry(troncon.value.geometry, {
+      dataProjection: 'EPSG:2154',
+      featureProjection: 'EPSG:3857'
+    });
+    const extent: Extent = geometry.getExtent();
+
+    const view: View = this.olService.map.getView();
+    view.fit(extent, {duration: 300, easing: easeOut});
+  }
 }
 
 @Pipe({

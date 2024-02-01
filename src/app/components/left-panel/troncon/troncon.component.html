@@ -32,14 +32,15 @@
         <ion-item lines="none"></ion-item>
       </ion-list>
   </div>
-  <div *ngIf="view === 'T'">
+  <div class="troncons" *ngIf="view === 'T'">
     <p style="padding: 5px;"><b>Choisir les tronçons favoris</b></p>
     <!--La liste de tous les tronçons d'un digue-->
     <ion-list >
-      <ion-item *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue" (click)="tronconCtrl.toggleLayer(troncon)">
+      <ion-item *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue">
         {{troncon.value.libelle}}
-        <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" slot="end">
+        <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" (click)="tronconCtrl.toggleLayer(troncon)" slot="end">
         </ion-checkbox>
+          <ion-button fill="clear" (click)="zoomToTroncon(troncon)" slot="end"><ion-icon size="large" name="scan-outline"></ion-icon></ion-button>
       </ion-item>
       <ion-item lines="none"></ion-item>
     </ion-list>

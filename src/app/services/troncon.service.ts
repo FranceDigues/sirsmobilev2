@@ -3,6 +3,7 @@ import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { DatabaseService } from './database.service';
 import { LoadingController } from '@ionic/angular';
 import { Subject } from 'rxjs';
+import { clear as clearMemoize, Memoize } from "typescript-memoize";
 
 @Injectable({
     providedIn: 'root',
@@ -135,13 +136,15 @@ export class TronconController {
         );
     }
 
-    isActive(id) {
+    @Memoize({tags: ['isTronconActive']})
+    public isActive(id: string): boolean {
         return this.appTronconsService.favorites.map((item) => {
             return item.id;
         }).indexOf(id) !== -1;
     }
 
-    toggleLayer(troncon) {
+    public toggleLayer(troncon: any): void {
+        clearMemoize(['isTronconActive']);
         if (this.isActive(troncon.id)) {
             this.appTronconsService.favorites.splice(this.appTronconsService.favorites
                 .map((item) => {
