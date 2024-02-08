@@ -203,5 +203,5 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
     await alert.present();
   }
 
-  protected readonly isNaN = isNaN;
+  public isNaN = isNaN;
 }
