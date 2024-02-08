@@ -149,6 +149,7 @@ export class ObservationEditComponent implements OnInit {
                                 this.observation.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
                                 this.observation.photos = [];
                                 this.observation.valid = false;
+                                delete this.observation.designation;
 
                                 // if there is a default observer, set it in the new observation
                                 // otherwise, set it empty as it is likely that the observer changes

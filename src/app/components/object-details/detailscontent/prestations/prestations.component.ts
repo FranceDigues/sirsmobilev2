@@ -54,7 +54,7 @@ export class PrestationsGenericComponent implements OnInit {
    * This function returns a human-readable name for a given 'prestation'
    * depending on the current 'textConfig' setting.
    *
-   * @param prestation {object} - An object containing the information needed to generate the name.
+   * @param prestation {object} - The prestation that we want to be human-readable
    * @return {string} - The generated name or an empty string if wrong configuration is provided.
    */
   @Memoize({
