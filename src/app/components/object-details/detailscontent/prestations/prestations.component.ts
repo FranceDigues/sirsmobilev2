@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
-import { Memoize } from "typescript-memoize";
+import { Memoize, clear as memoizeClear } from "typescript-memoize";
+import { DatabaseService } from "../../../../services/database.service";
 
 @Component({
   selector: 'prestations-generic',
@@ -11,11 +12,22 @@ export class PrestationsGenericComponent implements OnInit {
 
   public prestationList: any[] = [];
   public degradationPrestations: any[] = [];
+  public textConfig: 'abstract' | 'fullName' | 'both' | undefined;
 
-  constructor(public detailsObject: ObjectDetails) {}
+  constructor(public detailsObject: ObjectDetails,
+              public databaseService: DatabaseService) {}
 
   ngOnInit() {
+    this.getCurrentTextConfig().then(cfg => {
+      this.textConfig = cfg;
+      memoizeClear(['prestationDisplayName']);
+    });
     this.reloadLists();
+  }
+
+  private async getCurrentTextConfig(): Promise<'abstract' | 'fullName' | 'both'> {
+    const config: any = await this.databaseService.getCurrentDatabaseSettings();
+    return config.context.showText;
   }
 
   public reloadLists(): void {
@@ -38,30 +50,41 @@ export class PrestationsGenericComponent implements OnInit {
     this.reloadLists();
   }
 
-  @Memoize((p) => p.id)
+  /**
+   * This function returns a human-readable name for a given 'prestation'
+   * depending on the current 'textConfig' setting.
+   *
+   * @param prestation {object} - An object containing the information needed to generate the name.
+   * @return {string} - The generated name or an empty string if wrong configuration is provided.
+   */
+  @Memoize({
+    hashFunction: (p) => (p ? p.id : 'undefined'),
+    tags: ['prestationDisplayName']
+  })
   public prestationDisplayName(prestation: any): string {
-    console.assert(!!prestation, 'Cannot calculate displayname of ', prestation);
-    let res = '';
+    // Return an empty string if 'prestation' is undefined
+    if (!prestation) return '';
 
-    if (prestation.designation) {
-      res += prestation.designation;
-    } else {
-      res += 'Sans désignation';
+    let displayName = '';
+
+    switch (this.textConfig) {
+      case 'abstract':
+        displayName = prestation.designation || 'Sans désignation';
+        break;
+      case 'fullName':
+        displayName = prestation.libelle || 'Sans libellé';
+        break;
+      case 'both':
+        const designation = prestation.designation || 'Sans désignation';
+        const libelle = prestation.libelle || 'Sans libellé';
+        displayName = `${designation} - ${libelle}`;
+        break;
+      default:
+        // Return an empty string if 'textConfig' is undefined or doesn't match any expected value
+        return '';
     }
 
-    res += ' - ';
-
-    if (prestation.libelle) {
-      res += prestation.libelle;
-    } else {
-      res += 'Sans libellé';
-    }
-
-    res += ' - ';
-
-    res += prestation.id;
-
-    return res;
+    return displayName;
   }
 
   public getPrestationsFromId(id: string): any | undefined {
