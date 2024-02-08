@@ -177,15 +177,17 @@ export class ObjectDetails {
   private async initPrestation(prestationClass: string, linearId: string): Promise<void> {
     try {
       // we retrieve the prestations in the current section (tronçon)
-      const response: { value: any }[] = await this.localDB.query('Element/byClassAndLinear', {
+      const response: { value: any, doc: any }[] = await this.localDB.query('Element/byClassAndLinear', {
         startkey: [prestationClass, linearId],
-        endkey: [prestationClass, linearId, {}]
+        endkey: [prestationClass, linearId, {}],
+        include_docs: true
       });
 
       this.prestationMap = {};
       this.allPrestationList = [];
 
       for (const elt of response) {
+        elt.value.prestationFinished = elt.doc.date_fin !== undefined;
         this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
         this.allPrestationList.push(elt.value);
       }
@@ -296,6 +298,11 @@ export class ObjectDetails {
       this.selectedObject.desordreIds = [];
     }
     this.selectedObject.desordreIds.push(this.tempDesordre);
+    try {
+      await this.addObjectId(this.tempDesordre, this.selectedObject["_id"], 'prestationIds');
+    } catch (e) {
+      console.warn(e);
+    }
     this.tempDesordre = null;
     this.desordreList = this.filterDesordreList();
     this.selectedObject.valid = false;
@@ -321,24 +328,30 @@ export class ObjectDetails {
         },
         {
           text: 'OK',
-          handler: () => {
-            this.selectedObject.desordreIds.splice(index, 1);
-            if (this.selectedObject.desordreIds.length === 0) {
-              delete this.selectedObject.desordreIds;
-            }
-            this.selectedObject.valid = false;
-            this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
-            this.desordreList = this.filterDesordreList();
-            this.editionService.updateObject(this.selectedObject)
-              .then(() => {
-                this.mapManagerService.syncAllAppLayer();
-                this.mapManagerService.clearAll();
-              });
-          }
+          role: 'ok',
         }
       ]
     });
     await alert.present();
+    const res = await alert.onDidDismiss();
+
+    if (res.role === 'ok') {
+      const desordre = (this.selectedObject.desordreIds as string[]).splice(index, 1)[0];
+      if (this.selectedObject.desordreIds.length === 0) {
+        delete this.selectedObject.desordreIds;
+      }
+      try {
+        await this.removeObjectId(desordre, this.selectedObject["_id"], 'prestationIds');
+      } catch (e) {
+        console.warn(e);
+      }
+      this.selectedObject.valid = false;
+      this.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
+      this.desordreList = this.filterDesordreList();
+      await this.editionService.updateObject(this.selectedObject);
+      this.mapManagerService.syncAllAppLayer();
+      this.mapManagerService.clearAll();
+    }
   }
 
   /**
@@ -410,7 +423,26 @@ export class ObjectDetails {
    * @returns A Promise that resolves when the prestation is removed successfully.
    */
   public async removePrestation(index: number): Promise<void> {
-    const removeIt = async (): Promise<void> => {
+
+    const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
+      header: 'Suppression de l\'association',
+      message: 'Voulez vous vraiment supprimer cette association ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+        },
+        {
+          text: 'OK',
+          role: 'ok',
+        }
+      ]
+    });
+    await alert.present();
+    const res = await alert.onDidDismiss();
+
+    if (res.role === 'ok') {
       let removedIds = this.selectedObject.prestationIds.splice(index, 1);
       if (this.selectedObject.prestationIds.length === 0) {
         delete this.selectedObject.prestationIds;
@@ -434,24 +466,7 @@ export class ObjectDetails {
           await this.removeObjectId(removedIds[0], this.selectedObject["_id"], attribute);
         }
       }
-    };
-
-    const alert = await this.alertCtrl.create({
-      backdropDismiss: false,
-      header: 'Suppression de l\'association',
-      message: 'Voulez vous vraiment supprimer cette association ?',
-      buttons: [
-        {
-          text: 'Annuler',
-          role: 'cancel',
-        },
-        {
-          text: 'OK',
-          handler: removeIt
-        }
-      ]
-    });
-    await alert.present();
+    }
   }
 
   /**
