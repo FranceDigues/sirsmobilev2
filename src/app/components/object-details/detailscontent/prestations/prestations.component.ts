@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
 import { Memoize, clear as memoizeClear } from "typescript-memoize";
 import { DatabaseService } from "../../../../services/database.service";
+import { MapService } from "../../../../services/map.service";
 
 @Component({
   selector: 'prestations-generic',
@@ -15,7 +16,8 @@ export class PrestationsGenericComponent implements OnInit {
   public textConfig: 'abstract' | 'fullName' | 'both' | undefined;
 
   constructor(public detailsObject: ObjectDetails,
-              public databaseService: DatabaseService) {}
+              public databaseService: DatabaseService,
+              public mapService: MapService) {}
 
   ngOnInit() {
     this.getCurrentTextConfig().then(cfg => {
@@ -96,8 +98,15 @@ export class PrestationsGenericComponent implements OnInit {
     }
   }
 
+  /**
+   * returns all the prestations that should be displayed
+   */
   filteredPrestationList() {
-    return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished)
+    if (this.mapService.archiveObjectsFlag) {
+      return [...this.detailsObject.prestationList];
+    } else {
+      return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished);
+    }
   }
 
 }
