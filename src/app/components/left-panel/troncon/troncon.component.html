@@ -38,8 +38,7 @@
     <ion-list >
       <ion-item *ngFor="let troncon of tronconCtrl.troncons | sortByLibelleValue">
         {{troncon.value.libelle}}
-        <ion-checkbox [checked]="tronconCtrl.isActive(troncon.id)" (click)="tronconCtrl.toggleLayer(troncon)" slot="end">
-        </ion-checkbox>
+        <input type="checkbox" [ngModel]="tronconCtrl.isActive(troncon.id)" (click)="toggleTroncon(troncon)" slot="end"/>
           <ion-button fill="clear" (click)="zoomToTroncon(troncon)" slot="end"><ion-icon size="large" name="scan-outline"></ion-icon></ion-button>
       </ion-item>
       <ion-item lines="none"></ion-item>

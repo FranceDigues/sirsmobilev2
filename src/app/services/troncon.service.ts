@@ -159,6 +159,7 @@ export class TronconController {
                 borneIds: troncon.value.borneIds
             });
         }
+        clearMemoize(['isTronconActive']);
         this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites);
         this.appTronconsService.updated.next('tronçon updated');
     }

@@ -23,6 +23,12 @@ ion-toolbar {
     transition: background 0s;
 }
 
+.troncons input[type="checkbox"] {
+    position: unset;
+    opacity: unset;
+    pointer-events: unset;
+}
+
 .troncons ion-button {
     height: 46px;
 }

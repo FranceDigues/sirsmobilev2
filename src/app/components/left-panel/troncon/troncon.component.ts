@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from 'src/app/services/troncon.service';
 import { Pipe, PipeTransform } from '@angular/core';
@@ -27,7 +27,8 @@ export class LeftSlideTronconComponent implements OnInit {
 
   constructor(private storageService: StorageService, public systemeEndiguementService: SystemeEndiguement,
               private appTronconsService: AppTronconsService, public digueController: DigueController,
-              public tronconCtrl: TronconController, public olService: OLService) { }
+              public tronconCtrl: TronconController, public olService: OLService,
+              public changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {}
 
@@ -41,6 +42,11 @@ export class LeftSlideTronconComponent implements OnInit {
     } else {
       this.slidePathChange.emit('menu');
     }
+  }
+
+  public toggleTroncon(troncon: any): void {
+    this.tronconCtrl.toggleLayer(troncon);
+    this.changeDetectorRef.detectChanges();
   }
 
   changeView(view) {
