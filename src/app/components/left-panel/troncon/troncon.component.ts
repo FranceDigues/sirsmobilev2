@@ -92,14 +92,25 @@ export class LeftSlideTronconComponent implements OnInit {
 export class ArraySortPipe  implements PipeTransform {
 
   transform(value: any) {
+    if (Array.isArray(value)) {
+      if (value.length <= 1) {
+        return value;
+      }
+    }
     const data = value.sort(this.sortOn());
     return data;
   }
 
   sortOn() {
     return (a, b) => {
-      const v1 = a.value ? a.value.libelle : a.libelle;
-      const v2 = b.value ? b.value.libelle : b.libelle;
+      let v1 = a.value ? a.value.libelle : a.libelle;
+      let v2 = b.value ? b.value.libelle : b.libelle;
+      if (v1 === undefined) {
+        v1 = 'z';
+      }
+      if (v2 === undefined) {
+        v2 = 'z';
+      }
       if (v1.toLowerCase() < v2.toLowerCase()) {
         return -1;
       } else if (v1.toLowerCase() > v2.toLowerCase()){
