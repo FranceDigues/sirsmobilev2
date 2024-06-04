@@ -126,17 +126,19 @@ export class MapManagerService {
             let featureModels: any[];
 
             switch (layerModel.filterValue) {
-                case 'fr.sirs.core.model.TronconDigue':
-                    const keys: any[] = await this.getTronconsFavoritesIds();
-                    const results: any = await this.localDB.query('TronconDigue/streamLight', {keys});
-                    featureModels = results.filter((item: any) => item.value.valid).map(this.createAppFeatureModel.bind(this));
+                case 'fr.sirs.core.model.TronconDigue': {
+                        const keys: any[] = await this.getTronconsFavoritesIds();
+                        const results: any = await this.localDB.query('TronconDigue/streamLight', {keys});
+                        featureModels = results.filter((item: any) => item.value.valid).map(this.createAppFeatureModel.bind(this));
+                    }
                     break;
 
-                case 'fr.sirs.core.model.BorneDigue':
-                    const tronconsFavoritesIds = await this.getTronconsFavoritesIds();
-                    const results = await this.localDB.query('getBornesFromTronconID', {keys: tronconsFavoritesIds});
-                    const results2 = await this.localDB.query('getBornesIdsHB', {keys: results.map((obj: any) => obj.value)});
-                    featureModels = results2.map(this.createAppFeatureModel.bind(this));
+                case 'fr.sirs.core.model.BorneDigue': {
+                        const tronconsFavoritesIds = await this.getTronconsFavoritesIds();
+                        const results = await this.localDB.query('getBornesFromTronconID', {keys: tronconsFavoritesIds});
+                        const results2 = await this.localDB.query('getBornesIdsHB', {keys: results.map((obj: any) => obj.value)});
+                        featureModels = results2.map(this.createAppFeatureModel.bind(this));
+                    }
                     break;
 
                 default:

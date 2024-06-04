@@ -180,7 +180,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     const promises = [];
 
     designDocs.forEach((element, i) => {
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise<void>((resolve, reject) => {
         this.localDB.put(element).then(
             () => {
               console.debug('3 - EN COURS');

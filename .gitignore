@@ -38,3 +38,4 @@ npm-debug.log*
 /www
 coverage
 script.py
+.angular

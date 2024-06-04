@@ -148,7 +148,7 @@ export class PhotoDetailsComponent implements OnInit {
     array.splice(indexFound, 1);
   }
 
-  private saveParent() {
+  private saveParent(): Promise<void> {
     return new Promise(resolve => {
       this.objectDetails.selectedObject.valid = false;
       this.objectDetails.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
