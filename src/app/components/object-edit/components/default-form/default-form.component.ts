@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { EditObjectService } from "../../../../services/edit-object.service";
 import { GeolocationService } from "../../../../services/geolocation.service";
 
@@ -7,7 +7,7 @@ import { GeolocationService } from "../../../../services/geolocation.service";
     templateUrl: './default-form.component.html',
     styleUrls: ['./default-form.component.scss'],
 })
-export class DefaultFormComponent implements OnInit {
+export class DefaultFormComponent {
     @Output() selectPosEvent = new EventEmitter<string>();
     @Output() selectPosBySREvent = new EventEmitter<string>();
 
@@ -15,21 +15,18 @@ export class DefaultFormComponent implements OnInit {
                 public geolocationService: GeolocationService) {
     }
 
-    ngOnInit() {
-    }
-
-    selectPos() {
+    public selectPos(): void {
         this.selectPosEvent.emit('selectPos');
     }
 
-    getStartPositionValue() {
+    public selectPosBySR(): void {
+        this.selectPosBySREvent.emit('selectPosBySREvent');
+    }
+
+    public getStartPositionValue(): string {
         // Try to get GPS precision info
         const precisionGPSText = this.geolocationService.getGPSAccuracy() ? ', précision actuelle du GPS : +/- ' + this.geolocationService.getGPSAccuracy() + ' m' : '';
 
         return this.EOS.getStartPos() + precisionGPSText;
-    }
-
-    selectPosBySR() {
-        this.selectPosBySREvent.emit('selectPosBySREvent');
     }
 }
