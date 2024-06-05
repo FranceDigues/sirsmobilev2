@@ -15,6 +15,18 @@
             <div class="sirs-field">
                 <span class="sirs-field-title">Position</span>
                 <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
+                <!-- Borne relative position -->
+                <ng-container *ngIf="isLinear">
+                    <ng-container *ngIf="detailsObject.selectedObject.systemeRepId">
+                        <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                        <span class="sirs-field-value" *ngIf="borneFinPositionStr">Fin: {{borneFinPositionStr}}</span>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!isLinear">
+                    <ng-container *ngIf="!detailsObject.selectedObject.editedGeoCoordinate">
+                        <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                    </ng-container>
+                </ng-container>
             </div>
             <div class="sirs-field">
                 <span class="sirs-field-title">Côté</span>
