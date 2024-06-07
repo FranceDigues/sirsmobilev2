@@ -106,7 +106,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.completion = '0/' + docCount;
 
     const subject = new Subject<any>();
-    this.remoteDB.replicate.to(this.localDB, { live: false, retry: true, batches_limit: 10, batch_size: 100 })
+    this.remoteDB.replicate.to(this.localDB, { live: false, retry: false, batches_limit: 2, batch_size: 12 })
     .on('change', (result) => {
       console.log('2 - En COURS : ', result);
       const arg = {
