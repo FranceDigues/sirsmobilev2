@@ -73,7 +73,7 @@ export class DatabaseService {
         });
   }
 
-  getDatabaseSettings() {
+  getDatabaseSettings(): Promise<Array<DatabaseModel>> {
     return this.nativeStorage.getItem('databases-settings');
   }
 

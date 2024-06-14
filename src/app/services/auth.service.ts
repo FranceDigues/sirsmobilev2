@@ -29,7 +29,7 @@ export class AuthService {
 
   public async logout(): Promise<void> {
     this.user = null;
-    const db: DatabaseModel = await this.dbService.getDatabaseSettings();
+    const db: DatabaseModel = (await this.dbService.getDatabaseSettings())[0];
     db.context.authUser = null;
     this.dbService.removeDB$.next("DB changed");
     await this.dbService.setCurrentDatabaseSettings(db);
