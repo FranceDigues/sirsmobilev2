@@ -8,6 +8,7 @@ import { FormsTemplateService } from './formstemplate.service';
 import { PluginUtils } from '../utils/plugin-utils';
 import { DocToStringPipe } from "../pipe/doc-to-string/doc-to-string.pipe";
 import { AppLayersService } from "./app-layers.service";
+import { StorageService } from "@ionic-lib/lib-storage/storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,8 @@ export class ObjectDetails {
               private alertCtrl: AlertController,
               private formService: FormsTemplateService,
               private docToStringPipe: DocToStringPipe,
-              private appLayersService: AppLayersService
+              private appLayersService: AppLayersService,
+              private storageService: StorageService,
   ) {
     // Paths
     this.photoDir = null;
@@ -533,4 +535,15 @@ export class ObjectDetails {
     const isVisible = !!this.appLayersService.getFavorites().find(item => item.filterValue === doc['@class']);
     await this.editionService.updateObject(doc, isVisible);
   }
+
+  async getShowBorneRelativePosition(): Promise<boolean> {
+    const lsRes: boolean = await this.storageService.getItem<boolean>('showBorneRelativePosition');
+    if (lsRes === undefined) return false;
+    return lsRes;
+  }
+
+  async setShowBorneRelativePosition(value: boolean): Promise<void> {
+    return this.storageService.setItem<boolean>('showBorneRelativePosition', value);
+  }
+
 }

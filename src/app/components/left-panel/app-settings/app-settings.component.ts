@@ -6,6 +6,7 @@ import { Contact } from "../../../shared/models/contact.model";
 import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
 import { Memoize } from "typescript-memoize";
 import { ObservationEditService } from "../../../services/observation-edit.service";
+import { ObjectDetails } from "../../../services/object-details.service";
 
 @Component({
     selector: 'app-settings',
@@ -18,10 +19,12 @@ export class AppSettingsComponent implements OnInit {
     public defaultObservateurId?: string;
     public contactList?: {doc: Contact, id: string, key: any, value: any}[];
     private _prefillObservations?: boolean;
+    private _showBorneDistance?: boolean;
 
     constructor(private databaseService: DatabaseService,
                 private sirsDataService: SirsDataService,
                 private observationEditService: ObservationEditService,
+                private detailService: ObjectDetails,
                 private sortByDocNomPipe: ArraySortPipe2) {
     }
 
@@ -39,6 +42,7 @@ export class AppSettingsComponent implements OnInit {
         });
 
         this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
+        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show);
     }
 
     public get prefillObservations(): boolean | undefined {
@@ -48,6 +52,15 @@ export class AppSettingsComponent implements OnInit {
     public set prefillObservations(value: boolean) {
         this._prefillObservations = value;
         this.observationEditService.setPrefillObservation(value).then();
+    }
+
+    public get showBorneDistance(): boolean | undefined {
+        return this._showBorneDistance;
+    }
+
+    public set showBorneDistance(value: boolean) {
+        this._showBorneDistance = value;
+        this.detailService.setShowBorneRelativePosition(value).then();
     }
 
     goBack() {

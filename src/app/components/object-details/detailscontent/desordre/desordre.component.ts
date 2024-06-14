@@ -11,6 +11,7 @@ export class DesordreComponent {
 
   @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres';
 
+  public showBorneRelativePosition: boolean = false;
   public borneDebutPositionStr?: string;
   public borneFinPositionStr?: string;
 
@@ -21,6 +22,11 @@ export class DesordreComponent {
     private localDB: LocalDatabase,
     ) {
     this.isLinear = this.isDegradationLinear();
+
+    this.detailsObject.getShowBorneRelativePosition().then((show) => {
+      this.showBorneRelativePosition = show;
+    });
+
     Promise.all([this.getBornePosition('debut'), this.getBornePosition('fin')]).then(([debutStr, finStr]) => {
       this.borneDebutPositionStr = debutStr;
       this.borneFinPositionStr = finStr;
