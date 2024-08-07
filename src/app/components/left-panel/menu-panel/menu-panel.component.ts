@@ -58,6 +58,9 @@ export class MenuPanelComponent implements OnInit {
 
     changeLocationGPS() {
         this.geolocationService.isEnabled = !this.geolocationService.isEnabled;
+        if(!this.geolocationService.isEnabled){
+            this.geolocationService.setLastGPSUpdate(null);
+        }
     }
 
     changeShowArchivedObjects() {
