@@ -226,6 +226,7 @@ export class ObservationEditComponent implements OnInit {
     setView(str: 'form' | 'media') {
         this.view = str;
         this.cdr.detectChanges();
+        
     }
 
     // Todo make enum

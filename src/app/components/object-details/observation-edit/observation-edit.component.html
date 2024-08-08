@@ -240,7 +240,7 @@
             </ion-content>
         </div>
         <div class="full-height full-width" *ngSwitchCase="'media'">
-            <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
+            <observation-media class="observation-form" [EditingFromDetail]="false" (viewChange)="setView($event)"></observation-media>
         </div>
     </div>
 </div>

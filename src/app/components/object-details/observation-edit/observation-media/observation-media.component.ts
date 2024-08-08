@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ObservationEditService} from 'src/app/services/observation-edit.service';
 import {ModalController, ToastController} from '@ionic/angular';
 import { ToastService } from '../../../../services/toast.service';
@@ -24,7 +24,8 @@ import { PermissionsService } from "../../../../services/permissions.service";
 export class ObservationMediaComponent implements OnInit {
 
     @Output() readonly viewChange = new EventEmitter<string>();
-
+    @Output() readonly isEdited = new EventEmitter<boolean>();
+    @Input() EditingFromDetail: boolean;
     view: 'media' | 'map' | 'note';
     showTextConfig: string;
     pendingContactList: boolean;
@@ -51,8 +52,9 @@ export class ObservationMediaComponent implements OnInit {
         this.pendingContactList = true;
 
         this.OES.importPhotoData = null;
-        this.OES.mediaOptions.id = '';
-
+        if(this.OES.mediaOptions) {
+            this.OES.mediaOptions.id = '';
+        }
         this.sirsDataService.getContactList().then((list) => {
             this.contactList = list;
             this.pendingContactList = false;
@@ -81,12 +83,19 @@ export class ObservationMediaComponent implements OnInit {
                 this.defaultObservateurId = config.context.defaultObservateurId;
 
                 this.OES.contact = this.defaultObservateurId || '';
-                this.OES.mediaOptions.photographeId = this.defaultObservateurId || '';
+                if(this.OES.mediaOptions){
+                    this.OES.mediaOptions.photographeId = this.defaultObservateurId || '';
+                }
             });
     }
 
     cancel() {
-        this.viewChange.emit('form');
+        if(this.EditingFromDetail){
+            this.viewChange.emit('detail');
+        }else{
+            this.viewChange.emit('form');
+        }
+        
     }
 
     setView(str: 'media' | 'map' | 'note') {
@@ -276,6 +285,7 @@ export class ObservationMediaComponent implements OnInit {
                         content_type: 'image/jpeg',
                         data: txt
                     };
+                    this.isEdited.emit(true);
                     this.cancel();
                 }
                 if (isBase64) {
@@ -297,6 +307,7 @@ export class ObservationMediaComponent implements OnInit {
                     );
                 }
             }
+            
         } else {
             this.toastCtrl.create({
                 message: 'Formulaire d\'ajout de média incomplet: Veuillez au moins ajouter une image/note',

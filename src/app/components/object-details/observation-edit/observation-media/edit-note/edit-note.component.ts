@@ -31,7 +31,7 @@ export class EditNoteComponent implements AfterViewInit {
                 this.colors = [
                   '#9e2956',
                   '#c2281d',
-                  '#de722f', '#edbf4c', '#5db37e', '#459cde', '#4250ad', '#802fa3' ];
+                  '#de722f', '#edbf4c', '#5db37e', '#459cde', '#4250ad', '#802fa3' ];     
               }
 
   ngAfterViewInit(): void {
@@ -152,7 +152,6 @@ export class EditNoteComponent implements AfterViewInit {
 
 
       const options: Base64ToGalleryOptions = { prefix: 'canvas_', mediaScanner:  true };
-
       this.base64ToGallery.base64ToGallery(dataUrl, options).then(
         async res => {
           const toast = await this.toastCtrl.create({

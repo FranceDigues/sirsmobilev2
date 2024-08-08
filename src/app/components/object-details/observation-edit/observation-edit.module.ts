@@ -35,11 +35,12 @@ import { ObjectEditModule } from '../../object-edit/object-edit.module';
     ],
     declarations: [
         ObservationEditComponent,
-        ObservationEditComponent, NgInitDirective,
-        ObservationMediaComponent, PositionByBorneModal2Component,
+        NgInitDirective,
+        ObservationMediaComponent,
+        PositionByBorneModal2Component,
         ArraySortPipe2
     ],
-    exports: [ObservationEditComponent, ArraySortPipe2]
+    exports: [ObservationEditComponent,ObservationMediaComponent, ArraySortPipe2]
 })
 export class ObservationEditModule {
 }
