@@ -3,10 +3,16 @@ import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
 import { SirsDataService } from "../../../services/sirs-data.service";
 import { Contact } from "../../../shared/models/contact.model";
+import { Prestation } from "../../../shared/models/prestation.model";
 import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
 import { Memoize } from "typescript-memoize";
 import { ObservationEditService } from "../../../services/observation-edit.service";
 import { ObjectDetails } from "../../../services/object-details.service";
+import { PrestationsGenericComponent } from '../../object-details/detailscontent/prestations/prestations.component';
+import { GetByIdPipe } from 'src/app/pipe/get-by-id/get-by-id.pipe';
+import { MapService } from 'src/app/services/map.service';
+
+
 
 @Component({
     selector: 'app-settings',
@@ -17,7 +23,9 @@ export class AppSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
     public showTextConfig?: string;
     public defaultObservateurId?: string;
+    public defaultPrestationId?: string;
     public contactList?: {doc: Contact, id: string, key: any, value: any}[];
+    public prestationList?: any;
     private _prefillObservations?: boolean;
     private _showBorneDistance?: boolean;
 
@@ -25,14 +33,18 @@ export class AppSettingsComponent implements OnInit {
                 private sirsDataService: SirsDataService,
                 private observationEditService: ObservationEditService,
                 private detailService: ObjectDetails,
-                private sortByDocNomPipe: ArraySortPipe2) {
-    }
+                public detailsObject: ObjectDetails,
+                private getByIdPipe: GetByIdPipe,
+                private mapService: MapService,
+                private sortByDocNomPipe: ArraySortPipe2) {                
+    }       
 
     ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
                 this.defaultObservateurId = config.context.defaultObservateurId;
+                this.defaultPrestationId =  config.context.defaultPrestationId;
             });
 
         this.sirsDataService.getContactList().then((list: {doc: Contact, id: string, key: any, value: any}[]) => {
@@ -42,9 +54,18 @@ export class AppSettingsComponent implements OnInit {
         });
 
         this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
-        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show);
+        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show); 
+        this.sirsDataService.getPrestationList().then((list: {doc: Prestation, id: string, key: any, value: any}[]) => {
+            if (this.mapService.archiveObjectsFlag) {
+                this.prestationList = this.sortByDocNomPipe.transformPrestation(list);
+            } else {
+                this.prestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
+            }
+        }, (error) => {
+            console.error('error contactList returned : ', error);
+        });     
     }
-
+ 
     public get prefillObservations(): boolean | undefined {
         return this._prefillObservations;
     }
@@ -76,6 +97,9 @@ export class AppSettingsComponent implements OnInit {
             .changeDefaultObservateurId(this.defaultObservateurId);
     }
 
+    changeDefaultPrestationId(){
+        this.databaseService.changeDefaultPrestationId(this.defaultPrestationId);
+    }
     @Memoize()
     parseContactName(observateur) {
         return observateur.doc.nom ? `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}` : observateur.doc.designation;

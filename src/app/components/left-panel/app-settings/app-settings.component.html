@@ -54,6 +54,22 @@
                 <ion-icon name="trash-outline"></ion-icon>
             </button>
         </div>
+        <label class="block-title">Presatation par défaut : </label>
+        <div class="block-default-obs">
+            <select name="prestationList" class="browser-default"
+                    [(ngModel)]="defaultPrestationId"
+                    (change)="changeDefaultPrestationId()">
+                <option *ngFor="let prestation of prestationList"
+                        [value]="prestation.id"
+                        [selected]="prestation.value.id === defaultPrestationId">
+                    {{ prestation.value.libelle + (prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : '')}}
+                </option>
+            </select>
+            <button class="sirs-button-item remove-obs"
+                    (click)="defaultPrestationId='';changeDefaultPrestationId();$event.stopPropagation()">
+                <ion-icon name="trash-outline"></ion-icon>
+            </button>
+        </div>
         <div class="show-borne-distance">
             <label class="show-borne-distance-label">Afficher la distance relative aux bornes : </label>
             <ion-toggle [(ngModel)]="showBorneDistance"></ion-toggle>

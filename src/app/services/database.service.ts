@@ -137,7 +137,15 @@ export class DatabaseService {
         },
       );
   }
-
+  changeDefaultPrestationId(value: string){
+    this.getCurrentDatabaseSettings()
+      .then(
+        (database: DatabaseModel) => {
+          database.context.defaultPrestationId = value;
+          this.setCurrentDatabaseSettings(database).then();
+        },
+      );
+  }
   changeEditionModeFlag(flag: boolean) {
     this.getCurrentDatabaseSettings()
       .then(

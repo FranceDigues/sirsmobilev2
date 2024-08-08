@@ -36,6 +36,7 @@ export class DatabaseChoiceComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.dbService.changeDefaultPrestationId('');
     }
 
     init() {

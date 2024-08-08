@@ -11,6 +11,7 @@ import { File } from '@ionic-native/file/ngx';
 export class SirsDataService {
     sirsDoc: SirsDoc;
     contactList;
+    public prestationList;
     urgenceList;
     refOrientationPhoto;
     refCote;
@@ -111,7 +112,24 @@ export class SirsDataService {
             }
         });
     }
-
+    getPrestationList(){
+        return new Promise((resolve, reject) => {
+            if (!this.prestationList) {
+                this.localDB.query('Element/byClassAndLinear', {
+                    startkey: ['fr.sirs.core.model.Prestation'],
+                    endkey: ['fr.sirs.core.model.Prestation', {}],
+                    include_docs: true
+                }).then((list) => {
+                    this.prestationList = list;
+                    resolve(list);
+                }, (error) => {
+                    reject(error);
+                });
+            } else {
+                resolve(this.prestationList);
+            }
+        });
+    }
     getRefOrientationPhoto() {
         return new Promise((resolve, reject) => {
             if (!this.refOrientationPhoto) {

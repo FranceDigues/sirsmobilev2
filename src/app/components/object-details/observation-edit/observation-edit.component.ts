@@ -20,6 +20,7 @@ import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
 import { AuthService } from "../../../services/auth.service";
 import { Contact } from "../../../shared/models/contact.model";
+import { Prestation } from 'src/app/shared/models/prestation.model';
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -366,6 +367,27 @@ export class ArraySortPipe2 implements PipeTransform {
                 }
             } else {
                 return 0;
+            }
+        };
+    }
+
+    transformPrestation(value: any) {
+        return value ? value.sort(this.sortByDate()) : '';
+    }
+
+    sortByDate(){
+        return (a: {doc: Prestation}, b: {doc: Prestation}): number => {
+            const dateA = a.doc.date_fin ? new Date(a.doc.date_fin) : null;
+            const dateB = b.doc.date_fin ? new Date(b.doc.date_fin) : null;
+    
+            if (!dateA && !dateB) {
+              return 0; 
+            } else if (!dateA) {
+              return -1; 
+            } else if (!dateB) {
+              return 1; 
+            } else {
+              return dateB.getTime() - dateA.getTime(); 
             }
         };
     }

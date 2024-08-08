@@ -3,7 +3,9 @@
     <select id="prestationList" name="prestationList" class="browser-default prestation-selector"
         [(ngModel)]="detailsObject.tempPrestation" [disabled]="prestationList.length === 0">
         <option *ngFor="let p of prestationList"
-            [value]="p.id">
+            [value]="p.id"
+            [selected]="p.id === defaultPrestationId"
+            >
             {{ prestationDisplayName(p) }}
         </option>
     </select>

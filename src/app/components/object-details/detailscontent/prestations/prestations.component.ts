@@ -3,6 +3,7 @@ import { ObjectDetails } from 'src/app/services/object-details.service';
 import { Memoize, clear as memoizeClear } from "typescript-memoize";
 import { DatabaseService } from "../../../../services/database.service";
 import { MapService } from "../../../../services/map.service";
+import { DatabaseModel } from 'src/app/components/database-connection/models/database.model';
 
 @Component({
   selector: 'prestations-generic',
@@ -10,7 +11,8 @@ import { MapService } from "../../../../services/map.service";
   styleUrls: ['./prestations.component.scss', '../detailscontent.component.scss'],
 })
 export class PrestationsGenericComponent implements OnInit {
-
+  
+  public defaultPrestationId: string = "";
   public prestationList: any[] = [];
   public degradationPrestations: any[] = [];
   public textConfig: 'abstract' | 'fullName' | 'both' | undefined;
@@ -24,7 +26,11 @@ export class PrestationsGenericComponent implements OnInit {
       this.textConfig = cfg;
       memoizeClear(['prestationDisplayName']);
     });
-    this.reloadLists();
+    this.databaseService.getCurrentDatabaseSettings()
+      .then((config: DatabaseModel) => {
+          this.defaultPrestationId = config.context.defaultPrestationId;    
+      });
+    this.reloadLists(); 
   }
 
   private async getCurrentTextConfig(): Promise<'abstract' | 'fullName' | 'both'> {
@@ -105,7 +111,7 @@ export class PrestationsGenericComponent implements OnInit {
     if (this.mapService.archiveObjectsFlag) {
       return [...this.detailsObject.prestationList];
     } else {
-      return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished);
+      return [...this.detailsObject.prestationList].filter(p => {!p.prestationFinished});
     }
   }
 

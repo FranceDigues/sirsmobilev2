@@ -15,6 +15,7 @@ export interface SettingsModel {
     authUser?;
     showText?: string;
     defaultObservateurId: string,
+    defaultPrestationId: string,
     backLayer?: BackLayerModel;
     // mode?: {
     //     enableGeolocation: boolean,
