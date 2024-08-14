@@ -11,7 +11,7 @@ import { DatabaseModel } from 'src/app/components/database-connection/models/dat
   styleUrls: ['./prestations.component.scss', '../detailscontent.component.scss'],
 })
 export class PrestationsGenericComponent implements OnInit {
-  
+
   public defaultPrestationId: string = "";
   public prestationList: any[] = [];
   public degradationPrestations: any[] = [];
@@ -28,9 +28,9 @@ export class PrestationsGenericComponent implements OnInit {
     });
     this.databaseService.getCurrentDatabaseSettings()
       .then((config: DatabaseModel) => {
-          this.defaultPrestationId = config.context.defaultPrestationId;    
+          this.defaultPrestationId = config.context.defaultPrestationId;
       });
-    this.reloadLists(); 
+    this.reloadLists();
   }
 
   private async getCurrentTextConfig(): Promise<'abstract' | 'fullName' | 'both'> {
@@ -111,7 +111,7 @@ export class PrestationsGenericComponent implements OnInit {
     if (this.mapService.archiveObjectsFlag) {
       return [...this.detailsObject.prestationList];
     } else {
-      return [...this.detailsObject.prestationList].filter(p => {!p.prestationFinished});
+      return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished);
     }
   }
 

@@ -189,7 +189,21 @@ export class ObjectDetails {
       this.allPrestationList = [];
 
       for (const elt of response) {
-        elt.value.prestationFinished = elt.doc.date_fin !== undefined;
+        let prestaFinished = false;
+        if (elt.doc.date_fin !== undefined) {
+          try {
+            const dateFin = new Date(elt.doc.date_fin);
+            const dateNow = new Date();
+            if (dateFin < dateNow) {
+              prestaFinished = true;
+            }
+          } catch (_) {
+            prestaFinished = true;
+            console.info(`Cannot read end date of prestation "${elt.value.id}", assuming it is finished.`);
+          }
+        }
+
+        elt.value.prestationFinished = prestaFinished;
         this.prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
         this.allPrestationList.push(elt.value);
       }
