@@ -25,6 +25,7 @@
                             <ion-icon class="couches-metiers-icons" name="hand-left-outline" [ngClass]="getClassIcon(layer.selectable)"></ion-icon>
                             <ion-icon class="couches-metiers-icons" name="pricetag-outline" [ngClass]="getClassIcon(layer.featLabels)"></ion-icon>
                             <ion-icon class="couches-metiers-icons" name="color-palette-outline"></ion-icon>
+                            <ion-icon *ngIf="layer.title === 'Désordre'"  class="couches-metiers-icons" name="filter-outline"></ion-icon>
                         </div>
                         <h5 class="couches-metiers-title">{{ layer.title }}</h5>
                         <ion-reorder slot="end"></ion-reorder>
@@ -50,6 +51,9 @@
                         </ion-item-option>
                         <ion-item-option color="light" (click)="mapManagerService.forceRefresh(layer); notifyLayerUpdate()">
                             <ion-icon class="ion-icon-options" name="refresh-outline"></ion-icon>
+                        </ion-item-option>
+                        <ion-item-option *ngIf="layer.title === 'Désordre'" color="light" (click)="toggleUrgenceVisibility(layer); notifyLayerUpdate()">
+                            <ion-icon class="ion-icon-options" name="filter-outline" [ngClass]="getClassIcon(isDisplayUrgence)"></ion-icon>
                         </ion-item-option>
                     </ion-item-options>
                 </ion-item-sliding>

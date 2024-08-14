@@ -32,6 +32,8 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ToastNotification } from '../../shared/models/toast-notification.model';
 import { LongClickSelect } from '@plugins/LongClickSelect';
 import { PluginUtils } from "../../utils/plugin-utils";
+import { UrgenceLayerColors } from 'src/app/services/map-manager.service';
+import { getColorByRefId } from 'src/app/services/map-manager.service';
 
 @Component({
     selector: 'app-main',
@@ -45,6 +47,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     private onGeolocationSubscription: Subscription;
     private mapLoadingSubjectSubscription: Subscription;
 
+    isDisplayUrgence: boolean = false;
+    private UrgenceDisplaysubscription: Subscription;
+    public urgencyLevels : String[] = [];
     constructor(
         public geolocationService: GeolocationService,
         public editionLayerService: EditionLayerService,
@@ -84,12 +89,18 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                 // this.saveCurrentView();
                 await this.watchDeviceConnection();
             });
+        this.UrgenceDisplaysubscription = this.mapManagerService.isUrgence.subscribe(value => {
+            this.isDisplayUrgence = value;
+            });
+        
     }
 
     public ngOnInit(): void {
         this.onGeolocationSubscription = this.geolocationService.onPositionUpdated.subscribe((coord) => {
             this.geoLocLayer.redrawGeolocLayer(coord);
         });
+        this.urgencyLevels =  Object.values(this.mapManagerService.getUrgenceLayerColors());
+
     }
 
     public ngOnDestroy(): void {
@@ -490,4 +501,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             pointerIsDown = false;
         };
     }
+    public getColor(urgence: string){
+        const rgba : number[] = getColorByRefId(urgence);
+        const val = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+        return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+      }
 }

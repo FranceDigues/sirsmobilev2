@@ -23,7 +23,7 @@ import { SirsDataService } from "./sirs-data.service";
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { DatabaseService } from "./database.service";
 import { Memoize } from "typescript-memoize";
-
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
@@ -31,6 +31,18 @@ export class MapManagerService {
     appLayer: LayerGroup = null;
     wktFormat = new WKT();
     public mapLoadingSubject = new Subject();
+
+    private isDisplayUrgence = new BehaviorSubject<boolean>(false);
+    public isUrgence = this.isDisplayUrgence.asObservable();
+
+    urgenceDisplay: boolean;
+    private UrgenceDisplaysubscription: Subscription;
+
+    private filterUrgence = new BehaviorSubject<UrgenceLayerColors[]>([]);
+    public filterDesordreToApply = this.filterUrgence.asObservable();
+
+    filterUrgenceArray: UrgenceLayerColors[];
+    private filterDesordreArraySubscription: Subscription;
 
     constructor(private featureCache: FeatureCache,
                 private localDB: LocalDatabase,
@@ -75,6 +87,57 @@ export class MapManagerService {
             .subscribe({
                 next: () => this.appLayer = null
             })
+
+        this.filterDesordreArraySubscription = this.filterDesordreToApply.subscribe(data => {
+            this.filterUrgenceArray = data;
+            });
+
+        this.UrgenceDisplaysubscription = this.isUrgence.subscribe(value => {
+            this.urgenceDisplay = value;
+            });
+        this.sirsDataService.getRefUrgence().then((list) => {
+            list.forEach((item: any) => {
+                UrgenceLayerColors["REF"+item.designation] = item.id;
+              });
+              this.populateUrgenceLayerColorsMap();
+        }, (error) => {
+            console.error('error ref urgence returned : ', error);
+        });
+    }
+    private populateUrgenceLayerColorsMap() {
+        const predefinedColors: { [key: string]: number[] } = {
+          "RefUrgence:1": [255, 255, 0, 1],
+          "RefUrgence:2": [255, 150, 0, 1],
+          "RefUrgence:3": [255, 0, 0, 1],
+          "RefUrgence:4": [180, 0, 250, 1],
+          "RefUrgence:99": [255, 255, 255, 1]
+        };
+    
+        Object.keys(UrgenceLayerColors).forEach(key => {
+          if (predefinedColors[UrgenceLayerColors[key]]) {
+            UrgenceLayerColorsMap[UrgenceLayerColors[key]] = predefinedColors[UrgenceLayerColors[key]];
+          } else {
+            UrgenceLayerColorsMap[UrgenceLayerColors[key]] = this.getRandomColor();
+          }
+        });
+    }
+    private getRandomColor(): number[] {
+        return [
+          Math.floor(Math.random() * 256),
+          Math.floor(Math.random() * 256),
+          Math.floor(Math.random() * 256),
+          1
+        ];
+    }
+
+    public getUrgenceLayerColors(){
+        return UrgenceLayerColors;
+    }
+    updateIsDiplayingUrgence(value: boolean) {
+        this.isDisplayUrgence.next(value);
+        if(!value){
+            this.filterUrgence.next([]);
+        }
     }
 
     async init(): Promise<LayerGroup> {
@@ -109,7 +172,6 @@ export class MapManagerService {
         });
         olLayer.set('name', layerModel.title);
         olLayer.set('model', layerModel);
-
         if (layerModel.visible === true) {
             return this.setAppLayerFeatures(olLayer).then(() => Promise.resolve(olLayer));
         } else {
@@ -124,7 +186,7 @@ export class MapManagerService {
             const layerModel = olLayer.get('model');
             const olSource = olLayer.getSource();
             let featureModels: any[];
-
+         
             switch (layerModel.filterValue) {
                 case 'fr.sirs.core.model.TronconDigue': {
                         const keys: any[] = await this.getTronconsFavoritesIds();
@@ -210,16 +272,18 @@ export class MapManagerService {
                         featureModels = collectPhotos.map(this.createAppFeatureModelFromObject.bind(this));
 
                     } else {
-
                         // Get all the favorites tronçons ids
                         const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
                         const keys = [];
                         if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
+                            
                             favorites.forEach((key) => {
                                 keys.push([layerModel.filterValue, key.id]);
                             });
                             const results = await this.localDB.query('ElementSpecial3', {keys});
+
                             featureModels = results.map(this.createAppFeatureModel.bind(this));
+                            
                         } else {
                             featureModels = [];
                         }
@@ -334,13 +398,34 @@ export class MapManagerService {
                     // Show all the objects
                     const feature = new Feature();
                     if (layerModel.realPosition) {
-                        feature.setGeometry(featureModel.realGeometry);
-                        feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+                        if(this.urgenceDisplay){
+                            this.getLastDegreUrgence(featureModel.id).then(color => {
+                                if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
+                                    feature.setGeometry(featureModel.realGeometry);
+                                    feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+                                    feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                }
+                            });
+                        }else{
+                            feature.setGeometry(featureModel.realGeometry);
+                            feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
                             feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                        }   
                     } else {
-                        feature.setGeometry(featureModel.projGeometry);
-                        feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
-                            feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                        if(this.urgenceDisplay){
+                            this.getLastDegreUrgence(featureModel.id).then(color => {
+                                if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
+                                    feature.setGeometry(featureModel.realGeometry);
+                                    feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+                                    feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                }
+                            });
+                        }else{
+                            feature.setGeometry(featureModel.projGeometry);
+                            feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
+                                feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                        }
+
                     }
                     feature.set('id', featureModel.id);
                     feature.set('categories', layerModel.categories);
@@ -360,13 +445,34 @@ export class MapManagerService {
                     if (!featureModel.archive) {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
-                            feature.setGeometry(featureModel.realGeometry);
-                            feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+
+                            if(this.urgenceDisplay){
+                                this.getLastDegreUrgence(featureModel.id).then(color => {
+                                    if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
+                                        feature.setGeometry(featureModel.realGeometry);
+                                        feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+                                        feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                    }
+                                });
+                            }else{
+                                feature.setGeometry(featureModel.realGeometry);
+                                feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
+                            }   
                         } else {
-                            feature.setGeometry(featureModel.projGeometry);
-                            feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
-                                feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                            if(this.urgenceDisplay){
+                                this.getLastDegreUrgence(featureModel.id).then(color => {
+                                    if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
+                                        feature.setGeometry(featureModel.realGeometry);
+                                        feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
+                                        feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                    }
+                                });
+                            }else{
+                                feature.setGeometry(featureModel.projGeometry);
+                                feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
+                                    feature, layerModel.color, featureModel.projGeometry.getType(), featureModel, layerModel));
+                            }
                         }
                         feature.set('id', featureModel.id);
                         feature.set('categories', layerModel.categories);
@@ -401,7 +507,7 @@ export class MapManagerService {
             }
         });
     }
-
+    
     private getAppLayerInstance(layerModel) {
         const layers = this.appLayer.getLayers().getArray();
         for (let i = 0; i < layers.length; i++) {
@@ -460,4 +566,72 @@ export class MapManagerService {
         (olLayer as VectorLayer<any>).getSource().clear();
         this.setAppLayerFeatures(olLayer);
     }
+
+    /**
+     * Get the urgency degree of the last Observation with a degrés d'urgence.
+     */
+    private getLastDegreUrgence(idDesordre: String): Promise<UrgenceLayerColors | null> {
+        return this.getSOrtObservationByDesordreID(idDesordre)
+        .then((obs: Observation[]) => {
+            let lastUrgence: string | null = null;
+
+            // Parcourir les observations pour trouver le dernier urgenceId non-null
+            for (let i = 0; i < obs.length; i++) {
+                const urgenceId = obs[i].urgenceId; 
+                if (urgenceId !== null) {
+                    lastUrgence = urgenceId;
+                    break;
+                }
+            }
+
+            // Retourner la couleur associée à l'urgenceId trouvé ou null si non trouvé
+            return lastUrgence ? lastUrgence : null;
+        })
+        .catch(error => {
+            console.error('Error fetching last degree of urgency:', error);
+            return null; // Retourner null en cas d'erreur
+        });    
+    }
+
+    /**
+     * get all Observation of a specefic desordre !WARNING: SOME DESORDRE DO NOT HAVE OBSERVATION
+     */
+    private async getSOrtObservationByDesordreID(idDesordre: String): Promise<Observation[]>{
+        const result = await this.localDB.get(idDesordre);
+        const observations = result?.observations || [];
+        if(observations.length > 0){
+            observations.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB.getTime() - dateA.getTime();
+              });
+        }
+        return observations;
+
+    }
+
+    public updateUrgenceLayerColors(colors: UrgenceLayerColor[]) {
+        this.filterUrgence.next(colors);
+    }
 }
+
+
+export type Observation = {
+    "@class": string;
+    author: string;
+    date: string;
+    id: string;
+    nombreDesordres: number;
+    observateurId: string;
+    suite: string;
+    urgenceId: string;
+    valid: boolean;
+  };
+
+export let UrgenceLayerColors: { [key: string]: string } = {};
+export let UrgenceLayerColorsMap: { [key: string]: number[] } = {};
+
+// Function to get color by reference ID
+export function getColorByRefId(refId: string): number[] {
+    return UrgenceLayerColorsMap[refId as UrgenceLayerColors] ;
+  }

@@ -68,4 +68,11 @@
             </ion-fab-button>
         </ion-fab-list>
     </ion-fab>
+    <!-- Legende en bas à droite -->
+    <ion-card class="legend-card" slot="fixed" *ngIf="isDisplayUrgence">
+        <ion-card-content>
+            <h4>Légende</h4>
+            <p *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" > {{urgency}}</p>
+        </ion-card-content>
+    </ion-card>
 </div>

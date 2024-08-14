@@ -76,7 +76,6 @@ export class AppLayersService {
                 leaves = leaves.concat(this.extraLeaves(modules[module].layers));
             }
         }
-
         return leaves;
     }
 
