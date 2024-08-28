@@ -291,7 +291,7 @@ export class MapManagerService {
                             const results = await this.localDB.query('ElementSpecial3', {keys});
 
                             featureModels = results.map(this.createAppFeatureModel.bind(this));
-                            const tesObs = await this.localDB.get(featureModels[0].id);
+       
                         } else {
                             featureModels = [];
                         }
