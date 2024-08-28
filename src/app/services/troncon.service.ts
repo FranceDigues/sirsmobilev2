@@ -136,6 +136,7 @@ export class TronconController {
         );
     }
 
+    
     @Memoize({tags: ['isTronconActive']})
     public isActive(id: string): boolean {
         return this.appTronconsService.favorites.map((item) => {

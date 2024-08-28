@@ -21,6 +21,7 @@ export class AppLayersComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
     layers = Object.assign([], this.appLayersService.getFavorites());
     colors = colorFactory.colors;
+
     order = false;
     path = 0;
     isDisplayUrgence: boolean;

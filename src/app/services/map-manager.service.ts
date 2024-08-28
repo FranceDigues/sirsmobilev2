@@ -140,6 +140,13 @@ export class MapManagerService {
         }
     }
 
+    updateIsDiplayingUrgence(value: boolean) {
+        this.isDisplayUrgence.next(value);
+        if(!value){
+            this.filterUrgence.next([]);
+        }
+    }
+
     async init(): Promise<LayerGroup> {
         if (!this.appLayer) {
             this.appLayer = await this.createAppLayer();
@@ -172,6 +179,7 @@ export class MapManagerService {
         });
         olLayer.set('name', layerModel.title);
         olLayer.set('model', layerModel);
+
         if (layerModel.visible === true) {
             return this.setAppLayerFeatures(olLayer).then(() => Promise.resolve(olLayer));
         } else {
@@ -283,7 +291,7 @@ export class MapManagerService {
                             const results = await this.localDB.query('ElementSpecial3', {keys});
 
                             featureModels = results.map(this.createAppFeatureModel.bind(this));
-                            
+                            const tesObs = await this.localDB.get(featureModels[0].id);
                         } else {
                             featureModels = [];
                         }
@@ -390,15 +398,17 @@ export class MapManagerService {
     }
 
     createAppFeatureInstances(featureModels, layerModel) {
+        console.warn("filter: ", this.filterUrgenceArray);
         const features = [];
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
             if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
                 if (this.mapService.archiveObjectsFlag) {
                     // Show all the objects
+                    
                     const feature = new Feature();
                     if (layerModel.realPosition) {
-                        if(this.urgenceDisplay){
+                        if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                             this.getLastDegreUrgence(featureModel.id).then(color => {
                                 if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                     feature.setGeometry(featureModel.realGeometry);
@@ -412,7 +422,7 @@ export class MapManagerService {
                             feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                         }   
                     } else {
-                        if(this.urgenceDisplay){
+                        if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                             this.getLastDegreUrgence(featureModel.id).then(color => {
                                 if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                     feature.setGeometry(featureModel.realGeometry);
@@ -446,7 +456,7 @@ export class MapManagerService {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
 
-                            if(this.urgenceDisplay){
+                            if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                         feature.setGeometry(featureModel.realGeometry);
@@ -460,7 +470,7 @@ export class MapManagerService {
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                             }   
                         } else {
-                            if(this.urgenceDisplay){
+                            if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                         feature.setGeometry(featureModel.realGeometry);

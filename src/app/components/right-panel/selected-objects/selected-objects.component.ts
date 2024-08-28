@@ -27,7 +27,11 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     status: 'general' | 'details' = 'general';
     featuresCollection = [];
     subscription = null;
-
+    filteredFeatures: any[] = [];
+    filteredFeaturesCollection: any[] = [];
+    types : string[];
+    selectedType: string = ''; 
+    searchTerm: string = '';
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
                 private localDB: LocalDatabase,
                 private appLayerService: AppLayersService,
@@ -48,8 +52,22 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
             .subscribe((features) => {
                 this.status = 'general';
                 this.featuresCollection = this.getAllFeaturesFromCluster(features);
+                this.filteredFeaturesCollection = this.featuresCollection ;
+                this.filteredFeatures = this.selectedObjectsService.features;
+                this.types= [];
+                this.filteredFeatures.forEach(feat => {
+                    const type = feat.get('@class').split(".")[4];
+                    if (!this.types.some(t => t === type)) {
+                      
+                      this.types.push( type );
+                    }
+                    
+                });
+                
                 this.cdr.detectChanges();
             });
+        
+        
     }
 
     ngOnDestroy(): void {
@@ -179,4 +197,37 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         return segments[segments.length - 1];
     }
 
-}
+    filterItems(event: any) {
+        this.searchTerm = event.target.value.toLowerCase();
+        this.applyFilters();
+      }
+    
+    filterItemsByType(event: any) {
+        this.selectedType = event.detail.value;
+        this.applyFilters();
+    }
+
+    applyFilters() {
+        this.filteredFeatures = this.features.filter(feat => {
+            const designation = feat.get('designation')?.toLowerCase() || '';
+            const type = feat.get('@class')?.split(".")[4] || '';
+            
+            // Logique de filtrage
+            const matchesSearchTerm = this.searchTerm ? designation.includes(this.searchTerm) : true;
+            const matchesType = this.selectedType ? type === this.selectedType : true;
+
+            return matchesSearchTerm && matchesType;
+        });
+
+        this.filteredFeaturesCollection = this.featuresCollection.filter(feat => {
+            const designation = feat.get('designation')?.toLowerCase() || '';
+            const type = feat.get('@class')?.split(".")[4] || '';
+
+            // Logique de filtrage
+            const matchesSearchTerm = this.searchTerm ? designation.includes(this.searchTerm) : true;
+            const matchesType = this.selectedType ? type === this.selectedType : true;
+
+            return matchesSearchTerm && matchesType;
+        });
+    }
+}   
