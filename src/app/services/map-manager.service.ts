@@ -398,7 +398,6 @@ export class MapManagerService {
     }
 
     createAppFeatureInstances(featureModels, layerModel) {
-        console.warn("filter: ", this.filterUrgenceArray);
         const features = [];
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
