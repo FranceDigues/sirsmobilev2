@@ -47,6 +47,7 @@ export class EditObjectService {
     geoloc = undefined;
     refs = null;
     dateWrapper = null;
+    dateDebutWrapper = null;
     objectType = null;
     dataProjection = this.sirsDataService.sirsDoc.epsgCode;
     startPosBorneLabel: Promise<string> | string | null = null;
@@ -82,7 +83,7 @@ export class EditObjectService {
             }
 
             this.dateWrapper = this.objectDoc.date_fin;
-
+            this.dateDebutWrapper = this.objectDoc.date_debut;
             // Hack for borne fin data without borneFinId
             if (typeof (this.objectDoc.borne_fin_aval) !== 'undefined'
                 && typeof (this.objectDoc.borne_fin_distance) !== 'undefined'
@@ -144,6 +145,7 @@ export class EditObjectService {
         this.geoloc = undefined;
         this.refs = null;
         this.dateWrapper = null;
+        this.dateDebutWrapper = null;
         this.objectType = null;
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.startPosBorneLabel = null;
@@ -156,7 +158,9 @@ export class EditObjectService {
 
     formatDate() {
         const date = new Date(this.dateWrapper);
+        const dateDebut = new Date();
         this.objectDoc.date_fin = date.toISOString().split('T')[0];
+        this.objectDoc.date_debut = dateDebut.toISOString().split('T')[0];
     }
 
     watchDocPositionDebut() { // ! call this instead changing value alone
@@ -392,11 +396,16 @@ export class EditObjectService {
             if (!this.objectDoc.linearId) {
                 this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
                 return;
+            }else{
+                console.log("existe: ", this.objectDoc.linearId)
             }
+            
 
             if (!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId) {
                 this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
                 return;
+            }else{
+                console.log("existe: ", this.objectDoc.positionDebut)
             }
         }
 

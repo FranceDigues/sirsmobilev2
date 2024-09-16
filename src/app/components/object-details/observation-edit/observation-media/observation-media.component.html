@@ -21,6 +21,18 @@
             </ion-button>
           </div>
         </div>
+
+        <div *ngIf="photoToEdit && !(OES.mediaOptions && OES.mediaOptions.id !== '')"  class="pics ">
+          <ng-container *ngIf="OES.loaded[photoToEdit.id]">
+            <img (click)="OES.open(photoToEdit)" alt="Photo non disponible sur le mobile" style="height: 100px; width: 100px;"  [src]="OES.getPhotoPath(photoToEdit, true)" />
+            <button style="margin-left: 15px;margin-top: 5px;" type="button" class="btn-floating btn-small waves-effect waves-light pink"
+              (click)="removePhoto(photoToEdit, index);$event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+
+          </ng-container>
+        </div>
+
         <div class="pics " *ngIf="OES.mediaOptions && OES.mediaOptions.id !== ''">
           <div class="pic col col-25">
             <div class="pic-quicklook">

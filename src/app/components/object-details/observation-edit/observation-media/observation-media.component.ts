@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ObservationEditService} from 'src/app/services/observation-edit.service';
-import {ModalController, ToastController} from '@ionic/angular';
+import {AlertController, ModalController, ToastController} from '@ionic/angular';
 import { ToastService } from '../../../../services/toast.service';
 import { ToastNotification } from '../../../../shared/models/toast-notification.model';
 import {PositionByBorneModal2Component} from './positionbyborne-modal2/positionbyborne-modal2.component';
@@ -15,6 +15,8 @@ import {DatabaseModel} from '../../../database-connection/models/database.model'
 import {SirsDataService} from "../../../../services/sirs-data.service";
 import { PluginUtils } from "../../../../utils/plugin-utils";
 import { PermissionsService } from "../../../../services/permissions.service";
+import { ObjectDetails } from 'src/app/services/object-details.service';
+import { EditionModeService } from 'src/app/services/edition-mode.service';
 
 @Component({
     selector: 'observation-media',
@@ -26,7 +28,7 @@ export class ObservationMediaComponent implements OnInit {
     @Output() readonly viewChange = new EventEmitter<string>();
     @Output() readonly isEdited = new EventEmitter<boolean>();
     @Input() EditingFromDetail: boolean;
-    view: 'media' | 'map' | 'note';
+    view: 'media' | 'map' | 'note' | 'form';
     showTextConfig: string;
     pendingContactList: boolean;
 
@@ -36,17 +38,27 @@ export class ObservationMediaComponent implements OnInit {
     refCote;
     defaultObservateurId;
 
+
+    @Input() photoToEdit?: any;
+    @Input() index?: number;
+    doc;
+    photos: Array<any>;
+    objectDoc;
+
     constructor(public OES: ObservationEditService,
                 private modalCtrl: ModalController,
                 private geolocation: GeolocationService,
                 private cameraService: CameraService,
                 private camera: Camera,
                 private file: File,
+                private alertCtrl: AlertController,
                 private toastCtrl: ToastController,
                 private toastService: ToastService,
                 private cdr: ChangeDetectorRef,
                 private databaseService: DatabaseService,
                 private sirsDataService: SirsDataService,
+                private objectDetails: ObjectDetails, 
+                private editionService: EditionModeService, 
                 private permissionsService: PermissionsService) {
         this.view = 'media';
         this.pendingContactList = true;
@@ -74,8 +86,10 @@ export class ObservationMediaComponent implements OnInit {
         }, (error) => {
             console.error('error cotes returned : ', error);
         });
+        this.objectDoc = this.objectDetails.selectedObject;
+        
     }
-
+    
     ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
@@ -87,6 +101,11 @@ export class ObservationMediaComponent implements OnInit {
                     this.OES.mediaOptions.photographeId = this.defaultObservateurId || '';
                 }
             });
+        
+        if(this.photoToEdit){
+            this.OES.loadImage(this.photoToEdit, true);
+        }
+            
     }
 
     cancel() {
@@ -98,8 +117,12 @@ export class ObservationMediaComponent implements OnInit {
         
     }
 
-    setView(str: 'media' | 'map' | 'note') {
+    setView(str: 'media' | 'map' | 'note' | 'form') {
+        if(str === "form"){
+            str = 'media';
+        }
         this.view = str;
+        this.cdr.detectChanges();
     }
 
     showText(str: 'fullName' | 'abstract' | 'both') {
@@ -147,6 +170,7 @@ export class ObservationMediaComponent implements OnInit {
 
     editNote() {
         this.setView('note');
+        this.cdr.detectChanges();
     }
 
     public locateMe(): void {
@@ -326,5 +350,41 @@ export class ObservationMediaComponent implements OnInit {
 
     isDependance(objectType) {
         return PluginUtils.isDependanceAhClass(objectType);
+    }
+
+    async removePhoto(photo, index) {
+        const alert = await this.alertCtrl.create({
+            backdropDismiss: false,
+            header: 'Suppression d\'une photo',
+            message: 'Voulez-vous vraiment supprimer cette photo ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        
+
+                        if (this.objectDoc._attachments) {
+                            const index = this.objectDetails.selectedObservation.photos.findIndex(photoItem => photoItem.id === photo.id);
+                            delete this.objectDetails.selectedObservation.photos[index];
+                            if(this.photoToEdit){ 
+                                this.photoToEdit = null
+                            }
+                            delete this.objectDoc._attachments[photo.id];
+                        }
+                                                
+                        this.objectDoc.valid = false;
+
+                        this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.editionService.updateObject(this.objectDoc);
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 }

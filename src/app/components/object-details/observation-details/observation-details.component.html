@@ -40,7 +40,7 @@
           <ion-icon name="trash-outline"></ion-icon>
         </button>
         <button style="margin-left: 15px;margin-top: 5px;" type="button" class="btn-floating btn-small waves-effect waves-light pink"
-          (click)="editMedia(photo, index);$event.stopPropagation()">
+          (click)="openEditMedia(photo, index);$event.stopPropagation()">
           <ion-icon name="create-outline"></ion-icon>
         </button>
       </ng-container>
@@ -66,8 +66,4 @@
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</div>
-
-<div class="edit-media-content"  *ngIf="editingMedia">
-  <observation-media class="observation-form" [EditingFromDetail]="true" (viewChange)="setView($event)" (isEdited)="handleEdit($event)"></observation-media>
 </div>

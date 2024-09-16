@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@ang
 import { ObjectDetails } from 'src/app/services/object-details.service';
 import { LocalDatabase } from 'src/app/services/local-database.service';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { formatDate } from '@angular/common';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
+import { EditMediaComponent } from '../observation-edit/edit-media/edit-media/edit-media.component';
 
 @Component({
     selector: 'observation-details',
@@ -50,6 +51,7 @@ export class ObservationDetailsComponent implements OnInit {
                 private camera: Camera,
                 private mapManagerService: MapManagerService,
                 private observationEditService : ObservationEditService,
+                private modalCtrl: ModalController,
                 private cdr: ChangeDetectorRef) {
         this.doc = this.objectDetails.selectedObservation;
         this.objectId = this.objectDetails.selectedObject._id;
@@ -116,6 +118,28 @@ export class ObservationDetailsComponent implements OnInit {
         this.mediaEditing = photo;
         this.indexEditing = index;
         this.cdr.detectChanges();
+    }
+    async openEditMedia(photo,index) {
+        this.editingMedia = true;
+        this.mediaEditing = photo;
+        this.indexEditing = index;
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent, 
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: photo, 
+                index: index 
+            }
+        });
+
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            this.handleEdit(data.edited);
+            this.setView(data.view);
+        }
     }
     async removePhoto(photo, index) {
         const alert = await this.alertCtrl.create({

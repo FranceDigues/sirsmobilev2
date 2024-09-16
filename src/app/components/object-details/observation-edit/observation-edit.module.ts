@@ -14,6 +14,7 @@ import { Base64ToGallery } from '@ionic-native/base64-to-gallery/ngx';
 import { DirectiveModule } from '../../../directives/directive.module';
 import { EditNoteModule } from './observation-media/edit-note/edit-note.module';
 import { ObjectEditModule } from '../../object-edit/object-edit.module';
+import { EditMediaComponent } from './edit-media/edit-media/edit-media.component';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import { ObjectEditModule } from '../../object-edit/object-edit.module';
         NgInitDirective,
         ObservationMediaComponent,
         PositionByBorneModal2Component,
-        ArraySortPipe2
+        ArraySortPipe2,
+        EditMediaComponent
     ],
     exports: [ObservationEditComponent,ObservationMediaComponent, ArraySortPipe2]
 })
