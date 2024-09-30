@@ -44,6 +44,7 @@ export class MapManagerService {
     filterUrgenceArray: UrgenceLayerColors[];
     private filterDesordreArraySubscription: Subscription;
 
+
     constructor(private featureCache: FeatureCache,
                 private localDB: LocalDatabase,
                 private storageService: StorageService,
@@ -98,7 +99,9 @@ export class MapManagerService {
         this.sirsDataService.getRefUrgence().then((list) => {
             list.forEach((item: any) => {
                 UrgenceLayerColors["REF"+item.designation] = item.id;
+                UrgenceLegendeDisplay[item.id]= item.abrege + ' - ' + item.libelle
               });
+              
               this.populateUrgenceLayerColorsMap();
         }, (error) => {
             console.error('error ref urgence returned : ', error);
@@ -112,7 +115,7 @@ export class MapManagerService {
           "RefUrgence:4": [180, 0, 250, 1],
           "RefUrgence:99": [255, 255, 255, 1]
         };
-    
+        
         Object.keys(UrgenceLayerColors).forEach(key => {
           if (predefinedColors[UrgenceLayerColors[key]]) {
             UrgenceLayerColorsMap[UrgenceLayerColors[key]] = predefinedColors[UrgenceLayerColors[key]];
@@ -399,15 +402,17 @@ export class MapManagerService {
 
     createAppFeatureInstances(featureModels, layerModel) {
         const features = [];
+        
         // get each feature from the featureModel
         featureModels.forEach((featureModel) => {
             if ((layerModel.realPosition && featureModel.realGeometry) || (!layerModel.realPosition && featureModel.projGeometry)) {
+                
                 if (this.mapService.archiveObjectsFlag) {
                     // Show all the objects
                     
                     const feature = new Feature();
                     if (layerModel.realPosition) {
-                        if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
+                        if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                             this.getLastDegreUrgence(featureModel.id).then(color => {
                                 if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                     feature.setGeometry(featureModel.realGeometry);
@@ -421,7 +426,7 @@ export class MapManagerService {
                             feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                         }   
                     } else {
-                        if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
+                        if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                             this.getLastDegreUrgence(featureModel.id).then(color => {
                                 if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                     feature.setGeometry(featureModel.realGeometry);
@@ -455,7 +460,8 @@ export class MapManagerService {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
 
-                            if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
+                            if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
+                                
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                         feature.setGeometry(featureModel.realGeometry);
@@ -463,13 +469,13 @@ export class MapManagerService {
                                         feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
                                     }
                                 });
-                            }else{
+                            }else{                                
                                 feature.setGeometry(featureModel.realGeometry);
                                 feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                             }   
                         } else {
-                            if(this.urgenceDisplay && this.filterUrgenceArray.length > 0){
+                            if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
                                         feature.setGeometry(featureModel.realGeometry);
@@ -639,8 +645,14 @@ export type Observation = {
 
 export let UrgenceLayerColors: { [key: string]: string } = {};
 export let UrgenceLayerColorsMap: { [key: string]: number[] } = {};
-
+export let UrgenceLegendeDisplay: { [key: string]: string } = {};
 // Function to get color by reference ID
 export function getColorByRefId(refId: string): number[] {
     return UrgenceLayerColorsMap[refId as UrgenceLayerColors] ;
   }
+
+export function getLegendByRefId(refId: string): number[] {
+return UrgenceLegendeDisplay[refId as UrgenceLayerColors] ;
+}
+
+// export function get

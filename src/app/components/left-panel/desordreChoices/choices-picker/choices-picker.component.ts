@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { UrgenceLayerColors } from 'src/app/services/map-manager.service';
+import { MapManagerService, UrgenceLayerColors } from 'src/app/services/map-manager.service';
 import { getColorByRefId } from 'src/app/services/map-manager.service';
 
 @Component({
@@ -11,13 +11,15 @@ import { getColorByRefId } from 'src/app/services/map-manager.service';
 export class ChoicesPickerComponent implements OnInit {
   public urgencyLevels = Object.values(UrgenceLayerColors) ;
   public selectedDesordreType: string []= [];
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, 
+              public mapManagerService: MapManagerService) { }
 
   ngOnInit() {
    
   }
 
   closeModal() {
+    this.mapManagerService.updateIsDiplayingUrgence(false);
     this.modalCtrl.dismiss(null);
   }
 

@@ -77,7 +77,7 @@
     <ion-card class="legend-card" slot="fixed" *ngIf="mapManagerService.filterUrgenceArray.length > 0">
         <ion-card-content>
             <h4>Légende</h4>
-            <p *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" > {{urgency}}</p>
+            <p *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" > {{getLegendeLibelle(urgency)}}</p>
         </ion-card-content>
     </ion-card>
 </div>

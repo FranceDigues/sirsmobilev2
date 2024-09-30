@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService } from '../../services/map-manager.service';
+import { getLegendByRefId, MapManagerService } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
@@ -102,6 +102,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             this.geoLocLayer.redrawGeolocLayer(coord);
         });
         this.urgencyLevels =  Object.values(this.mapManagerService.getUrgenceLayerColors());
+        
     }
 
     public ngOnDestroy(): void {
@@ -507,7 +508,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         const val = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
         return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
       }
-
+    public getLegendeLibelle(urgence: string){        
+        return getLegendByRefId(urgence);
+      }
     async toSearchObject(){
         await this.openSearchModal();
     }
