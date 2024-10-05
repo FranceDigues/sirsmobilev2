@@ -9,6 +9,7 @@ import { EditionLayerService } from 'src/app/services/edition-layer.service';
 import { AppTronconsService, TronconController } from 'src/app/services/troncon.service';
 import { MapService } from 'src/app/services/map.service';
 import { element } from 'protractor';
+import { offset } from 'ol/sphere';
 
 export type dataFromDB = {
   offset: number,
@@ -68,25 +69,20 @@ export class SearchModalComponent implements OnInit {
           if (typeField) {
             elm = row;
             typeFieldValue = row.doc[typeField].split(":")[0]; // Récupérer la valeur du champ "type"
-            break; // Arrêter la boucle une fois que l'élément est trouvé
+            break; 
           }
         }
     
         if (elm) {
-          console.log("Élément trouvé:", elm);
-          console.log("Valeur du champ typeField:", typeFieldValue);
           const categories = await this.getCategorieObject(typeFieldValue);
-          console.warn('categorie: ', categories)
           this.specificTypes = {field:typeField , types:categories.rows};
         } else {
-          console.log("Aucun élément avec un champ commençant par 'type' trouvé.");
           this.specificTypes = {field:null, types:[]};
           this.cdRef.detectChanges();
         }
     
-        
       } else {
-        console.log("Aucun élément trouvé pour ce type.");
+      
         this.specificTypes = {field:null, types:[]};
         this.cdRef.detectChanges();
       }
@@ -111,46 +107,53 @@ export class SearchModalComponent implements OnInit {
     const { designation, type, specificType } = this.form.value;
     this.items = await this.getObjectByfilter(designation,type, specificType);
     console.warn("item: ", this.items)
-    if(designation){
-      this.form.controls['type'].setValue(null);
-
-    }
     this.loadTronconNames();
   }
-  private async getObjectByfilter(designation?:string, type?: string, speceficType?: string){
-    let queryOptions = {
+ 
+  private async getObjectByfilter(designation?: string, type?: string, speceficType?: string) {
+    const queryOptions: any = {
       include_docs: true
     };
-    if (designation) {
-      queryOptions['startkey'] = [designation];
-      queryOptions['endkey'] = [designation, type || {}];
+  
+    try {
+      // Choix de la vue et des clés de requête en fonction de la présence de "designation" ou "type"
+      let view = '';
+      if (designation) {
+        queryOptions.startkey = [designation];
+        queryOptions.endkey = [designation, type || {}];
+        view = 'byDesignation/byDesignation';
+      } else if (type) {
+        console.warn("par type:", type)
+        queryOptions.startkey = [type];
+        queryOptions.endkey = [type, {}];
+        view = 'Element/byClassAndLinear';
+      } else {
+        return null; // Si ni "designation" ni "type" n'est défini
+      }
+  
+  
+      const allDocs = await this.databaseService.getLocalDB().query(view, queryOptions);
       
-      const view = 'byDesignation/byDesignation';
-
-      try {
-          return await this.databaseService.getLocalDB().query(view, queryOptions);
-      } catch (error) {
-          console.error("Error querying database:", error);
-          throw error; // Lever une exception pour gérer les erreurs en amont
+      // Application du filtrage par "type" si défini
+      let filteredDocs = allDocs.rows;
+      if (type && designation) {
+        filteredDocs = filteredDocs.filter(item => item.value.class === type);
       }
-    }
-    if(type){
- 
-      queryOptions['startkey']= [type];
-      queryOptions['endkey']= [type,{}]
-      const allDocsByType = await this.databaseService.getLocalDB().query('Element/byClassAndLinear' , queryOptions);
-      const fieldToFilter = this.specificTypes.field;
-      if(speceficType){
-        const filteredDocs = allDocsByType.rows.filter(item => item.doc[fieldToFilter] === speceficType);
-        return {rows:filteredDocs};
-        console.warn("filtrered: ", filteredDocs) 
+  
+      // Application du filtrage par "speceficType" si défini
+      if (speceficType) {
+        const fieldToFilter = this.specificTypes.field;
+        filteredDocs = filteredDocs.filter(item => item.doc[fieldToFilter] === speceficType);
       }
-      return allDocsByType;
+  
+      // Retour des documents filtrés
+      return { rows: filteredDocs , offset:null, total_rows: null};
+      
+    } catch (error) {
+      console.error("Error querying database:", error);
+      throw error; // Lever une exception pour la gestion en amont
     }
-    
-    return null;
   }
-
   public async getCategorieObject(refType: string){
     let queryOptions = {
       include_docs: true
