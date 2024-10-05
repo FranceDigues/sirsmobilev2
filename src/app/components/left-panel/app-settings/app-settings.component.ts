@@ -11,6 +11,7 @@ import { ObjectDetails } from "../../../services/object-details.service";
 import { PrestationsGenericComponent } from '../../object-details/detailscontent/prestations/prestations.component';
 import { GetByIdPipe } from 'src/app/pipe/get-by-id/get-by-id.pipe';
 import { MapService } from 'src/app/services/map.service';
+import { EditObjectService } from 'src/app/services/edit-object.service';
 
 
 
@@ -36,10 +37,12 @@ export class AppSettingsComponent implements OnInit {
                 public detailsObject: ObjectDetails,
                 private getByIdPipe: GetByIdPipe,
                 private mapService: MapService,
-                private sortByDocNomPipe: ArraySortPipe2) {                
+                private sortByDocNomPipe: ArraySortPipe2,
+                private EOS : EditObjectService
+            ) {                
     }       
 
-    ngOnInit() {
+    async ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
@@ -55,17 +58,25 @@ export class AppSettingsComponent implements OnInit {
 
         this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
         this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show); 
-        this.sirsDataService.getPrestationList().then((list: {doc: Prestation, id: string, key: any, value: any}[]) => {
+        this.sirsDataService.getPrestationList().then(async (list: {doc: Prestation, id: string, key: any, value: any}[]) => {
             if (this.mapService.archiveObjectsFlag) {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list);
             } else {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
+                console.warn("presta : ", this.prestationList)
+                await this.EOS.initTronconList()
+                console.warn(this.EOS.troncons)
+                const idTroncon = this.EOS.troncons.map(item => item.id);
+                console.log("resulat: ", idTroncon)
+                const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
+                console.log("resulat: ", resultatFiltre)
+                
             }
         }, (error) => {
             console.error('error contactList returned : ', error);
         });     
     }
- 
+    
     public get prefillObservations(): boolean | undefined {
         return this._prefillObservations;
     }

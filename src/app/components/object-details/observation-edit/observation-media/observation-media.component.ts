@@ -105,7 +105,7 @@ export class ObservationMediaComponent implements OnInit {
         if(this.photoToEdit){
             this.OES.loadImage(this.photoToEdit, true);
         }
-            
+        console.log("eos media: ", this.OES.mediaOptions)
     }
 
     cancel() {
@@ -351,8 +351,13 @@ export class ObservationMediaComponent implements OnInit {
     isDependance(objectType) {
         return PluginUtils.isDependanceAhClass(objectType);
     }
-
+    async removePhoto2(photo){
+        this.OES.importPhotoData = null;
+        this.OES.mediaOptions.id = '';
+        this.cdr.detectChanges();
+    }
     async removePhoto(photo, index) {
+        console.warn("photo: ", photo);
         const alert = await this.alertCtrl.create({
             backdropDismiss: false,
             header: 'Suppression d\'une photo',

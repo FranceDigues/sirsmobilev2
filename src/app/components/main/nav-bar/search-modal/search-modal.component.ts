@@ -8,6 +8,7 @@ import { DatabaseModel } from 'src/app/components/database-connection/models/dat
 import { EditionLayerService } from 'src/app/services/edition-layer.service';
 import { AppTronconsService, TronconController } from 'src/app/services/troncon.service';
 import { MapService } from 'src/app/services/map.service';
+import { element } from 'protractor';
 
 export type dataFromDB = {
   offset: number,
@@ -22,6 +23,7 @@ export type dataFromDB = {
 export class SearchModalComponent implements OnInit {
   public form: FormGroup;
   public types: any[] = [];
+  public specificTypes: {field: string,types: any[]} = {field:'',types:[]};
   public items: dataFromDB = null;
   public tronconNamesCache = new Map<string, string>();
 
@@ -34,12 +36,12 @@ export class SearchModalComponent implements OnInit {
               public mapService: MapService,
               private cdRef:ChangeDetectorRef,
               public tronconCtrl: TronconController,
-              public changeDetectorRef: ChangeDetectorRef,
               private alertController: AlertController,
               private databaseService: DatabaseService) { 
     this.form = this.fb.group({
       designation: [''],
-      type: ['']
+      type: [''],
+      specificType:['']
     },{ validator: this.atLeastOneFieldFilledValidator() });
   }
 
@@ -52,6 +54,43 @@ export class SearchModalComponent implements OnInit {
         this.types = this.order(withoutOldDependanceModules);
       }
     );
+    this.form.get('type')?.valueChanges.subscribe(async selectedType => {
+      const result = await this.getObjectByfilter(null, selectedType);
+      if (result && result.rows.length > 0) {
+        let elm = null;
+        let typeFieldValue = null;
+        let typeField = null
+        // Parcourir le tableau pour trouver un élément avec un champ commençant par "type"
+        for (const row of result.rows) {
+          const keys = Object.keys(row.doc);
+          typeField = keys.find(key => key.startsWith('type')); // Trouver le champ qui commence par "type"
+    
+          if (typeField) {
+            elm = row;
+            typeFieldValue = row.doc[typeField].split(":")[0]; // Récupérer la valeur du champ "type"
+            break; // Arrêter la boucle une fois que l'élément est trouvé
+          }
+        }
+    
+        if (elm) {
+          console.log("Élément trouvé:", elm);
+          console.log("Valeur du champ typeField:", typeFieldValue);
+          const categories = await this.getCategorieObject(typeFieldValue);
+          console.warn('categorie: ', categories)
+          this.specificTypes = {field:typeField , types:categories.rows};
+        } else {
+          console.log("Aucun élément avec un champ commençant par 'type' trouvé.");
+          this.specificTypes = {field:null, types:[]};
+          this.cdRef.detectChanges();
+        }
+    
+        
+      } else {
+        console.log("Aucun élément trouvé pour ce type.");
+        this.specificTypes = {field:null, types:[]};
+        this.cdRef.detectChanges();
+      }
+    });
     
   }
 
@@ -69,11 +108,16 @@ export class SearchModalComponent implements OnInit {
   }
 
   async validate() {
-    const { designation, type } = this.form.value;
-    this.items = await this.getObjectByfilter(designation,type);
+    const { designation, type, specificType } = this.form.value;
+    this.items = await this.getObjectByfilter(designation,type, specificType);
+    console.warn("item: ", this.items)
+    if(designation){
+      this.form.controls['type'].setValue(null);
+
+    }
     this.loadTronconNames();
   }
-  private async getObjectByfilter(designation?:string, type?: string){
+  private async getObjectByfilter(designation?:string, type?: string, speceficType?: string){
     let queryOptions = {
       include_docs: true
     };
@@ -91,13 +135,33 @@ export class SearchModalComponent implements OnInit {
       }
     }
     if(type){
+ 
       queryOptions['startkey']= [type];
       queryOptions['endkey']= [type,{}]
-      return await this.databaseService.getLocalDB().query('Element/byClassAndLinear' , queryOptions);
+      const allDocsByType = await this.databaseService.getLocalDB().query('Element/byClassAndLinear' , queryOptions);
+      const fieldToFilter = this.specificTypes.field;
+      if(speceficType){
+        const filteredDocs = allDocsByType.rows.filter(item => item.doc[fieldToFilter] === speceficType);
+        return {rows:filteredDocs};
+        console.warn("filtrered: ", filteredDocs) 
+      }
+      return allDocsByType;
     }
     
     return null;
   }
+
+  public async getCategorieObject(refType: string){
+    let queryOptions = {
+      include_docs: true
+    };
+    if(refType){
+      queryOptions['startkey']= ["fr.sirs.core.model."+refType];
+      queryOptions['endkey']= ["fr.sirs.core.model."+refType,{}]
+      return await this.databaseService.getLocalDB().query('Element/byClassAndLinear' , queryOptions);
+    }
+  }
+
   private sortOn() {
     return (a, b) => {
       const lowtitlea = a.title.toLowerCase();

@@ -109,7 +109,7 @@
 <div class="row">
     <div class="sirs-field col col-100">
         <label for="trancon" class="active edit-label">La liste des Tronçons</label>
-        <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId"
+        <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId" 
                 name="trancon">
             <option [value]="undefined" [selected]="EOS.objectDoc.linearId === undefined" selected>Non renseigné</option>
             <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">

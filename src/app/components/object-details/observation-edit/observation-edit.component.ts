@@ -21,6 +21,8 @@ import { PluginUtils } from 'src/app/utils/plugin-utils';
 import { AuthService } from "../../../services/auth.service";
 import { Contact } from "../../../shared/models/contact.model";
 import { Prestation } from 'src/app/shared/models/prestation.model';
+import { ModalController } from '@ionic/angular';
+import { EditMediaComponent } from './edit-media/edit-media/edit-media.component';
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -70,7 +72,11 @@ export class ObservationEditComponent implements OnInit {
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
                 private route: Router, private editionService: EditionModeService,
-                private objectDetails: ObjectDetails, public sirsDataService: SirsDataService, private authService: AuthService) {
+                private objectDetails: ObjectDetails, 
+                public sirsDataService: SirsDataService,
+                private authService: AuthService,
+                private modalCtrl: ModalController) {
+                    
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.isNewObject = !this.obsId;
@@ -241,7 +247,25 @@ export class ObservationEditComponent implements OnInit {
     goToMedia() {
         this.setView('media');
     }
+    async goToMedia2(){
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent, 
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: null, 
+                index: null 
+            }
+        });
 
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            // this.handleEdit(data.edited);
+            // this.setView(data.view);
+        }
+    }
     goMain() {
         //think about clear photos already taken
         this.route.navigateByUrl('/main');

@@ -70,8 +70,24 @@ export class LeftSlideTronconComponent implements OnInit {
   }
 
   cleanAll() {
+    this.storageService.getItem('AppTronconsFavorities')
+        .then(
+            (res: Array<any>) => {
+                if (res !== null) {
+                    console.warn("get item: ", res)
+                }
+            }
+        );
     this.appTronconsService.favorites = [];
     this.storageService.setItem('AppTronconsFavorities', []);
+    this.storageService.getItem('AppTronconsFavorities')
+        .then(
+            (res: Array<any>) => {
+                if (res !== null) {
+                    console.warn("get item: ", res)
+                }
+            }
+        );
   }
 
   public zoomToTroncon(troncon: any): void {

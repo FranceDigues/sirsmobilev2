@@ -28,4 +28,12 @@
       font-weight: 400;
       line-height: 1;
   }
+
+}
+
+::ng-deep .sc-ion-alert-md-h {
+  --min-width: 500px !important;
+}
+::ng-deep .alert-wrapper.sc-ion-alert-md {
+  width: 100% !important;
 }

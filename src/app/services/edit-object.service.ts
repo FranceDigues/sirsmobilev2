@@ -17,6 +17,7 @@ import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
 import Point from "ol/geom/Point";
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -157,10 +158,9 @@ export class EditObjectService {
     }
 
     formatDate() {
-        const date = new Date(this.dateWrapper);
-        const dateDebut = new Date();
+        const date = new Date(this.dateWrapper);   
         this.objectDoc.date_fin = date.toISOString().split('T')[0];
-        this.objectDoc.date_debut = dateDebut.toISOString().split('T')[0];
+
     }
 
     watchDocPositionDebut() { // ! call this instead changing value alone
@@ -271,8 +271,8 @@ export class EditObjectService {
         this.refs = res;
     }
 
-    initTronconList() {
-        this.storageService.getItem('AppTronconsFavorities')
+    initTronconList(): Promise<void>{
+        return this.storageService.getItem('AppTronconsFavorities')
             .then(
                 (value) => {
                     if (Array.isArray(value)) {
@@ -431,7 +431,8 @@ export class EditObjectService {
 
         // Update date
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
-
+        const dateDebut = new Date();
+        this.objectDoc.date_debut = dateDebut.toISOString().split('T')[0];
         delete this.objectDoc.prDebut;
 
         delete this.objectDoc.prFin;
