@@ -63,15 +63,12 @@ export class AppSettingsComponent implements OnInit {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list);
             } else {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
-                console.warn("presta : ", this.prestationList)
-                await this.EOS.initTronconList()
-                console.warn(this.EOS.troncons)
-                const idTroncon = this.EOS.troncons.map(item => item.id);
-                console.log("resulat: ", idTroncon)
-                const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
-                console.log("resulat: ", resultatFiltre)
-                
             }
+            await this.EOS.initTronconList()
+            const idTroncon = this.EOS.troncons.map(item => item.id);
+            const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
+    
+            this.prestationList  = resultatFiltre;
         }, (error) => {
             console.error('error contactList returned : ', error);
         });     

@@ -8,7 +8,7 @@ import { OLService } from "@ionic-lib/lib-map/ol.service";
 import { Extent } from "ol/extent";
 import View from "ol/View";
 import { easeOut } from "ol/easing";
-
+import { clear as clearMemoize, Memoize } from "typescript-memoize";
 
 @Component({
   selector: 'left-slide-troncon',
@@ -79,15 +79,13 @@ export class LeftSlideTronconComponent implements OnInit {
             }
         );
     this.appTronconsService.favorites = [];
-    this.storageService.setItem('AppTronconsFavorities', []);
-    this.storageService.getItem('AppTronconsFavorities')
-        .then(
-            (res: Array<any>) => {
-                if (res !== null) {
-                    console.warn("get item: ", res)
-                }
-            }
-        );
+    this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+    .then(() => {
+      console.log("Favorites cleaned and storage updated");
+      this.changeDetectorRef.markForCheck();
+    });
+    clearMemoize(['isTronconActive']);
+ 
   }
 
   public zoomToTroncon(troncon: any): void {
@@ -137,3 +135,5 @@ export class ArraySortPipe  implements PipeTransform {
     };
   }
 }
+
+

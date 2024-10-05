@@ -139,9 +139,7 @@ export class TronconController {
     
     @Memoize({tags: ['isTronconActive']})
     public isActive(id: string): boolean {
-        console.warn("taille de favorite: ",this.appTronconsService.favorites);
         const res = this.appTronconsService.favorites.map((item) => {
-            console.warn("it: ", item)
             return item.id;
         }).indexOf(id) !== -1;
         return res;

@@ -42,18 +42,12 @@
                                     </mat-grid-tile>
                                 </mat-grid-list>
                             </div>
+                            
                             <div class="text-center">
                                 <button type="button" class="btn btn-large waves-effect waves-teal"
-                                    (click)="goToMedia()">
+                                (click)="goToMedia()">
                                     <ion-icon name="images-outline"></ion-icon>
                                     Ajouter un media
-                                </button>
-                            </div>
-                            <div class="text-center">
-                                <button type="button" class="btn btn-large waves-effect waves-teal"
-                                (click)="goToMedia2()">
-                                    <ion-icon name="images-outline"></ion-icon>
-                                    appel composant
                                 </button>
                             </div>
                         </div>
@@ -246,9 +240,7 @@
                 </form>
             </ion-content>
         </div>
-        <div class="full-height full-width" *ngSwitchCase="'media'">
-            <observation-media class="observation-form" [EditingFromDetail]="false" (viewChange)="setView($event)"></observation-media>
-        </div>
+
     </div>
 </div>
 

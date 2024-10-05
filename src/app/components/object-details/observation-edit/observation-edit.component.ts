@@ -244,10 +244,7 @@ export class ObservationEditComponent implements OnInit {
         this.tabSpecification = tab;
     }
 
-    goToMedia() {
-        this.setView('media');
-    }
-    async goToMedia2(){
+    async goToMedia(){
         const modal = await this.modalCtrl.create({
             component: EditMediaComponent, 
             animated: true,
