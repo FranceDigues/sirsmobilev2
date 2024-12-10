@@ -1,14 +1,15 @@
 <label for="prestationList" class="active">Ajouter une prestation</label>
 <div style="display: flex;">
     <select id="prestationList" name="prestationList" class="browser-default prestation-selector"
-        [(ngModel)]="detailsObject.tempPrestation" [disabled]="prestationList.length === 0">
+            [(ngModel)]="detailsObject.tempPrestation" [disabled]="prestationList.length === 0">
         <option *ngFor="let p of prestationList"
-            [value]="p.id"
-            [selected]="p.id === defaultPrestationId"
-            >
+                [value]="p.id"
+                [selected]="p.id === defaultPrestationId"
+        >
             {{ prestationDisplayName(p) }}
         </option>
     </select>
+
     <div class="sirs-ion-fab-button">
         <ion-fab slot="fixed">
             <ion-fab-button color="danger" (click)="addPrestation()">

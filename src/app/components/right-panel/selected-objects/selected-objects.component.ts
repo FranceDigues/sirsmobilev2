@@ -30,8 +30,10 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     filteredFeatures: any[] = [];
     filteredFeaturesCollection: any[] = [];
     types : string[];
-    selectedType: string = ''; 
+    selectedType: string = '';
     searchTerm: string = '';
+    searchLibelleTerm: string = '';
+    searchPerformed: boolean = false
     constructor(private selectedObjectsService: SelectedObjectsService, private cdr: ChangeDetectorRef,
                 private localDB: LocalDatabase,
                 private appLayerService: AppLayersService,
@@ -114,6 +116,7 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
                                 if (Array.isArray(value)) {
                                     const found = value.find(innerDoc => innerDoc.id === feature.get('id'));
                                     if (found) {
+                                        //console.log()
                                         //Only photos of troncons are supported for now.
                                         if (doc['@class'] === 'fr.sirs.core.model.TronconDigue' && found['@class'] === 'fr.sirs.core.model.Photo') {
                                             this.openPhotoTronconSuccess(doc, found);
@@ -201,6 +204,11 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
         this.searchTerm = event.target.value.toLowerCase();
         this.applyFilters();
       }
+
+    filterItemsByLibelle(event: any) {
+        this.searchLibelleTerm = event.target.value.toLowerCase();
+        this.applyFilters();
+    }
     
     filterItemsByType(event: any) {
         this.selectedType = event.detail.value;
@@ -208,26 +216,29 @@ export class SelectedObjectsComponent implements OnInit, OnDestroy {
     }
 
     applyFilters() {
+        this.searchPerformed = true;
         this.filteredFeatures = this.features.filter(feat => {
             const designation = feat.get('designation')?.toLowerCase() || '';
             const type = feat.get('@class')?.split(".")[4] || '';
-            
+            const libelle = feat.get('libelle')?.toLowerCase() || '';
             // Logique de filtrage
             const matchesSearchTerm = this.searchTerm ? designation.includes(this.searchTerm) : true;
             const matchesType = this.selectedType ? type === this.selectedType : true;
+            const matchesLibelle = this.searchLibelleTerm ? libelle.includes(this.searchLibelleTerm) : true;
 
-            return matchesSearchTerm && matchesType;
+            return matchesSearchTerm && matchesType && matchesLibelle;
         });
 
         this.filteredFeaturesCollection = this.featuresCollection.filter(feat => {
             const designation = feat.get('designation')?.toLowerCase() || '';
             const type = feat.get('@class')?.split(".")[4] || '';
+            const libelle = feat.get('libelle')?.toLowerCase() || '';
 
             // Logique de filtrage
             const matchesSearchTerm = this.searchTerm ? designation.includes(this.searchTerm) : true;
             const matchesType = this.selectedType ? type === this.selectedType : true;
-
-            return matchesSearchTerm && matchesType;
+            const matchesLibelle = this.searchLibelleTerm ? libelle.includes(this.searchLibelleTerm) : true;
+            return matchesSearchTerm && matchesType && matchesLibelle;
         });
     }
 }   

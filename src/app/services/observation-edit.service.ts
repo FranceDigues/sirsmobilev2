@@ -106,6 +106,7 @@ export class ObservationEditService {
 
         this.doc = structuredClone(doc);
         this.photos = this.doc.photos;
+
         this.contact = this.doc.observateurId;
 
         if (this.doc.urgenceId) {
@@ -410,10 +411,11 @@ export class ObservationEditService {
             console.warn(`The deleted picture doesn't exists in the local database`);
         }
 
-        const index = this.photos.findIndex((item) => item.id === photo.id);
+        const index = this.photos.findIndex((item) => item?.id === photo.id);
         if (index !== -1) {
             this.photos.splice(index, 1);
         }
+        this.ref.tick();
     }
 
     warningSizeMessage() {

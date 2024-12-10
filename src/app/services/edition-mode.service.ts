@@ -86,6 +86,7 @@ export class EditionModeService {
 
     createObject(objectDoc) {
         objectDoc.createFromMobile = true;
+        objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
         return (this.localDB.create(objectDoc)
             .then(
                 (doc) => {
@@ -97,6 +98,7 @@ export class EditionModeService {
     }
 
     updateObject(objectDoc, visible = true) {
+        objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
         return (this.localDB.save(objectDoc)
             .then(
                 () => {

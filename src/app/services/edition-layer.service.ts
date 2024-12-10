@@ -75,7 +75,6 @@ export class EditionLayerService {
         olSource.clear();
 
         let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
-
         // Filter edited objects by the favorites selection of troncon
         const tronconFavorites: any[] | null = await this.storageService.getItem('AppTronconsFavorities');
         const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
@@ -102,6 +101,7 @@ export class EditionLayerService {
                     obj.value.photos.forEach(p => {
                         if (!p.valid) {
                             p.parent = trId;
+                            p.geometry = obj.value.geometry;
                             editModePhotos.push(p);
                         }
                     });
@@ -113,6 +113,7 @@ export class EditionLayerService {
             const visibleFeatures = [];
 
             for (const favorite of favorites) {
+
                 if (favorite.visible) {
                     if (favorite.title === 'Photos des tronçons') { //photo treatment
                         extractPhotos();
@@ -144,6 +145,7 @@ export class EditionLayerService {
             extractPhotos();
             olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
         }
+
         olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
 
     }
@@ -198,9 +200,15 @@ export class EditionLayerService {
         } else if (photoDoc.approximatePositionDebut) {
             geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
         } else {
-            return null;
+            let geom = photoDoc.geometry.split(",")[0].split("(")[1];
+            const pt =  "POINT ("  + geom + ")";
+            console.log("pt: ", pt);
+            console.log('geom: ', geom)
+            geometry = this.wktFormat.readGeometry(pt, { dataProjection, featureProjection: 'EPSG:3857' });
+
         }
-        return this.createFeatureFromPhoto(photoDoc, geometry);
+        const res = this.createFeatureFromPhoto(photoDoc, geometry)
+        return res;
     }
 
     createFeatureFromPhoto(photoDoc, geometry) {

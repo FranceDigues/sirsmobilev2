@@ -1,0 +1,50 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+    <!-- Content / Description -->
+    <div *ngSwitchCase="'description'">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation : </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.DesordreLit'">
+                <span class="sirs-field-title">Type de désordre</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordre | async"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
+                <!-- Borne relative position -->
+                <ng-container *ngIf="showBorneRelativePosition">
+                    <ng-container *ngIf="isLinear">
+                        <ng-container *ngIf="detailsObject.selectedObject.systemeRepId">
+                            <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                            <span class="sirs-field-value" *ngIf="borneFinPositionStr">Fin: {{borneFinPositionStr}}</span>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="!isLinear">
+                        <ng-container *ngIf="!detailsObject.selectedObject.editedGeoCoordinate">
+                            <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Côté</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
+            </div>
+            <div class="sirs-field">
+                <span class="sirs-field-title">Commentaire</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Content / Observations -->
+    <div *ngSwitchCase="'observations'">
+        <observations-generic></observations-generic>
+    </div>
+    <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+        <prestations-generic></prestations-generic>
+    </div>
+</div>

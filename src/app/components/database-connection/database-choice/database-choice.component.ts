@@ -21,7 +21,7 @@ export class DatabaseChoiceComponent implements OnInit {
     selectedDatabase: DatabaseModel;
     status = 0;
     databaseIndex = 0;
-
+    slowReplication : boolean = false;
     constructor(private router: Router,
                 private platform: Platform,
                 public alertCtrl: AlertController,
@@ -147,6 +147,10 @@ export class DatabaseChoiceComponent implements OnInit {
         }
     }
 
+    async replicateSlowDatabase(){
+        this.slowReplication = true;
+        this.status = 3;
+    }
 
     public async updateViews(): Promise<void> {
         for (const designDoc of designDocs) {

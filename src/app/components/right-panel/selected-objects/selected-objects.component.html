@@ -14,6 +14,7 @@
       </ion-select>
     </ion-item>
     <ion-searchbar search-icon=“undefined” placeholder="Rechercher par désignation"   animated="true" (ionInput)="filterItems($event)"></ion-searchbar>
+    <ion-searchbar search-icon=“undefined” placeholder="Rechercher par libellé"   animated="true" (ionInput)="filterItemsByLibelle($event)"></ion-searchbar>
     <ion-list *ngIf="filteredFeaturesCollection.length > 0">
       <ion-item *ngFor="let feat of filteredFeaturesCollection" (click)="openDetails(feat)"
       [ngClass]="{ 'visited': feat.get('visited') }">
@@ -31,6 +32,9 @@
         <div *ngIf="!feat.get('subTitle') && feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
       </ion-item>
     </ion-list>
+    <ion-text color="danger" *ngIf="searchPerformed && (filteredFeaturesCollection.length === 0 && filteredFeatures.length ===0)">
+          <p style="text-align: center; font-weight: bold;">Aucun objet trouvé</p>
+    </ion-text>
   </ion-content>
 </div>
 <div class="full-height" *ngIf="status === 'details'">

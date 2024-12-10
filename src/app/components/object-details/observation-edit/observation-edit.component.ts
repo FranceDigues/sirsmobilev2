@@ -21,7 +21,7 @@ import { PluginUtils } from 'src/app/utils/plugin-utils';
 import { AuthService } from "../../../services/auth.service";
 import { Contact } from "../../../shared/models/contact.model";
 import { Prestation } from 'src/app/shared/models/prestation.model';
-import { ModalController } from '@ionic/angular';
+import {AlertController, ModalController} from '@ionic/angular';
 import { EditMediaComponent } from './edit-media/edit-media/edit-media.component';
 
 enum ObservationEditTabs {
@@ -68,13 +68,14 @@ export class ObservationEditComponent implements OnInit {
     public prefilled?: boolean;
     observationEditTabs = ObservationEditTabs;
     specificationTabs = SpecificationTabs;
-
+    public editingMedia: boolean = false;
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
                 private route: Router, private editionService: EditionModeService,
                 private objectDetails: ObjectDetails, 
                 public sirsDataService: SirsDataService,
                 private authService: AuthService,
+                private alertCtrl: AlertController,
                 private modalCtrl: ModalController) {
                     
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
@@ -343,6 +344,72 @@ export class ObservationEditComponent implements OnInit {
 
     public isReseauEtOuvrage() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
+
+    async removePhoto(photo, index) {
+        const alert = await this.alertCtrl.create({
+            backdropDismiss: false,
+            header: 'Suppression d\'une photo',
+            message: 'Voulez-vous vraiment supprimer cette photo ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        // this.doc.photos.splice(index, 1);
+                        // this.photos.splice(index, 1);
+
+                        if (this.objectDoc._attachments) {
+                            delete this.objectDoc._attachments[photo.id];
+                        }
+
+                        this.objectDoc.valid = false;
+
+                        this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.editionService.updateObject(this.objectDoc);
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    async openEditMedia(photo,index) {
+        this.editingMedia = true;
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: photo,
+                index: index
+            }
+        });
+
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            this.handleEdit(data.edited, photo, index);
+            //this.updateData(data.view);
+        }
+    }
+    handleEdit(val: boolean, photo:any, index: number){
+        if(val){
+            this.observationEditService.remove(photo)
+            this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+            this.editionService.updateObject(this.objectDoc);
+        }
+    }
+    updateData(){
+        this.cdr.detectChanges();
+        this.observationEditService.photos
+
+
     }
 }
 

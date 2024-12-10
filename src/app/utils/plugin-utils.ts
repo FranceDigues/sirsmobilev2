@@ -36,6 +36,25 @@ export class PluginUtils {
             || strClass === 'fr.sirs.core.model.PeuplementVegetation';
     }
 
+    static isLitClass(strClass: string): boolean {
+        return strClass === 'fr.sirs.core.model.AutreOuvrageLit'
+            || strClass === 'fr.sirs.core.model.DesordreLit'
+            || strClass === 'fr.sirs.core.model.DomanialiteLit'
+            || strClass === 'fr.sirs.core.model.IleBancLit'
+            || strClass === 'fr.sirs.core.model.LargeurLit'
+            || strClass === 'fr.sirs.core.model.OccupationRiveraineLit'
+            || strClass === 'fr.sirs.core.model.PenteLit'
+            || strClass === 'fr.sirs.core.model.PlageDepotLit'
+            || strClass === 'fr.sirs.core.model.RegimeEcoulementLit'
+            || strClass === 'fr.sirs.core.model.SeuilLit'
+            || strClass === 'fr.sirs.core.model.TronconLit'
+            || strClass === 'fr.sirs.core.model.ZoneAtterrissementLit'
+            || strClass === 'fr.sirs.core.model.OuvrageAssocieLit'
+
+
+            ;
+    }
+
     static isParcelleVegetationClass(strClass: string): boolean {
         return strClass === 'fr.sirs.core.model.ParcelleVegetation'
     }

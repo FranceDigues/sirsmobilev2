@@ -17,7 +17,8 @@ export const indexedViews = [
     'getBornesFromTronconID',
     'getBornesIdsHB',
     'byClassAndLinearRef',
-    'byDesignation'
+    'byDesignation',
+    'byLibelle'
 ];
 
 export const syncViews = [
@@ -250,6 +251,25 @@ export const designDocs = [
                 map: function (doc) {
                     if (doc.designation) {
                         emit([doc.designation,doc['@class']], {
+                            id: doc._id,
+                            rev: doc._rev,
+                            class: doc['@class'],
+                            designation: doc.designation,
+                            libelle: doc.libelle,
+                            abrege: doc.abrege
+                        })
+                    }
+                }.toString()
+            }
+        }
+    },
+    {
+        _id: '_design/byLibelle',
+        views: {
+            'byLibelle': {
+                map: function (doc) {
+                    if (doc.libelle) {
+                        emit([doc.libelle,doc['@class']], {
                             id: doc._id,
                             rev: doc._rev,
                             class: doc['@class'],

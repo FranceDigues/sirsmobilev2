@@ -97,13 +97,13 @@ export class PhotoDetailsComponent implements OnInit {
   }
 
   canShowEditionButtons() {
-    if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
+    if (this.authService.getValue()?.role === 'USER' || this.authService.getValue()?.role === 'ADMIN') {
       return true;
     }
-    if (this.authService.getValue().role === 'GUEST') {
+    if (this.authService.getValue()?.role === 'GUEST') {
       return false;
     }
-    if (this.authService.getValue().role === 'EXTERN') {
+    if (this.authService.getValue()?.role === 'EXTERN') {
       return this.objectDetails.selectedPhoto.author && this.authService.getValue()._id === this.objectDetails.selectedPhoto.author;
     }
   }

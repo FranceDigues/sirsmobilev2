@@ -33,6 +33,10 @@
                     <ion-icon name="checkmark-outline"></ion-icon>
                     <span>&nbsp;&nbsp;Valider</span>
                 </button>
+                <button mat-raised-button *ngIf="!selectedDatabase?.replicated" [disabled]="!selectedDatabase" (click)="replicateSlowDatabase()" style="margin-left:10px">
+                    <ion-icon name="checkmark-outline"></ion-icon>
+                    <span>&nbsp;&nbsp;Réplication plus lente</span>
+                </button>
             </div>
         </div>
     </div>
@@ -46,7 +50,7 @@
     </div>
 
     <div *ngSwitchCase="3">
-        <app-replicate-database [databaseIndex]="databaseIndex"
+        <app-replicate-database [databaseIndex]="databaseIndex" [slower] = slowReplication
                                 (statusChange)="changeStatus($event)"></app-replicate-database>
     </div>
 

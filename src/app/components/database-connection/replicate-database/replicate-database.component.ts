@@ -16,6 +16,7 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
 export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   @Input() databaseIndex;
+  @Input() slower: boolean = false;
   @Output() readonly statusChange = new EventEmitter<any>();
 
   step;
@@ -106,7 +107,21 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.completion = '0/' + docCount;
 
     const subject = new Subject<any>();
-    this.remoteDB.replicate.to(this.localDB, { live: false, retry: false, batches_limit: 5, batch_size: 200, timeout: 5000, style: 'main_only' })
+
+    let replicationOptions = {
+      live: false,
+      retry: false,
+      batches_limit: 5,
+      batch_size: 200,
+      timeout: 5000,
+      style: 'main_only'
+    };
+    if (this.slower) {
+      replicationOptions.batch_size = 50;
+      replicationOptions.batches_limit = 2;
+      replicationOptions.timeout = 50000;
+    }
+    this.remoteDB.replicate.to(this.localDB, replicationOptions)
     .on('change', (result) => {
       console.log('2 - En COURS : ', result);
       const arg = {

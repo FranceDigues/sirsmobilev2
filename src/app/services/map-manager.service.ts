@@ -224,7 +224,17 @@ export class MapManagerService {
                         });
                         featureModels = results.filter(item => item.doc.valid).map(this.createAppFeatureModel.bind(this));
 
-                    } else if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
+                    } else if(PluginUtils.isLitClass((layerModel.filterValue))){
+
+                            const results = await this.localDB.query('Element/byClassAndLinear', {
+                            startkey: [layerModel.filterValue],
+                            endkey: [layerModel.filterValue, {}],
+                            include_docs: true
+                        });
+
+                        featureModels = results.filter(item => item.doc.valid).map(this.createAppFeatureModel.bind(this));
+                    }
+                    else if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
 
                         const results = (await this.localDB.query('Element/byClassAndLinear', {
                             startkey: [layerModel.filterValue],
@@ -273,8 +283,10 @@ export class MapManagerService {
                         results.map(obj => obj.value).forEach(troncon => {
                             if (troncon.photos) {
                                 troncon.photos.forEach(photo => {
+                                    console.log('photo en cours: ', photo)
                                     if (photo.valid) {
                                         photo.parent = troncon._id;
+                                        photo.geometry = troncon.geometry;
                                         collectPhotos.push(photo);
                                     }
                                 });
@@ -325,7 +337,6 @@ export class MapManagerService {
 
     private createAppFeatureModelFromObject(obj) {
         let dataProjection;
-
         if (!this.sirsDataService.sirsDoc) {
             dataProjection = 'EPSG:2154';
         } else {
@@ -429,9 +440,9 @@ export class MapManagerService {
                         if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                             this.getLastDegreUrgence(featureModel.id).then(color => {
                                 if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
-                                    feature.setGeometry(featureModel.realGeometry);
-                                    feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
-                                    feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                    feature.setGeometry(featureModel.projGeometry);
+                                    feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
+                                    feature, getColorByRefId(color), featureModel.projGeometry.getType(), featureModel, layerModel));
                                 }
                             });
                         }else{
@@ -459,7 +470,7 @@ export class MapManagerService {
                     if (!featureModel.archive) {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
-
+                            console.warn("reel")
                             if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
@@ -475,12 +486,13 @@ export class MapManagerService {
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                             }   
                         } else {
+                            console.warn("projete")
                             if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {
-                                        feature.setGeometry(featureModel.realGeometry);
-                                        feature.setStyle(this.realPositionStyle.style(this.mapService.selection,
-                                        feature, getColorByRefId(color), featureModel.realGeometry.getType(), featureModel, layerModel));
+                                        feature.setGeometry(featureModel.projGeometry);
+                                        feature.setStyle(this.DefaultStyleService.style(this.mapService.selection,
+                                        feature, getColorByRefId(color), featureModel.projGeometry.getType(), featureModel, layerModel));
                                     }
                                 });
                             }else{

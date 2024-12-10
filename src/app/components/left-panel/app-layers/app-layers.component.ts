@@ -165,7 +165,7 @@ export class AppLayersComponent implements OnInit {
 
     async openUrgencesChoicesModal() {
         const modal = await this.modalCtrl.create({
-            component: ChoicesPickerComponent, // Ce composant doit être créé
+            component: ChoicesPickerComponent,
             animated: true,
             cssClass: 'modal-css',
             componentProps: {}

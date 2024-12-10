@@ -108,13 +108,21 @@
 
 <div class="row">
     <div class="sirs-field col col-100">
-        <label for="trancon" class="active edit-label">La liste des Tronçons</label>
-        <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId" 
+        <label for="trancon" class="active edit-label">{{ !isLitClass(EOS.objectDoc['@class']) ? "La liste des Tronçons" : "La liste des Tronçons de lit"}}</label>
+        <select id="trancon" class="browser-default" [(ngModel)]="EOS.objectDoc.linearId" *ngIf="!isLitClass(EOS.objectDoc['@class'])"
                 name="trancon">
             <option [value]="undefined" [selected]="EOS.objectDoc.linearId === undefined" selected>Non renseigné</option>
-            <option *ngFor="let troncon of EOS.troncons" [ngValue]="troncon.id">
+            <option *ngFor="let troncon of getTronconDigues()" [ngValue]="troncon.id" >
                 {{ troncon.libelle }}</option>
         </select>
+
+        <select id="tranconLit" class="browser-default" [(ngModel)]="selectedTronconLitId" *ngIf="isLitClass(EOS.objectDoc['@class'])" (ngModelChange)="onTronconLitChange($event)" name="tranconLit">
+            <option [value]="undefined" [selected]="selectedTronconLitId === undefined" selected>Non renseigné</option>
+            <option *ngFor="let troncon of tronconsLit" [value]="troncon._id">
+                {{ troncon.libelle }}
+            </option>
+        </select>
+
     </div>
 </div>
 

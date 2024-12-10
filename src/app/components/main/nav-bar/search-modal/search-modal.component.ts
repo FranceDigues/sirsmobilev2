@@ -27,6 +27,7 @@ export class SearchModalComponent implements OnInit {
   public specificTypes: {field: string,types: any[]} = {field:'',types:[]};
   public items: dataFromDB = null;
   public tronconNamesCache = new Map<string, string>();
+  public noResults: boolean = false;
 
   constructor(private modalCtrl: ModalController, 
               private fb: FormBuilder,
@@ -42,7 +43,8 @@ export class SearchModalComponent implements OnInit {
     this.form = this.fb.group({
       designation: [''],
       type: [''],
-      specificType:['']
+      specificType:[''],
+      libelle: ['']
     },{ validator: this.atLeastOneFieldFilledValidator() });
   }
 
@@ -104,13 +106,18 @@ export class SearchModalComponent implements OnInit {
   }
 
   async validate() {
-    const { designation, type, specificType } = this.form.value;
-    this.items = await this.getObjectByfilter(designation,type, specificType);
+    const { designation, type, specificType, libelle } = this.form.value;
+    this.items = await this.getObjectByfilter(designation,type, specificType, libelle);
     console.warn("item: ", this.items)
-    this.loadTronconNames();
+    if (!this.items || this.items.rows.length === 0) {
+      this.noResults = true; // Aucun résultat trouvé
+    } else {
+      this.noResults = false;
+      this.loadTronconNames();
+    }
   }
  
-  private async getObjectByfilter(designation?: string, type?: string, speceficType?: string) {
+  private async getObjectByfilter(designation?: string, type?: string, speceficType?: string, libelle?: string) {
     const queryOptions: any = {
       include_docs: true
     };
@@ -122,7 +129,12 @@ export class SearchModalComponent implements OnInit {
         queryOptions.startkey = [designation];
         queryOptions.endkey = [designation, type || {}];
         view = 'byDesignation/byDesignation';
-      } else if (type) {
+      } else if(libelle){
+        queryOptions.startkey = [libelle];
+        queryOptions.endkey = [libelle, type || {}];
+        view = 'byLibelle/byLibelle';
+      }
+      else if (type) {
         console.warn("par type:", type)
         queryOptions.startkey = [type];
         queryOptions.endkey = [type, {}];
@@ -145,7 +157,10 @@ export class SearchModalComponent implements OnInit {
         const fieldToFilter = this.specificTypes.field;
         filteredDocs = filteredDocs.filter(item => item.doc[fieldToFilter] === speceficType);
       }
-  
+
+      if (libelle) {
+        filteredDocs = filteredDocs.filter(item => item.value.libelle?.toLowerCase().includes(libelle.toLowerCase()));
+      }
       // Retour des documents filtrés
       return { rows: filteredDocs , offset:null, total_rows: null};
       
@@ -241,8 +256,8 @@ export class SearchModalComponent implements OnInit {
     return (form: FormGroup): { [key: string]: any } | null => {
       const designation = form.get('designation')?.value;
       const type = form.get('type')?.value;
-  
-      if (!designation && !type) {
+      const libelle = form.get('libelle')?.value;
+      if (!designation && !type && !libelle) {
         return { atLeastOneRequired: true };
       }
       return null;

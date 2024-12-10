@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { MapManagerService, UrgenceLayerColors } from 'src/app/services/map-manager.service';
+import {getLegendByRefId, MapManagerService, UrgenceLayerColors} from 'src/app/services/map-manager.service';
 import { getColorByRefId } from 'src/app/services/map-manager.service';
 
 @Component({
@@ -9,7 +9,8 @@ import { getColorByRefId } from 'src/app/services/map-manager.service';
   styleUrls: ['./choices-picker.component.scss'],
 })
 export class ChoicesPickerComponent implements OnInit {
-  public urgencyLevels = Object.values(UrgenceLayerColors) ;
+  public urgencyLevels = Object.values(this.mapManagerService.getUrgenceLayerColors());
+  //public urgencyLevels = Object.values(UrgenceLayerColors) ;
   public selectedDesordreType: string []= [];
   constructor(private modalCtrl: ModalController, 
               public mapManagerService: MapManagerService) { }
@@ -59,6 +60,10 @@ export class ChoicesPickerComponent implements OnInit {
 
   isAllSelected() {
       return this.urgencyLevels.length === this.selectedDesordreType.length;
+  }
+
+  public getLegendeLibelle(urgence: string){
+    return getLegendByRefId(urgence);
   }
 
 

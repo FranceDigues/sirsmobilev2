@@ -45,6 +45,7 @@ export class EditObjectService {
     plans = [];
     parcelles = [];
     allTroncons = [];
+    tronconLit = [];
     geoloc = undefined;
     refs = null;
     dateWrapper = null;
@@ -262,6 +263,9 @@ export class EditObjectService {
         return PluginUtils.isParcelleVegetationClass(this.objectDoc['@class']);
     }
 
+    isLit(){
+        return PluginUtils.isLitClass(this.objectDoc['@class']);
+    }
     private async initReferences() {
         const refs = await this.editionModeService.getReferenceTypes();
         const res = {};
@@ -293,6 +297,13 @@ export class EditObjectService {
         });
     }
 
+    async getTronconLit(){
+        return  this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.TronconLit'],
+            endkey: ['fr.sirs.core.model.TronconLit', {}],
+            include_docs: true
+        });
+    }
     private async initDependance() {
         //Dependance or AH don't have linearId.
         delete this.objectDoc.linearId;
@@ -391,8 +402,9 @@ export class EditObjectService {
         })
     }
 
-    save() {
-        if (!this.isDependance() && !this.isVegetation()) {
+    async save() {
+
+        if (!this.isDependance() && !this.isVegetation() && !this.isLit()) {
             if (!this.objectDoc.linearId) {
                 this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
                 return;
@@ -408,13 +420,12 @@ export class EditObjectService {
                 console.log("existe: ", this.objectDoc.positionDebut)
             }
         }
-
-        if (this.isDependance() && !this.objectDoc.geometry) {
+        if ((this.isDependance()) && !this.objectDoc.geometry) {
             this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
             return;
         }
 
-        if (this.isVegetation()) {
+        if (this.isVegetation() || this.isLit()) {
             if (!this.objectDoc.geometry && !this.objectDoc.positionDebut && !this.objectDoc.positionDebut) {
                 this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
                 return;
@@ -438,6 +449,7 @@ export class EditObjectService {
         delete this.objectDoc.prFin;
 
         if (this.isNew) {
+            //await this.createObjectWithPrestation();
             this.editionModeService.createObject(this.objectDoc).then(
                 () => {
                     this.route.navigateByUrl('/main').then();
@@ -450,6 +462,30 @@ export class EditObjectService {
         }
     }
 
+    public async createObjectWithPrestation(): Promise<void> {
+        try {
+            // Récupérer l'ID de la prestation par défaut
+            const config = await this.databaseService.getCurrentDatabaseSettings();
+            const tempPrestationId = config?.context?.defaultPrestationId;
+
+            if (!tempPrestationId) {
+                console.warn("Aucun ID de prestation par défaut n'est configuré.");
+                return;
+            }
+
+            // Ajouter l'ID de prestation au nouvel objet
+            if (!this.objectDoc.prestationIds) {
+                this.objectDoc.prestationIds = [];
+            }
+
+            this.objectDoc.prestationIds.push(tempPrestationId);
+
+
+            console.log("Nouvel objet créé avec une prestation automatiquement ajoutée :", this.objectDoc);
+        } catch (error) {
+            console.error("Erreur lors de la création de l'objet avec prestation :", error);
+        }
+    }
     private messageErrorHandler(msg: string) {
         this.toastCtrl.create({
             message: msg,

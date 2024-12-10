@@ -12,7 +12,7 @@
       <div class="square-container" fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="10px">
         <ion-list class="list">
           <ion-item *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" (click)="selectUrgency(urgency)" class="centerItem">
-            {{ urgency }}
+             {{getLegendeLibelle(urgency)}}
             <mat-icon *ngIf="ifSelected(urgency)" class="white-icon">
               check
             </mat-icon>

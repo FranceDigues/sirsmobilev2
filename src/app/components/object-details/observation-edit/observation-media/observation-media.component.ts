@@ -105,7 +105,7 @@ export class ObservationMediaComponent implements OnInit {
         if(this.photoToEdit){
             this.OES.loadImage(this.photoToEdit, true);
         }
-        console.log("eos media: ", this.OES.mediaOptions)
+
     }
 
     cancel() {

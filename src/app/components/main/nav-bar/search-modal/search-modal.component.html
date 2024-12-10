@@ -15,7 +15,12 @@
           <ion-label position="floating">Désignation</ion-label>
           <ion-input formControlName="designation"></ion-input>
         </ion-item>
-  
+
+          <ion-item>
+              <ion-label position="floating">Libellé</ion-label>
+              <ion-input formControlName="libelle"></ion-input>
+          </ion-item>
+
         <ion-item>
           <ion-label>Type d'Objet</ion-label>
           <ion-select formControlName="type">
@@ -23,8 +28,10 @@
             <ion-select-option *ngFor="let type of types" [value]="type?.filterValue">{{ type?.title }}</ion-select-option>
           </ion-select>
         </ion-item>
-        
-        <ion-item *ngIf="specificTypes.types.length > 0" >
+
+
+
+          <ion-item *ngIf="specificTypes.types.length > 0" >
           <ion-label>Type Spécifique</ion-label>
           <ion-select formControlName="specificType" >
             <ion-select-option value="">Aucun</ion-select-option>
@@ -49,6 +56,9 @@
         </div>
       </ion-item>
     </ion-list>
+  <ion-text color="danger" *ngIf="noResults">
+      <p style="text-align: center; font-weight: bold;">Aucun objet trouvé</p>
+  </ion-text>
   </ion-content>
   
 
