@@ -283,10 +283,8 @@ export class MapManagerService {
                         results.map(obj => obj.value).forEach(troncon => {
                             if (troncon.photos) {
                                 troncon.photos.forEach(photo => {
-                                    console.log('photo en cours: ', photo)
                                     if (photo.valid) {
                                         photo.parent = troncon._id;
-                                        photo.geometry = troncon.geometry;
                                         collectPhotos.push(photo);
                                     }
                                 });
@@ -364,6 +362,7 @@ export class MapManagerService {
                 additionnalProperties['typeVegetationId'] = obj['typeVegetationId'];
             }
         } else {
+            console.log("geometry ? ", obj);
             projGeometry = obj.geometry ? this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
@@ -391,7 +390,17 @@ export class MapManagerService {
                 ]);
             }
         }
-
+        console.log("mon obj photo: ", {
+            id: obj.id || obj._id,
+            rev: obj.rev || obj._rev,
+            designation: obj.designation,
+            title: obj.libelle,
+            projGeometry,
+            realGeometry,
+            archive: !!obj.date_fin,
+            parent: obj.parent,
+            ...additionnalProperties,
+        })
         return {
             id: obj.id || obj._id,
             rev: obj.rev || obj._rev,
@@ -486,7 +495,6 @@ export class MapManagerService {
                                 feature, layerModel.color, featureModel.realGeometry.getType(), featureModel, layerModel));
                             }   
                         } else {
-                            console.warn("projete")
                             if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 this.getLastDegreUrgence(featureModel.id).then(color => {
                                     if (color && this.filterUrgenceArray && this.filterUrgenceArray.includes(color) ) {

@@ -172,8 +172,11 @@ export class FormsTemplateService {
     }
 
     attributeNameOfObjectFromClass(objectType, clazz) {
+        console.warn("clazz: ", clazz);
+        console.warn("objectType: ", objectType);
         for (let key in formTemplatePilote[objectType]) {
             let value = formTemplatePilote[objectType][key];
+            console.warn("value: ", value);
             if (value.type === clazz) {
                 return value.name;
             }

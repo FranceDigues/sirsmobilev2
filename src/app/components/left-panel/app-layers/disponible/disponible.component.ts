@@ -33,6 +33,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
                         //HACK hard to remove old dependance module configuration from desktop
                         const withoutOldDependanceModules = this.oldDependanceFilter(layers);
                         this.available = this.order(withoutOldDependanceModules);
+                        console.log("couches disponibles:", this.available)
                         loading.dismiss();
                       }
                     );
@@ -64,7 +65,9 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
     };
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   goBack() {
     this.slidePathChange.emit(0);

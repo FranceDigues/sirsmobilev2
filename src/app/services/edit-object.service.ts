@@ -18,6 +18,10 @@ import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
 import Point from "ol/geom/Point";
 import { Observable } from 'rxjs';
+import {ObjectDetails} from "./object-details.service";
+import {Prestation} from "../shared/models/prestation.model";
+import {formTemplatePilote} from "../utils/form-template-pilote";
+import {AppLayersService} from "./app-layers.service";
 
 @Injectable({
     providedIn: 'root'
@@ -66,6 +70,7 @@ export class EditObjectService {
                 private geolocationService: GeolocationService,
                 private positionService: PositionService,
                 private storageService: StorageService,
+                private appLayersService: AppLayersService,
                 private localDB: LocalDatabase) {
     }
 
@@ -403,7 +408,7 @@ export class EditObjectService {
     }
 
     async save() {
-
+        console.log("objectDoc: ", this.objectDoc);
         if (!this.isDependance() && !this.isVegetation() && !this.isLit()) {
             if (!this.objectDoc.linearId) {
                 this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
@@ -449,9 +454,32 @@ export class EditObjectService {
         delete this.objectDoc.prFin;
 
         if (this.isNew) {
-            //await this.createObjectWithPrestation();
+            let prestationClass: string;
+            if(this.isDependance()){
+                prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+            }else{
+                prestationClass = 'fr.sirs.core.model.Prestation';
+            }
+            const prestationList:Array<{doc: Prestation, id: string, key: any, value: any}>= await this.getPrestationByLinearId(prestationClass, this.objectDoc.linearId);
+
+            await this.createObjectWithPrestation(prestationList);
             this.editionModeService.createObject(this.objectDoc).then(
-                () => {
+                async (res ) => {
+                    // Reciproque ajout dans l'objet prestation (must be here after object creation)
+                    const config = await this.databaseService.getCurrentDatabaseSettings();
+                    const tempPrestationId = config?.context?.defaultPrestationId;
+                    let clazz = PluginUtils.doc2Class(this.objectDoc);
+                    let attribute: string;
+                    if (this.isDependance()) {
+                        attribute = this.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
+                    } else {
+                        attribute = this.attributeNameOfObjectFromClass("Prestation", clazz);
+                    }
+
+                    const regex = /.*Ids$/;
+                    if (regex.test(attribute)) {
+                        await this.addObjectId(tempPrestationId, res["_id"], attribute);
+                    }
                     this.route.navigateByUrl('/main').then();
                 });
         } else {
@@ -462,7 +490,7 @@ export class EditObjectService {
         }
     }
 
-    public async createObjectWithPrestation(): Promise<void> {
+    public async createObjectWithPrestation(prestationList: Array<{ doc: Prestation, id: string, key: any, value: any }>): Promise<void> {
         try {
             // Récupérer l'ID de la prestation par défaut
             const config = await this.databaseService.getCurrentDatabaseSettings();
@@ -473,6 +501,14 @@ export class EditObjectService {
                 return;
             }
 
+            // Vérifier si l'ID de la prestation par défaut est dans la liste
+            const prestationExists = prestationList.some(prestation => prestation.id === tempPrestationId);
+
+            if (!prestationExists) {
+                console.warn(`L'ID de prestation par défaut (${tempPrestationId}) n'est pas contenu dans la liste.`);
+                return;
+            }
+
             // Ajouter l'ID de prestation au nouvel objet
             if (!this.objectDoc.prestationIds) {
                 this.objectDoc.prestationIds = [];
@@ -480,11 +516,90 @@ export class EditObjectService {
 
             this.objectDoc.prestationIds.push(tempPrestationId);
 
-
-            console.log("Nouvel objet créé avec une prestation automatiquement ajoutée :", this.objectDoc);
         } catch (error) {
             console.error("Erreur lors de la création de l'objet avec prestation :", error);
         }
+    }
+    private async addObjectId(receiverId: string, idToAdd: string, attribute: string): Promise<void> {
+        const doc: any = await this.localDB.get(receiverId);
+        if (!doc) {
+            console.error("Document (" + receiverId + ") not found.");
+            return;
+        }
+
+        if (doc[attribute]) {
+            doc[attribute].push(idToAdd);
+        } else {
+            doc[attribute] = [idToAdd];
+        }
+        doc.valid = false;
+        doc.dateMaj = new Date().toISOString().split('T')[0];
+        // Check if the layer model is visible or not
+        const isVisible = !!this.appLayersService.getFavorites().find(item => item.filterValue === doc['@class']);
+        await this.editionModeService.updateObject(doc, isVisible);
+    }
+    /**
+     * Retrieves all prestations from the current section (troncon) and populates
+     * `this.prestationMap`, `this.allPrestationList` and `this.prestationList`
+     * @param prestationClass class of prestations in the db
+     * @param linearId id of the section (troncon)
+     * @private
+     */
+    private async getPrestationByLinearId(prestationClass: string, linearId: string): Promise<Array<{doc: Prestation, id: string, key: any, value: any}>> {
+        try {
+            // we retrieve the prestations in the current section (tronçon)
+            const response: { value: any, doc: any }[] = await this.localDB.query('Element/byClassAndLinear', {
+                startkey: [prestationClass, linearId],
+                endkey: [prestationClass, linearId, {}],
+                include_docs: true
+            });
+
+            let prestationMap = {};
+            let allPrestationList = [];
+
+            for (const elt of response) {
+                let prestaFinished = false;
+                if (elt.doc.date_fin !== undefined) {
+                    try {
+                        const dateFin = new Date(elt.doc.date_fin);
+                        const dateNow = new Date();
+                        if (dateFin < dateNow) {
+                            prestaFinished = true;
+                        }
+                    } catch (_) {
+                        prestaFinished = true;
+                        console.info(`Cannot read end date of prestation "${elt.value.id}", assuming it is finished.`);
+                    }
+                }
+
+                elt.value.prestationFinished = prestaFinished;
+                prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                allPrestationList.push(elt.value);
+            }
+            return allPrestationList;
+
+
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    // private filteredPrestationList() {
+    //     if (this.mapService.archiveObjectsFlag) {
+    //         return [...this.detailsObject.prestationList];
+    //     } else {
+    //         return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished);
+    //     }
+    // }
+    private attributeNameOfObjectFromClass(objectType, clazz) {
+        console.warn("objectType: ", objectType);
+        for (let key in formTemplatePilote[objectType]) {
+            let value = formTemplatePilote[objectType][key];
+            console.warn("attributName: ", value.type);
+            if (value.type === clazz) {
+                return value.name;
+            }
+        }
+        return null;
     }
     private messageErrorHandler(msg: string) {
         this.toastCtrl.create({

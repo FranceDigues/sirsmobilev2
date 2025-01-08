@@ -26,7 +26,7 @@ export class AppSettingsComponent implements OnInit {
     public defaultObservateurId?: string;
     public defaultPrestationId?: string;
     public contactList?: {doc: Contact, id: string, key: any, value: any}[];
-    public prestationList?: any;
+    public prestationList: Array<{doc: Prestation, id: string, key: any, value: any}>= [];
     private _prefillObservations?: boolean;
     private _showBorneDistance?: boolean;
 
@@ -57,21 +57,17 @@ export class AppSettingsComponent implements OnInit {
         });
 
         this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
-        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show); 
-        this.sirsDataService.getPrestationList().then(async (list: {doc: Prestation, id: string, key: any, value: any}[]) => {
+        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show);
+        this.sirsDataService.getPrestationList().then((list: {doc: Prestation, id: string, key: any, value: any}[]) => {
             if (this.mapService.archiveObjectsFlag) {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list);
             } else {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
             }
-            await this.EOS.initTronconList()
-            const idTroncon = this.EOS.troncons.map(item => item.id);
-            const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
-    
-            this.prestationList  = resultatFiltre;
         }, (error) => {
             console.error('error contactList returned : ', error);
-        });     
+        });
+
     }
     
     public get prefillObservations(): boolean | undefined {
