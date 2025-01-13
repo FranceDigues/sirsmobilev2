@@ -419,13 +419,11 @@ export class ObjectDetails {
     // Reciproque ajout dans l'objet prestation
     let clazz = PluginUtils.doc2Class(this.selectedObject);
     let attribute: string;
-    console.log("clazz :", clazz);
     if (this.isDependance) {
       attribute = this.formService.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
     } else {
       attribute = this.formService.attributeNameOfObjectFromClass("Prestation", clazz);
     }
-    console.log("attribbute :", attribute);
     const regex = /.*Ids$/;
     if (regex.test(attribute)) {
       await this.addObjectId(this.tempPrestation, this.selectedObject["_id"], attribute);
@@ -508,7 +506,6 @@ export class ObjectDetails {
    * @return {Promise<void>} A promise that resolves when the ID is added to the document successfully.
    */
   private async addObjectId(receiverId: string, idToAdd: string, attribute: string): Promise<void> {
-    console.warn(`recievedid: (${receiverId}) , idtoAdd: ${idToAdd}, attribut: ${attribute}`);
     const doc: any = await this.localDB.get(receiverId);
 
     if (!doc) {

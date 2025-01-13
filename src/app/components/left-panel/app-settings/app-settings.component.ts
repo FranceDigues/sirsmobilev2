@@ -58,15 +58,22 @@ export class AppSettingsComponent implements OnInit {
 
         this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
         this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show);
-        this.sirsDataService.getPrestationList().then((list: {doc: Prestation, id: string, key: any, value: any}[]) => {
+        this.sirsDataService.getPrestationList().then(async (list: {doc: Prestation, id: string, key: any, value: any}[]) => {
             if (this.mapService.archiveObjectsFlag) {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list);
             } else {
                 this.prestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
             }
+            this.prestationList = this.prestationList.filter(item => item.doc.valid === true);
+            await this.EOS.initTronconList()
+            const idTroncon = this.EOS.troncons.map(item => item.id);
+            const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
+
+            this.prestationList  = resultatFiltre;
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
+
 
     }
     
