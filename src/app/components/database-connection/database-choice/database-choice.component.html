@@ -33,9 +33,8 @@
                     <ion-icon name="checkmark-outline"></ion-icon>
                     <span>&nbsp;&nbsp;Valider</span>
                 </button>
-                <button mat-raised-button *ngIf="!selectedDatabase?.replicated" [disabled]="!selectedDatabase" (click)="replicateSlowDatabase()" style="margin-left:10px">
-                    <ion-icon name="checkmark-outline"></ion-icon>
-                    <span>&nbsp;&nbsp;Réplication plus lente</span>
+                <button mat-icon-button *ngIf="selectedDatabase && !selectedDatabase?.replicated " (click)="openReplicationModal()">
+                    <ion-icon name="hourglass"></ion-icon>
                 </button>
             </div>
         </div>
@@ -59,3 +58,18 @@
     </div>
 
 </div>
+<ng-template #replicationModal>
+    <div class="modal-header">
+        <h2>Réplication plus lente</h2>
+    </div>
+    <div class="modal-body">
+        <p>En activant cette option, la réplication sera plus lente pour éviter la corruption de données avec de gros fichiers.</p>
+        <mat-checkbox [(ngModel)]="slowReplication">
+            Activer la réplication lente
+        </mat-checkbox>
+    </div>
+    <div class="modal-footer">
+        <button mat-button (click)="closeModal()">Fermer</button>
+        <button mat-raised-button color="primary" (click)="confirmSlowReplication()">Confirmer</button>
+    </div>
+</ng-template>

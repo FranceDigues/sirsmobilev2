@@ -408,13 +408,12 @@ export class EditObjectService {
     }
 
     async save() {
-        console.log("objectDoc: ", this.objectDoc);
         if (!this.isDependance() && !this.isVegetation() && !this.isLit()) {
             if (!this.objectDoc.linearId) {
                 this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
                 return;
             }else{
-                console.log("existe: ", this.objectDoc.linearId)
+
             }
             
 
@@ -468,18 +467,21 @@ export class EditObjectService {
                     // Reciproque ajout dans l'objet prestation (must be here after object creation)
                     const config = await this.databaseService.getCurrentDatabaseSettings();
                     const tempPrestationId = config?.context?.defaultPrestationId;
-                    let clazz = PluginUtils.doc2Class(this.objectDoc);
-                    let attribute: string;
-                    if (this.isDependance()) {
-                        attribute = this.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
-                    } else {
-                        attribute = this.attributeNameOfObjectFromClass("Prestation", clazz);
+                    if(tempPrestationId){
+                        let clazz = PluginUtils.doc2Class(this.objectDoc);
+                        let attribute: string;
+                        if (this.isDependance()) {
+                            attribute = this.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
+                        } else {
+                            attribute = this.attributeNameOfObjectFromClass("Prestation", clazz);
+                        }
+
+                        const regex = /.*Ids$/;
+                        if (regex.test(attribute)) {
+                            await this.addObjectId(tempPrestationId, res["_id"], attribute);
+                        }
                     }
 
-                    const regex = /.*Ids$/;
-                    if (regex.test(attribute)) {
-                        await this.addObjectId(tempPrestationId, res["_id"], attribute);
-                    }
                     this.route.navigateByUrl('/main').then();
                 });
         } else {

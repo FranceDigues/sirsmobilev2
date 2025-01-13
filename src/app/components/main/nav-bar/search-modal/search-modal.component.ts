@@ -10,6 +10,7 @@ import { AppTronconsService, TronconController } from 'src/app/services/troncon.
 import { MapService } from 'src/app/services/map.service';
 import { element } from 'protractor';
 import { offset } from 'ol/sphere';
+import {PluginUtils} from "../../../../utils/plugin-utils";
 
 export type dataFromDB = {
   offset: number,
@@ -197,13 +198,14 @@ export class SearchModalComponent implements OnInit {
   public async goToItem(item: any){
     let alertShown = false;
     const troncon = this.getTronconNameCached(item.foreignParentId)
+    const couche = this.getclass(item['@class']);
     const currLayer = this.appLayersService.getFavorites().find(e => e.filterValue === item['@class']);
     if(!currLayer || (!currLayer.visible || !currLayer.selectable)){
-      const couche = this.getclass(item['@class']);
+
       await this.showAlert("Activez la couche " + couche,"Veuillez activer la couche "+ couche+ ", la rendre <strong>visible</strong> et <strong>séléctionnable</strong>")
       alertShown = true;
     }
-    else if( !this.appTronconsService.favorites.find( e => e.libelle === troncon ) && troncon != "Unknown"){ 
+    else if( !PluginUtils.isLitClass(item['@class']) && !this.appTronconsService.favorites.find( e => e.libelle === troncon ) && troncon != "Unknown"){
       await this.showAlert("Activer le tronçon " + troncon, "Veuillez activer le tronçon " + troncon);
       alertShown = true;
     }
@@ -227,7 +229,10 @@ export class SearchModalComponent implements OnInit {
       key: id,
       include_docs: true // pour inclure les documents complets
     });
-    return res.rows[0].doc.libelle;
+    if(res.rows && res.rows.length > 0){
+      return res.rows[0].doc.libelle;
+    }
+    return null
   }
 
   public getTronconNameCached(id: string): string {

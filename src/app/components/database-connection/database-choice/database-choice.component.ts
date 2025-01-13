@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -22,6 +22,7 @@ export class DatabaseChoiceComponent implements OnInit {
     status = 0;
     databaseIndex = 0;
     slowReplication : boolean = false;
+    @ViewChild('replicationModal') replicationModal: TemplateRef<any>;
     constructor(private router: Router,
                 private platform: Platform,
                 public alertCtrl: AlertController,
@@ -160,6 +161,40 @@ export class DatabaseChoiceComponent implements OnInit {
                 if (error.status !== 409) console.warn(error);
             }
         }
+    }
+
+    openReplicationModal() {
+        const modalRef = this.alertCtrl.create({
+            header: 'Réplication plus lente',
+            message: `
+            <p>En activant cette option, la réplication sera plus lente afin de palier le cas d'une réplication classique n'arrivant pas à terme</p>
+            <mat-checkbox [(ngModel)]="slowReplication">Activer la réplication lente</mat-checkbox>
+        `,
+            buttons: [
+                {
+                    text: 'Fermer',
+                    role: 'cancel',
+                },
+                {
+                    text: 'Confirmer',
+                    handler: () => {
+                        this.confirmSlowReplication();
+                    },
+                },
+            ],
+        });
+        modalRef.then((modal) => modal.present());
+    }
+
+
+    confirmSlowReplication() {
+        this.slowReplication = true;
+        this.status = 3;
+        this.closeModal();
+    }
+
+    closeModal() {
+        this.alertCtrl.dismiss();
     }
 
 }

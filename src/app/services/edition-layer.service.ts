@@ -202,8 +202,6 @@ export class EditionLayerService {
         } else {
             let geom = photoDoc.geometry.split(",")[0].split("(")[1];
             const pt =  "POINT ("  + geom + ")";
-            console.log("pt: ", pt);
-            console.log('geom: ', geom)
             geometry = this.wktFormat.readGeometry(pt, { dataProjection, featureProjection: 'EPSG:3857' });
 
         }

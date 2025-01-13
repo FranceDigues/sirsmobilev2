@@ -231,8 +231,8 @@ export class MapManagerService {
                             endkey: [layerModel.filterValue, {}],
                             include_docs: true
                         });
-
-                        featureModels = results.filter(item => item.doc.valid).map(this.createAppFeatureModel.bind(this));
+                            console.log("res: ", results)
+                        featureModels = results.map(this.createAppFeatureModel.bind(this));
                     }
                     else if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
 
@@ -362,7 +362,6 @@ export class MapManagerService {
                 additionnalProperties['typeVegetationId'] = obj['typeVegetationId'];
             }
         } else {
-            console.log("geometry ? ", obj);
             projGeometry = obj.geometry ? this.wktFormat.readGeometry(obj.geometry, {
                 dataProjection,
                 featureProjection: 'EPSG:3857'
@@ -390,17 +389,6 @@ export class MapManagerService {
                 ]);
             }
         }
-        console.log("mon obj photo: ", {
-            id: obj.id || obj._id,
-            rev: obj.rev || obj._rev,
-            designation: obj.designation,
-            title: obj.libelle,
-            projGeometry,
-            realGeometry,
-            archive: !!obj.date_fin,
-            parent: obj.parent,
-            ...additionnalProperties,
-        })
         return {
             id: obj.id || obj._id,
             rev: obj.rev || obj._rev,
