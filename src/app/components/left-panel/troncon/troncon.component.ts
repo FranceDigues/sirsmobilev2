@@ -30,7 +30,9 @@ export class LeftSlideTronconComponent implements OnInit {
               public tronconCtrl: TronconController, public olService: OLService,
               public changeDetectorRef: ChangeDetectorRef) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   goBack() {
     if (this.view === 'T') {
