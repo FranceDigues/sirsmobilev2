@@ -22,8 +22,9 @@ import { SelectedObjectsService } from "./selected-objects.service";
 import { SirsDataService } from "./sirs-data.service";
 import { DefaultStyle, RealPositionStyle } from './style.service';
 import { DatabaseService } from "./database.service";
-import { Memoize } from "typescript-memoize";
+import {clear as clearMemoize, Memoize} from "typescript-memoize";
 import { BehaviorSubject } from 'rxjs';
+import {AppTronconsService} from "./troncon.service";
 @Injectable({
     providedIn: 'root'
 })
@@ -55,7 +56,8 @@ export class MapManagerService {
                 private appLayersService: AppLayersService,
                 private selectedObjectsService: SelectedObjectsService,
                 private editionLayerService: EditionLayerService,
-                private dbService: DatabaseService
+                private dbService: DatabaseService,
+                private appTronconsService: AppTronconsService
     ) {
         // Highlight the selected features
         this.selectedObjectsService.getFeatures()
@@ -106,6 +108,7 @@ export class MapManagerService {
         }, (error) => {
             console.error('error ref urgence returned : ', error);
         });
+
     }
     private populateUrgenceLayerColorsMap() {
         const predefinedColors: { [key: string]: number[] } = {
@@ -293,6 +296,7 @@ export class MapManagerService {
 
                     } else {
                         // Get all the favorites tronçons ids
+
                         const favorites = await this.storageService.getItem('AppTronconsFavorities'); // TODO : that shit returns something null / empty. WHY ?!?!?§
                         const keys = [];
                         if (favorites !== null && Array.isArray(favorites) && favorites.length !== 0) {
@@ -301,7 +305,6 @@ export class MapManagerService {
                                 keys.push([layerModel.filterValue, key.id]);
                             });
                             const results = await this.localDB.query('ElementSpecial3', {keys});
-
                             featureModels = results.map(this.createAppFeatureModel.bind(this));
        
                         } else {
@@ -633,6 +636,23 @@ export class MapManagerService {
 
     public updateUrgenceLayerColors(colors: UrgenceLayerColor[]) {
         this.filterUrgence.next(colors);
+    }
+    cleanAllFavoriteTroncon() {
+        this.storageService.getItem('AppTronconsFavorities')
+            .then(
+                (res: Array<any>) => {
+                    if (res !== null) {
+                        console.log("troncons choisies:: ", res)
+                    }
+                }
+            );
+        this.appTronconsService.favorites = [];
+        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+            .then(() => {
+                console.log("Favorites cleaned and storage updated");
+            });
+        clearMemoize(['isTronconActive']);
+
     }
 }
 

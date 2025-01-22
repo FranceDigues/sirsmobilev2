@@ -5,7 +5,7 @@ import { SirsDataService } from "../../../services/sirs-data.service";
 import { Contact } from "../../../shared/models/contact.model";
 import { Prestation } from "../../../shared/models/prestation.model";
 import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
-import { Memoize } from "typescript-memoize";
+import {clear as clearMemoize, Memoize} from "typescript-memoize";
 import { ObservationEditService } from "../../../services/observation-edit.service";
 import { ObjectDetails } from "../../../services/object-details.service";
 import { PrestationsGenericComponent } from '../../object-details/detailscontent/prestations/prestations.component';
@@ -67,9 +67,6 @@ export class AppSettingsComponent implements OnInit {
             }
             //this.prestationList = this.prestationList.filter(item => item.doc.valid === true);
             await this.EOS.initTronconList()
-            // const idTroncon = this.EOS.troncons.map(item => item.id);
-            // const resultatFiltre = this.prestationList.filter(item => idTroncon.includes(item.doc.linearId));
-
             const idsTroncon = this.EOS.troncons.map(item => item.id);
             const favoriteLit = await this.favoriteTronconList();
             const filteredIdTroncon = idsTroncon.filter(

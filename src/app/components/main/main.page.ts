@@ -99,7 +99,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         this.UrgenceDisplaysubscription = this.mapManagerService.isUrgence.subscribe(value => {
             this.isDisplayUrgence = value;
             });
-        
+
     }
 
     public ngOnInit(): void {
@@ -107,7 +107,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             this.geoLocLayer.redrawGeolocLayer(coord);
         });
         this.urgencyLevels =  Object.values(this.mapManagerService.getUrgenceLayerColors());
-        
     }
 
     public ngOnDestroy(): void {
