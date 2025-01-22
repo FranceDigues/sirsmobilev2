@@ -637,23 +637,7 @@ export class MapManagerService {
     public updateUrgenceLayerColors(colors: UrgenceLayerColor[]) {
         this.filterUrgence.next(colors);
     }
-    cleanAllFavoriteTroncon() {
-        this.storageService.getItem('AppTronconsFavorities')
-            .then(
-                (res: Array<any>) => {
-                    if (res !== null) {
-                        console.log("troncons choisies:: ", res)
-                    }
-                }
-            );
-        this.appTronconsService.favorites = [];
-        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
-            .then(() => {
-                console.log("Favorites cleaned and storage updated");
-            });
-        clearMemoize(['isTronconActive']);
 
-    }
 }
 
 

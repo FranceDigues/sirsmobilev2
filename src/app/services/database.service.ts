@@ -54,13 +54,7 @@ export class DatabaseService {
     return this.localDB;
   }
 
-  setLocalDB(activeDB:any){
-      this.localDB = new PouchDB(activeDB.name, {
-          location: 'default',
-          androidDatabaseProvider: 'system',
-          adapter: 'cordova-sqlite'
-      });
-  }
+
   saveDatabaseSettings(databases) {
     this.nativeStorage.setItem('databases-settings', databases);
   }
