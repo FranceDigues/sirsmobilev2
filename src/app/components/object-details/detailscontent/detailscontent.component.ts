@@ -14,5 +14,6 @@ export class DetailsContentComponent implements OnInit{
 
 
     ngOnInit(): void {
+        console.log("latence here")
     }
 }
