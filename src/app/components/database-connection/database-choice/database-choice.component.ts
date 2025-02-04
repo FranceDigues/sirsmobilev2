@@ -136,6 +136,7 @@ export class DatabaseChoiceComponent implements OnInit {
     }
 
     async validateDatabase() {
+        this.cleanAllFavoriteTroncon();
         if (this.selectedDatabase.replicated === false) {
             this.status = 3;
         } else if (this.selectedDatabase.replicated

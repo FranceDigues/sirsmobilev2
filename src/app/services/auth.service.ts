@@ -37,6 +37,7 @@ export class AuthService {
   }
 
   public async login(login: string, password: string): Promise<DatabaseModel> {
+    console.log("login:",login)
     const result = await this.dbService.getLocalDB().query('Utilisateur/byLogin', {
       key: login,
       include_docs: true
