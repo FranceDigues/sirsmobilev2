@@ -79,6 +79,7 @@ export class DatabaseChoiceComponent implements OnInit {
                     console.error('no \'databases\' in HardDisk ' + error);
                 }
             );
+
     }
 
     selectDB(db) {

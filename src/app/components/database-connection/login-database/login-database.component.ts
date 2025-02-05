@@ -45,6 +45,16 @@ export class LoginDatabaseComponent implements OnInit {
     .then(
       async () => {
         const database = await this.dbService.getDatabaseSettings();
+        const realActiveBase = this.dbService.activeDB;
+        for (const db of database) {
+          if (db.context && db.context.authUser) {
+            db.context.authUser = null;
+            this.dbService.activeDB = db;
+            this.dbService.removeDB$.next("DB changed");
+            await this.dbService.setCurrentDatabaseSettings(db);
+          }
+        };
+        this.dbService.activeDB = realActiveBase;
         if (this.dbService.activeDB.replicated) {
           this.storageService.getItem('AppTronconsFavorities')
               .then( (res: Array<any>) => {
