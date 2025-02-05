@@ -53,7 +53,6 @@ export class DatabaseChoiceComponent implements OnInit {
                         .then(
                             (databases) => {
                                 this.databases = databases;
-                                console.warn("this.databse: ", this.databases)
                                 setTimeout(() => {
                                     this.statusBar.styleBlackTranslucent();
                                     this.splashScreen.hide();
@@ -136,7 +135,6 @@ export class DatabaseChoiceComponent implements OnInit {
     }
 
     async validateDatabase() {
-        this.cleanAllFavoriteTroncon();
         if (this.selectedDatabase.replicated === false) {
             this.status = 3;
         } else if (this.selectedDatabase.replicated

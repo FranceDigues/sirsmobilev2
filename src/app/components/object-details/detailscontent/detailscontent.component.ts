@@ -13,7 +13,5 @@ export class DetailsContentComponent implements OnInit{
     @Input() activeTab: 'description' | 'observations' | 'prestations' | 'desordres' | 'photos';
 
 
-    ngOnInit(): void {
-        console.log("latence here")
-    }
+    ngOnInit(): void {}
 }

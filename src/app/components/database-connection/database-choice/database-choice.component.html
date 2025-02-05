@@ -71,22 +71,6 @@
         </div>
     </div>
 
-
-    <div *ngSwitchCase="5" class="sirs-card-content">
-        <h2 class="sirs-card-title">Fermeture de la précedente  base requise</h2>
-        <p>Veuillez fermer la précédente base  avant d'ouvrir celle-ci. Voulez-vous continuer ?</p>
-        <div class="sirs-card-action text-right" fxLayout="row" fxLayoutAlign="end center">
-            <button mat-button color="primary" (click)="closeDatabase()">
-                <ion-icon name="checkmark-outline"></ion-icon>
-                <span>&nbsp;&nbsp;Fermer et continuer</span>
-            </button>
-            <button mat-button color="warn" (click)="cancelAction()">
-                <ion-icon name="close-outline"></ion-icon>
-                <span>&nbsp;&nbsp;Annuler</span>
-            </button>
-        </div>
-    </div>
-
 </div>
 <ng-template #replicationModal>
     <div class="modal-header">
