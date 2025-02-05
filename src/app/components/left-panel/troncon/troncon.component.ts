@@ -81,7 +81,6 @@ export class LeftSlideTronconComponent implements OnInit {
     this.appTronconsService.favorites = [];
     this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
     .then(() => {
-      console.log("Favorites cleaned and storage updated");
       this.changeDetectorRef.markForCheck();
     });
     clearMemoize(['isTronconActive']);

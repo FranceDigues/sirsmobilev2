@@ -231,7 +231,6 @@ export class MapManagerService {
                             endkey: [layerModel.filterValue, {}],
                             include_docs: true
                         });
-                            console.log("res: ", results)
                         featureModels = results.map(this.createAppFeatureModel.bind(this));
                     }
                     else if (PluginUtils.isVegetationClass(layerModel.filterValue)) {
@@ -467,7 +466,6 @@ export class MapManagerService {
                     if (!featureModel.archive) {
                         const feature = new Feature();
                         if (layerModel.realPosition) {
-                            console.warn("reel")
                             if(layerModel.filterValue ==="fr.sirs.core.model.Desordre" && this.urgenceDisplay && this.filterUrgenceArray.length > 0){
                                 
                                 this.getLastDegreUrgence(featureModel.id).then(color => {

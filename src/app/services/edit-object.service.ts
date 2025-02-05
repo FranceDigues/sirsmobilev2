@@ -467,7 +467,7 @@ export class EditObjectService {
                     // Reciproque ajout dans l'objet prestation (must be here after object creation)
                     const config = await this.databaseService.getCurrentDatabaseSettings();
                     const tempPrestationId = config?.context?.defaultPrestationId;
-                    if(tempPrestationId){
+                    if(tempPrestationId && prestationList.some(prestation => prestation.id === tempPrestationId)){
                         let clazz = PluginUtils.doc2Class(this.objectDoc);
                         let attribute: string;
                         if (this.isDependance()) {
@@ -593,10 +593,8 @@ export class EditObjectService {
     //     }
     // }
     private attributeNameOfObjectFromClass(objectType, clazz) {
-        console.warn("objectType: ", objectType);
         for (let key in formTemplatePilote[objectType]) {
             let value = formTemplatePilote[objectType][key];
-            console.warn("attributName: ", value.type);
             if (value.type === clazz) {
                 return value.name;
             }

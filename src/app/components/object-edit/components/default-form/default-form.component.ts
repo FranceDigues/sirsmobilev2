@@ -101,7 +101,6 @@ export class DefaultFormComponent implements OnInit {
 
 
     onTronconLitChange(selectedTronconLitId: string) {
-        console.log("Selected ID: ", selectedTronconLitId);
 
         // Trouver le tronçon correspondant dans tronconsLit
         const selectedTroncon = this.tronconsLit.find(troncon => troncon._id === selectedTronconLitId);

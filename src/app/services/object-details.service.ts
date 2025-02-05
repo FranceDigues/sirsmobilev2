@@ -210,7 +210,6 @@ export class ObjectDetails {
 
       this.prestationList = this.filterPrestationList();
       this.tempPrestation = null;
-
     } catch (e) {
       console.error(e)
     }

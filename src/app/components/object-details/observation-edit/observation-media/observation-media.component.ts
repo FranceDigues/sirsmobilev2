@@ -357,7 +357,6 @@ export class ObservationMediaComponent implements OnInit {
         this.cdr.detectChanges();
     }
     async removePhoto(photo, index) {
-        console.warn("photo: ", photo);
         const alert = await this.alertCtrl.create({
             backdropDismiss: false,
             header: 'Suppression d\'une photo',

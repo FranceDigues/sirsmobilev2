@@ -59,10 +59,11 @@
             <select name="prestationList" class="browser-default"
                     [(ngModel)]="defaultPrestationId"
                     (change)="changeDefaultPrestationId()">
+                <option value="" disabled selected>Veuillez sélectionner une prestation</option>
                 <option *ngFor="let prestation of prestationList"
                         [value]="prestation.id"
                         [selected]="prestation.value.id === defaultPrestationId">
-                    {{ prestation.value.libelle + (prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : '')}}
+                    {{ prestation.value.designation? (prestation.value.designation + '-' + prestation.value.libelle + ((prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : ''))) : (prestation.value.libelle + (prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : ''))}}
                 </option>
             </select>
             <button class="sirs-button-item remove-obs"

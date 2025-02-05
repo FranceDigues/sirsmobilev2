@@ -109,7 +109,6 @@ export class SearchModalComponent implements OnInit {
   async validate() {
     const { designation, type, specificType, libelle } = this.form.value;
     this.items = await this.getObjectByfilter(designation,type, specificType, libelle);
-    console.warn("item: ", this.items)
     if (!this.items || this.items.rows.length === 0) {
       this.noResults = true; // Aucun résultat trouvé
     } else {
@@ -136,7 +135,6 @@ export class SearchModalComponent implements OnInit {
         view = 'byLibelle/byLibelle';
       }
       else if (type) {
-        console.warn("par type:", type)
         queryOptions.startkey = [type];
         queryOptions.endkey = [type, {}];
         view = 'Element/byClassAndLinear';

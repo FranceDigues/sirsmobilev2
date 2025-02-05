@@ -9,6 +9,9 @@ import { DatabaseService } from '../../../services/database.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
 import { designDocs } from '../replicate-database/couchDB-Vues';
 import { EditionModeService } from "../../../services/edition-mode.service";
+import {clear as clearMemoize} from "typescript-memoize";
+import {StorageService} from "@ionic-lib/lib-storage/storage.service";
+import {AppTronconsService} from "../../../services/troncon.service";
 
 @Component({
     selector: 'app-database-choice',
@@ -32,7 +35,9 @@ export class DatabaseChoiceComponent implements OnInit {
                 private statusBar: StatusBar,
                 private sirsDataService: SirsDataService,
                 private editionModeService: EditionModeService,
-                private loadingCtrl: LoadingController) {
+                private loadingCtrl: LoadingController,
+                private storageService: StorageService,
+                private appTronconsService: AppTronconsService) {
         this.init();
     }
 
@@ -134,7 +139,17 @@ export class DatabaseChoiceComponent implements OnInit {
             this.status = 3;
         } else if (this.selectedDatabase.replicated
             && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
-            this.status = 4;
+                        // Vérifier s'il existe une autre BD avec un authUser défini
+            const hasAuthUserInOtherDB = this.databases.some(
+                    (db) => db !== this.selectedDatabase && db.context.authUser !== undefined && db.context.authUser
+            );
+            if (!hasAuthUserInOtherDB) {
+                    this.status = 4;
+                    return;
+            } else { // already connected
+                    this.status = 5;
+                    return;
+            }
         } else {
             const loading = await this.loadingCtrl.create({
                 message: 'Déploiement en cours ...'
@@ -196,5 +211,39 @@ export class DatabaseChoiceComponent implements OnInit {
     closeModal() {
         this.alertCtrl.dismiss();
     }
+    async closeDatabase() {
+        const realActiveBase = this.dbService.activeDB;
+        const databaseWithAuthUser = this.databases.find(
+         (db) => db !== this.selectedDatabase && db.context.authUser !== undefined && db.context.authUser
+        );
 
+        databaseWithAuthUser.context.authUser = null;
+        this.dbService.activeDB = databaseWithAuthUser;
+        this.dbService.removeDB$.next("DB changed");
+        await this.dbService.setCurrentDatabaseSettings(databaseWithAuthUser);
+        this.dbService.activeDB = realActiveBase;
+        this.cleanAllFavoriteTroncon();
+        this.status = 4;
+
+    }
+   cancelAction() {
+       this.status = 0;
+       console.log('Action annulée par l’utilisateur.');
+    }
+    cleanAllFavoriteTroncon() {
+        this.storageService.getItem('AppTronconsFavorities')
+            .then( (res: Array<any>) => {
+                if (res !== null) {
+                    console.log("troncons choisies:: ", res)
+                }
+            });
+
+        this.appTronconsService.favorites = [];
+        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+            .then(() => {
+                console.log("Favorites cleaned and storage updated");
+            });
+        clearMemoize(['isTronconActive']);
+
+    }
 }

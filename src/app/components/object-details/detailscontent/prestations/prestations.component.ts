@@ -91,7 +91,6 @@ export class PrestationsGenericComponent implements OnInit {
         // Return an empty string if 'textConfig' is undefined or doesn't match any expected value
         return '';
     }
-
     return displayName;
   }
 

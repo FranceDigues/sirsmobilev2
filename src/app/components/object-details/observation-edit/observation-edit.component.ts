@@ -23,6 +23,7 @@ import { Contact } from "../../../shared/models/contact.model";
 import { Prestation } from 'src/app/shared/models/prestation.model';
 import {AlertController, ModalController} from '@ionic/angular';
 import { EditMediaComponent } from './edit-media/edit-media/edit-media.component';
+import {LocalDatabase} from "../../../services/local-database.service";
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -76,7 +77,8 @@ export class ObservationEditComponent implements OnInit {
                 public sirsDataService: SirsDataService,
                 private authService: AuthService,
                 private alertCtrl: AlertController,
-                private modalCtrl: ModalController) {
+                private modalCtrl: ModalController,
+                private localDB: LocalDatabase) {
                     
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
@@ -273,7 +275,7 @@ export class ObservationEditComponent implements OnInit {
         return this.showTextConfig === str;
     }
 
-    save() {
+    async save() {
         this.saving = true;
         if (this.isNewObject) {
             // Add the new pictures to the new observation
@@ -282,6 +284,26 @@ export class ObservationEditComponent implements OnInit {
             // Add the new observation to observation list.
             if (!this.objectDoc.observations) this.objectDoc.observations = [];
             this.objectDoc.observations.push(this.observation);
+            const config = await this.databaseService.getCurrentDatabaseSettings();
+            this.objectDetails.tempPrestation = config?.context?.defaultPrestationId;
+            if(this.objectDetails.tempPrestation &&
+                (this.objectDoc.prestationIds && !this.objectDoc.prestationIds.includes(this.objectDetails.tempPrestation) ||
+                    !this.objectDoc.prestationIds
+                )
+                ){
+                let prestationClass: string;
+                if(this.isDependance()){
+                    prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+                }else{
+                    prestationClass = 'fr.sirs.core.model.Prestation';
+                }
+                const prestationList:Array<{doc: Prestation, id: string, key: any, value: any}>= await this.getPrestationByLinearId(prestationClass, this.objectDoc.linearId);
+                if(prestationList.some(prestation => prestation.id === this.objectDetails.tempPrestation)){
+                    await this.objectDetails.addPrestation();
+                }
+
+            }
+
         } else {
             this.observation.photos = [];
             this.observation.photos.push(...this.observationEditService.photos);
@@ -299,6 +321,44 @@ export class ObservationEditComponent implements OnInit {
         });
     }
 
+    private async getPrestationByLinearId(prestationClass: string, linearId: string): Promise<Array<{doc: Prestation, id: string, key: any, value: any}>> {
+        try {
+            // we retrieve the prestations in the current section (tronçon)
+            const response: { value: any, doc: any }[] = await this.localDB.query('Element/byClassAndLinear', {
+                startkey: [prestationClass, linearId],
+                endkey: [prestationClass, linearId, {}],
+                include_docs: true
+            });
+
+            let prestationMap = {};
+            let allPrestationList = [];
+
+            for (const elt of response) {
+                let prestaFinished = false;
+                if (elt.doc.date_fin !== undefined) {
+                    try {
+                        const dateFin = new Date(elt.doc.date_fin);
+                        const dateNow = new Date();
+                        if (dateFin < dateNow) {
+                            prestaFinished = true;
+                        }
+                    } catch (_) {
+                        prestaFinished = true;
+                        console.info(`Cannot read end date of prestation "${elt.value.id}", assuming it is finished.`);
+                    }
+                }
+
+                elt.value.prestationFinished = prestaFinished;
+                prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                allPrestationList.push(elt.value);
+            }
+            return allPrestationList;
+
+
+        } catch (e) {
+            console.error(e)
+        }
+    }
     parseUrgenceText(urgence) {
         switch (this.showTextConfig) {
             case 'fullName':
@@ -410,6 +470,9 @@ export class ObservationEditComponent implements OnInit {
         this.observationEditService.photos
 
 
+    }
+    isDependance() {
+        return PluginUtils.isDependanceAhClass(this.objectDoc['@class']);
     }
 }
 

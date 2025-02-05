@@ -4,7 +4,6 @@
             [(ngModel)]="detailsObject.tempPrestation" [disabled]="prestationList.length === 0">
         <option *ngFor="let p of prestationList"
                 [value]="p.id"
-                [selected]="p.id === defaultPrestationId"
         >
             {{ prestationDisplayName(p) }}
         </option>

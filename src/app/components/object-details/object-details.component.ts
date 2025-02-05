@@ -268,7 +268,7 @@ export class ObjectDetailsComponent implements OnInit, OnDestroy {
             );
     }
 
-    addObservation() {
+    async addObservation() {
         this.route.navigateByUrl('/observation/' + this.document._id.toString() + '/');
     }
 

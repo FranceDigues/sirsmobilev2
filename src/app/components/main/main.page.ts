@@ -35,6 +35,9 @@ import { PluginUtils } from "../../utils/plugin-utils";
 import {ModalController} from '@ionic/angular';
 import { getColorByRefId } from 'src/app/services/map-manager.service';
 import { SearchModalComponent } from './nav-bar/search-modal/search-modal.component'
+import {AppTronconsService} from "../../services/troncon.service";
+import {clear as clearMemoize} from "typescript-memoize";
+import {StorageService} from "@ionic-lib/lib-storage/storage.service";
 @Component({
     selector: 'app-main',
     templateUrl: './main.page.html',
@@ -71,7 +74,9 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         private toastController: ToastController,
         private appLayersService: AppLayersService,
         private ref: ApplicationRef,
-        private modalCtrl: ModalController) {
+        private modalCtrl: ModalController,
+        private appTronconsService: AppTronconsService,
+        private storageService: StorageService) {
 
         this.platform.pause.subscribe(
             () => {
@@ -272,7 +277,24 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     }
 
     logout() {
+        this.cleanAllFavoriteTroncon();
         this.authService.logout();
+    }
+    cleanAllFavoriteTroncon() {
+        this.storageService.getItem('AppTronconsFavorities')
+            .then( (res: Array<any>) => {
+                if (res !== null) {
+                    console.log("troncons choisies:: ", res)
+                }
+            });
+
+        this.appTronconsService.favorites = [];
+        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+            .then(() => {
+                console.log("Favorites cleaned and storage updated");
+            });
+        clearMemoize(['isTronconActive']);
+
     }
 
     handleSliderLeft() {

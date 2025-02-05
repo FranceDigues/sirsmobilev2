@@ -42,6 +42,26 @@ export class SystemeEndiguement {
           }
         );
     }
+
+    async reloadSE(){
+        this.dbService.getLocalDB().query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.SystemeEndiguement'],
+            endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
+        }).then(
+            (results) => {
+                this.systemEndiguements = results.rows;
+                this.systemEndiguements.push({
+                    id: 'withoutSystem',
+                    value: {
+                        libelle: 'Sans système d\'endiguement'
+                    }
+                });
+                },
+            (err) => {
+                console.error('err Endiguement', err);
+            }
+        );
+    }
 }
 
 @Injectable({
