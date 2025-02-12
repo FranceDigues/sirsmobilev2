@@ -16,6 +16,19 @@
                         <span class="sirs-field-title">Dernière synchronisation</span>
                         <p>{{ (dbService.activeDB.lastSync | date:'dd/MM/yyyy HH:mm:ss') || 'Aucune' }}</p>
                     </div>
+                    <div class="sirs-field">
+                        <span class="sirs-field-title">nombre d'élements à synchroniser en même temps: {{syncService.batchSize}}</span>
+                        <ion-range
+                                [ticks]="true"
+                                [snaps]="true"
+                                [pin]="true"
+                                [(ngModel)]="syncService.batchSize"
+                                [step]="1"
+                                [min]="1"
+                                [max]="10">
+
+                        </ion-range>
+                    </div>
                 </div>
                 <div style="height: 20%;" *ngIf="syncService.status === 1">
                     <div>Cette opération peut prendre quelques minutes...</div>
@@ -28,6 +41,14 @@
                     <div fxLayout="row" fxLayoutAlign="space-between center" > 
                         <span>Synchronisation avec la base de données...</span>
                         <!-- <span class="right">{{ syncService.completion }}</span> -->
+                    </div>
+                    <div class="sirs-field">
+                        <span class="sirs-field-title">documents traités</span>
+                        <p>{{ syncService.completion }}</p>
+                    </div>
+                    <div class="sirs-field">
+                        <span class="sirs-field-title" style="color: red">erreurs de synchronisation</span>
+                        <p>{{ syncService.doc_write_failures }}</p>
                     </div>
                 </div>
                 <div *ngIf="syncService.status === 2">
