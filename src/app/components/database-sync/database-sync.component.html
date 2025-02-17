@@ -17,7 +17,8 @@
                         <p>{{ (dbService.activeDB.lastSync | date:'dd/MM/yyyy HH:mm:ss') || 'Aucune' }}</p>
                     </div>
                     <div class="sirs-field">
-                        <span class="sirs-field-title">nombre d'élements à synchroniser en même temps: {{syncService.batchSize}}</span>
+                        <span class="sirs-field-title">Nombre d'élement(s) à synchroniser en même temps: {{syncService.batchSize}}</span>
+                        <p>Personnalisation du nombre de documents à transférer. Possibilité suivant la puissance de la tablette de transferer par lot (optimisation du temps de transfert), par défaut "1" jusqu’à "10"</p>
                         <ion-range
                                 [ticks]="true"
                                 [snaps]="true"
