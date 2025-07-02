@@ -164,7 +164,7 @@ export class EditObjectService {
     }
 
     formatDate() {
-        const date = new Date(this.dateWrapper);   
+        const date = new Date(this.dateWrapper);
         this.objectDoc.date_fin = date.toISOString().split('T')[0];
 
     }
@@ -226,7 +226,7 @@ export class EditObjectService {
             // The distance
             const dist = getDistance(transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
                 transform(geomTronc, 'EPSG:3857', 'EPSG:4326'), 6378137) / 1000;
-            if (dist <= 1) {
+            if (dist <= 0.1) {
                 nearTronconList.push(elt);
             }
         });
@@ -415,7 +415,7 @@ export class EditObjectService {
             }else{
 
             }
-            
+
 
             if (!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId) {
                 this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
