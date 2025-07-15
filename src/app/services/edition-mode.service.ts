@@ -98,8 +98,9 @@ export class EditionModeService {
     }
 
     updateObject(objectDoc, visible = true) {
+        const cleanDoc = this.removeUndefinedFields(objectDoc);
         objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
-        return (this.localDB.save(objectDoc)
+        return (this.localDB.save(cleanDoc)
             .then(
                 () => {
                     const source = this.editionLayerService.editionLayer.getSource();
@@ -118,6 +119,31 @@ export class EditionModeService {
                     return objectDoc;
                 }
             ));
+    }
+
+
+    /**
+     * necessary to remove undefined fields because Sirs desktop does not process them
+     * @param obj
+     * @private
+     */
+    removeUndefinedFields(obj: any): any {
+        if (Array.isArray(obj)) {
+            return obj
+                .map(item => this.removeUndefinedFields(item))
+                .filter(item => item !== undefined);
+        } else if (obj !== null && typeof obj === 'object') {
+            return Object.entries(obj)
+                .filter(([_, v]) =>  v !== 'undefined')
+                .reduce((acc, [k, v]) => {
+                    const cleanedValue = this.removeUndefinedFields(v);
+                    if (cleanedValue !== 'undefined') {
+                        acc[k] = cleanedValue;
+                    }
+                    return acc;
+                }, {});
+        }
+        return obj;
     }
 
     getClosableObjects() {
