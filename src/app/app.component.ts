@@ -15,13 +15,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.platform.ready().then((readySource) => {
       // Check if Media directory exist.
-      this.file.checkDir(this.file.dataDirectory, 'medias')
+      this.file.checkDir(this.file.externalDataDirectory, 'medias')
         .then(() => {
           },
           (error) => {
             // Create Media directory
-            this.file.createDir(this.file.dataDirectory, 'medias', false);
-            this.file.createFile(`${this.file.dataDirectory}medias/`, '_keepOpen', false);
+            this.file.createDir(this.file.externalDataDirectory, 'medias', false);
+            this.file.createFile(`${this.file.externalDataDirectory}medias/`, '_keepOpen', false);
           });
       // Check if Document directory exist.
       this.file.checkDir(this.file.dataDirectory, 'documents')

@@ -84,7 +84,7 @@ export class PhotoEditComponent implements OnInit {
                 };
                 this.photoDoc['@class'] = 'fr.sirs.core.model.Photo';
                 this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
-                this.mediaPath = `${this.file.dataDirectory}medias`;
+                this.mediaPath = `${this.file.externalDataDirectory}medias`;
                 this.parentId = this.activeRoute.snapshot.paramMap.get('parentId');
                 this.photoId = this.activeRoute.snapshot.paramMap.get('photoId'); //Mandatory if edition
 

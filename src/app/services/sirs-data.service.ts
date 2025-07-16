@@ -72,7 +72,7 @@ export class SirsDataService {
     ];
 
     constructor(private localDB: LocalDatabase, private file: File) {
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
     }
 
     getSirsDoc(): Promise<SirsDoc> {

@@ -20,7 +20,7 @@ export class ObservationItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-        this.mediaPath = `${this.file.dataDirectory}medias/`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias/`;
 
         this.hasPhoto$ = new Promise<boolean>(async (resolve) => {
             if (this.observation.photos && this.observation.photos.length > 0) {

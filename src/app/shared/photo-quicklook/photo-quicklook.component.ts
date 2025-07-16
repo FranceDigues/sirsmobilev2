@@ -30,14 +30,14 @@ export class PhotoQuicklookComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
         if (this.photo) {
             this.loadImage(this.photo);
         }
     }
 
     async openPhoto(photo) {
-        const fileEntries = await this.file.listDir(this.file.dataDirectory, 'medias');
+        const fileEntries = await this.file.listDir(this.file.externalDataDirectory, 'medias');
         const find = fileEntries.find(item => item.name === `${photo.id}.jpg`);
         if (find) {
             const url = decodeURI(find.nativeURL);
@@ -55,7 +55,7 @@ export class PhotoQuicklookComponent implements OnInit {
 
     getPhotoPath(photo, details?) {
         let path = (details) ? `${photo.id}.jpg` : `${photo.id}${photo.chemin.substring(photo.chemin.indexOf('.')).toLowerCase()}`;
-        path = `${this.file.dataDirectory}medias/${path}`;
+        path = `${this.file.externalDataDirectory}medias/${path}`;
         return this.webview.convertFileSrc(path);
     }
 

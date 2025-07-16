@@ -30,7 +30,7 @@ export class PhotoDetailsComponent implements OnInit {
 
   ngOnInit() {
     //Init photo path
-    const mediaPath = `${this.file.dataDirectory}medias`;
+    const mediaPath = `${this.file.externalDataDirectory}medias`;
     const path = `${mediaPath}/${this.objectDetails.selectedPhoto.id}.jpg`;
     this.photoPath = this.webview.convertFileSrc(path);
 

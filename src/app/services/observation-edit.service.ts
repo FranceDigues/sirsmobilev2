@@ -69,7 +69,7 @@ export class ObservationEditService {
     // pre init method exists as the init methods are called from other components and services.
     async preInit(sirsDataService: SirsDataService) {
         this.dataProjection = sirsDataService.sirsDoc.epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
         this.showContent = true;
         this.loaded = {};
         this.mediaOptions = {
@@ -131,7 +131,7 @@ export class ObservationEditService {
 
     setValuesToDefault() {
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
         this.mediaOptions = {
             id: '',
             chemin: '',
