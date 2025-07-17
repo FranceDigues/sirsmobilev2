@@ -16,7 +16,7 @@ ENV ANDROID_HOME="/opt/android"
 ENV ANDROID_VERSION="35"
 ENV ANDROID_BUILD_TOOLS_VERSION="35.0.0"
 ENV ANDROID_COMMAND_LINE_TOOLS_URL="https://nexus.geomatys.com/repository/raw-public/binaries/google/android/commandlinetools-linux-6609375_latest.zip"
-ENV GRADLE_VERSION="7.4.2"
+ENV GRADLE_VERSION="8.13"
 ENV GRADLE_HOME="/opt/gradle/gradle-${GRADLE_VERSION}"
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -64,3 +64,7 @@ RUN yes | sdkmanager "platforms;android-${ANDROID_VERSION}"
 RUN yes | sdkmanager "build-tools;${ANDROID_BUILD_TOOLS_VERSION}"
 ENV PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
 ENV PATH="${ANDROID_SDK_ROOT}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}:${PATH}"
+
+# Debug: Verify installed SDK and Build Tools
+RUN sdkmanager --list --verbose | grep "platforms;android-${ANDROID_VERSION}" || echo "Android SDK ${ANDROID_VERSION} not installed!"
+RUN sdkmanager --list --verbose | grep "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" || echo "Build Tools ${ANDROID_BUILD_TOOLS_VERSION} not installed!"
