@@ -3,7 +3,7 @@
     <name>SIRS Mobile</name>
     <description>SIRS Mobile Application</description>
     <author email="contact@geomatys.com" href="https://geomatys.com/">Geomatys</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <access origin="file://*" />
     <allow-navigation href="*" />
@@ -53,5 +53,4 @@
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-insomnia" />
-    <allow-navigation href="http://localhost:8100" sessionid="6ee1ad41" />
 </widget>
