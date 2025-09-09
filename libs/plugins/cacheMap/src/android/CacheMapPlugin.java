@@ -218,20 +218,12 @@ public class CacheMapPlugin extends CordovaPlugin {
 
 
     public void registerDr(){
-//        if(dr == null) {
-//            dr = new DownloadReceiver();
-//            IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-//            this.cordova.getActivity().registerReceiver(dr, filter);
-//            Log.d(TAG, "DownloadReceiver dynamically registered");
-//        }
+        dr = new DownloadReceiver();
+        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     public void unRegisterDr(){
-//        if(dr != null) {
-//            this.cordova.getActivity().unregisterReceiver(dr);
-//            dr = null;
-//            Log.d(TAG, "DownloadReceiver unregistered");
-//        }
+        this.cordova.getActivity().unregisterReceiver(dr);
     }
 
 
