@@ -35,7 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import androidx.core.content.ContextCompat;
 
 /**
  *
@@ -219,7 +219,7 @@ public class CacheMapPlugin extends CordovaPlugin {
 
     public void registerDr(){
         dr = new DownloadReceiver();
-        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),ContextCompat.RECEIVER_EXPORTED);
     }
     public void unRegisterDr(){
         this.cordova.getActivity().unregisterReceiver(dr);

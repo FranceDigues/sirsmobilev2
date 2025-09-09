@@ -38,10 +38,9 @@ CacheMapPlugin.prototype._amplifier = function (info) {
 CacheMapPlugin.prototype.updateCache = function (cacheArray) {
     console.log("CacheMapPlugin.js: updateCache");
     exec(function (result) {
-
-        //alert("result" + result);
+       // alert("result" + result);
     }, function (result) {
-    //alert("Error" + result);
+    alert("Error" + result);
     }, "CacheMapPlugin", "updateCache", cacheArray);
 };
 
