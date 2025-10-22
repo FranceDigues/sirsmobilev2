@@ -2,7 +2,6 @@
   "@awesome-cordova-plugins/camera": "5.46.0",
   "@types/pouchdb": "6.4.2",
   "cordova": "13.0.0-nightly.20240813002555489.sha.b57fb454",
-  "cordova-android": "14.0.1",
   "cordova-plugin-geolocation": "4.0.2",
   "cordova-plugin-insomnia": "4.3.0",
   "cordova-plugin-x-toast": "2.7.3",
