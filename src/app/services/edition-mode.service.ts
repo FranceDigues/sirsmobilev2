@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { LocalDatabase } from './local-database.service';
 import { EditionLayerService } from './edition-layer.service';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -68,7 +69,7 @@ export class EditionModeService {
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-                private editionLayerService: EditionLayerService) {
+                private editionLayerService: EditionLayerService, private toastController: ToastController) {
     }
 
     newObject(type) {
@@ -98,9 +99,9 @@ export class EditionModeService {
     }
 
     updateObject(objectDoc, visible = true) {
-        const cleanDoc = this.removeUndefinedFields(objectDoc);
         objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
-        return (this.localDB.save(cleanDoc)
+        this.removeUndefinedFields(objectDoc);
+        return (this.localDB.save(objectDoc)
             .then(
                 () => {
                     const source = this.editionLayerService.editionLayer.getSource();
@@ -118,33 +119,55 @@ export class EditionModeService {
                     }
                     return objectDoc;
                 }
-            ));
+            )
+            .catch(async (error) => {
+                console.error('Erreur lors de la sauvegarde du document:', error);
+                const toast = await this.toastController.create({
+                    message: `Erreur lors de la sauvegarde du document: ${error.message || error}. Veuillez réessayer.`,
+                    duration: 4000,
+                    position: 'bottom',
+                    color: 'danger'
+                });
+                await toast.present();
+                throw error;
+            }));
     }
 
 
     /**
-     * necessary to remove undefined fields because Sirs desktop does not process them
+     * Removes undefined fields in-place because Sirs desktop (Java) does not process them.
+     * Skips _attachments for performance (binary data, never contains undefined).
      * @param obj
      * @private
      */
-    removeUndefinedFields(obj: any): any {
-        if (Array.isArray(obj)) {
-            return obj
-                .map(item => this.removeUndefinedFields(item))
-                .filter(item => item !== undefined);
-        } else if (obj !== null && typeof obj === 'object') {
-            return Object.entries(obj)
-                .filter(([_, v]) =>  v !== 'undefined')
-                .reduce((acc, [k, v]) => {
-                    const cleanedValue = this.removeUndefinedFields(v);
-                    if (cleanedValue !== 'undefined') {
-                        acc[k] = cleanedValue;
-                    }
-                    return acc;
-                }, {});
+    removeUndefinedFields(obj: any): void {
+        if (obj === null || obj === undefined || typeof obj !== 'object') {
+            return;
         }
-        return obj;
+        if (Array.isArray(obj)) {
+            for (let i = obj.length - 1; i >= 0; i--) {
+                if (obj[i] === undefined || obj[i] === 'undefined') {
+                    obj.splice(i, 1);
+                } else if (typeof obj[i] === 'object') {
+                    this.removeUndefinedFields(obj[i]);
+                }
+            }
+            return;
+        }
+        for (const key of Object.keys(obj)) {
+            if (key === '_attachments') {
+                continue;
+            }
+            if (obj[key] === undefined || obj[key] === 'undefined') {
+                delete obj[key];
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                this.removeUndefinedFields(obj[key]);
+            }
+        }
     }
+
+
+
 
     getClosableObjects() {
         return (this.localDB.query('objetsNonClosByBorne/byAuthor', {
