@@ -44,7 +44,8 @@ export class DatabaseService {
       this.localDB = new PouchDB(this.activeDB.name, {
         location: 'default',
         androidDatabaseProvider: 'system',
-        adapter: 'cordova-sqlite'
+        adapter: 'cordova-sqlite',
+        auto_compaction: true
       });
       /* Indicate there is no memory leak in the Fourth Step (10 listeners by default).
        TODO : Try to rise this limit until I have memory leaks warning. Check : https://pouchdb.com/errors.html
