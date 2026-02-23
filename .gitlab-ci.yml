@@ -48,7 +48,15 @@ build builder:
 .base-job:
   image: $DOCKER_REPOSITORY/builder:$BUILDER_VERSION
   before_script:
-    - npm config set cache $CI_PROJECT_DIR/.npm --global
+    - echo "user:x:$(id -u):$(id -g)::$CI_PROJECT_DIR:/bin/sh" >> /etc/passwd || true
+    - export HOME=$CI_PROJECT_DIR
+    - export ANDROID_SDK_HOME=$CI_PROJECT_DIR
+    - mkdir -p $CI_PROJECT_DIR/.android
+    - keytool -genkey -v -keystore $CI_PROJECT_DIR/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+    - chmod -R 777 $CI_PROJECT_DIR/.android
+    - node -e "var fs=require('fs');fs.writeFileSync(process.env.CI_PROJECT_DIR+'/fix-userinfo.js','const os=require(\"os\");const _u=os.userInfo;os.userInfo=function(o){try{return _u(o)}catch(e){return{uid:process.getuid?process.getuid():-1,gid:process.getgid?process.getgid():-1,username:\"user\",homedir:process.env.HOME||\"/tmp\",shell:null}}};')"
+    - export NODE_OPTIONS="--require $CI_PROJECT_DIR/fix-userinfo.js"
+    - export npm_config_cache=$CI_PROJECT_DIR/.npm
   only:
     refs:
       - master
@@ -60,7 +68,7 @@ build:
   stage: build
   script:
     - npm ci
-    - npx --package=@ionic/cli ionic cordova build android --prod
+    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod
 
   artifacts:
     paths:
@@ -106,13 +114,21 @@ build_prod:
     - when: never
 
   before_script:
-    - npm config set cache $CI_PROJECT_DIR/.npm --global
+    - echo "user:x:$(id -u):$(id -g)::$CI_PROJECT_DIR:/bin/sh" >> /etc/passwd || true
+    - export HOME=$CI_PROJECT_DIR
+    - export ANDROID_SDK_HOME=$CI_PROJECT_DIR
+    - mkdir -p $CI_PROJECT_DIR/.android
+    - keytool -genkey -v -keystore $CI_PROJECT_DIR/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+    - chmod -R 777 $CI_PROJECT_DIR/.android
+    - node -e "var fs=require('fs');fs.writeFileSync(process.env.CI_PROJECT_DIR+'/fix-userinfo.js','const os=require(\"os\");const _u=os.userInfo;os.userInfo=function(o){try{return _u(o)}catch(e){return{uid:process.getuid?process.getuid():-1,gid:process.getgid?process.getgid():-1,username:\"user\",homedir:process.env.HOME||\"/tmp\",shell:null}}};')"
+    - export NODE_OPTIONS="--require $CI_PROJECT_DIR/fix-userinfo.js"
+    - export npm_config_cache=$CI_PROJECT_DIR/.npm
   script:
     - npm ci
-    - npx --package=@ionic/cli ionic cordova platform rm android
-    - npx --package=@ionic/cli ionic cordova platform add android
-    - npx --package=@ionic/cli ionic cordova build android --prod --release -- -- --packageType=apk
-    - npx --package=@ionic/cli ionic cordova build android --prod --release -- -- --packageType=bundle
+    - npx --package=@ionic/cli@7.2.0 ionic cordova platform rm android
+    - npx --package=@ionic/cli@7.2.0 ionic cordova platform add android
+    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod --release -- -- --packageType=apk
+    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod --release -- -- --packageType=bundle
     - zipalign -v -f 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_$CI_COMMIT_TAG.apk
     - zipalign -v -f 4 ./platforms/android/app/build/outputs/bundle/release/app-release.aab sirsmobile_$CI_COMMIT_TAG.aab
     - apksigner sign --ks sirs-mobile.keystore --ks-pass "pass:$KEYSTORE_PASS" --v1-signing-enabled true --v2-signing-enabled true sirsmobile_$CI_COMMIT_TAG.apk
