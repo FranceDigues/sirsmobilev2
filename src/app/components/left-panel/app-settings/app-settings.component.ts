@@ -63,7 +63,15 @@ export class AppSettingsComponent implements OnInit {
             if (this.mapService.archiveObjectsFlag) {
                 tempPrestationList = this.sortByDocNomPipe.transformPrestation(list);
             } else {
-                tempPrestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => !p.doc.date_fin));
+                const now = new Date();
+                tempPrestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => {
+                    if (!p.doc.date_fin) return true;
+                    try {
+                        return new Date(p.doc.date_fin) >= now;
+                    } catch (_) {
+                        return false;
+                    }
+                }));
             }
             //this.prestationList = this.prestationList.filter(item => item.doc.valid === true);
             await this.EOS.initTronconList()
