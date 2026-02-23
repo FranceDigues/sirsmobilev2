@@ -119,22 +119,21 @@ export class LeftSlideCacheComponent implements AfterViewInit, OnDestroy {
   }
 
   setNewCacheInGoodLayerInBackLayerList(cache) {
-    const name = this.backLayerService.getActive().name;
-
     this.backLayerService.backLayers.list.forEach((backLayer) => {
-      if (backLayer.name === name) {
+      if (backLayer.name === this.layerModel.name) {
         backLayer.cache = cache;
       }
     });
   }
 
   setNewCacheInActiveBackLayer(cache) {
-    this.backLayerService.backLayers.active.cache = cache;
+    if (this.backLayerService.backLayers.active.name === this.layerModel.name) {
+      this.backLayerService.backLayers.active.cache = cache;
+    }
   }
 
   validate() {
     let extent = this.cacheMapManager.getCurrentArea();
-    this.layerModel = this.backLayerService.backLayers.active;
 
     // Update layer model and force update.
     const cache = {
