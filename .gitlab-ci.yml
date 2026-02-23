@@ -68,7 +68,7 @@ build:
   stage: build
   script:
     - npm ci
-    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod
+    - npx --package=@ionic/cli ionic cordova build android --prod
 
   artifacts:
     paths:
@@ -125,10 +125,10 @@ build_prod:
     - export npm_config_cache=$CI_PROJECT_DIR/.npm
   script:
     - npm ci
-    - npx --package=@ionic/cli@7.2.0 ionic cordova platform rm android
-    - npx --package=@ionic/cli@7.2.0 ionic cordova platform add android
-    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod --release -- -- --packageType=apk
-    - npx --package=@ionic/cli@7.2.0 ionic cordova build android --prod --release -- -- --packageType=bundle
+    - npx --package=@ionic/cli ionic cordova platform rm android
+    - npx --package=@ionic/cli ionic cordova platform add android
+    - npx --package=@ionic/cli ionic cordova build android --prod --release -- -- --packageType=apk
+    - npx --package=@ionic/cli ionic cordova build android --prod --release -- -- --packageType=bundle
     - zipalign -v -f 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_$CI_COMMIT_TAG.apk
     - zipalign -v -f 4 ./platforms/android/app/build/outputs/bundle/release/app-release.aab sirsmobile_$CI_COMMIT_TAG.aab
     - apksigner sign --ks sirs-mobile.keystore --ks-pass "pass:$KEYSTORE_PASS" --v1-signing-enabled true --v2-signing-enabled true sirsmobile_$CI_COMMIT_TAG.apk
