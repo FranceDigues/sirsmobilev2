@@ -168,7 +168,38 @@ This will build a new "builder" docker image (cf. docker/builder/Dockerfile for 
 
 In order to change the version of the builder, edit the `BUILDER_VERSION` entry in CI/CD variables.
 
-## 6 - Deployment
+## 6 - CI/CD : Patch temporaire (Kubernetes non-root UID)
+
+> **ATTENTION : Patch temporaire.** Les modifications ci-dessous sont des contournements liés a l'execution des jobs CI dans un pod Kubernetes avec un UID non-root arbitraire. Une solution long terme serait de reconstruire l'image Docker builder (`docker/builder/Dockerfile`) pour integrer ces corrections directement.
+
+### Contexte
+
+Le runner GitLab CI utilise un executeur Kubernetes. Les jobs sont lances dans des pods ou le conteneur `init-permissions` tourne en **root** (UID 0), mais le conteneur de build tourne avec un **UID arbitraire non-root** (ex: 1001). Cela provoque plusieurs problemes :
+
+- L'UID n'a pas d'entree dans `/etc/passwd`
+- Le repertoire `HOME` par defaut (`/root`) n'est pas accessible en ecriture
+- Certains fichiers/dossiers crees par le conteneur init sont possedes par root
+
+### Problemes resolus
+
+| Probleme | Cause | Contournement |
+|---|---|---|
+| `os.userInfo()` crash dans `@ionic/cli` | Node.js appelle `getpwuid_r` (libc) qui echoue sans entree `/etc/passwd` | Script `fix-userinfo.js` charge via `NODE_OPTIONS=--require` qui monkey-patch `os.userInfo()` |
+| `EACCES: permission denied, mkdir '/root/.ionic'` | `HOME` pointe vers `/root` non-accessible | `export HOME=$CI_PROJECT_DIR` |
+| `Unable to create debug keystore in .android` | Le debug keystore n'existe pas et le dossier `.android` cree par `keytool` (root) n'est pas writable | Generation du keystore avec `keytool` + `chmod -R 777` |
+| `EACCES` sur le cache npm dans les subprocesses Cordova | Les subprocesses `npm install` (lances par les plugins Cordova) utilisent `$HOME/.npm` au lieu du cache configure | `export npm_config_cache=$CI_PROJECT_DIR/.npm` (variable d'environnement heritee par les subprocesses) |
+| Job `test` echoue avec `zip: not a valid zip file` | Le job test telecharge les artifacts du job build qui sont corrompus | `dependencies: []` sur le job test |
+
+### Solution long terme recommandee
+
+Integrer dans l'image Docker builder (`docker/builder/Dockerfile`) :
+
+1. Creer un utilisateur non-root avec un `HOME` accessible
+2. Pre-generer le debug keystore Android
+3. Configurer le cache npm dans un repertoire accessible
+4. Eventuellement passer a une version de Node.js >= 18 (qui gere mieux `os.userInfo()` sans entree `/etc/passwd`)
+
+## 7 - Deployment
 ### Générer l'AAB
 
 Lignes de commande pour générer l'AAB:
