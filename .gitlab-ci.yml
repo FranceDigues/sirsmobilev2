@@ -79,6 +79,7 @@ build:
 test:
   extends: .base-job
   stage: test
+  dependencies: []
   script:
     - npm run test:ci
   artifacts:
