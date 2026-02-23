@@ -62,16 +62,16 @@ export class ShapesLayersManagerService {
     if (this.shapeLayers && this.shapeLayers.length > 0) {
       const copy = this.shapeLayers.map(x => Object.assign({}, x));
       for (let data of copy) {
-        let geojson = await this.getGeojson(data);
-        const projCode = this.getProjCode(data);
         try {
+          let geojson = await this.getGeojson(data);
+          const projCode = this.getProjCode(data);
           const features = new GeoJSON().readFeatures(geojson, {
             dataProjection: projCode,
             featureProjection: 'EPSG:3857'
           });
           this.addFeaturesToMap(data.name, features);
         } catch (err) {
-          console.error('Lecture du geojson ' + geojson + ' impossible. Suppression de la référence dans le stockage.');
+          console.error('Impossible de charger la couche "' + data.name + '". Suppression de la référence.');
           console.error(err);
           const i: number = copy.indexOf(data);
           this.shapeLayers.splice(i, 1);
@@ -232,16 +232,21 @@ export class ShapesLayersManagerService {
   }
 
   getGeojson(data) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       if (data.type === 'WFS') {
         this.wfsRequest(data.url)
-          .then(geojson => resolve(geojson));
+          .then(geojson => resolve(geojson))
+          .catch(err => reject(err));
       } else if (data.type === 'shapefile') {
         this.getGeojsonFromShapefile(data.url)
-          .then(geojson => resolve(geojson));
+          .then(geojson => resolve(geojson))
+          .catch(err => reject(err));
       } else if (data.type === 'geojson') {
         this.getGeojsonFromGeojson(data.url)
-          .then(geojson => resolve(geojson));
+          .then(geojson => resolve(geojson))
+          .catch(err => reject(err));
+      } else {
+        reject('Unknown layer type: ' + data.type);
       }
     })
   }
