@@ -70,6 +70,7 @@ export class DatabaseChoiceComponent implements OnInit {
 
     changeStatus(status: number) {
         this.status = status;
+        this.slowReplication = false;
         this.dbService.getDatabaseSettings()
             .then(
                 (databases) => {
