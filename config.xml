@@ -51,6 +51,7 @@
             <uses-permission android:maxSdkVersion="32" android:name="android.permission.CAMERA" />
         </config-file>
     </platform>
+    <hook src="hooks/patch-plugin-manager.js" type="after_prepare" />
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-insomnia" />
