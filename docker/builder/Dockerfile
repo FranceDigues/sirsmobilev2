@@ -9,8 +9,8 @@ MAINTAINER marius.van-nieuwenhuyse@geomatys.com
 
 # Define paths and versions
 ENV OPEN_JDK_VERSION="17"
-ENV NODEJS_VERSION="16"
-ENV NPM_VERSION="8.19.4"
+ENV NODEJS_VERSION="20"
+ENV NPM_VERSION="10.8.2"
 ENV ANDROID_SDK_ROOT="/opt/android"
 ENV ANDROID_HOME="/opt/android"
 ENV ANDROID_VERSION="35"
