@@ -75,7 +75,7 @@ build:
       - $CI_PROJECT_DIR/platforms/android
       - $CI_PROJECT_DIR/build
     exclude:
-      - $CI_PROJECT_DIR/platforms/android/.gradle/**/*
+      - $CI_PROJECT_DIR/platforms/android/**/.gradle/**/*
 
 #---------------------------------------<  Test  >--------------------------------------------------
 test:
