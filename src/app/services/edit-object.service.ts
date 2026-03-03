@@ -446,8 +446,7 @@ export class EditObjectService {
 
         // Update date
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
-        const dateDebut = new Date();
-        this.objectDoc.date_debut = dateDebut.toISOString().split('T')[0];
+        this.objectDoc.date_debut ??= new Date().toISOString().split('T')[0];
         delete this.objectDoc.prDebut;
 
         delete this.objectDoc.prFin;
