@@ -122,3 +122,40 @@ patchFile(
     '            callbackContext.error(e.getMessage());',
     'OutOfMemoryError'
 );
+
+// ─── Patch 6: cordova-sqlite-storage JARs (16KB alignment) ───
+//
+// cordova-sqlite-storage's beforePluginInstall.js runs "npm install" inside
+// plugins/cordova-sqlite-storage/, which may resolve an older version of
+// cordova-sqlite-storage-dependencies whose .so files are aligned to 4KB only.
+// Android 16 (API 36) requires 16KB alignment. We overwrite those JARs with
+// the ones from node_modules/ which are guaranteed 16KB-aligned (v5.0.0).
+
+const sqliteDepsJars = [
+    'sqlite-native-ndk-connector.jar',
+    'sqlite-ndk-native-driver.jar'
+];
+
+const sqlitePluginLibsDir = path.join(
+    projectRoot, 'plugins', 'cordova-sqlite-storage',
+    'node_modules', 'cordova-sqlite-storage-dependencies', 'libs'
+);
+
+const sqliteNodeModulesLibsDir = path.join(
+    projectRoot, 'node_modules', 'cordova-sqlite-storage-dependencies', 'libs'
+);
+
+if (fs.existsSync(sqlitePluginLibsDir)) {
+    sqliteDepsJars.forEach(function (jar) {
+        const src = path.join(sqliteNodeModulesLibsDir, jar);
+        const dest = path.join(sqlitePluginLibsDir, jar);
+        if (!fs.existsSync(src)) {
+            console.warn('[patch] WARNING: ' + jar + ' not found in node_modules, skipping.');
+            return;
+        }
+        fs.copyFileSync(src, dest);
+        console.log('[patch] ' + jar + ' replaced with 16KB-aligned version.');
+    });
+} else {
+    console.log('[patch] cordova-sqlite-storage plugin libs not found yet, skipping JAR patch.');
+}
