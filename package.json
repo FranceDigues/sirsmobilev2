@@ -50,7 +50,7 @@
     "angular-md5": "^0.1.10",
     "bootstrap": "4.6.2",
     "cordova": "^13.0.0-nightly.20240813002555489.sha.b57fb454",
-    "cordova-android": "14.0.1",
+    "cordova-android": "15.0.0",
     "cordova-plugin-geolocation": "^4.0.2",
     "cordova-plugin-insomnia": "^4.3.0",
     "cordova-plugin-x-toast": "^2.7.3",
