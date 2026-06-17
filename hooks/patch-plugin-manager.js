@@ -123,7 +123,31 @@ patchFile(
     'OutOfMemoryError'
 );
 
-// ─── Patch 6: cordova-sqlite-storage JARs (16KB alignment) ───
+// ─── Patch 6: Remove READ_MEDIA_IMAGES and READ_MEDIA_VIDEO from AndroidManifest ───
+//
+// cordova-plugin-camera@7 automatically declares READ_MEDIA_IMAGES and READ_MEDIA_VIDEO
+// but the app only takes photos and does not need persistent access to the media library.
+// Google Play rejects apps targeting SDK 36 that declare these permissions without
+// justified persistent use.
+
+const manifestPath = path.join(projectRoot, 'platforms', 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
+
+if (fs.existsSync(manifestPath)) {
+    let manifest = fs.readFileSync(manifestPath, 'utf8');
+    const before = manifest;
+    manifest = manifest.replace(/\s*<uses-permission[^>]*android:name="android\.permission\.READ_MEDIA_IMAGES"[^>]*\/>/g, '');
+    manifest = manifest.replace(/\s*<uses-permission[^>]*android:name="android\.permission\.READ_MEDIA_VIDEO"[^>]*\/>/g, '');
+    if (manifest !== before) {
+        fs.writeFileSync(manifestPath, manifest, 'utf8');
+        console.log('[patch] Removed READ_MEDIA_IMAGES and READ_MEDIA_VIDEO from AndroidManifest.xml.');
+    } else {
+        console.log('[patch] READ_MEDIA_IMAGES/READ_MEDIA_VIDEO not found in AndroidManifest.xml, skipping.');
+    }
+} else {
+    console.log('[patch] AndroidManifest.xml not found yet, skipping media permissions patch.');
+}
+
+// ─── Patch 7: cordova-sqlite-storage JARs (16KB alignment) ───
 //
 // cordova-sqlite-storage's beforePluginInstall.js runs "npm install" inside
 // plugins/cordova-sqlite-storage/, which may resolve an older version of
