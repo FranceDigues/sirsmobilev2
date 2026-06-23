@@ -268,7 +268,6 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         let f = this.editionLayerService.favorites
         this.editionLayerService.updateEditionLayerInstance(f);
         this.mapManagerService.clearAll();
-        this.zoomToCurrentLocation();
         this.mapManagerService.mapLoadingSubject.subscribe(
             {
                 complete: () => loading.dismiss()
