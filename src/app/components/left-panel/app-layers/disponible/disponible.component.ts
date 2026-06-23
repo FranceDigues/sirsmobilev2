@@ -103,6 +103,7 @@ export class LeftSlideDisponibleLayersComponent implements OnInit {
       }
       this.mapManagerService.createAppLayerInstance(layerModel)
         .then(layer => {
+          console.log("TOGGLE LAYER: ", layer);
           this.mapManagerService.appLayer.getLayers().getArray().push(layer);
         })
         .catch(error => {
