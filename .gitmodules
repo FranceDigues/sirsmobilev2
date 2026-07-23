@@ -1,0 +1,3 @@
+[submodule "libs/geomatys-ionic-libraries-framework"]
+	path = libs/geomatys-ionic-libraries-framework
+	url = ../../../../Produits/Geomatys/Librairies/Ionic/geomatys-ionic-libraries-framework

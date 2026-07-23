@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { transform } from 'ol/proj';
 import {
     StorageService
-} from '../../../libs/geomatys-ionic-libraries-framework/demo/src/lib/lib-storage/storage.service';
+} from '@ionic-lib/lib-storage/storage.service';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { DatabaseService } from './database.service';
 import WKT from 'ol/format/WKT';
@@ -32,9 +32,6 @@ export class ObservationEditService {
     doc;
     objectDoc;
     objectType;
-    objectId: string;
-    obsId: string;
-    isNewObject: boolean;
     mediaPath: string;
     showContent: boolean;
     photos: Array<any>;
@@ -72,7 +69,7 @@ export class ObservationEditService {
     // pre init method exists as the init methods are called from other components and services.
     async preInit(sirsDataService: SirsDataService) {
         this.dataProjection = sirsDataService.sirsDoc.epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
         this.showContent = true;
         this.loaded = {};
         this.mediaOptions = {
@@ -89,7 +86,7 @@ export class ObservationEditService {
         this.importPhotoData = null;
     }
 
-    init(objectId: string, obsId: string) {
+    init(doc: any) {
         this.setValuesToDefault();
 
         this.storageService.getItem('AppTronconsFavorities')
@@ -105,12 +102,11 @@ export class ObservationEditService {
         this.objectDoc = this.objectDetails.selectedObject;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
-        this.objectId = objectId;
-        this.obsId = obsId;
-        this.isNewObject = !this.obsId;
 
-        this.doc = this.isNewObject ? this.createNewObservation() : Object.assign({}, this.getTargetObservation());
+
+        this.doc = structuredClone(doc);
         this.photos = this.doc.photos;
+
         this.contact = this.doc.observateurId;
 
         if (this.doc.urgenceId) {
@@ -135,7 +131,7 @@ export class ObservationEditService {
 
     setValuesToDefault() {
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
         this.mediaOptions = {
             id: '',
             chemin: '',
@@ -415,10 +411,11 @@ export class ObservationEditService {
             console.warn(`The deleted picture doesn't exists in the local database`);
         }
 
-        const index = this.photos.findIndex((item) => item.id === photo.id);
+        const index = this.photos.findIndex((item) => item?.id === photo.id);
         if (index !== -1) {
             this.photos.splice(index, 1);
         }
+        this.ref.tick();
     }
 
     warningSizeMessage() {
@@ -449,6 +446,16 @@ export class ObservationEditService {
 
     isReseauEtOuvrageType() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
+
+    async getPrefillObservation(): Promise<boolean> {
+        const lsRes: boolean = await this.storageService.getItem<boolean>('prefillObservations');
+        if (lsRes === undefined) return false;
+        return lsRes;
+    }
+
+    async setPrefillObservation(value: boolean): Promise<void> {
+        return this.storageService.setItem<boolean>('prefillObservations', value);
     }
 
     get positionPrecision(): number {

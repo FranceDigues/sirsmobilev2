@@ -1,19 +1,29 @@
 <div class="full-height" *ngIf="status === 'general'">
   <ion-header translucent>
     <ion-toolbar class="header-slide">
-      <ion-title style="text-align: center;">Objets sélectionnés</ion-title>
+      <ion-title style="text-align: center;">Objets sélectionnés</ion-title>  
     </ion-toolbar>
   </ion-header>
   <ion-content class="scroll-contents">
-    <ion-list *ngIf="featuresCollection.length > 0">
-      <ion-item *ngFor="let feat of featuresCollection" (click)="openDetails(feat)"
+    
+    <ion-item>
+      <ion-label>Filtrer par Type d'objets</ion-label>
+      <ion-select (ionChange)="filterItemsByType($event)">
+        <ion-select-option value="">Aucun</ion-select-option>
+        <ion-select-option *ngFor="let type of types" [value]="type">{{ type}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-searchbar search-icon=“undefined” placeholder="Rechercher par désignation"   animated="true" (ionInput)="filterItems($event)"></ion-searchbar>
+    <ion-searchbar search-icon=“undefined” placeholder="Rechercher par libellé"   animated="true" (ionInput)="filterItemsByLibelle($event)"></ion-searchbar>
+    <ion-list *ngIf="filteredFeaturesCollection.length > 0">
+      <ion-item *ngFor="let feat of filteredFeaturesCollection" (click)="openDetails(feat)"
       [ngClass]="{ 'visited': feat.get('visited') }">
         <div class="layer-title">{{ feat.get('designation') }}</div>
         <div class="layer-categories">{{ feat.get('categories').join('/') || 'Sans catégorie' }}</div>
       </ion-item>
     </ion-list>
-    <ion-list *ngIf="features.length > 0">
-      <ion-item *ngFor="let feat of features" (click)="openDetails(feat)"
+    <ion-list *ngIf="filteredFeatures.length > 0">
+      <ion-item *ngFor="let feat of filteredFeatures" (click)="openDetails(feat)"
       [ngClass]="{ 'visited': feat.get('visited') }">
         <ion-icon slot="start" *ngIf="feat.get('edition')" name="create-outline"></ion-icon>
         <div class="layer-title">{{ feat.get('designation') }}</div>
@@ -22,6 +32,9 @@
         <div *ngIf="!feat.get('subTitle') && feat.get('@class')" class="layer-categories">{{ feat.get('@class').split(".")[4] || 'Sans catégorie' }}</div>
       </ion-item>
     </ion-list>
+    <ion-text color="danger" *ngIf="searchPerformed && (filteredFeaturesCollection.length === 0 && filteredFeatures.length ===0)">
+          <p style="text-align: center; font-weight: bold;">Aucun objet trouvé</p>
+    </ion-text>
   </ion-content>
 </div>
 <div class="full-height" *ngIf="status === 'details'">

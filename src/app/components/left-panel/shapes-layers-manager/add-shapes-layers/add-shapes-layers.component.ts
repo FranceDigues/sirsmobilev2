@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 
@@ -41,6 +41,7 @@ export class AddShapesLayersComponent implements OnInit {
     constructor(
         private shapesLayersManagerService: ShapesLayersManagerService,
         private toastCtrl: ToastController,
+        private loadingCtrl: LoadingController,
         private fileChooser: FileChooser,
         private file: File,
         private filePath: FilePath,
@@ -51,21 +52,28 @@ export class AddShapesLayersComponent implements OnInit {
     ngOnInit() {
     }
 
-    wfsRequest() {
+    async wfsRequest() {
         const typeNameParameter = this.wfsInputs.version === '1.1.0' ? 'typeName=' : 'typeNames=';
-        const url = this.wfsInputs.url + '?'
+        const url = this.wfsInputs.url.trim() + '?'
             + 'request=GetFeature'
             + '&service=WFS'
             + `&version=${this.wfsInputs.version}`
             + '&' + typeNameParameter + `${this.wfsInputs.layerName}`
             + '&outputformat=application/json';
 
+        const loading = await this.loadingCtrl.create({
+            message: 'Téléchargement des données WFS...'
+        });
+        await loading.present();
+
         this.shapesLayersManagerService.wfsRequest(url)
             .then((geojson) => {
+                loading.dismiss();
                 this.shapesLayersManagerService.saveLayer(this.wfsInputs.layerName, 'WFS', url, true, null);
                 this.geoJsonTreatment(this.wfsInputs.layerName, geojson, 'EPSG:4326');
             })
             .catch(async error => {
+                loading.dismiss();
                 const toast = await this.toastCtrl.create({
                     message: 'Erreur lors de la requête WFS.',
                     duration: 5000

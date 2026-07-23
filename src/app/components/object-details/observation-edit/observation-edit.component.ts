@@ -19,6 +19,11 @@ import { formatDate } from '@angular/common';
 import { ObjectDetails } from '../../../services/object-details.service';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
 import { AuthService } from "../../../services/auth.service";
+import { Contact } from "../../../shared/models/contact.model";
+import { Prestation } from 'src/app/shared/models/prestation.model';
+import {AlertController, ModalController} from '@ionic/angular';
+import { EditMediaComponent } from './edit-media/edit-media/edit-media.component';
+import {LocalDatabase} from "../../../services/local-database.service";
 
 enum ObservationEditTabs {
     medias = 'medias',
@@ -55,17 +60,26 @@ export class ObservationEditComponent implements OnInit {
     tabSpecification: SpecificationTabs;
     showTextConfig: string;
     refUrgence;
-    contactList;
+    contactList: {doc: Contact}[];
     refSuiteApporter;
     saving = false; // Status to display a loading overlay if the observation is saving and waiting for a response.
     etatOuvAccGCList;
     manoeuvreOuvrageList;
     defaultObservateurId;
-
+    public prefilled?: boolean;
+    observationEditTabs = ObservationEditTabs;
+    specificationTabs = SpecificationTabs;
+    public editingMedia: boolean = false;
     constructor(private activeRoute: ActivatedRoute, public observationEditService: ObservationEditService,
                 private cdr: ChangeDetectorRef, private databaseService: DatabaseService,
                 private route: Router, private editionService: EditionModeService,
-                private objectDetails: ObjectDetails, public sirsDataService: SirsDataService, private authService: AuthService) {
+                private objectDetails: ObjectDetails, 
+                public sirsDataService: SirsDataService,
+                private authService: AuthService,
+                private alertCtrl: AlertController,
+                private modalCtrl: ModalController,
+                private localDB: LocalDatabase) {
+                    
         this.objectId = this.activeRoute.snapshot.paramMap.get('objectId');
         this.obsId = this.activeRoute.snapshot.paramMap.get('obsId');
         this.isNewObject = !this.obsId;
@@ -75,11 +89,8 @@ export class ObservationEditComponent implements OnInit {
         this.tabSpecification = SpecificationTabs.etatOuvrageId;
         this.objectType = PluginUtils.doc2Class(this.objectDoc);
 
-        // Not optimized at all. Look for a way to init this properly or at the right time.
-        this.observationEditService.init(this.objectId, this.obsId);
-
         this.sirsDataService.getContactList().then((list) => {
-            this.contactList = list;
+            this.contactList = list as {doc: Contact}[];
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
@@ -118,8 +129,54 @@ export class ObservationEditComponent implements OnInit {
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
                 this.defaultObservateurId = config.context.defaultObservateurId;
-                this.observation = this.obsId ? this.getObservationToEdit() : this.createNewObservation();
-                this.observation.author = this.authService.user._id;
+
+                if (this.obsId) {
+                    // if editing observation
+                    this.observation = this.getObservationToEdit();
+                    this.observation.author = this.authService.user._id;
+                    this.observationEditService.init(this.observation);
+                } else {
+                    // if creating observation, depends on if the user choose to prefill the obs with the latest or not
+                    this.observationEditService.getPrefillObservation().then((shouldPrefill: boolean) => {
+                        this.prefilled = shouldPrefill;
+                        if (this.prefilled) {
+                            // if the user choose to prefill, we copy the details from the last observation
+                            const len = this.objectDetails.selectedObject.observations ? this.objectDetails.selectedObject.observations.length : 0;
+
+                            //if no previous observation, we just create a new one
+                            if (len === 0) {
+                                console.debug(`Cannot prefill, there is no previous observation`)
+                                this.observation = this.createNewObservation();
+                            } else {
+                                const srcObs = (this.objectDetails.selectedObject.observations as any[]).sort((obj1: any, obj2: any) => {
+                                    return new Date(obj1?.date).getTime() - new Date(obj2?.date).getTime();
+                                })[len - 1];
+
+                                console.debug(`Prefilling with`, srcObs);
+
+                                this.observation = structuredClone(srcObs);
+                                this.observation.id = UuidUtils.generateUuid();
+                                this.observation.date = formatDate(Date.now(), 'yyyy-MM-dd', 'en-US');
+                                this.observation.photos = [];
+                                this.observation.valid = false;
+                                delete this.observation.designation;
+
+                                // if there is a default observer, set it in the new observation
+                                // otherwise, set it empty as it is likely that the observer changes
+                                if (this.defaultObservateurId !== undefined && this.defaultObservateurId !== null) {
+                                    this.observation.observateurId = this.defaultObservateurId;
+                                } else {
+                                    this.observation.observateurId = '';
+                                }
+                            }
+                        } else {
+                            this.observation = this.createNewObservation();
+                        }
+
+                        this.observationEditService.init(this.observation);
+                        this.observation.author = this.authService.user._id;
+                    });
+                }
             });
     }
 
@@ -178,6 +235,7 @@ export class ObservationEditComponent implements OnInit {
     setView(str: 'form' | 'media') {
         this.view = str;
         this.cdr.detectChanges();
+        
     }
 
     // Todo make enum
@@ -189,10 +247,25 @@ export class ObservationEditComponent implements OnInit {
         this.tabSpecification = tab;
     }
 
-    goToMedia() {
-        this.setView('media');
-    }
+    async goToMedia(){
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent, 
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: null, 
+                index: null 
+            }
+        });
 
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            // this.handleEdit(data.edited);
+            // this.setView(data.view);
+        }
+    }
     goMain() {
         //think about clear photos already taken
         this.route.navigateByUrl('/main');
@@ -202,7 +275,7 @@ export class ObservationEditComponent implements OnInit {
         return this.showTextConfig === str;
     }
 
-    save() {
+    async save() {
         this.saving = true;
         if (this.isNewObject) {
             // Add the new pictures to the new observation
@@ -211,6 +284,29 @@ export class ObservationEditComponent implements OnInit {
             // Add the new observation to observation list.
             if (!this.objectDoc.observations) this.objectDoc.observations = [];
             this.objectDoc.observations.push(this.observation);
+            const config = await this.databaseService.getCurrentDatabaseSettings();
+            this.objectDetails.tempPrestation = config?.context?.defaultPrestationId;
+            if(this.objectDetails.tempPrestation &&
+                (this.objectDoc.prestationIds && !this.objectDoc.prestationIds.includes(this.objectDetails.tempPrestation) ||
+                    !this.objectDoc.prestationIds
+                )
+                ){
+                let prestationClass: string;
+                if(this.isDependance()){
+                    prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+                }else{
+                    prestationClass = 'fr.sirs.core.model.Prestation';
+                }
+                const prestationList:Array<{doc: Prestation, id: string, key: any, value: any}>= await this.getPrestationByLinearId(prestationClass, this.objectDoc.linearId);
+                if(prestationList.some(prestation => prestation.id === this.objectDetails.tempPrestation)){
+                    await this.objectDetails.addPrestation();
+                }
+
+            }
+
+        } else {
+            this.observation.photos = [];
+            this.observation.photos.push(...this.observationEditService.photos);
         }
         this.objectDoc.valid = false;
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
@@ -225,6 +321,44 @@ export class ObservationEditComponent implements OnInit {
         });
     }
 
+    private async getPrestationByLinearId(prestationClass: string, linearId: string): Promise<Array<{doc: Prestation, id: string, key: any, value: any}>> {
+        try {
+            // we retrieve the prestations in the current section (tronçon)
+            const response: { value: any, doc: any }[] = await this.localDB.query('Element/byClassAndLinear', {
+                startkey: [prestationClass, linearId],
+                endkey: [prestationClass, linearId, {}],
+                include_docs: true
+            });
+
+            let prestationMap = {};
+            let allPrestationList = [];
+
+            for (const elt of response) {
+                let prestaFinished = false;
+                if (elt.doc.date_fin !== undefined) {
+                    try {
+                        const dateFin = new Date(elt.doc.date_fin);
+                        const dateNow = new Date();
+                        if (dateFin < dateNow) {
+                            prestaFinished = true;
+                        }
+                    } catch (_) {
+                        prestaFinished = true;
+                        console.info(`Cannot read end date of prestation "${elt.value.id}", assuming it is finished.`);
+                    }
+                }
+
+                elt.value.prestationFinished = prestaFinished;
+                prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                allPrestationList.push(elt.value);
+            }
+            return allPrestationList;
+
+
+        } catch (e) {
+            console.error(e)
+        }
+    }
     parseUrgenceText(urgence) {
         switch (this.showTextConfig) {
             case 'fullName':
@@ -268,8 +402,77 @@ export class ObservationEditComponent implements OnInit {
         }
     }
 
-    private isReseauEtOuvrage() {
+    public isReseauEtOuvrage() {
         return PluginUtils.isReseauOuvrageClass(this.objectType);
+    }
+
+    async removePhoto(photo, index) {
+        const alert = await this.alertCtrl.create({
+            backdropDismiss: false,
+            header: 'Suppression d\'une photo',
+            message: 'Voulez-vous vraiment supprimer cette photo ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    handler: () => {
+                        // this.doc.photos.splice(index, 1);
+                        // this.photos.splice(index, 1);
+
+                        if (this.objectDoc._attachments) {
+                            delete this.objectDoc._attachments[photo.id];
+                        }
+
+                        this.objectDoc.valid = false;
+
+                        this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.editionService.updateObject(this.objectDoc);
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    async openEditMedia(photo,index) {
+        this.editingMedia = true;
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: photo,
+                index: index
+            }
+        });
+
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            this.handleEdit(data.edited, photo, index);
+            //this.updateData(data.view);
+        }
+    }
+    handleEdit(val: boolean, photo:any, index: number){
+        if(val){
+            this.observationEditService.remove(photo)
+            this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+            this.editionService.updateObject(this.objectDoc);
+        }
+    }
+    updateData(){
+        this.cdr.detectChanges();
+        this.observationEditService.photos
+
+
+    }
+    isDependance() {
+        return PluginUtils.isDependanceAhClass(this.objectDoc['@class']);
     }
 }
 
@@ -290,21 +493,23 @@ export class NgInitDirective implements OnInit {
 })
 export class ArraySortPipe2 implements PipeTransform {
 
-    transform(value: any, exponent: any) {
+    transform(value: any) {
         return value ? value.sort(this.sortOn()) : '';
     }
 
     sortOn() {
-        return (a, b) => {
+        return (a: {doc: Contact}, b: {doc: Contact}): number => {
             if (a.doc.nom && b.doc.nom) {
-                if (a.doc.nom.toLowerCase() < b.doc.nom.toLowerCase()) {
+                const aName = a.doc.nom.trim();
+                const bName = b.doc.nom.trim();
+                if (aName.toLowerCase() < bName.toLowerCase()) {
                     return -1;
-                } else if (a.doc.nom.toLowerCase() > b.doc.nom.toLowerCase()) {
+                } else if (aName.toLowerCase() > bName.toLowerCase()) {
                     return 1;
                 } else {
                     return 0;
                 }
-            } else {
+            } else if (a.doc.designation && b.doc.designation) {
                 if (a.doc.designation.toLowerCase() < b.doc.designation.toLowerCase()) {
                     return -1;
                 } else if (a.doc.designation.toLowerCase() > b.doc.designation.toLowerCase()) {
@@ -312,6 +517,29 @@ export class ArraySortPipe2 implements PipeTransform {
                 } else {
                     return 0;
                 }
+            } else {
+                return 0;
+            }
+        };
+    }
+
+    transformPrestation(value: any) {
+        return value ? value.sort(this.sortByDate()) : '';
+    }
+
+    sortByDate(){
+        return (a: {doc: Prestation}, b: {doc: Prestation}): number => {
+            const dateA = a.doc.date_fin ? new Date(a.doc.date_fin) : null;
+            const dateB = b.doc.date_fin ? new Date(b.doc.date_fin) : null;
+    
+            if (!dateA && !dateB) {
+              return 0; 
+            } else if (!dateA) {
+              return -1; 
+            } else if (!dateB) {
+              return 1; 
+            } else {
+              return dateB.getTime() - dateA.getTime(); 
             }
         };
     }

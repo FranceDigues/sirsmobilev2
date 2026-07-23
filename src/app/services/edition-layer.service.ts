@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 import { Injectable } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
@@ -16,12 +15,14 @@ import { MapService } from './map.service';
 import { SirsDataService } from './sirs-data.service';
 import { EditionLayerStyle } from './style.service';
 import { AppTronconsService } from './troncon.service';
+import { Geometry } from "ol/geom";
+import { Memoize, MemoizeExpiring } from "typescript-memoize";
 
 @Injectable({
     providedIn: 'root'
 })
 export class EditionLayerService {
-    editionLayer = null;
+    editionLayer?: VectorLayer<VectorSource<Geometry>> = null;
     favorites = [];
     wktFormat = new WKT();
 
@@ -31,12 +32,11 @@ export class EditionLayerService {
         private editionLayerStyle: EditionLayerStyle,
         private storageService: StorageService,
         private mapService: MapService,
-                private appTronconsService: AppTronconsService) {
+        private appTronconsService: AppTronconsService) {
         this.appTronconsService.updated
             .subscribe({
                 next: () => {
                     if (this.editionLayer.getVisible()) {
-                        console.log(this.editionLayer);
                         this.redrawEditionLayerAfterSynchronization();
                     }
                 }
@@ -51,8 +51,9 @@ export class EditionLayerService {
     }
 
     /** Call setEditionLayerFeatures after */
-    createEditionLayerInstance() {
+    createEditionLayerInstance(): VectorLayer<VectorSource<Geometry>> {
         return new VectorLayer({
+            // @ts-ignore
             name: 'Edition',
             model: { selectable: true },
             zIndex: 1000,
@@ -66,72 +67,105 @@ export class EditionLayerService {
     }
 
     /*
-    * Possibility to improve performances by update objectsModeEdition5 view by including selection by linearId
-    * for classic element and another without for dependance/ah objects.
-    */
-    setEditionLayerFeatures(olLayer, favorites?: any[]) {
+     * Possibility to improve performances by update objectsModeEdition5 view by including selection by linearId
+     * for classic element and another without for dependance/ah objects.
+     */
+    public async setEditionLayerFeatures(olLayer: VectorLayer<VectorSource<Geometry>>, favorites?: any[]): Promise<any> {
         const olSource = olLayer.getSource();
         olSource.clear();
 
-        return new Promise(async (resolve) => {
-            let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
-
-            // Filter edited objects by the favorites selection of troncon
-            const tronconFavorites: any = await this.storageService.getItem('AppTronconsFavorities');
-            const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
-            editedObjects = editedObjects.filter(eo => {
-                // TronconDigue cases
-                if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
-                    return tronconIds.indexOf(eo.id) > -1;
-                    // All objects that have linearId attribute case
-                } else if (eo.value.linearId) {
-                    return  tronconIds.indexOf(eo.value.linearId) > -1;
-                    // All other cases namely dependance/AH
-                } else {
-                    return true;
-                }
-            });
-
-            // Photo treatment
-            const editModePhotos = [];
-            function extractPhotos() {
-                editedObjects.forEach(obj => {
-                    if ("fr.sirs.core.model.TronconDigue" === obj.value['@class'] && obj.value.photos) {
-                        const trId = obj.id;
-                        obj.value.photos.forEach(p => {
-                            if (!p.valid) {
-                                p.parent = trId;
-                                editModePhotos.push(p);
-                            }
-                        });
-                    }
-                });
+        let editedObjects = await this.localDB.query('objetsModeEdition8/objetsModeEdition8', { include_docs: false });
+        // Filter edited objects by the favorites selection of troncon
+        const tronconFavorites: any[] | null = await this.storageService.getItem('AppTronconsFavorities');
+        const tronconIds = tronconFavorites === null ? [] : tronconFavorites.map(t => t.id);
+        editedObjects = editedObjects.filter(eo => {
+            // TronconDigue cases
+            if ('fr.sirs.core.model.TronconDigue' === eo.value['@class']) {
+                return tronconIds.indexOf(eo.id) > -1;
+                // All objects that have linearId attribute case
+            } else if (eo.value.linearId) {
+                return  tronconIds.indexOf(eo.value.linearId) > -1;
+                // All other cases namely dependance/AH
+            } else {
+                return true;
             }
+        });
 
-            if (favorites && favorites.length > 0) {
-                const visibleFeatures = [];
+        // Photo treatment
+        const editModePhotos = [];
+        const extractPhotos = () => {
 
-                for (const favorite of favorites) {
-                    if (favorite.visible) {
-                        if (favorite.title === 'Photos des tronçons') { //photo treatment
-                            extractPhotos();
-                        } else {
-                            for (const obj of editedObjects) {
-                                if (favorite.filterValue === obj.value['@class']) {
+            for (const obj of editedObjects) {
+                if ("fr.sirs.core.model.TronconDigue" === obj.value['@class'] && obj.value.photos) {
+                    const trId = obj.id;
+                    obj.value.photos.forEach(p => {
+                        if (!p.valid) {
+                            p.parent = trId;
+                            p.geometry = obj.value.geometry;
+                            editModePhotos.push(p);
+                        }
+                    });
+                }
+            }
+        }
+
+        if (favorites && favorites.length > 0) {
+            const visibleFeatures = [];
+
+            for (const favorite of favorites) {
+
+                if (favorite.visible) {
+                    if (favorite.title === 'Photos des tronçons') { //photo treatment
+                        extractPhotos();
+                    } else {
+                        for (const obj of editedObjects) {
+                            if (favorite.filterValue === obj.value['@class']) {
+                                /* Checking the layer of the vegetation elements since the filter is not enough on them */
+                                if (PluginUtils.isVegetationClass(obj.value['@class'])) {
+                                    const refs: any[] = await this.getVegetationRefs(obj.value['@class']);
+                                    const refIdx: number = refs.findIndex((ref) => ref._id === obj.value['typeVegetationId']);
+                                    if (refIdx === -1) {
+                                        console.error('Cannot find ref of vegetation', obj);
+                                        continue;
+                                    }
+                                    const layerName = refs[refIdx].libelle;
+                                    if (favorite.title === layerName) {
+                                        visibleFeatures.push(obj);
+                                    }
+                                } else {
                                     visibleFeatures.push(obj);
                                 }
                             }
                         }
                     }
                 }
-                olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
-            } else {
-                extractPhotos();
-                olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
             }
-            olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
-            resolve();
+            olSource.addFeatures(this.createEditionFeatureInstances(visibleFeatures));
+        } else {
+            extractPhotos();
+            olSource.addFeatures(this.createEditionFeatureInstances(editedObjects));
+        }
+
+        olSource.addFeatures(editModePhotos.map(p => this.createEditionFeatureInstancesFromPhoto(p))); //photo treatment
+
+    }
+
+    @MemoizeExpiring(30000)
+    private async getVegetationRefs(refName: string): Promise<any[]> {
+        const classNameLastSegment = this.getLastClassSegment(refName);
+        const refs = await this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.RefType' + classNameLastSegment],
+            endkey: ['fr.sirs.core.model.RefType' + classNameLastSegment, {}],
+            include_docs: true
         });
+
+        return refs.map(elem => elem.doc);
+    }
+
+    @Memoize()
+    private getLastClassSegment(className: string): string {
+        const segments: string[] = className.split('.');
+        return segments[segments.length - 1];
     }
 
     createEditionFeatureInstances(featureDocs) {
@@ -166,9 +200,13 @@ export class EditionLayerService {
         } else if (photoDoc.approximatePositionDebut) {
             geometry = this.wktFormat.readGeometry(photoDoc.approximatePositionDebut, { dataProjection, featureProjection: 'EPSG:3857' });
         } else {
-            return null;
+            let geom = photoDoc.geometry.split(",")[0].split("(")[1];
+            const pt =  "POINT ("  + geom + ")";
+            geometry = this.wktFormat.readGeometry(pt, { dataProjection, featureProjection: 'EPSG:3857' });
+
         }
-        return this.createFeatureFromPhoto(photoDoc, geometry);
+        const res = this.createFeatureFromPhoto(photoDoc, geometry)
+        return res;
     }
 
     createFeatureFromPhoto(photoDoc, geometry) {
@@ -211,6 +249,7 @@ export class EditionLayerService {
                                 dataProjection,
                                 featureProjection: 'EPSG:3857'
                             }
+                            // @ts-ignore
                         ).getFirstCoordinate()
                     ]);
                 }
@@ -231,6 +270,11 @@ export class EditionLayerService {
         feature.set('designation', featureDoc.designation);
         feature.set('@class', featureDoc['@class']);
         feature.set('edition', true);
+
+        if (PluginUtils.isVegetationClass(featureDoc['@class'])) {
+            feature.set('typeVegetationId', featureDoc['typeVegetationId']);
+        }
+
         return feature;
     }
 

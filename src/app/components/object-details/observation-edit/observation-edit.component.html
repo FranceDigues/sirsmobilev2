@@ -9,42 +9,50 @@
                         <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
                             fxLayoutAlign="center center">
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'medias'}" (click)="setTab('medias')">Medias</span>
+                                [ngClass]="{active: tab === 'medias'}" (click)="setTab(observationEditTabs.medias)">Medias</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'evolution'}" (click)="setTab('evolution')">Évolution</span>
+                                [ngClass]="{active: tab === 'evolution'}" (click)="setTab(observationEditTabs.evolution)">Évolution</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'urgence'}" (click)="setTab('urgence')">Urgence</span>
+                                [ngClass]="{active: tab === 'urgence'}" (click)="setTab(observationEditTabs.urgence)">Urgence</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'nombre'}" (click)="setTab('nombre')">Nombre</span>
+                                [ngClass]="{active: tab === 'nombre'}" (click)="setTab(observationEditTabs.nombre)">Nombre</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tab === 'observateur'}"
-                                (click)="setTab('observateur')">Observateur</span>
+                                (click)="setTab(observationEditTabs.observateur)">Observateur</span>
                             <span fxFlex="33" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab('suiteApporter')">Suite à
+                                [ngClass]="{active: tab === 'suiteApporter'}" (click)="setTab(observationEditTabs.suiteApporter)">Suite à
                                 apporter</span>
                             <span fxFlex="70" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tab === 'suite'}" (click)="setTab('suite')">Suite à apporter
+                                [ngClass]="{active: tab === 'suite'}" (click)="setTab(observationEditTabs.suite)">Suite à apporter
                                 (complément)</span>
                         </div>
                         <div class="medias" *ngSwitchCase="'medias'">
                             <div class="pics row" fxLayout="row" *ngIf="observationEditService.showContent">
 
                                 <mat-grid-list cols="4" rowHeight="110px" fxFlexFill *ngIf="sirsDataService.mediaPath">
-                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos" (ngInit)="observationEditService.loadImage(photo)">
-                                        <div class="progress" *ngIf="!observationEditService.loaded[photo.id]">
+                                    <mat-grid-tile *ngFor="let photo of observationEditService.photos; let index = index" (ngInit)="observationEditService.loadImage(photo)">
+
+                                        <div class="progress" *ngIf="photo && !observationEditService.loaded[photo?.id]">
                                             <div class="indeterminate"></div>
                                         </div>
-                                        <div *ngIf="observationEditService.loaded[photo.id]" class="pic-item">
+                                        <div *ngIf="photo && observationEditService.loaded[photo.id]" class="pic-item">
                                             <img alt="Photo non disponible" (click)="observationEditService.open(photo)"
                                                  [src]="observationEditService.getPhotoPath(photo)" />
                                             <ion-icon name="close" (click)="observationEditService.remove(photo)"></ion-icon>
                                         </div>
+
+                                        <button type="button" style="margin-left: 15px;margin-top: 5px;" class="btn-floating btn-small waves-effect waves-light pink" *ngIf="photo"
+                                                (click)="openEditMedia(photo, index);$event.stopPropagation()">
+                                            <ion-icon name="create-outline"></ion-icon>
+                                        </button>
+
                                     </mat-grid-tile>
                                 </mat-grid-list>
                             </div>
+                            
                             <div class="text-center">
                                 <button type="button" class="btn btn-large waves-effect waves-teal"
-                                    (click)="goToMedia()">
+                                (click)="goToMedia()">
                                     <ion-icon name="images-outline"></ion-icon>
                                     Ajouter un media
                                 </button>
@@ -83,7 +91,7 @@
                                 <select name="contactList" class="browser-default"
                                     *ngIf="contactList && contactList.length > 0"
                                     [(ngModel)]="observation.observateurId">
-                                    <option *ngFor="let observateur of contactList | sortByDocNom"
+                                    <option *ngFor="let observateur of (contactList | sortByDocNom)"
                                         [value]="observateur.id"
                                         [selected]="observateur.id === observation.observateurId">
                                         {{ parseContactName(observateur) }}
@@ -128,18 +136,18 @@
                         <div style="width: 100%; background-color: #f8f8f8;border-radius: 3px;" fxLayout="row wrap"
                             fxLayoutAlign="center center">
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
-                                [ngClass]="{active: tabSpecification === 'etatOuvrageId'}" (click)="setTabSpecification('etatOuvrageId')">Etat de
+                                [ngClass]="{active: tabSpecification === 'etatOuvrageId'}" (click)="setTabSpecification(specificationTabs.etatOuvrageId)">Etat de
                                 l'ouvrage</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'etatAccessoireId'}"
-                                (click)="setTabSpecification('etatAccessoireId')">Etat
+                                (click)="setTabSpecification(specificationTabs.etatAccessoireId)">Etat
                                 des accessoires</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'etatGenieCivilId'}"
-                                (click)="setTabSpecification('etatGenieCivilId')">Etat du génie civil</span>
+                                (click)="setTabSpecification(specificationTabs.etatGenieCivilId)">Etat du génie civil</span>
                             <span fxFlex="50" class="sirs-tab waves-effect waves-teal"
                                 [ngClass]="{active: tabSpecification === 'manoeuvreOuvrageId'}"
-                                (click)="setTabSpecification('manoeuvreOuvrageId')">Manoeuvre de l'ouvrage</span>
+                                (click)="setTabSpecification(specificationTabs.manoeuvreOuvrageId)">Manoeuvre de l'ouvrage</span>
                         </div>
                         <div *ngSwitchCase="'etatOuvrageId'">
                             <div class="sirs-field">
@@ -152,10 +160,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat d'ouvrage trouvé</span>
                                 </div>
@@ -175,10 +180,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat d'accessoire trouvé</span>
                                 </div>
@@ -199,10 +201,7 @@
                                         {{ etat.libelle ? etat.libelle : 'libelle undefined / id: ' + etat.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingEtatOuvAccGCList" fxLayout="column" fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingEtatOuvAccGCList && etatOuvAccGCList.length == 0" fxLayout="column"
+                                <div *ngIf="etatOuvAccGCList.length == 0" fxLayout="column"
                                     fxLayoutAlign="center center">
                                     <span>Aucun Etat de génie civil trouvé</span>
                                 </div>
@@ -224,11 +223,7 @@
                                         {{ manoeuvreOuvrage.libelle ? manoeuvreOuvrage.libelle : 'libelle undefined / id: ' + manoeuvreOuvrage.id }}
                                     </option>
                                 </select>
-                                <div *ngIf="pendingManoeuvreOuvrageList" fxLayout="column"
-                                    fxLayoutAlign="center center">
-                                    <ion-spinner name="crescent"></ion-spinner>
-                                </div>
-                                <div *ngIf="!pendingManoeuvreOuvrageList && manoeuvreOuvrageList.length == 0"
+                                <div *ngIf="manoeuvreOuvrageList.length == 0"
                                     fxLayout="column" fxLayoutAlign="center center">
                                     <span>Aucune Manoeuvre de l'ouvrage trouvé</span>
                                 </div>
@@ -252,9 +247,7 @@
                 </form>
             </ion-content>
         </div>
-        <div class="full-height full-width" *ngSwitchCase="'media'">
-            <observation-media class="observation-form" (viewChange)="setView($event)"></observation-media>
-        </div>
+
     </div>
 </div>
 

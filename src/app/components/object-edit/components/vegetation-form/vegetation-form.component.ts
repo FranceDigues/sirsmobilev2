@@ -10,8 +10,7 @@ export class VegetationFormComponent implements OnInit {
     @Output() drawPolygonEvent = new EventEmitter<string>();
     @Output() selectPosEvent = new EventEmitter<string>();
 
-    constructor(public EOS: EditObjectService) {
-    }
+    constructor(public EOS: EditObjectService) {}
 
     ngOnInit() {
         if (this.EOS.objectType === 'PeuplementVegetation') {
@@ -31,14 +30,13 @@ export class VegetationFormComponent implements OnInit {
                 this.EOS.objectDoc.especeId = find.id;
             }
         }
-        // else if (this.EOS.objectType === 'HerbaceeVegetation') {}
     }
 
-    drawPolygon() {
+    public drawPolygon(): void {
         this.drawPolygonEvent.emit('draw');
     }
 
-    selectPos() {
+    public selectPos(): void {
         this.selectPosEvent.emit('selectPos');
 
     }

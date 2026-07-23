@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 //import android.database.Cursor;
 import android.content.IntentFilter;
+import androidx.core.content.ContextCompat;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -219,11 +220,13 @@ public class CacheMapPlugin extends CordovaPlugin {
 
     public void registerDr(){
         dr = new DownloadReceiver();
-        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        this.cordova.getActivity().registerReceiver(dr, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), ContextCompat.RECEIVER_EXPORTED);
     }
+
     public void unRegisterDr(){
         this.cordova.getActivity().unregisterReceiver(dr);
     }
+
 
 
 

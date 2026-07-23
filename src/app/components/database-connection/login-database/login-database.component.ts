@@ -4,6 +4,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { DatabaseService } from '../../../services/database.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
+import {clear as clearMemoize} from "typescript-memoize";
+import {StorageService} from "@ionic-lib/lib-storage/storage.service";
+import {AppTronconsService, SystemeEndiguement} from "../../../services/troncon.service";
 
 @Component({
   selector: 'app-login-database',
@@ -26,7 +29,10 @@ export class LoginDatabaseComponent implements OnInit {
               private router: Router,
               private sirsDataService: SirsDataService,
               private dbService: DatabaseService,
-              private loadingCtrl: LoadingController) { }
+              private loadingCtrl: LoadingController,
+              private storageService: StorageService,
+              private appTronconsService: AppTronconsService,
+              private SE:SystemeEndiguement) { }
 
   ngOnInit() {}
 
@@ -39,10 +45,34 @@ export class LoginDatabaseComponent implements OnInit {
     .then(
       async () => {
         const database = await this.dbService.getDatabaseSettings();
-        if (database && database[0].replicated) {
+        const realActiveBase = this.dbService.activeDB;
+        for (const db of database) {
+          if (db.context && db.context.authUser) {
+            db.context.authUser = null;
+            this.dbService.activeDB = db;
+            this.dbService.removeDB$.next("DB changed");
+            await this.dbService.setCurrentDatabaseSettings(db);
+          }
+        };
+        this.dbService.activeDB = realActiveBase;
+        if (this.dbService.activeDB.replicated) {
+          this.storageService.getItem('AppTronconsFavorities')
+              .then( (res: Array<any>) => {
+                if (res !== null) {
+                  console.log("troncons choisies:: ", res)
+                }
+              });
+
+          this.appTronconsService.favorites = [];
+          this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+              .then(() => {
+                console.log("Favorites cleaned and storage updated");
+              });
+          clearMemoize(['isTronconActive']);
           const loading = await this.loadingCtrl.create({
             message: 'Déploiement en cours ...'
           });
+          await this.SE.reloadSE();
           await loading.present();
           await this.sirsDataService.loadDataFromDB();
           this.authService.user = this.dbService.activeDB.context.authUser;

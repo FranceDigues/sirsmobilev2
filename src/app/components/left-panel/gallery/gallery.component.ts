@@ -39,7 +39,9 @@ export class GalleryComponent implements OnInit {
     }
 
     initDirectory() {
-        this.file.listDir(this.file.dataDirectory, this.activeTab)
+        const pathToLoad = this.activeTab === 'documents' ? this.file.dataDirectory : this.file.externalDataDirectory;
+
+        this.file.listDir(pathToLoad, this.activeTab)
             .then((fileEntries) => {
                 const files = [];
                 fileEntries.forEach((entry) => {
@@ -58,7 +60,7 @@ export class GalleryComponent implements OnInit {
     }
 
     getPhotoPath() {
-        return this.selected ? this.webview.convertFileSrc(`${this.file.dataDirectory}medias/${this.selected.label}`) : '';
+        return this.selected ? this.webview.convertFileSrc(`${this.file.externalDataDirectory}medias/${this.selected.label}`) : '';
     }
 
     open() {

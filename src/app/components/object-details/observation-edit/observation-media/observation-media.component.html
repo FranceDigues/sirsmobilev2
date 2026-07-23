@@ -1,3 +1,4 @@
+
 <div class="full-height" *ngIf="view === 'media'">
   <ion-content>
     <div class="sirs-card">
@@ -20,17 +21,33 @@
             </ion-button>
           </div>
         </div>
-        <div class="pics " *ngIf="OES.mediaOptions.id !== ''">
-          <div class="pic col col-25">
-            <div class="pic-quicklook">
+
+        <div *ngIf="photoToEdit && !(OES.mediaOptions && OES.mediaOptions.id !== '')"  class="pics ">
+          <ng-container *ngIf="OES.loaded[photoToEdit.id]">
+            <img (click)="OES.open(photoToEdit)" alt="Photo non disponible sur le mobile" style="height: 100px; width: 100px;"  [src]="OES.getPhotoPath(photoToEdit, true)" />
+            <button style="margin-left: 15px;margin-top: 5px;" type="button" class="btn-floating btn-small waves-effect waves-light pink"
+              (click)="removePhoto(photoToEdit, index);$event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+
+          </ng-container>
+        </div>
+
+        <div style="display: flex; align-items: center;" *ngIf="OES.mediaOptions && OES.mediaOptions.id !== ''">
+          <ng-container >
               <ion-img style="height: 100px; width: 100px;" [src]="OES.importPhotoData"></ion-img>
-            </div>
-          </div>
+              <button style="margin-left: 15px;margin-top: 5px;" type="button" class="btn-floating btn-small waves-effect waves-light pink"
+              (click)="removePhoto2(OES.importPhotoData);$event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </ng-container>
+          
+          
         </div>
         <div>
           <label>Depuis un appareil externe</label>
           <div class="center">
-            <input [(ngModel)]="OES.mediaOptions.designation" placeholder="Numéro de photo" />
+            <input *ngIf="OES.mediaOptions" [(ngModel)]="OES.mediaOptions.designation" placeholder="Numéro de photo" />
           </div>
         </div>
         <div>
@@ -53,11 +70,11 @@
               </span>
             </a>
           </div>
-          <div *ngIf="OES.mediaOptions.positionDebut" class="sirs-field-inline">
+          <div *ngIf="OES.mediaOptions && OES.mediaOptions.positionDebut" class="sirs-field-inline">
             <span class="sirs-field-title">&nbsp;&nbsp;Position&nbsp; : &nbsp;</span>
             <span class="sirs-field-value">{{ OES.mediaOptions.positionDebut }}{{OES.positionPrecision !== undefined ? ', +/- ' + OES.positionPrecision + ' m' : ''}}</span>
           </div>
-          <div *ngIf="OES.mediaOptions.borneDebutId" class="sirs-field-inline">
+          <div *ngIf="OES.mediaOptions && OES.mediaOptions.borneDebutId" class="sirs-field-inline">
             <span class="sirs-field-value">&nbsp;&nbsp;Position via borne</span>
             <span class="sirs-field-value">{{ OES.mediaOptions.borneDebutId ? 'à ' +
               OES.mediaOptions.borne_debut_distance + ' m de la borne ' +
@@ -72,7 +89,7 @@
             <label>Orientations :</label>
             <div>
               <div *ngIf="showText('fullName')">
-                <select class="browser-default" [(ngModel)]="OES.mediaOptions.orientationPhoto">
+                <select class="browser-default" *ngIf="OES.mediaOptions" [(ngModel)]="OES.mediaOptions.orientationPhoto">
                   <option *ngFor="let v of refOrientationPhoto" [value]="v.id"
                     [selected]="OES.mediaOptions.orientationPhoto === v.id">
                     {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
@@ -103,7 +120,7 @@
             <label>Cotes :</label>
             <div>
               <div *ngIf="showText('fullName')">
-                <select class="browser-default" [(ngModel)]="OES.mediaOptions.coteId">
+                <select class="browser-default" *ngIf="OES.mediaOptions" [(ngModel)]="OES.mediaOptions.coteId">
                   <option *ngFor="let v of refCote" [value]="v.id" [selected]="OES.mediaOptions.coteId === v.id">
                     {{ v.value.libelle ? v.value.libelle : 'abrégé indéfini / id: ' + v.id }}
                   </option>
@@ -130,7 +147,7 @@
 
         <!-- USER COMMENT -->
         <div>
-          <input type="text" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
+          <input type="text" *ngIf="OES.mediaOptions" [(ngModel)]="OES.mediaOptions.commentaire" placeholder="Commentaire">
         </div>
 
         <!-- PHOTOGRAPHER'S NAME -->
@@ -171,7 +188,7 @@
 
 <!-- CONDITIONNAL OPEN -->
 <div class="full-height" *ngIf="view === 'map'">
-  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event)"
+  <map-point class="full-height" (slidePathChange)="setView('media')" (successData)="OES.handlePos($event, 0)"
     notNeedEOS=true></map-point>
 </div>
 <div class="full-height" *ngIf="view === 'note'">

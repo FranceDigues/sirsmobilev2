@@ -4,7 +4,7 @@ import { EditObjectService } from '../../../services/edit-object.service';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
 import { DirectoryEntry, Entry, File, FileEntry, Metadata } from '@ionic-native/file/ngx';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
-import { Camera } from '@ionic-native/camera/ngx';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 import { UuidUtils } from '../../../utils/uuid-utils';
 import { ModalController, ToastController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
@@ -65,7 +65,7 @@ export class MediaFormComponent implements OnInit {
             photographeId: '',
             author: this.authService.getValue()._id
         };
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
     }
 
     back() {

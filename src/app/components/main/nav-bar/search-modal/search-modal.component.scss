@@ -1,0 +1,39 @@
+.modal-css {
+    height: 20%;
+    top: 80%;
+    position: absolute;
+    display: block;
+  }
+.main-div{
+  height: 100%;
+  width: 100%;
+}
+:host {
+  .square-container {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    margin-top: 10px;
+    
+  }
+  .scroll-contents{
+    height: calc(100% - 60px);
+  }
+  .layer-categories {
+    font-size: 12px;
+    color: #AAAAAA;
+  }
+
+  .layer-title {
+      font-weight: 400;
+      line-height: 1;
+  }
+
+}
+
+::ng-deep .sc-ion-alert-md-h {
+  --min-width: 500px !important;
+}
+::ng-deep .alert-wrapper.sc-ion-alert-md {
+  width: 100% !important;
+}

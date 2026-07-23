@@ -2,6 +2,18 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DatabaseService } from '../../../services/database.service';
 import { DatabaseModel } from '../../database-connection/models/database.model';
 import { SirsDataService } from "../../../services/sirs-data.service";
+import { Contact } from "../../../shared/models/contact.model";
+import { Prestation } from "../../../shared/models/prestation.model";
+import { ArraySortPipe2 } from "../../object-details/observation-edit/observation-edit.component";
+import {clear as clearMemoize, Memoize} from "typescript-memoize";
+import { ObservationEditService } from "../../../services/observation-edit.service";
+import { ObjectDetails } from "../../../services/object-details.service";
+import { PrestationsGenericComponent } from '../../object-details/detailscontent/prestations/prestations.component';
+import { GetByIdPipe } from 'src/app/pipe/get-by-id/get-by-id.pipe';
+import { MapService } from 'src/app/services/map.service';
+import { EditObjectService } from 'src/app/services/edit-object.service';
+
+
 
 @Component({
     selector: 'app-settings',
@@ -10,34 +22,108 @@ import { SirsDataService } from "../../../services/sirs-data.service";
 })
 export class AppSettingsComponent implements OnInit {
     @Output() readonly slidePathChange = new EventEmitter<string>();
-    public showTextConfig;
-    public defaultObservateurId;
-    public contactList;
-
-    get touchSensitivity() {
-        return +localStorage.getItem('touchSensitivity') || 200;
-    }
-
-    set touchSensitivity(value: number) {
-        localStorage.setItem('touchSensitivity', value.toString());
-    }
+    public showTextConfig?: string;
+    public defaultObservateurId?: string;
+    public defaultPrestationId?: string;
+    public contactList?: {doc: Contact, id: string, key: any, value: any}[];
+    public prestationList: Array<{doc: Prestation, id: string, key: any, value: any}>= [];
+    private _prefillObservations?: boolean;
+    private _showBorneDistance?: boolean;
 
     constructor(private databaseService: DatabaseService,
-                public sirsDataService: SirsDataService) {
-    }
+                private sirsDataService: SirsDataService,
+                private observationEditService: ObservationEditService,
+                private detailService: ObjectDetails,
+                public detailsObject: ObjectDetails,
+                private getByIdPipe: GetByIdPipe,
+                private mapService: MapService,
+                private sortByDocNomPipe: ArraySortPipe2,
+                private EOS : EditObjectService
+            ) {                
+    }       
 
-    ngOnInit() {
+    async ngOnInit() {
         this.databaseService.getCurrentDatabaseSettings()
             .then((config: DatabaseModel) => {
                 this.showTextConfig = config.context.showText;
                 this.defaultObservateurId = config.context.defaultObservateurId;
+                this.defaultPrestationId =  config.context.defaultPrestationId;
             });
 
-        this.sirsDataService.getContactList().then((list) => {
-            this.contactList = list;
+        this.sirsDataService.getContactList().then((list: {doc: Contact, id: string, key: any, value: any}[]) => {
+            this.contactList = this.sortByDocNomPipe.transform(list);
         }, (error) => {
             console.error('error contactList returned : ', error);
         });
+
+        this.observationEditService.getPrefillObservation().then(prefill => this._prefillObservations = prefill);
+        this.detailService.getShowBorneRelativePosition().then(show => this._showBorneDistance = show);
+        var tempPrestationList: Array<{doc: Prestation, id: string, key: any, value: any}>= [];
+        this.sirsDataService.getPrestationList().then(async (list: {doc: Prestation, id: string, key: any, value: any}[]) => {
+            if (this.mapService.archiveObjectsFlag) {
+                tempPrestationList = this.sortByDocNomPipe.transformPrestation(list);
+            } else {
+                const now = new Date();
+                tempPrestationList = this.sortByDocNomPipe.transformPrestation(list.filter(p => {
+                    if (!p.doc.date_fin) return true;
+                    try {
+                        return new Date(p.doc.date_fin) >= now;
+                    } catch (_) {
+                        return false;
+                    }
+                }));
+            }
+            //this.prestationList = this.prestationList.filter(item => item.doc.valid === true);
+            await this.EOS.initTronconList()
+            const idsTroncon = this.EOS.troncons.map(item => item.id);
+            const favoriteLit = await this.favoriteTronconList();
+            const filteredIdTroncon = idsTroncon.filter(
+                id => !favoriteLit.some(fav => fav === id)
+            );
+            const resultatFiltre = tempPrestationList.filter(item => filteredIdTroncon.includes(item.doc.linearId));
+            this.prestationList  = resultatFiltre;
+        }, (error) => {
+            console.error('error contactList returned : ', error);
+        });
+
+
+    }
+
+    async favoriteTronconList() {
+           try {
+               let resTronconLit = [];
+                const result = await this.EOS.getTronconLit();
+
+                const tronconsLit = result.map(row => row.doc);
+                const favoriteTroncon = this.EOS.troncons;
+                tronconsLit.forEach(troncon => {
+                       const exists = favoriteTroncon.some(fav => fav.id === troncon._id);
+                        if (exists) {
+                               resTronconLit.push(troncon._id)
+                            }
+
+                     });
+               return resTronconLit;
+           } catch (error) {
+                   console.error('Error loading troncons:', error);
+           }
+    }
+    public get prefillObservations(): boolean | undefined {
+        return this._prefillObservations;
+    }
+
+    public set prefillObservations(value: boolean) {
+        this._prefillObservations = value;
+        this.observationEditService.setPrefillObservation(value).then();
+    }
+
+    public get showBorneDistance(): boolean | undefined {
+        return this._showBorneDistance;
+    }
+
+    public set showBorneDistance(value: boolean) {
+        this._showBorneDistance = value;
+        this.detailService.setShowBorneRelativePosition(value).then();
     }
 
     goBack() {
@@ -53,6 +139,10 @@ export class AppSettingsComponent implements OnInit {
             .changeDefaultObservateurId(this.defaultObservateurId);
     }
 
+    changeDefaultPrestationId(){
+        this.databaseService.changeDefaultPrestationId(this.defaultPrestationId);
+    }
+    @Memoize()
     parseContactName(observateur) {
         return observateur.doc.nom ? `${observateur.doc.nom} ${observateur.doc.prenom ? observateur.doc.prenom : ''}` : observateur.doc.designation;
     }

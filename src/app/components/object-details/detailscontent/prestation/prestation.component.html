@@ -20,31 +20,43 @@
               <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.date_fin || 'Non définie'"></span>
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Position Id</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionId || 'Non définie'"></span>
+              <span class="sirs-field-title">Position</span>
+<!--              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.positionId || 'Non définie'"></span>-->
+              <ng-container *ngIf="(detailsObject.selectedObject.positionId | getById | async) as position">
+                  <span class="sirs-field-value" [textContent]="position.libelle || position.designation || 'Non définie'"></span>
+              </ng-container>
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Source Id</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.sourceId || 'Non définie'"></span>
+              <span class="sirs-field-title">Source</span>
+<!--              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.sourceId || 'Non définie'"></span>-->
+              <ng-container *ngIf="(detailsObject.selectedObject.sourceId | getById | async) as source">
+                  <span class="sirs-field-value" [textContent]="source.libelle || source.designation || 'Non définie'"></span>
+              </ng-container>
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Tronçon Id</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.linearId || 'Non définie'"></span>
+              <span class="sirs-field-title">Tronçon</span>
+              <ng-container *ngIf="(detailsObject.selectedObject.linearId | getById | async) as troncon">
+                  <span class="sirs-field-value" [textContent]="troncon.libelle || troncon.designation || 'Non définie'"></span>
+              </ng-container>
+<!--              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.linearId || 'Non définie'"></span>-->
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Type de Prestation Id</span>
-              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.typePrestationId || 'Non définie'"></span>
+              <span class="sirs-field-title">Type de Prestation</span>
+              <ng-container *ngIf="(detailsObject.selectedObject.typePrestationId | getById | async) as type">
+                  <span class="sirs-field-value" [textContent]="type.libelle || type.designation || 'Non définie'"></span>
+              </ng-container>
+<!--              <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.typePrestationId || 'Non définie'"></span>-->
           </div>
           <div class="sirs-field">
               <span class="sirs-field-title">Commentaire</span>
               <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.commentaire || 'Non définie'"></span>
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Coût Globale</span>
+              <span class="sirs-field-title">Coût Global</span>
               <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutGlobal || 'Non définie'"></span>
           </div>
           <div class="sirs-field">
-              <span class="sirs-field-title">Coût Metre</span>
+              <span class="sirs-field-title">Coût Mètre</span>
               <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coutMetre || 'Non définie'"></span>
           </div>
           <div class="sirs-field">

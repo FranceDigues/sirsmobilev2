@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.geomatys.sirsMobileV2" version="2.0.15" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.geomatys.sirsMobileV2" version="2.0.45" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>SIRS Mobile</name>
     <description>SIRS Mobile Application</description>
     <author email="contact@geomatys.com" href="https://geomatys.com/">Geomatys</author>
@@ -22,11 +22,12 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="android-targetSdkVersion" value="33" />
+    <preference name="android-compileSdkVersion" value="36" />
+    <preference name="android-targetSdkVersion" value="36" />
     <preference name="android-minSdkVersion" value="24" />
     <platform name="android">
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
-            <application android:usesCleartextTraffic="true" />
+            <application android:largeHeap="true" android:usesCleartextTraffic="true" />
         </edit-config>
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/uses-permission">
             <uses-permission android:name="android.permission.INTERNET" />
@@ -50,10 +51,8 @@
             <uses-permission android:maxSdkVersion="32" android:name="android.permission.CAMERA" />
         </config-file>
     </platform>
+    <hook src="hooks/patch-plugin-manager.js" type="after_prepare" />
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
-    <plugin name="cordova-plugin-device" spec="2.0.2" />
-    <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <plugin name="cordova-plugin-nativestorage" spec="^2.3.2" />
     <plugin name="cordova-plugin-insomnia" />
 </widget>

@@ -56,32 +56,74 @@ import { Diagnostic } from "@ionic-native/diagnostic/ngx";
 import { PermissionsService } from "./services/permissions.service";
 
 @NgModule({
-    declarations: [AppComponent],
-    entryComponents: [],
-    imports: [
-        BrowserModule, MatIconModule,
-        IonicModule.forRoot(), IonicStorageModule.forRoot(),
-        AppRoutingModule, BrowserAnimationsModule, HttpClientModule,
-        DatabaseConnectionPageModule, LibCameraModule,
-        NgbCollapseModule, FlexLayoutModule, DirectiveModule,
-        ObjectEditModule, DocToStringPipeModule, FormatOptionTextPipeModule
-    ],
-    providers: [
-        StatusBar, OLService, SplashScreen, NativeStorage,
-        MapService, Insomnia, Geolocation, EditionModeService,
-        RealPositionStyle, GetStyle, HandlingStyle, DefaultStyle,
-        MapManagerService, GeolocLayerService, EditionLayerService,
-        SyncService, DatabaseService, AuthService,
-        AppVersionsService, BackLayerService,
-        SystemeEndiguement, AppTronconsService, DigueController,
-        TronconController, FilterPipe, EditObjectService,
-        Toast, SelectedObjectsService, ObjectDetails, MapEditObjectService,
-        FormsTemplateService, ToastService, CacheMapManager, File, WebView, FileOpener,
-        ObservationEditService, Network, FileChooser, FilePath,DocToStringPipe,
-        SirsDataService, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-        Diagnostic, PermissionsService
-    ],
-    bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    MatIconModule,
+    IonicModule.forRoot(),
+    IonicStorageModule.forRoot(),
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    DatabaseConnectionPageModule,
+    LibCameraModule,
+    NgbCollapseModule,
+    FlexLayoutModule,
+    DirectiveModule,
+    ObjectEditModule,
+    DocToStringPipeModule,
+    FormatOptionTextPipeModule
+  ],
+  providers: [
+    StatusBar,
+    OLService,
+    SplashScreen,
+    NativeStorage,
+    MapService,
+    Insomnia,
+    Geolocation,
+    EditionModeService,
+    RealPositionStyle,
+    GetStyle,
+    HandlingStyle,
+    DefaultStyle,
+    MapManagerService,
+    GeolocLayerService,
+    EditionLayerService,
+    SyncService,
+    DatabaseService,
+    AuthService,
+    AppVersionsService,
+    BackLayerService,
+    SystemeEndiguement,
+    AppTronconsService,
+    DigueController,
+    TronconController,
+    FilterPipe,
+    EditObjectService,
+    Toast,
+    SelectedObjectsService,
+    ObjectDetails,
+    MapEditObjectService,
+    FormsTemplateService,
+    ToastService,
+    CacheMapManager,
+    File,
+    WebView,
+    FileOpener,
+    ObservationEditService,
+    Network,
+    FileChooser,
+    FilePath,
+    DocToStringPipe,
+    SirsDataService,
+    {
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy
+    },
+    Diagnostic,
+    PermissionsService
+  ],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

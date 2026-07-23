@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LeftPanelModule } from '../left-panel/left-panel.module';
 import { RightPanelModule } from '../right-panel/right-panel.module';
+import { SearchModalComponent } from './nav-bar/search-modal/search-modal.component';
 
 @NgModule({
   imports: [
@@ -26,13 +27,14 @@ import { RightPanelModule } from '../right-panel/right-panel.module';
     NgbCollapseModule,
     MatIconModule,
     FlexLayoutModule,
-    LeftPanelModule, RightPanelModule
+    LeftPanelModule, RightPanelModule,
+    ReactiveFormsModule
   ],
   providers: [
     Geolocation,
     RealPositionStyle,
     EditionModeService
   ],
-  declarations: [MainPage]
+  declarations: [MainPage,SearchModalComponent]
 })
 export class MainPageModule {}

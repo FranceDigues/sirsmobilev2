@@ -8,7 +8,7 @@ import { BaseFormComponent } from './base-form/base-form.component';
 import { CoteDigueGenericComponent } from './cote-digue/cote-digue.component';
 import { CreteComponent } from './crete/crete.component';
 import { DesordreDependanceAhComponent } from './desordre-dependance-ah/desordre-dependance-ah.component';
-import { DesordreComponent, RefSortPipe } from './desordre/desordre.component';
+import { DesordreComponent } from './desordre/desordre.component';
 import { FonctionHautBasIdGenericComponent } from './fonction-haut-bas-id/fonction-haut-bas-id.component';
 import { FonctionIdGenericComponent } from './fonction-id/fonction-id.component';
 import { FormsTemplateComponent } from './forms-template.component';
@@ -28,7 +28,9 @@ import { OuvrageTelecomEnergieComponent } from './ouvrage-telecom-energie/ouvrag
 import { OuvrageVoirieComponent } from './ouvrage-voirie/ouvrage-voirie.component';
 import { PiedDigueComponent } from './pied-digue/pied-digue.component';
 import { PositionDigueGenericComponent } from './position-digue/position-digue.component';
-import { ReseauHydrauliqueCielOuvertComponent } from './reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
+import {
+  ReseauHydrauliqueCielOuvertComponent
+} from './reseau-hydraulique-ciel-ouvert/reseau-hydraulique-ciel-ouvert.component';
 import { ReseauHydrauliqueFermeComponent } from './reseau-hydraulique-ferme/reseau-hydraulique-ferme.component';
 import { ReseauTelecomEnergieComponent } from './reseau-telecom-energie/reseau-telecom-energie.component';
 import { SommetRisbermeComponent } from './sommet-risberme/sommet-risberme.component';
@@ -40,21 +42,22 @@ import { UsageIdGenericComponent } from './usage-id/usage-id.component';
 import { VoieAccesComponent } from './voie-acces/voie-acces.component';
 import { VoieDigueComponent } from './voie-digue/voie-digue.component';
 import { DocToStringPipeModule } from "../../../pipe/doc-to-string/doc-to-string.pipe.module";
+import { RefSortPipeModule } from "../../../pipe/ref-sort/ref-sort.pipe.module";
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule,
-        MatCheckboxModule,
-        MatButtonModule,
-        DocToStringPipeModule,
-    ],
-  providers: [
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    DocToStringPipeModule,
+    RefSortPipeModule
   ],
+  providers: [],
   declarations: [
-    FormsTemplateComponent, DesordreComponent, RefSortPipe,
+    FormsTemplateComponent, DesordreComponent,
     CreteComponent, LaisseCrueComponent, LargeurFrancBordComponent,
     MonteeEauxComponent, OuvertureBatardableComponent, OuvrageFranchissementComponent,
     OuvrageHydrauliqueComponent, OuvrageParticulierComponent, OuvrageRevancheComponent,

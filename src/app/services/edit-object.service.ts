@@ -17,6 +17,11 @@ import { PluginUtils } from '../utils/plugin-utils';
 import { SirsDataService } from './sirs-data.service';
 import { LocalDatabase } from './local-database.service';
 import Point from "ol/geom/Point";
+import { Observable } from 'rxjs';
+import {ObjectDetails} from "./object-details.service";
+import {Prestation} from "../shared/models/prestation.model";
+import {formTemplatePilote} from "../utils/form-template-pilote";
+import {AppLayersService} from "./app-layers.service";
 
 @Injectable({
     providedIn: 'root'
@@ -44,9 +49,11 @@ export class EditObjectService {
     plans = [];
     parcelles = [];
     allTroncons = [];
+    tronconLit = [];
     geoloc = undefined;
     refs = null;
     dateWrapper = null;
+    dateDebutWrapper = null;
     objectType = null;
     dataProjection = this.sirsDataService.sirsDoc.epsgCode;
     startPosBorneLabel: Promise<string> | string | null = null;
@@ -63,6 +70,7 @@ export class EditObjectService {
                 private geolocationService: GeolocationService,
                 private positionService: PositionService,
                 private storageService: StorageService,
+                private appLayersService: AppLayersService,
                 private localDB: LocalDatabase) {
     }
 
@@ -81,6 +89,8 @@ export class EditObjectService {
                 this.objectDoc = await this.localDB.get(id);
             }
 
+            this.dateWrapper = this.objectDoc.date_fin;
+            this.dateDebutWrapper = this.objectDoc.date_debut;
             // Hack for borne fin data without borneFinId
             if (typeof (this.objectDoc.borne_fin_aval) !== 'undefined'
                 && typeof (this.objectDoc.borne_fin_distance) !== 'undefined'
@@ -95,11 +105,16 @@ export class EditObjectService {
 
             await this.initReferences();
             this.initTronconList();
-            if (this.isDependance()) await this.initDependance();
-            if (this.isVegetation()) await this.initVegetation();
-            if (this.isParcelleVegetation()) await this.initPlansList();
-            await this.initStartPosBorne();
-            await this.initEndPosBorne();
+
+            const promises: Promise[] = []
+            if (this.isDependance()) promises.push(this.initDependance());
+            if (this.isVegetation()) promises.push(this.initVegetation());
+            if (this.isParcelleVegetation()) promises.push(this.initPlansList());
+            promises.push(this.initStartPosBorne());
+            promises.push(this.initEndPosBorne());
+
+            await Promise.all(promises);
+
             this.initIsLinear();
 
             await this.databaseService.getCurrentDatabaseSettings()
@@ -137,6 +152,7 @@ export class EditObjectService {
         this.geoloc = undefined;
         this.refs = null;
         this.dateWrapper = null;
+        this.dateDebutWrapper = null;
         this.objectType = null;
         this.dataProjection = this.sirsDataService.sirsDoc.epsgCode;
         this.startPosBorneLabel = null;
@@ -150,6 +166,7 @@ export class EditObjectService {
     formatDate() {
         const date = new Date(this.dateWrapper);
         this.objectDoc.date_fin = date.toISOString().split('T')[0];
+
     }
 
     watchDocPositionDebut() { // ! call this instead changing value alone
@@ -209,7 +226,7 @@ export class EditObjectService {
             // The distance
             const dist = getDistance(transform(positionCoord, 'EPSG:3857', 'EPSG:4326'),
                 transform(geomTronc, 'EPSG:3857', 'EPSG:4326'), 6378137) / 1000;
-            if (dist <= 1) {
+            if (dist <= 0.1) {
                 nearTronconList.push(elt);
             }
         });
@@ -251,6 +268,9 @@ export class EditObjectService {
         return PluginUtils.isParcelleVegetationClass(this.objectDoc['@class']);
     }
 
+    isLit(){
+        return PluginUtils.isLitClass(this.objectDoc['@class']);
+    }
     private async initReferences() {
         const refs = await this.editionModeService.getReferenceTypes();
         const res = {};
@@ -260,8 +280,8 @@ export class EditObjectService {
         this.refs = res;
     }
 
-    initTronconList() {
-        this.storageService.getItem('AppTronconsFavorities')
+    initTronconList(): Promise<void>{
+        return this.storageService.getItem('AppTronconsFavorities')
             .then(
                 (value) => {
                     if (Array.isArray(value)) {
@@ -282,6 +302,13 @@ export class EditObjectService {
         });
     }
 
+    async getTronconLit(){
+        return  this.localDB.query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.TronconLit'],
+            endkey: ['fr.sirs.core.model.TronconLit', {}],
+            include_docs: true
+        });
+    }
     private async initDependance() {
         //Dependance or AH don't have linearId.
         delete this.objectDoc.linearId;
@@ -380,25 +407,29 @@ export class EditObjectService {
         })
     }
 
-    save() {
-        if (!this.isDependance() && !this.isVegetation()) {
+    async save() {
+        if (!this.isDependance() && !this.isVegetation() && !this.isLit()) {
             if (!this.objectDoc.linearId) {
                 this.messageErrorHandler('Veuillez choisir un tronçon de rattachement pour cet objet');
                 return;
+            }else{
+
             }
+
 
             if (!this.objectDoc.positionDebut && !this.objectDoc.borneDebutId) {
                 this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
                 return;
+            }else{
+                console.log("existe: ", this.objectDoc.positionDebut)
             }
         }
-
-        if (this.isDependance() && !this.objectDoc.geometry) {
+        if ((this.isDependance()) && !this.objectDoc.geometry) {
             this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
             return;
         }
 
-        if (this.isVegetation()) {
+        if (this.isVegetation() || this.isLit()) {
             if (!this.objectDoc.geometry && !this.objectDoc.positionDebut && !this.objectDoc.positionDebut) {
                 this.messageErrorHandler('Veuillez choisir une position pour cet objet, avant de continuer');
                 return;
@@ -415,14 +446,41 @@ export class EditObjectService {
 
         // Update date
         this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
-
+        this.objectDoc.date_debut ??= new Date().toISOString().split('T')[0];
         delete this.objectDoc.prDebut;
 
         delete this.objectDoc.prFin;
 
         if (this.isNew) {
+            let prestationClass: string;
+            if(this.isDependance()){
+                prestationClass = 'fr.sirs.core.model.PrestationAmenagementHydraulique';
+            }else{
+                prestationClass = 'fr.sirs.core.model.Prestation';
+            }
+            const prestationList:Array<{doc: Prestation, id: string, key: any, value: any}>= await this.getPrestationByLinearId(prestationClass, this.objectDoc.linearId);
+
+            await this.createObjectWithPrestation(prestationList);
             this.editionModeService.createObject(this.objectDoc).then(
-                () => {
+                async (res ) => {
+                    // Reciproque ajout dans l'objet prestation (must be here after object creation)
+                    const config = await this.databaseService.getCurrentDatabaseSettings();
+                    const tempPrestationId = config?.context?.defaultPrestationId;
+                    if(tempPrestationId && prestationList.some(prestation => prestation.id === tempPrestationId)){
+                        let clazz = PluginUtils.doc2Class(this.objectDoc);
+                        let attribute: string;
+                        if (this.isDependance()) {
+                            attribute = this.attributeNameOfObjectFromClass("PrestationAmenagementHydraulique", clazz);
+                        } else {
+                            attribute = this.attributeNameOfObjectFromClass("Prestation", clazz);
+                        }
+
+                        const regex = /.*Ids$/;
+                        if (regex.test(attribute)) {
+                            await this.addObjectId(tempPrestationId, res["_id"], attribute);
+                        }
+                    }
+
                     this.route.navigateByUrl('/main').then();
                 });
         } else {
@@ -433,6 +491,115 @@ export class EditObjectService {
         }
     }
 
+    public async createObjectWithPrestation(prestationList: Array<{ doc: Prestation, id: string, key: any, value: any }>): Promise<void> {
+        try {
+            // Récupérer l'ID de la prestation par défaut
+            const config = await this.databaseService.getCurrentDatabaseSettings();
+            const tempPrestationId = config?.context?.defaultPrestationId;
+
+            if (!tempPrestationId) {
+                console.warn("Aucun ID de prestation par défaut n'est configuré.");
+                return;
+            }
+
+            // Vérifier si l'ID de la prestation par défaut est dans la liste
+            const prestationExists = prestationList.some(prestation => prestation.id === tempPrestationId);
+
+            if (!prestationExists) {
+                console.warn(`L'ID de prestation par défaut (${tempPrestationId}) n'est pas contenu dans la liste.`);
+                return;
+            }
+
+            // Ajouter l'ID de prestation au nouvel objet
+            if (!this.objectDoc.prestationIds) {
+                this.objectDoc.prestationIds = [];
+            }
+
+            this.objectDoc.prestationIds.push(tempPrestationId);
+
+        } catch (error) {
+            console.error("Erreur lors de la création de l'objet avec prestation :", error);
+        }
+    }
+    private async addObjectId(receiverId: string, idToAdd: string, attribute: string): Promise<void> {
+        const doc: any = await this.localDB.get(receiverId);
+        if (!doc) {
+            console.error("Document (" + receiverId + ") not found.");
+            return;
+        }
+
+        if (doc[attribute]) {
+            doc[attribute].push(idToAdd);
+        } else {
+            doc[attribute] = [idToAdd];
+        }
+        doc.valid = false;
+        doc.dateMaj = new Date().toISOString().split('T')[0];
+        // Check if the layer model is visible or not
+        const isVisible = !!this.appLayersService.getFavorites().find(item => item.filterValue === doc['@class']);
+        await this.editionModeService.updateObject(doc, isVisible);
+    }
+    /**
+     * Retrieves all prestations from the current section (troncon) and populates
+     * `this.prestationMap`, `this.allPrestationList` and `this.prestationList`
+     * @param prestationClass class of prestations in the db
+     * @param linearId id of the section (troncon)
+     * @private
+     */
+    private async getPrestationByLinearId(prestationClass: string, linearId: string): Promise<Array<{doc: Prestation, id: string, key: any, value: any}>> {
+        try {
+            // we retrieve the prestations in the current section (tronçon)
+            const response: { value: any, doc: any }[] = await this.localDB.query('Element/byClassAndLinear', {
+                startkey: [prestationClass, linearId],
+                endkey: [prestationClass, linearId, {}],
+                include_docs: true
+            });
+
+            let prestationMap = {};
+            let allPrestationList = [];
+
+            for (const elt of response) {
+                let prestaFinished = false;
+                if (elt.doc.date_fin !== undefined) {
+                    try {
+                        const dateFin = new Date(elt.doc.date_fin);
+                        const dateNow = new Date();
+                        if (dateFin < dateNow) {
+                            prestaFinished = true;
+                        }
+                    } catch (_) {
+                        prestaFinished = true;
+                        console.info(`Cannot read end date of prestation "${elt.value.id}", assuming it is finished.`);
+                    }
+                }
+
+                elt.value.prestationFinished = prestaFinished;
+                prestationMap[elt.value.id] = elt.value.designation ? elt.value.designation + ' ' + (elt.value.libelle ? elt.value.libelle : '') : elt.value.id;
+                allPrestationList.push(elt.value);
+            }
+            return allPrestationList;
+
+
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    // private filteredPrestationList() {
+    //     if (this.mapService.archiveObjectsFlag) {
+    //         return [...this.detailsObject.prestationList];
+    //     } else {
+    //         return [...this.detailsObject.prestationList].filter(p => !p.prestationFinished);
+    //     }
+    // }
+    private attributeNameOfObjectFromClass(objectType, clazz) {
+        for (let key in formTemplatePilote[objectType]) {
+            let value = formTemplatePilote[objectType][key];
+            if (value.type === clazz) {
+                return value.name;
+            }
+        }
+        return null;
+    }
     private messageErrorHandler(msg: string) {
         this.toastCtrl.create({
             message: msg,

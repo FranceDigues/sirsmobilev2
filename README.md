@@ -2,9 +2,9 @@
 
 ## 1 - Prerequisites
 
-Clone this repository
+Clone this repository **with submodules**:
 ```
-git clone https://github.com/FranceDigues/sirsmobilev2.git
+git clone https://gitlab.geomatys.com/geopatys-group/sirsmobilev2.git --recurse-submodules
 ```
 
 Install **Android SDK** : http://developer.android.com/sdk/installing/index.html
@@ -150,8 +150,56 @@ graph TB
 end
 ```
 
+## 5 - Continuous integration
 
-## 6 - Deployment
+The CI of this project is driven by `.gitlab-ci.yml` file.
+
+It consists in three stages:
+
+- build
+- test
+- sonarqube
+
+the two first (build and test) are triggered on each push on master or any merge request.
+The sonarqube stage is only triggered for push in master branch since we have only a single branch version of the software.
+
+A `builder build` job (withing build stage) is triggered only if a `builder-v<X>.<Y>.<Z>` tag is added.
+This will build a new "builder" docker image (cf. docker/builder/Dockerfile for more info) on `docker.geomatys.com`.
+
+In order to change the version of the builder, edit the `BUILDER_VERSION` entry in CI/CD variables.
+
+## 6 - CI/CD : Patch temporaire (Kubernetes non-root UID)
+
+> **ATTENTION : Patch temporaire.** Les modifications ci-dessous sont des contournements liés a l'execution des jobs CI dans un pod Kubernetes avec un UID non-root arbitraire. Une solution long terme serait de reconstruire l'image Docker builder (`docker/builder/Dockerfile`) pour integrer ces corrections directement.
+
+### Contexte
+
+Le runner GitLab CI utilise un executeur Kubernetes. Les jobs sont lances dans des pods ou le conteneur `init-permissions` tourne en **root** (UID 0), mais le conteneur de build tourne avec un **UID arbitraire non-root** (ex: 1001). Cela provoque plusieurs problemes :
+
+- L'UID n'a pas d'entree dans `/etc/passwd`
+- Le repertoire `HOME` par defaut (`/root`) n'est pas accessible en ecriture
+- Certains fichiers/dossiers crees par le conteneur init sont possedes par root
+
+### Problemes resolus
+
+| Probleme | Cause | Contournement |
+|---|---|---|
+| `os.userInfo()` crash dans `@ionic/cli` | Node.js appelle `getpwuid_r` (libc) qui echoue sans entree `/etc/passwd` | Script `fix-userinfo.js` charge via `NODE_OPTIONS=--require` qui monkey-patch `os.userInfo()` |
+| `EACCES: permission denied, mkdir '/root/.ionic'` | `HOME` pointe vers `/root` non-accessible | `export HOME=$CI_PROJECT_DIR` |
+| `Unable to create debug keystore in .android` | Le debug keystore n'existe pas et le dossier `.android` cree par `keytool` (root) n'est pas writable | Generation du keystore avec `keytool` + `chmod -R 777` |
+| `EACCES` sur le cache npm dans les subprocesses Cordova | Les subprocesses `npm install` (lances par les plugins Cordova) utilisent `$HOME/.npm` au lieu du cache configure | `export npm_config_cache=$CI_PROJECT_DIR/.npm` (variable d'environnement heritee par les subprocesses) |
+| Job `test` echoue avec `zip: not a valid zip file` | Le job test telecharge les artifacts du job build qui sont corrompus | `dependencies: []` sur le job test |
+
+### Solution long terme recommandee
+
+Integrer dans l'image Docker builder (`docker/builder/Dockerfile`) :
+
+1. Creer un utilisateur non-root avec un `HOME` accessible
+2. Pre-generer le debug keystore Android
+3. Configurer le cache npm dans un repertoire accessible
+4. Eventuellement passer a une version de Node.js >= 18 (qui gere mieux `os.userInfo()` sans entree `/etc/passwd`)
+
+## 7 - Deployment
 ### Générer l'AAB
 
 Lignes de commande pour générer l'AAB:
@@ -162,6 +210,13 @@ ionic cordova platform rm android
 ionic cordova build android --release -- -- --packageType=bundle
 
 $ANDROID_HOME/build-tools/32.0.0/zipalign -v 4 ./platforms/android/app/build/outputs/bundle/release/app-release.aab sirsmobile_<version>_<test/prod>.aab
+```
+
+A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
+```
+$ANDROID_HOME/build-tools/32.0.0/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true -min-sdk-version 26 sirsmobile_<version>_<test/prod>.aab
+
+rm sirsmobile_<version>_<test/prod>.aab.idsig
 ```
 
 
@@ -176,3 +231,26 @@ ionic cordova build android --release -- -- --packageType=apk
 
 $ANDROID_HOME/build-tools/33.0.2/zipalign -v 4 ./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk sirsmobile_<version>_<test/prod>.apk
 ```
+A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
+```
+$ANDROID_HOME/build-tools/33.0.2/apksigner sign --ks sirs-mobile.keystore --v1-signing-enabled true --v2-signing-enabled true sirsmobile_<version>_<test/prod>.apk
+
+rm sirsmobile_<version>_<test/prod>.apk.idsig
+```
+A ce stade un mot de passe est demandé, il se trouve dans l'item 'SirsMobile PlayStore' sur Bitwarden.
+
+### Déployer sur Google Play Console
+
+Une fois l'APK généré, naviguez jusqu'à la Console Google Play du compte Google sirsdigues@gmail.com (mdp sur Bitwarden, item: 'SirsMobile PlayStore').
+
+Puis naviguez de la manière suivante: 'Toutes les applications' > 'Sirs Mobile Test Ionic 5' > Publier > Tests > Tests internes > 'Créer une release'.
+
+Enfin suivre les indications du formulaire de création de release.
+
+### Partager le lien de l'application (test uniquement)
+
+Une fois l'APK déployée, il vous faut partager avec le client la nouvelle application.
+
+Allez dans: Toutes les applications > Sirs Mobile Test Ionic 5 > Publier > Tests > Tests internes > afficher les détails de la release > "Dans 'Nouveaux app bundles', à la ligne de l'APK, la flèche à l'extrémité gauche" > Téléchargements.
+Dans "Téléchargement" , cliquer sur "Copier le lien partageable", envoyer le au client, il doit l'ouvrir sur un systeme Android.
+Il est peut être nécéssaire à cette étape d' "activé la partage d'application en interne" du systeme recevant l'application.

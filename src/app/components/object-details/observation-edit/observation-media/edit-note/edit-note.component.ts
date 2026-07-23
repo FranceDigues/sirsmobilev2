@@ -23,6 +23,7 @@ export class EditNoteComponent implements AfterViewInit {
   lineWidth: number = 5;
   colors: Array<string>;
   drawing: boolean = false;
+  
 
   constructor(private platform: Platform, private base64ToGallery: Base64ToGallery,
               private toastCtrl: ToastController, private file: File,
@@ -31,7 +32,7 @@ export class EditNoteComponent implements AfterViewInit {
                 this.colors = [
                   '#9e2956',
                   '#c2281d',
-                  '#de722f', '#edbf4c', '#5db37e', '#459cde', '#4250ad', '#802fa3' ];
+                  '#de722f', '#edbf4c', '#5db37e', '#459cde', '#4250ad', '#802fa3' ];     
               }
 
   ngAfterViewInit(): void {
@@ -46,7 +47,9 @@ export class EditNoteComponent implements AfterViewInit {
   }
 
   validate() {
-    this.exportCanvasImage().then(
+    let dataUrl = this.canvasElement.toDataURL();
+
+    this.saveBase64ImageToGallery(dataUrl).then(
       res => {
         this.successData.emit(res);
         this.goBack();
@@ -58,7 +61,7 @@ export class EditNoteComponent implements AfterViewInit {
     );
   }
 
-  private radioGroupChange(event) {
+  public radioGroupChange(event) {
     this.selectedColor = event.detail.value;
   }
 
@@ -152,7 +155,6 @@ export class EditNoteComponent implements AfterViewInit {
 
 
       const options: Base64ToGalleryOptions = { prefix: 'canvas_', mediaScanner:  true };
-
       this.base64ToGallery.base64ToGallery(dataUrl, options).then(
         async res => {
           const toast = await this.toastCtrl.create({
@@ -174,5 +176,47 @@ export class EditNoteComponent implements AfterViewInit {
         }
       );
     });
+  }
+
+  saveBase64ImageToGallery(base64Data: string): Promise<Entry> {
+    return new Promise((resolve, reject) => {
+      // Check if we're running on a real device
+      if (this.platform.is('android')) {
+              this.saveImage(base64Data).then(resolve).catch(reject);
+      } else {
+        console.log('This feature works only on a real device.');
+        reject(new Error('This feature works only on a real device.'));
+      }
+    });
+  }
+
+  saveImage(base64Data: string): Promise<Entry> {
+    return new Promise((resolve, reject) => {
+            
+      const directory = this.file.externalRootDirectory + 'Pictures/';
+            
+      const blob = this.base64ToBlob(base64Data, 'image/jpeg');
+      
+      const fileName = 'image_' + new Date().getTime() + '.jpg';
+      
+      this.file.writeFile(directory, fileName, blob, { replace: true }).then((fileEntry: Entry) => {
+        console.log('File saved successfully to:', fileEntry.nativeURL);
+        resolve(fileEntry);  // Resolve with the FileEntry object
+      }).catch(err => {
+        console.log('Error saving file:', err);
+        reject(err);  // Reject if writing the file fails
+      });
+    });
+  }
+  
+  // Convert base64 to Blob
+  base64ToBlob(base64: string, contentType: string): Blob {
+    const byteCharacters = atob(base64.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
   }
 }

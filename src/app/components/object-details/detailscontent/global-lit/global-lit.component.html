@@ -1,0 +1,161 @@
+<div [ngSwitch]="activeTab" class="scrolling-block">
+    <!-- Content / Description -->
+    <div *ngSwitchCase="'description'">
+        <div class="sirs-panel">
+            <div class="sirs-field-inline">
+                <span class="sirs-field-title">Numéro de désignation : </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.designation"></span>
+            </div>
+        </div>
+        <div class="sirs-section">
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.DesordreLit'">
+                <span class="sirs-field-title">Type de désordre</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeDesordre | async"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.DesordreLit'">
+                <span class="sirs-field-title">Position</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.position | async"></span>
+                <!-- Borne relative position -->
+                <ng-container *ngIf="showBorneRelativePosition">
+                    <ng-container *ngIf="isLinear">
+                        <ng-container *ngIf="detailsObject.selectedObject.systemeRepId">
+                            <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                            <span class="sirs-field-value" *ngIf="borneFinPositionStr">Fin: {{borneFinPositionStr}}</span>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="!isLinear">
+                        <ng-container *ngIf="!detailsObject.selectedObject.editedGeoCoordinate">
+                            <span class="sirs-field-value" *ngIf="borneDebutPositionStr">Début: {{borneDebutPositionStr}}</span>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.DesordreLit'">
+                <span class="sirs-field-title">Côté</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.cote | async"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.DesordreLit'">
+                <span class="sirs-field-title">Source</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.source | async"></span>
+            </div>
+
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'
+            || detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'
+            || detailsObject.selectedObject['@class']=='fr.sirs.core.model.IleBancLit'
+            ">
+                <span class="sirs-field-title">Libellé</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.libelle"></span>
+            </div>
+
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Année de construction</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.anneeConstruction"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Pente rempante(%)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.penteRampant"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Surface d'entretien(m²)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.surfaceRempantEntretien"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Longueur totale(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.longueurTotale"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Longueur du coursier(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.longueurCoursier"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Largeur en crête(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.largeurEnCrete"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Hauteur de chute(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.hauteurChute"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Fonction du seuil</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.fonctionSeuil | async"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Position du seuil</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.positionSeuil | async"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Geométrie de la crête</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.geometrieCrete | async"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.SeuilLit'">
+                <span class="sirs-field-title">Type de profil du coursier</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.profilCoursier | async "></span>
+            </div>
+
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Cote de fond</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coteFond "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Cote d'alerte</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.coteAlerte "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Volume de stockage(m²)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.volumeStockage  "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Longueur de la zone de dépot</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.longueur  "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Largeur max(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.largeurMax  "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Pente à vide(%) </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.penteAVide  "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Type élement associé </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeElementAssocie | async "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Type de fermeture</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.abstract.typeElementAssocieFermeture | async "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Hauteur de fermeture </span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.hauteur  "></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.PlageDepotLit'">
+                <span class="sirs-field-title">Largeur en crête(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.largeurEnCrete"></span>
+            </div>
+
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.IleBancLit'">
+                <span class="sirs-field-title">Largeur(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.largeur"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.IleBancLit'">
+                <span class="sirs-field-title">Longueur(m)</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.longueur"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.IleBancLit'">
+                <span class="sirs-field-title">Berge attachée</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.rattacheBerge"></span>
+            </div>
+            <div class="sirs-field" *ngIf="detailsObject.selectedObject['@class']=='fr.sirs.core.model.IleBancLit'">
+                <span class="sirs-field-title">Vegetalisé</span>
+                <span class="sirs-field-value" [textContent]="detailsObject.selectedObject.vegetalise"></span>
+            </div>
+        </div>
+    </div>
+    <!-- Content / Observations -->
+    <div *ngSwitchCase="'observations'">
+        <observations-generic></observations-generic>
+    </div>
+    <div *ngSwitchCase="'prestations'" style="padding: 5px 10px;">
+        <prestations-generic></prestations-generic>
+    </div>
+</div>

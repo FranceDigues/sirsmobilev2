@@ -20,7 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
         ObservationDetailsModule,
         PhotoDetailsModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        
     ],
     exports: [ObjectDetailsComponent]
 })

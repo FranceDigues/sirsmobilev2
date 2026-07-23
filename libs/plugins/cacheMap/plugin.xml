@@ -18,7 +18,15 @@
             <feature name="CacheMapPlugin" >
                 <param name="android-package" value="CacheMapPlugin"/>
             </feature>
+            <receiver android:name="com.rde.cachemap.DownloadReceiver"
+                      android:enabled="true"
+                      android:exported="false">
+                <intent-filter>
+                    <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                </intent-filter>
+            </receiver>
         </config-file>
+        <allow-intent android:exported="true" href="market:*" />
         <source-file src="src/android/CacheMapPlugin.java" target-dir="src/" />
         <source-file src="src/android/AsyncCacheBuilder.java" target-dir="src/" />
         <source-file src="src/android/AsyncClear.java" target-dir="src/" />

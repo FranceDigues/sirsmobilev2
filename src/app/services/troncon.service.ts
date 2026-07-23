@@ -3,6 +3,7 @@ import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { DatabaseService } from './database.service';
 import { LoadingController } from '@ionic/angular';
 import { Subject } from 'rxjs';
+import { clear as clearMemoize, Memoize } from "typescript-memoize";
 
 @Injectable({
     providedIn: 'root',
@@ -39,6 +40,26 @@ export class SystemeEndiguement {
                 }
             );
           }
+        );
+    }
+
+    async reloadSE(){
+        this.dbService.getLocalDB().query('Element/byClassAndLinear', {
+            startkey: ['fr.sirs.core.model.SystemeEndiguement'],
+            endkey: ['fr.sirs.core.model.SystemeEndiguement', {}]
+        }).then(
+            (results) => {
+                this.systemEndiguements = results.rows;
+                this.systemEndiguements.push({
+                    id: 'withoutSystem',
+                    value: {
+                        libelle: 'Sans système d\'endiguement'
+                    }
+                });
+                },
+            (err) => {
+                console.error('err Endiguement', err);
+            }
         );
     }
 }
@@ -135,13 +156,17 @@ export class TronconController {
         );
     }
 
-    isActive(id) {
-        return this.appTronconsService.favorites.map((item) => {
+    
+    @Memoize({tags: ['isTronconActive']})
+    public isActive(id: string): boolean {
+        const res = this.appTronconsService.favorites.map((item) => {
             return item.id;
         }).indexOf(id) !== -1;
+        return res;
     }
 
-    toggleLayer(troncon) {
+    public toggleLayer(troncon: any): void {
+        clearMemoize(['isTronconActive']);
         if (this.isActive(troncon.id)) {
             this.appTronconsService.favorites.splice(this.appTronconsService.favorites
                 .map((item) => {
@@ -156,6 +181,7 @@ export class TronconController {
                 borneIds: troncon.value.borneIds
             });
         }
+        clearMemoize(['isTronconActive']);
         this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites);
         this.appTronconsService.updated.next('tronçon updated');
     }

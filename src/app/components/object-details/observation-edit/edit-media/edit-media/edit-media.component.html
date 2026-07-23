@@ -1,0 +1,17 @@
+<div class ="edit-wrapper" fxLayout="column" fxLayoutAlign="start stretch">
+  <ion-header translucent>
+    <ion-toolbar>
+            <ion-title style="text-align: center;">Modification de média</ion-title>               
+            <ion-buttons slot="end">
+                <ion-button (click)="closeModal()">Fermer</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+  <ion-content fxFlex>
+      <div class="square-container" fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="10px">
+        <observation-media class="observation-form" [photoToEdit]="photo" [index]= "indexP" [EditingFromDetail]="true" (viewChange)="getView($event)" (isEdited)="getEdit($event)"></observation-media>
+      </div>
+  </ion-content>
+ 
+</div>
+

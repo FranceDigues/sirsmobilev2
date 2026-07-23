@@ -16,7 +16,9 @@ export const indexedViews = [
     'byId',
     'getBornesFromTronconID',
     'getBornesIdsHB',
-    'byClassAndLinearRef'
+    'byClassAndLinearRef',
+    'byDesignation',
+    'byLibelle'
 ];
 
 export const syncViews = [
@@ -241,5 +243,45 @@ export const designDocs = [
                 }.toString()
             }
         }
-    }
+    },
+    {
+        _id: '_design/byDesignation',
+        views: {
+            'byDesignation': {
+                map: function (doc) {
+                    if (doc.designation) {
+                        emit([doc.designation,doc['@class']], {
+                            id: doc._id,
+                            rev: doc._rev,
+                            class: doc['@class'],
+                            designation: doc.designation,
+                            libelle: doc.libelle,
+                            abrege: doc.abrege
+                        })
+                    }
+                }.toString()
+            }
+        }
+    },
+    {
+        _id: '_design/byLibelle',
+        views: {
+            'byLibelle': {
+                map: function (doc) {
+                    if (doc.libelle) {
+                        emit([doc.libelle,doc['@class']], {
+                            id: doc._id,
+                            rev: doc._rev,
+                            class: doc['@class'],
+                            designation: doc.designation,
+                            libelle: doc.libelle,
+                            abrege: doc.abrege
+                        })
+                    }
+                }.toString()
+            }
+        }
+    },
+
+
 ]; // TODO → make it configurable ?

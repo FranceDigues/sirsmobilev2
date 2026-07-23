@@ -23,6 +23,11 @@
             </ul>
             <ul id="navbar-buttons" class="right">
                 <li>
+                    <a class="header-icon" (click)="toSearchObject()">
+                        <ion-icon class="ion-icon-options" name="search-outline"> </ion-icon>
+                    </a>
+                </li>
+                <li>
                     <a *ngIf="geolocationService.isEnabled" class="header-icon" (click)="locateMe()">
                         <ion-icon name="navigate-outline"></ion-icon>
                     </a>
@@ -68,4 +73,11 @@
             </ion-fab-button>
         </ion-fab-list>
     </ion-fab>
+    <!-- Legende en bas à droite -->
+    <ion-card class="legend-card" slot="fixed" *ngIf="mapManagerService.filterUrgenceArray.length > 0">
+        <ion-card-content>
+            <h4>Légende</h4>
+            <p *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" > {{getLegendeLibelle(urgency)}}</p>
+        </ion-card-content>
+    </ion-card>
 </div>

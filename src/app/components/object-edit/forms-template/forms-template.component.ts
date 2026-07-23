@@ -1,19 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'forms-template',
     templateUrl: './forms-template.component.html',
     styleUrls: ['./forms-template.component.scss'],
 })
-export class FormsTemplateComponent implements OnInit {
+export class FormsTemplateComponent {
 
     @Input() type: string;
-
-    constructor() {
-    }
-
-    ngOnInit() {
-
-    }
 
 }

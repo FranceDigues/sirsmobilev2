@@ -24,13 +24,13 @@ export class PhotoDetailsComponent implements OnInit {
   cote: string;
   photographe: string;
 
-  constructor(private objectDetails: ObjectDetails, private file: File, private localDB: LocalDatabase,
+  constructor(public objectDetails: ObjectDetails, private file: File, private localDB: LocalDatabase,
     private webview: WebView, private fileOpener: FileOpener, private editionModeService: EditionModeService,
     private router: Router, private alertCtrl: AlertController, private authService: AuthService) { }
 
   ngOnInit() {
     //Init photo path
-    const mediaPath = `${this.file.dataDirectory}medias`;
+    const mediaPath = `${this.file.externalDataDirectory}medias`;
     const path = `${mediaPath}/${this.objectDetails.selectedPhoto.id}.jpg`;
     this.photoPath = this.webview.convertFileSrc(path);
 
@@ -51,7 +51,7 @@ export class PhotoDetailsComponent implements OnInit {
       this.localDB.get(this.objectDetails.selectedPhoto.photographeId)
         .then((result) => {
           if (result.nom) {
-            this.photographe = result.prenom ? result.nom + ' ' + result.prenom : result.nom; 
+            this.photographe = result.prenom ? result.nom + ' ' + result.prenom : result.nom;
           } else {
             this.photographe = result._id;
           }
@@ -97,13 +97,13 @@ export class PhotoDetailsComponent implements OnInit {
   }
 
   canShowEditionButtons() {
-    if (this.authService.getValue().role === 'USER' || this.authService.getValue().role === 'ADMIN') {
+    if (this.authService.getValue()?.role === 'USER' || this.authService.getValue()?.role === 'ADMIN') {
       return true;
     }
-    if (this.authService.getValue().role === 'GUEST') {
+    if (this.authService.getValue()?.role === 'GUEST') {
       return false;
     }
-    if (this.authService.getValue().role === 'EXTERN') {
+    if (this.authService.getValue()?.role === 'EXTERN') {
       return this.objectDetails.selectedPhoto.author && this.authService.getValue()._id === this.objectDetails.selectedPhoto.author;
     }
   }
@@ -148,7 +148,7 @@ export class PhotoDetailsComponent implements OnInit {
     array.splice(indexFound, 1);
   }
 
-  private saveParent() {
+  private saveParent(): Promise<void> {
     return new Promise(resolve => {
       this.objectDetails.selectedObject.valid = false;
       this.objectDetails.selectedObject.dateMaj = new Date().toISOString().split('T')[0];
