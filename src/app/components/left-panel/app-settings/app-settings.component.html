@@ -8,46 +8,73 @@
 </ion-header>
 <ion-content [scrollEvents]="true" fullscreen class="scroll-all-content">
     <label class="block-title">Affichage de texte : </label>
-    <ion-list>
-        <ion-radio-group [value]="showTextConfig">
-            <ion-item>
-                <span>Abrégé</span>
-                <ion-radio [value]="'abstract'"
-                           slot="end"
-                           color="success"
-                           (click)="changeShowTextConfig('abstract')"></ion-radio>
-            </ion-item>
-            <ion-item>
-                <span>Nom complet</span>
-                <ion-radio [value]="'fullName'"
-                           slot="end"
-                           color="success"
-                           (click)="changeShowTextConfig('fullName')"></ion-radio>
-            </ion-item>
-            <ion-item>
-                <span>Abrégé / Nom complet</span>
-                <ion-radio [value]="'both'"
-                           slot="end"
-                           color="success"
-                           (click)="changeShowTextConfig('both')"></ion-radio>
-            </ion-item>
-        </ion-radio-group>
-    </ion-list>
-    <label class="block-title">Observateur par défaut : </label>
-    <div class="block-default-obs">
-        <select name="contactList" class="browser-default"
-                [(ngModel)]="defaultObservateurId"
-                (change)="changeDefaultObservateurId()">
-            <option *ngFor="let observateur of contactList | sortByDocNom"
-                    [value]="observateur.id"
-                    [selected]="observateur.id === defaultObservateurId">
-                {{ parseContactName(observateur) }}
-            </option>
-        </select>
-        <button class="sirs-button-item remove-obs"
-                (click)="defaultObservateurId='';changeDefaultObservateurId();$event.stopPropagation()">
-            <ion-icon name="trash-outline"></ion-icon>
-        </button>
-    </div>
+    <ng-container *ngIf="showTextConfig !== undefined && contactList !== undefined && prefillObservations !== undefined">
+        <ion-list>
+            <ion-radio-group [value]="showTextConfig">
+                <ion-item>
+                    <span>Abrégé</span>
+                    <ion-radio [value]="'abstract'"
+                               slot="end"
+                               color="success"
+                               (click)="changeShowTextConfig('abstract')"></ion-radio>
+                </ion-item>
+                <ion-item>
+                    <span>Nom complet</span>
+                    <ion-radio [value]="'fullName'"
+                               slot="end"
+                               color="success"
+                               (click)="changeShowTextConfig('fullName')"></ion-radio>
+                </ion-item>
+                <ion-item>
+                    <span>Abrégé / Nom complet</span>
+                    <ion-radio [value]="'both'"
+                               slot="end"
+                               color="success"
+                               (click)="changeShowTextConfig('both')"></ion-radio>
+                </ion-item>
+            </ion-radio-group>
+        </ion-list>
+        <div class="prefill-obs">
+            <label class="prefill-obs-label">Préremplir les observations : </label>
+            <ion-toggle [(ngModel)]="prefillObservations"></ion-toggle>
+        </div>
+        <label class="block-title">Observateur par défaut : </label>
+        <div class="block-default-obs">
+            <select name="contactList" class="browser-default"
+                    [(ngModel)]="defaultObservateurId"
+                    (change)="changeDefaultObservateurId()">
+                <option *ngFor="let observateur of contactList"
+                        [value]="observateur.id"
+                        [selected]="observateur.id === defaultObservateurId">
+                    {{ parseContactName(observateur) }}
+                </option>
+            </select>
+            <button class="sirs-button-item remove-obs"
+                    (click)="defaultObservateurId='';changeDefaultObservateurId();$event.stopPropagation()">
+                <ion-icon name="trash-outline"></ion-icon>
+            </button>
+        </div>
+        <label class="block-title">Prestation par défaut : </label>
+        <div class="block-default-obs">
+            <select name="prestationList" class="browser-default"
+                    [(ngModel)]="defaultPrestationId"
+                    (change)="changeDefaultPrestationId()">
+                <option value="" disabled selected>Veuillez sélectionner une prestation</option>
+                <option *ngFor="let prestation of prestationList"
+                        [value]="prestation.id"
+                        [selected]="prestation.value.id === defaultPrestationId">
+                    {{ prestation.value.designation? (prestation.value.designation + '-' + prestation.value.libelle + ((prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : ''))) : (prestation.value.libelle + (prestation.doc.date_fin ? ' - ' + prestation.doc.date_fin : ''))}}
+                </option>
+            </select>
+            <button class="sirs-button-item remove-obs"
+                    (click)="defaultPrestationId='';changeDefaultPrestationId();$event.stopPropagation()">
+                <ion-icon name="trash-outline"></ion-icon>
+            </button>
+        </div>
+        <div class="show-borne-distance">
+            <label class="show-borne-distance-label">Afficher la distance relative aux bornes : </label>
+            <ion-toggle [(ngModel)]="showBorneDistance"></ion-toggle>
+        </div>
+    </ng-container>
 
 </ion-content>

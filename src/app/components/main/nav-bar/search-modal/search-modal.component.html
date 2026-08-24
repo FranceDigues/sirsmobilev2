@@ -1,0 +1,66 @@
+<div class ="main-div" fxLayout="column" fxLayoutAlign="start stretch">
+  <ion-header translucent>
+    <ion-toolbar>
+            <ion-title style="text-align: center;">recherche d'objet(s)</ion-title>            
+            <ion-buttons slot="end">
+                <ion-button (click)="closeModal()">Fermer</ion-button>
+            </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <form [formGroup]="form" (ngSubmit)="validate()">
+      <ion-list> 
+        <ion-item >
+          <ion-label position="floating">Désignation</ion-label>
+          <ion-input formControlName="designation"></ion-input>
+        </ion-item>
+
+          <ion-item>
+              <ion-label position="floating">Libellé</ion-label>
+              <ion-input formControlName="libelle"></ion-input>
+          </ion-item>
+
+        <ion-item>
+          <ion-label>Type d'Objet</ion-label>
+          <ion-select formControlName="type">
+            <ion-select-option value="">Aucun</ion-select-option>
+            <ion-select-option *ngFor="let type of types" [value]="type?.filterValue">{{ type?.title }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+
+          <ion-item *ngIf="specificTypes.types.length > 0" >
+          <ion-label>Type Spécifique</ion-label>
+          <ion-select formControlName="specificType" >
+            <ion-select-option value="">Aucun</ion-select-option>
+            <ion-select-option *ngFor="let specificType of specificTypes.types" [value]="specificType.value.id">
+              {{ specificType.value.libelle? specificType.value.libelle : "Non défini"}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button type="submit" expand="block" [disabled]="form.invalid">Rechercher</ion-button>
+      </ion-list>
+    </form>
+  
+    <ion-list *ngIf="items?.rows?.length > 0">
+      <ion-list-header>
+        <ion-label>Résultats (designation/libelle - couche - troncon)</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let item of items['rows']" (click)="goToItem(item.doc)" class="scroll-contents">
+        <div>
+          <div class="layer-title">{{ item.value.designation ? item.value.designation : "Non défini"}} {{item.value?.libelle ? " - " + item.value?.libelle : ""}}</div>
+          <div class="layer-categories"> {{ getclass(item.doc?.["@class"]) }} - {{ item.doc.date_fin ? "archivé" : "non archivé" }} - {{ getTronconNameCached(item.doc?.foreignParentId) }} </div>
+        </div>
+      </ion-item>
+    </ion-list>
+  <ion-text color="danger" *ngIf="noResults">
+      <p style="text-align: center; font-weight: bold;">Aucun objet trouvé</p>
+  </ion-text>
+  </ion-content>
+  
+
+</div>
+

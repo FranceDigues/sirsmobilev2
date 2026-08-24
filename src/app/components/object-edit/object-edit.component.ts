@@ -5,6 +5,7 @@ import { EditObjectService } from 'src/app/services/edit-object.service';
 import { GeolocationService } from '../../services/geolocation.service';
 import { PositionByBorneModalComponent } from './positionbyborne-modal/positionbyborne-modal.component';
 import { SirsDataService } from '../../services/sirs-data.service';
+import { Memoize } from "typescript-memoize";
 
 @Component({
     selector: 'app-editobjects',
@@ -54,17 +55,15 @@ export class ObjectEditComponent implements OnInit {
         this.view = path;
     }
 
+    @Memoize({expiring: 10000})
     displayName(str: string) {
-        for (let i = 1; i < str.length; i++) {
-            const char = str.charAt(i);
-            if (char !== `'` && i > 0) {
-                if (char === char.toUpperCase()) {
-                    str = str.slice(0, i) + ' ' + str.slice(i);
-                    i++;
-                    continue;
-                }
-            }
+        str = str.replace(/(?<=[a-z])(?=[A-Z])/g, ' ');
+
+        // In case of vegetation
+        if (this.EOS.isVegetation() && this.EOS.selectedLayer !== undefined) {
+            str += ` (${this.EOS.selectedLayer.title})`;
         }
+
         return str;
     }
 
@@ -222,7 +221,7 @@ export class ObjectEditComponent implements OnInit {
         return this.EOS.objectDoc.amenagementHydrauliqueId === a.id;
     }
 
-    private isActiveTabs() {
+    public isActiveTabs() {
         return this.EOS.type !== 'BorneDigue'
             && this.EOS.type !== 'Desordre'
             && this.EOS.type !== 'Berge'
@@ -244,4 +243,6 @@ export class ObjectEditComponent implements OnInit {
         }
 
     }
+
+
 }

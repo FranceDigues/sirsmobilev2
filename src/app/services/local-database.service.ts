@@ -70,6 +70,7 @@ export class LocalDatabase {
     }
 
     create(doc): Promise<any> {
+
         return new Promise((resolve, rejects) => {
             this.dbService.getLocalDB().post(doc)
             .then(

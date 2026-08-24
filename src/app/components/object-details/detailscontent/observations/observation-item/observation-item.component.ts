@@ -20,16 +20,16 @@ export class ObservationItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-        this.mediaPath = `${this.file.dataDirectory}medias/`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias/`;
 
         this.hasPhoto$ = new Promise<boolean>(async (resolve) => {
             if (this.observation.photos && this.observation.photos.length > 0) {
                 for (let i = 0; i < this.observation.photos.length; i++) {
-                    if (this.selectedObject['_attachments'] && this.selectedObject['_attachments'][this.observation.photos[i].id]) {
+                    if (this.selectedObject['_attachments'] && this.selectedObject['_attachments'][this.observation.photos[i]?.id]) {
                         this.loading = false;
                         resolve(true);
                     } else {
-                        let fileName = `${this.observation.photos[i].id}.jpg`;
+                        let fileName = `${this.observation.photos[i]?.id}.jpg`;
                         const find = await this.file.checkFile(this.mediaPath, fileName);
                         if (find) {
                             this.loading = false;

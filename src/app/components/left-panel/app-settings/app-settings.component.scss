@@ -29,3 +29,18 @@ ion-toolbar {
 }
 
 
+.prefill-obs, .show-borne-distance {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 15px 0 15px;
+
+  .prefill-obs-label {
+    font-size: 15px;
+  }
+  .show-borne-distance-label {
+    font-size: 14px;
+    margin: 0;
+  }
+}

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EditObjectService } from 'src/app/services/edit-object.service';
-import { FormsTemplateService } from 'src/app/services/formstemplate.service';
-import { UuidUtils as uuid } from '../../../../utils/uuid-utils';
-import { EditionModeService } from '../../../../services/edition-mode.service';
+import { UuidUtils as uuid } from 'src/app/utils/uuid-utils';
+import { EditionModeService } from 'src/app/services/edition-mode.service';
 
 
 @Component({
@@ -11,18 +10,23 @@ import { EditionModeService } from '../../../../services/edition-mode.service';
     styleUrls: ['./montee-eaux.component.scss'],
 })
 export class MonteeEauxComponent implements OnInit {
-    refs;
+    public refs: {[key: string]: any};
 
-    constructor(public EOS: EditObjectService, private FT: FormsTemplateService, private editionModeService: EditionModeService) {
-    }
+    constructor(
+      public EOS: EditObjectService,
+      private editionModeService: EditionModeService
+    ) {}
 
     ngOnInit() {
-        this.EOS.objectDoc.mesures = [this.createMeasure()];
 
-        this.editionModeService.getReferenceTypes()
-            .then((refs) => {
-                this.refs = refs;
-            });
+        this.editionModeService.getReferenceTypes().then((refs) => {
+            const res: {[key: string]: any} = {};
+            for (const ref of refs) {
+                res[ref[0]] = ref[1];
+            }
+            this.refs = res;
+            this.EOS.objectDoc.mesures = [this.createMeasure()];
+        });
 
     }
 
@@ -37,5 +41,4 @@ export class MonteeEauxComponent implements OnInit {
             hauteur: 0
         };
     }
-
 }

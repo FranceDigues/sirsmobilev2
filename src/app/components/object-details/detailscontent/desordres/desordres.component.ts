@@ -8,6 +8,6 @@ import { ObjectDetails } from 'src/app/services/object-details.service';
 })
 export class DesordresGenericComponent {
 
-  constructor(public detailsObject: ObjectDetails) { }
+  constructor(public detailsObject: ObjectDetails) {}
 
 }

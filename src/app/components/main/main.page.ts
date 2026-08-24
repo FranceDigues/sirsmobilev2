@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 import { BackLayerService } from '../../services/back-layer.service';
 import { DatabaseService } from '../../services/database.service';
 import { GeolocationService } from '../../services/geolocation.service';
-import { MapManagerService } from '../../services/map-manager.service';
+import { getLegendByRefId, MapManagerService } from '../../services/map-manager.service';
 import { MapService } from '../../services/map.service';
 import { DatabaseModel } from '../database-connection/models/database.model';
 import { SelectedObjectsService } from '../../services/selected-objects.service';
@@ -32,7 +32,12 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ToastNotification } from '../../shared/models/toast-notification.model';
 import { LongClickSelect } from '@plugins/LongClickSelect';
 import { PluginUtils } from "../../utils/plugin-utils";
-
+import {ModalController} from '@ionic/angular';
+import { getColorByRefId } from 'src/app/services/map-manager.service';
+import { SearchModalComponent } from './nav-bar/search-modal/search-modal.component'
+import {AppTronconsService} from "../../services/troncon.service";
+import {clear as clearMemoize} from "typescript-memoize";
+import {StorageService} from "@ionic-lib/lib-storage/storage.service";
 @Component({
     selector: 'app-main',
     templateUrl: './main.page.html',
@@ -45,6 +50,10 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     private onGeolocationSubscription: Subscription;
     private mapLoadingSubjectSubscription: Subscription;
 
+    isDisplayUrgence: boolean = false;
+    private UrgenceDisplaysubscription: Subscription;
+    
+    public urgencyLevels : String[] = [];
     constructor(
         public geolocationService: GeolocationService,
         public editionLayerService: EditionLayerService,
@@ -52,7 +61,7 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         private backLayerService: BackLayerService,
         private geoLocLayer: GeolocLayerService,
         private mapService: MapService,
-        private mapManagerService: MapManagerService,
+        public mapManagerService: MapManagerService,
         private authService: AuthService,
         private menu: MenuController,
         private loadingCtrl: LoadingController,
@@ -64,7 +73,10 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
         private toastService: ToastService,
         private toastController: ToastController,
         private appLayersService: AppLayersService,
-        private ref: ApplicationRef) {
+        private ref: ApplicationRef,
+        private modalCtrl: ModalController,
+        private appTronconsService: AppTronconsService,
+        private storageService: StorageService) {
 
         this.platform.pause.subscribe(
             () => {
@@ -84,12 +96,17 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
                 // this.saveCurrentView();
                 await this.watchDeviceConnection();
             });
+        this.UrgenceDisplaysubscription = this.mapManagerService.isUrgence.subscribe(value => {
+            this.isDisplayUrgence = value;
+            });
+
     }
 
     public ngOnInit(): void {
         this.onGeolocationSubscription = this.geolocationService.onPositionUpdated.subscribe((coord) => {
             this.geoLocLayer.redrawGeolocLayer(coord);
         });
+        this.urgencyLevels =  Object.values(this.mapManagerService.getUrgenceLayerColors());
     }
 
     public ngOnDestroy(): void {
@@ -242,11 +259,11 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    private async refresh() {
+    public async refresh() {
         const loading: HTMLIonLoadingElement = await this.loadingCtrl.create({
             message: 'Déploiement de la carte en cours'
         });
-        loading.present();
+        await loading.present();
         this.backLayerService.syncBackLayer();
         let f = this.editionLayerService.favorites
         this.editionLayerService.updateEditionLayerInstance(f);
@@ -259,7 +276,24 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
     }
 
     logout() {
+        this.cleanAllFavoriteTroncon();
         this.authService.logout();
+    }
+    cleanAllFavoriteTroncon() {
+        this.storageService.getItem('AppTronconsFavorities')
+            .then( (res: Array<any>) => {
+                if (res !== null) {
+                    console.log("troncons choisies:: ", res)
+                }
+            });
+
+        this.appTronconsService.favorites = [];
+        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+            .then(() => {
+                console.log("Favorites cleaned and storage updated");
+            });
+        clearMemoize(['isTronconActive']);
+
     }
 
     handleSliderLeft() {
@@ -490,4 +524,94 @@ export class MainPage implements AfterViewInit, OnInit, OnDestroy {
             pointerIsDown = false;
         };
     }
+    public getColor(urgence: string){
+        const rgba : number[] = getColorByRefId(urgence);
+        const val = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+        return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
+      }
+    public getLegendeLibelle(urgence: string){        
+        return getLegendByRefId(urgence);
+      }
+    async toSearchObject(){
+        await this.openSearchModal();
+    }
+    async openSearchModal() {
+        const modal = await this.modalCtrl.create({
+            component: SearchModalComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {}
+        });
+        
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            const res = this.mapManagerService.createAppFeatureModelFromObject(data);
+            this.dbService.activeDB.context.currentView = {
+                zoom: 20,
+                coords: res.realGeometry ? res.realGeometry?.flatCoordinates : res.projGeometry?.flatCoordinates
+            };
+
+            this.olService.getMap().setView(this.mapService.currentView);
+            const featuresIntersection = [];
+            const forEachVectorSources = (layers, callback) => {
+                layers.forEach((layer) => {
+                    // Treat only visible layer, specially to filter edition layer when it's off
+                    if (layer.getVisible()) {
+                        // This is a group of layers. Call this method recursively.
+                        if (layer instanceof LayerGroup) {
+                            forEachVectorSources(layer.getLayers(), callback);
+                        }
+                        // This is a single layer. Check if this layer should be included.
+                        else if (layer instanceof VectorLayer && layer.get('model') && layer.get('model').selectable) {
+                            const source = layer.getSource();
+                            // Ensure that the layer has a vector source.
+                            if (source instanceof VectorSource) {
+                                callback.call(this, source);
+                            } else if (source instanceof ImageSource) {
+                                callback.call(this, source.getSource());
+                            }
+                        }
+                    }
+                });
+            };
+            // Identify features which have at least one point in the circle.
+            forEachVectorSources( this.olService.getLayers(), source => {
+                const features : any[] = source.getFeatures();
+                features.forEach(
+                    feat => {
+                       
+                        if(feat.values_.id === res.id){
+                            if (PluginUtils.isVegetationClass(feat.get('@class'))) {
+                                feat.setProperties(Object.assign(feat.getProperties(), { 'subTitle': true }));
+                            }
+                            if(!featuresIntersection.find(elm => elm.values_.id === feat.values_.id)){
+                                featuresIntersection.push(feat);
+                            }
+                            
+                        }
+                    }
+                )
+               
+            });
+            this.pathRightSlide = 'objectsSelected';
+            this.selectedObjectsService.updateFeatures(featuresIntersection);
+            
+            if(featuresIntersection.length > 0){
+                this.mapService.selection.list = featuresIntersection;
+                this.menu.open('right-slider').then();
+                    //force refresh object data layers
+                if (this.mapManagerService.appLayer !== null) {
+                    this.mapManagerService.appLayer.getLayers().forEach(layer => (layer as VectorLayer<any>).getSource().changed());
+                }
+
+            }
+            
+            
+            
+        }
+    }
+
+    
 }

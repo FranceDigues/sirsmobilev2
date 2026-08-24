@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import { timeout } from 'rxjs/operators';
 import { DatabaseService } from './database.service';
 import { Insomnia } from '@ionic-native/insomnia/ngx';
@@ -7,22 +7,27 @@ import { Subject, noop } from 'rxjs';
 import { Router } from '@angular/router';
 import { MapManagerService } from './map-manager.service';
 import { EditionLayerService } from './edition-layer.service';
+import { EditionModeService } from "./edition-mode.service";
 
 @Injectable({providedIn: 'root'})
 export class SyncService {
-    private status: number = 0;
-    private percent: number = 0;
-    private completion: string = '0/1';
+    public status: number = 0;
+    public percent: number = 0;
+    public completion: string = '0/1';
     private synch: any;
     private isFirstSync: boolean = false;
     private _error: string = '';
-
+    public doc_write_failures: string ='';
+    public batchSize: number ;
     constructor(private dbService: DatabaseService,
                 private insomnia: Insomnia,
                 private route: Router,
                 private mapManagerService: MapManagerService,
                 private editionLayerService: EditionLayerService,
+                private editionModeService: EditionModeService,
+                private zone: NgZone,
                 private http: HttpClient) {
+        this.batchSize = 1;
     }
 
     public cancelSync() {
@@ -34,7 +39,8 @@ export class SyncService {
         return new Promise<string>(async (resolve, rejects) => {
             this.isFirstSync = firstSync;
             this.percent = 0;
-            this.completion = '0/1';
+            this.completion = '0 documents traités';
+            this.doc_write_failures = "0 erreur de sync";
             this.status = 1;
             this._error = '';
 
@@ -44,8 +50,12 @@ export class SyncService {
             const remoteDB = await this.dbService.getRemoteDB();
 
             let index = 0;
+            let sentDocs = 0;
+            let receivedDocs= 0;
+            let errosPullDocs: number = 0;
+            let errosPushDocs:  number = 0;
             const subject = new Subject<any>();
-            const options = {live: false, retry: false, batch_size: 1, batches_limit: 1};
+            const options = {live: false, retry: false, batch_size: this.batchSize, batches_limit: this.batchSize};
 
             console.debug('[Sync Service] Starting sync');
 
@@ -57,7 +67,6 @@ export class SyncService {
                 this.synch = PouchDB.sync(localDB, remoteDB, options)
                     .on('complete', () => {
                         console.debug('[Sync Service] Sync complete');
-                        subject.next(++index);
                         subject.complete();
                     })
                     .on('error', (error) => {
@@ -65,6 +74,19 @@ export class SyncService {
                         subject.error(new Error('Une erreur s\'est produite durant la synchronisation de la base de données, veuillez réessayer.'));
                     })
                     .on('change', (info) => {
+                        if (info.direction === 'push') {
+                            sentDocs = info.change.docs_written ;
+                            errosPullDocs = info.change.doc_write_failures;
+                        } else if (info.direction === 'pull') {
+                            receivedDocs = info.change.docs_written ;
+                            errosPushDocs = info.change.doc_write_failures;
+                        }
+
+                        this.zone.run(() => {
+                            this.completion = `${sentDocs + receivedDocs} documents traités`;
+                            this.doc_write_failures = `${errosPullDocs + errosPushDocs } erreur(s) de sync`;
+                        });
+                        subject.next(this.completion );
                         console.debug('[Sync Service] change', info);
                     })
                     .on('active', () => {
@@ -82,7 +104,7 @@ export class SyncService {
             subject.subscribe({
                 next: (i) => {
                     console.log("next");
-                    this.syncProgress(i);
+                   // this.syncProgress(i);
                 },
                 complete: async () => {
                     console.log("complete");

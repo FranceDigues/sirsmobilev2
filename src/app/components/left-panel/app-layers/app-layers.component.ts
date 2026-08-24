@@ -1,13 +1,16 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {AppLayersService} from 'src/app/services/app-layers.service';
 import {MapManagerService} from 'src/app/services/map-manager.service';
+import {UrgenceLayerColors} from 'src/app/services/map-manager.service';
 import {colorFactory} from 'src/app/utils/color-factory';
 import {ModalController, NavController} from '@ionic/angular';
 import {ColorModalComponent} from './color-modal/color-modal.component';
 import {DatabaseService} from '../../../services/database.service';
 import {DatabaseModel} from '../../database-connection/models/database.model';
 import {EditionLayerService} from 'src/app/services/edition-layer.service';
-
+import { Subscription } from 'rxjs';
+import {ChoicesPickerComponent} from '../desordreChoices/choices-picker/choices-picker.component'
+import { UrgenceLayerColorsMap } from 'src/app/services/map-manager.service';
 @Component({
     selector: 'app-layers',
     templateUrl: './app-layers.component.html',
@@ -20,8 +23,11 @@ export class AppLayersComponent implements OnInit {
     colors = colorFactory.colors;
 
     order = false;
-
     path = 0;
+    isDisplayUrgence: boolean;
+    private UrgenceDisplaysubscription: Subscription;
+    filterUrgenceArray: typeof UrgenceLayerColors[];
+    private filterDesordreArraySubscription: Subscription;
 
     constructor(private appLayersService: AppLayersService,
                 public mapManagerService: MapManagerService,
@@ -32,6 +38,12 @@ export class AppLayersComponent implements OnInit {
         this.mapManagerService.init().then(() => {
             console.log('App layer initialized');
         });
+        this.UrgenceDisplaysubscription = this.mapManagerService.isUrgence.subscribe(value => {
+            this.isDisplayUrgence = value;
+          });
+        this.filterDesordreArraySubscription = this.mapManagerService.filterDesordreToApply.subscribe(data => {
+            this.filterUrgenceArray = data;
+          });
     }
 
     goBack() {
@@ -138,4 +150,33 @@ export class AppLayersComponent implements OnInit {
     onBack() {
         this.slidePathChange.emit('menu');
     }
+
+    public notifyLayerUpdate() {
+        this.appLayersService.notifyLayerChange();
+    }
+
+    async toggleUrgenceVisibility(layer) {
+        this.mapManagerService.updateIsDiplayingUrgence(!this.isDisplayUrgence);
+        if(this.isDisplayUrgence){
+            await this.openUrgencesChoicesModal();
+        }
+        this.mapManagerService.reloadLayer(layer);
+    }
+
+    async openUrgencesChoicesModal() {
+        const modal = await this.modalCtrl.create({
+            component: ChoicesPickerComponent,
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {}
+        });
+
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            this.mapManagerService.updateUrgenceLayerColors(data);
+        }
+    }
 }
+

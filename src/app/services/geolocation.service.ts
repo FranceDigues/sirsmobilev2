@@ -49,6 +49,10 @@ export class GeolocationService {
         return this.lastGPSUpdate;
     }
 
+    public setLastGPSUpdate(value: string): void {
+        this.lastGPSUpdate = value;
+    }
+
     async getCurrentLocation(silent: boolean = false): Promise<Coordinates> {
         let loading: HTMLIonLoadingElement;
         if (!silent) {

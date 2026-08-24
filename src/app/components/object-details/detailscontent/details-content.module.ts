@@ -55,6 +55,7 @@ import {
 } from "./parcelle-vegetation-details/parcelle-vegetation-details.component";
 import { FormatOptionTextPipeModule } from "../../../pipe/format-option-text/format-option-text.pipe.module";
 import { GetByIdPipeModule } from "../../../pipe/get-by-id/get-by-id.pipe.module";
+import {GlobalLitComponent} from "./global-lit/global-lit.component";
 
 @NgModule({
     imports: [
@@ -85,7 +86,7 @@ import { GetByIdPipeModule } from "../../../pipe/get-by-id/get-by-id.pipe.module
     VoieDigueComponent, AmenagementHydrauliqueComponent, OrganeProtectionCollectiveComponent,
     OuvrageAssocieAmenagementHydrauliqueComponent, PrestationAmenagementHydrauliqueComponent,
     StructureAmenagementHydrauliqueComponent, TraitAmenagementHydrauliqueComponent, ObservationItemComponent,
-      VegetationDetailsComponent, ParcelleVegetationDetailsComponent
+      VegetationDetailsComponent, ParcelleVegetationDetailsComponent, GlobalLitComponent
   ],
   exports: [DetailsContentComponent]
 })

@@ -33,6 +33,9 @@
                     <ion-icon name="checkmark-outline"></ion-icon>
                     <span>&nbsp;&nbsp;Valider</span>
                 </button>
+                <button mat-icon-button *ngIf="selectedDatabase && !selectedDatabase?.replicated " (click)="openReplicationModal()">
+                    <ion-icon name="hourglass"></ion-icon>
+                </button>
             </div>
         </div>
     </div>
@@ -46,12 +49,41 @@
     </div>
 
     <div *ngSwitchCase="3">
-        <app-replicate-database [databaseIndex]="databaseIndex"
+        <app-replicate-database [databaseIndex]="databaseIndex" [slower] = slowReplication
                                 (statusChange)="changeStatus($event)"></app-replicate-database>
     </div>
 
     <div *ngSwitchCase="4">
         <app-login-database (statusChange)="changeStatus($event)"></app-login-database>
     </div>
+    <div *ngSwitchCase="5" class="sirs-card-content">
+        <h2 class="sirs-card-title">Fermeture de la précedente  base requise</h2>
+        <p>Veuillez fermer la précédente base  avant d'ouvrir celle-ci. Voulez-vous continuer ?</p>
+        <div class="sirs-card-action text-right" fxLayout="row" fxLayoutAlign="end center">
+            <button mat-button color="primary" (click)="closeDatabase()">
+                <ion-icon name="checkmark-outline"></ion-icon>
+                <span>&nbsp;&nbsp;Fermer et continuer</span>
+            </button>
+            <button mat-button color="warn" (click)="cancelAction()">
+                <ion-icon name="close-outline"></ion-icon>
+                <span>&nbsp;&nbsp;Annuler</span>
+            </button>
+        </div>
+    </div>
 
 </div>
+<ng-template #replicationModal>
+    <div class="modal-header">
+        <h2>Réplication plus lente</h2>
+    </div>
+    <div class="modal-body">
+        <p>En activant cette option, la réplication sera plus lente pour éviter la corruption de données avec de gros fichiers.</p>
+        <mat-checkbox [(ngModel)]="slowReplication">
+            Activer la réplication lente
+        </mat-checkbox>
+    </div>
+    <div class="modal-footer">
+        <button mat-button (click)="closeModal()">Fermer</button>
+        <button mat-raised-button color="primary" (click)="confirmSlowReplication()">Confirmer</button>
+    </div>
+</ng-template>

@@ -58,7 +58,7 @@ export class BaseFormComponent implements OnInit {
     }
   }
 
-  private isSelected(singleReference, eosReference) {
+  public isSelected(singleReference, eosReference) {
     if (typeof eosReference._id === 'undefined') {
       return this.EOS.objectDoc[singleReference.name] === eosReference.id;
     } else {
@@ -66,7 +66,7 @@ export class BaseFormComponent implements OnInit {
     }
   }
 
-  private optionValue(eosReference) {
+  public optionValue(eosReference) {
     if (typeof eosReference._id === 'undefined') {
       return eosReference.id;
     } else {
@@ -74,7 +74,7 @@ export class BaseFormComponent implements OnInit {
     }
   }
 
-  private refList(type) {
+  public refList(type) {
     return this.EOS.refs[type] || [];
   }
 

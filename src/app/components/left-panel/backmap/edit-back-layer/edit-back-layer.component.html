@@ -35,7 +35,7 @@
               <div class="add-back-layer col s12">
                   <label for="version" class="active">Version du service</label>
                   <select id="version" name="version" class="browser-default"
-                  [(ngModel)]="backLayerForm.source.params.version" (change)="prepareType()">
+                  [(ngModel)]="backLayerForm.source.params.version">
                   <option *ngFor="let version of ['1.1.1', '1.3.0']" [value]="version" >
                       {{ version }}
                   </option>

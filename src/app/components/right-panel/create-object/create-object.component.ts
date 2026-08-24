@@ -58,7 +58,7 @@ export class CreateObjectComponent implements OnInit {
     if (this.selectedLayer) {
       const type = this.getSelectLayerType();
       const title = this.selectedLayer.title;
-      return this.authService.getValue().role !== 'GUEST' && type !== 'BorneDigue' && type !== 'TronconDigue' && title !== 'Photos des tronçons';
+      return this.authService.getValue()?.role !== 'GUEST' && type !== 'BorneDigue' && type !== 'TronconDigue' && title !== 'Photos des tronçons';
     } else {
       return false;
     }

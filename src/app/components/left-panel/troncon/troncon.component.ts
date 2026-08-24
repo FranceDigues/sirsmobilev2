@@ -1,8 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StorageService } from '@ionic-lib/lib-storage/storage.service';
 import { AppTronconsService, DigueController, SystemeEndiguement, TronconController } from 'src/app/services/troncon.service';
 import { Pipe, PipeTransform } from '@angular/core';
-
+import WKT from "ol/format/WKT";
+import { Geometry } from "ol/geom";
+import { OLService } from "@ionic-lib/lib-map/ol.service";
+import { Extent } from "ol/extent";
+import View from "ol/View";
+import { easeOut } from "ol/easing";
+import { clear as clearMemoize, Memoize } from "typescript-memoize";
 
 @Component({
   selector: 'left-slide-troncon',
@@ -17,11 +23,16 @@ export class LeftSlideTronconComponent implements OnInit {
   SEID = null;
   DID = null;
 
+  private wkt = new WKT();
+
   constructor(private storageService: StorageService, public systemeEndiguementService: SystemeEndiguement,
               private appTronconsService: AppTronconsService, public digueController: DigueController,
-              public tronconCtrl: TronconController) { }
+              public tronconCtrl: TronconController, public olService: OLService,
+              public changeDetectorRef: ChangeDetectorRef) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   goBack() {
     if (this.view === 'T') {
@@ -33,6 +44,11 @@ export class LeftSlideTronconComponent implements OnInit {
     } else {
       this.slidePathChange.emit('menu');
     }
+  }
+
+  public toggleTroncon(troncon: any): void {
+    this.tronconCtrl.toggleLayer(troncon);
+    this.changeDetectorRef.detectChanges();
   }
 
   changeView(view) {
@@ -56,10 +72,33 @@ export class LeftSlideTronconComponent implements OnInit {
   }
 
   cleanAll() {
+    this.storageService.getItem('AppTronconsFavorities')
+        .then(
+            (res: Array<any>) => {
+                if (res !== null) {
+                    console.warn("get item: ", res)
+                }
+            }
+        );
     this.appTronconsService.favorites = [];
-    this.storageService.setItem('AppTronconsFavorities', []);
+    this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+    .then(() => {
+      this.changeDetectorRef.markForCheck();
+    });
+    clearMemoize(['isTronconActive']);
+ 
   }
 
+  public zoomToTroncon(troncon: any): void {
+    const geometry: Geometry = this.wkt.readGeometry(troncon.value.geometry, {
+      dataProjection: 'EPSG:2154',
+      featureProjection: 'EPSG:3857'
+    });
+    const extent: Extent = geometry.getExtent();
+
+    const view: View = this.olService.map.getView();
+    view.fit(extent, {duration: 300, easing: easeOut});
+  }
 }
 
 @Pipe({
@@ -67,15 +106,26 @@ export class LeftSlideTronconComponent implements OnInit {
 })
 export class ArraySortPipe  implements PipeTransform {
 
-  transform(value: any, exponent: any) {
+  transform(value: any) {
+    if (Array.isArray(value)) {
+      if (value.length <= 1) {
+        return value;
+      }
+    }
     const data = value.sort(this.sortOn());
     return data;
   }
 
   sortOn() {
     return (a, b) => {
-      const v1 = a.value ? a.value.libelle : a.libelle;
-      const v2 = b.value ? b.value.libelle : b.libelle;
+      let v1 = a.value ? a.value.libelle : a.libelle;
+      let v2 = b.value ? b.value.libelle : b.libelle;
+      if (v1 === undefined) {
+        v1 = 'z';
+      }
+      if (v2 === undefined) {
+        v2 = 'z';
+      }
       if (v1.toLowerCase() < v2.toLowerCase()) {
         return -1;
       } else if (v1.toLowerCase() > v2.toLowerCase()){
@@ -86,3 +136,5 @@ export class ArraySortPipe  implements PipeTransform {
     };
   }
 }
+
+

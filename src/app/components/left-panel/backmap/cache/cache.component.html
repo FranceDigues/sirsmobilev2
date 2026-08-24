@@ -18,9 +18,9 @@
         [(ngModel)]="knobValues" (ionChange)="updateTileCount()">
         </ion-range>
       </div>
-      <div class="sirs-field">
+      <div class="sirs-field" *ngIf="!isNaN(lastZoom)">
         <span class="sirs-field-title">Niveau de zoom actuel</span>
-        <p class="text-right">{{ getCurrentZoom() }}</p>
+        <p class="text-right">{{ lastZoom }}</p>
       </div>
       <div class="sirs-field">
         <span class="sirs-field-title">Nombre de tuiles</span>

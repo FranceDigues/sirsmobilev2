@@ -11,6 +11,7 @@ import { File } from '@ionic-native/file/ngx';
 export class SirsDataService {
     sirsDoc: SirsDoc;
     contactList;
+    public prestationList;
     urgenceList;
     refOrientationPhoto;
     refCote;
@@ -71,7 +72,7 @@ export class SirsDataService {
     ];
 
     constructor(private localDB: LocalDatabase, private file: File) {
-        this.mediaPath = `${this.file.dataDirectory}medias`;
+        this.mediaPath = `${this.file.externalDataDirectory}medias`;
     }
 
     getSirsDoc(): Promise<SirsDoc> {
@@ -95,23 +96,36 @@ export class SirsDataService {
 
     getContactList() {
         return new Promise((resolve, reject) => {
-            if (!this.contactList) {
-                this.localDB.query('Element/byClassAndLinear', {
-                    startkey: ['fr.sirs.core.model.Contact'],
-                    endkey: ['fr.sirs.core.model.Contact', {}],
-                    include_docs: true
-                }).then((list) => {
-                    this.contactList = list;
-                    resolve(list);
-                }, (error) => {
-                    reject(error);
-                });
-            } else {
-                resolve(this.contactList);
-            }
+
+            this.localDB.query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.Contact'],
+                endkey: ['fr.sirs.core.model.Contact', {}],
+                include_docs: true
+            }).then((list) => {
+                this.contactList = list;
+                resolve(list);
+            }, (error) => {
+                reject(error);
+            });
+
         });
     }
+    getPrestationList(){
+        return new Promise((resolve, reject) => {
 
+            this.localDB.query('Element/byClassAndLinear', {
+                startkey: ['fr.sirs.core.model.Prestation'],
+                endkey: ['fr.sirs.core.model.Prestation', {}],
+                include_docs: true
+            }).then((list) => {
+                this.prestationList = list;
+                resolve(list);
+            }, (error) => {
+                reject(error);
+            });
+
+        });
+    }
     getRefOrientationPhoto() {
         return new Promise((resolve, reject) => {
             if (!this.refOrientationPhoto) {

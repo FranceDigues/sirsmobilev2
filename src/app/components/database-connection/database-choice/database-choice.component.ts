@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -8,6 +8,10 @@ import { AuthService } from '../../../services/auth.service';
 import { DatabaseService } from '../../../services/database.service';
 import { SirsDataService } from '../../../services/sirs-data.service';
 import { designDocs } from '../replicate-database/couchDB-Vues';
+import { EditionModeService } from "../../../services/edition-mode.service";
+import {clear as clearMemoize} from "typescript-memoize";
+import {StorageService} from "@ionic-lib/lib-storage/storage.service";
+import {AppTronconsService} from "../../../services/troncon.service";
 
 @Component({
     selector: 'app-database-choice',
@@ -20,7 +24,8 @@ export class DatabaseChoiceComponent implements OnInit {
     selectedDatabase: DatabaseModel;
     status = 0;
     databaseIndex = 0;
-
+    slowReplication : boolean = false;
+    @ViewChild('replicationModal') replicationModal: TemplateRef<any>;
     constructor(private router: Router,
                 private platform: Platform,
                 public alertCtrl: AlertController,
@@ -29,11 +34,15 @@ export class DatabaseChoiceComponent implements OnInit {
                 private splashScreen: SplashScreen,
                 private statusBar: StatusBar,
                 private sirsDataService: SirsDataService,
-                private loadingCtrl: LoadingController) {
+                private editionModeService: EditionModeService,
+                private loadingCtrl: LoadingController,
+                private storageService: StorageService,
+                private appTronconsService: AppTronconsService) {
         this.init();
     }
 
     ngOnInit() {
+        this.dbService.changeDefaultPrestationId('');
     }
 
     init() {
@@ -61,6 +70,7 @@ export class DatabaseChoiceComponent implements OnInit {
 
     changeStatus(status: number) {
         this.status = status;
+        this.slowReplication = false;
         this.dbService.getDatabaseSettings()
             .then(
                 (databases) => {
@@ -70,6 +80,7 @@ export class DatabaseChoiceComponent implements OnInit {
                     console.error('no \'databases\' in HardDisk ' + error);
                 }
             );
+
     }
 
     selectDB(db) {
@@ -130,7 +141,17 @@ export class DatabaseChoiceComponent implements OnInit {
             this.status = 3;
         } else if (this.selectedDatabase.replicated
             && (this.selectedDatabase.context.authUser === undefined || !this.selectedDatabase.context.authUser)) {
-            this.status = 4;
+                        // Vérifier s'il existe une autre BD avec un authUser défini
+            const hasAuthUserInOtherDB = this.databases.some(
+                    (db) => db !== this.selectedDatabase && db.context.authUser !== undefined && db.context.authUser
+            );
+            if (!hasAuthUserInOtherDB) {
+                    this.status = 4;
+                    return;
+            } else { // already connected
+                    this.status = 5;
+                    return;
+            }
         } else {
             const loading = await this.loadingCtrl.create({
                 message: 'Déploiement en cours ...'
@@ -144,6 +165,10 @@ export class DatabaseChoiceComponent implements OnInit {
         }
     }
 
+    async replicateSlowDatabase(){
+        this.slowReplication = true;
+        this.status = 3;
+    }
 
     public async updateViews(): Promise<void> {
         for (const designDoc of designDocs) {
@@ -155,4 +180,72 @@ export class DatabaseChoiceComponent implements OnInit {
         }
     }
 
+    openReplicationModal() {
+        const modalRef = this.alertCtrl.create({
+            header: 'Réplication plus lente',
+            message: `
+            <p>En activant cette option, la réplication sera plus lente afin de palier le cas d'une réplication classique n'arrivant pas à terme</p>
+            <mat-checkbox [(ngModel)]="slowReplication">Activer la réplication lente</mat-checkbox>
+        `,
+            buttons: [
+                {
+                    text: 'Fermer',
+                    role: 'cancel',
+                },
+                {
+                    text: 'Confirmer',
+                    handler: () => {
+                        this.confirmSlowReplication();
+                    },
+                },
+            ],
+        });
+        modalRef.then((modal) => modal.present());
+    }
+
+
+    confirmSlowReplication() {
+        this.slowReplication = true;
+        this.status = 3;
+        this.closeModal();
+    }
+
+    closeModal() {
+        this.alertCtrl.dismiss();
+    }
+    async closeDatabase() {
+        const realActiveBase = this.dbService.activeDB;
+        const databaseWithAuthUser = this.databases.find(
+         (db) => db !== this.selectedDatabase && db.context.authUser !== undefined && db.context.authUser
+        );
+
+        databaseWithAuthUser.context.authUser = null;
+        this.dbService.activeDB = databaseWithAuthUser;
+        this.dbService.removeDB$.next("DB changed");
+        await this.dbService.setCurrentDatabaseSettings(databaseWithAuthUser);
+        this.dbService.activeDB = realActiveBase;
+        this.cleanAllFavoriteTroncon();
+        this.status = 4;
+
+    }
+   cancelAction() {
+       this.status = 0;
+       console.log('Action annulée par l’utilisateur.');
+    }
+    cleanAllFavoriteTroncon() {
+        this.storageService.getItem('AppTronconsFavorities')
+            .then( (res: Array<any>) => {
+                if (res !== null) {
+                    console.log("troncons choisies:: ", res)
+                }
+            });
+
+        this.appTronconsService.favorites = [];
+        this.storageService.setItem('AppTronconsFavorities', this.appTronconsService.favorites)
+            .then(() => {
+                console.log("Favorites cleaned and storage updated");
+            });
+        clearMemoize(['isTronconActive']);
+
+    }
 }

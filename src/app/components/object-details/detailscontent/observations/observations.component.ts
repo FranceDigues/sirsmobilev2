@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { ObjectDetails } from 'src/app/services/object-details.service';
     templateUrl: './observations.component.html',
     styleUrls: ['./observations.component.scss', '../detailscontent.component.scss'],
 })
-export class ObservationsGenericComponent {
+export class ObservationsGenericComponent implements OnInit{
 
     constructor(public detailsObject: ObjectDetails) {
     }
@@ -15,6 +15,9 @@ export class ObservationsGenericComponent {
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
         return new Date(obj1?.date).getTime() - new Date(obj2?.date).getTime();
+    }
+
+    ngOnInit(): void {
     }
 
 }

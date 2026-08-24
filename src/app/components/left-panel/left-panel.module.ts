@@ -22,7 +22,7 @@ import { ObservationEditModule } from "../object-details/observation-edit/observ
 import { AppSettings2Component } from "./app-settings2/app-settings2.component";
 import { GpsSettingsComponent } from "./gps-settings/gps-settings.component";
 import { PhotoSettingsComponent } from "./photo-settings/photo-settings.component";
-
+import { ChoicesPickerComponent } from "./desordreChoices/choices-picker/choices-picker.component"
 @NgModule({
     imports: [
         CommonModule,
@@ -51,6 +51,7 @@ import { PhotoSettingsComponent } from "./photo-settings/photo-settings.componen
         LeftSlideTronconComponent,
         AppLayersComponent,
         ColorModalComponent,
+        ChoicesPickerComponent,
         LeftSlideDisponibleLayersComponent],
     exports: [LeftPanelComponent]
 })

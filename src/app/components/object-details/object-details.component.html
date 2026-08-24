@@ -34,7 +34,7 @@
 
     <details-content [objectType]="objectType" [activeTab]="activeTab"></details-content>
 
-    <div *ngIf="isEditableLayer() && canShowEditionButtons() && activeTab === 'description'"
+    <div *ngIf="isEditableLayer && canShowEditionButtons() && activeTab === 'description'"
         style="position: absolute; bottom: 0; right: 0; display:flex">
         <ion-fab-button color="danger" (click)="editObject()" style="margin: 8px;">
             <ion-icon name="pencil-outline"></ion-icon>
@@ -45,7 +45,7 @@
     </div>
 
     <div *ngIf="canAddObservation()">
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixedF">
             <ion-fab-button color="danger" (click)="addObservation()">
                 <ion-icon name="add-outline"></ion-icon>
             </ion-fab-button>

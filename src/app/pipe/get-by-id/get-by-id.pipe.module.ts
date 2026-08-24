@@ -10,7 +10,8 @@ import { GetByIdPipe } from "./get-by-id.pipe";
     ],
     imports: [
         CommonModule
-    ]
+    ],
+    providers: [GetByIdPipe]
 })
 export class GetByIdPipeModule {
 }

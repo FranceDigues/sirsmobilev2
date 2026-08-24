@@ -1,18 +1,19 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ObjectDetails } from 'src/app/services/object-details.service';
 import { LocalDatabase } from 'src/app/services/local-database.service';
 import { ObservationEditService } from 'src/app/services/observation-edit.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { EditionModeService } from 'src/app/services/edition-mode.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CameraService } from '@ionic-lib/lib-camera/camera.service';
-import { Camera } from '@ionic-native/camera/ngx';
+import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 import { UuidUtils } from 'src/app/utils/uuid-utils';
 import { formatDate } from '@angular/common';
 import { MapManagerService } from 'src/app/services/map-manager.service';
 import { Options } from '@ionic-lib/lib-camera/interface.model';
 import { PluginUtils } from 'src/app/utils/plugin-utils';
+import { EditMediaComponent } from '../observation-edit/edit-media/edit-media/edit-media.component';
 
 @Component({
     selector: 'observation-details',
@@ -33,18 +34,31 @@ export class ObservationDetailsComponent implements OnInit {
     loaded;
     objectId;
     mediaPath;
-
-    constructor(private objectDetails: ObjectDetails, private localDB: LocalDatabase,
-                public OES: ObservationEditService, private alertCtrl: AlertController,
-                private editionService: EditionModeService, private authService: AuthService,
-                private route: Router, private cameraService: CameraService, private camera: Camera,
-                private mapManagerService: MapManagerService) {
+    public objectType: string;
+    public editingMedia: boolean = false;
+    public mediaEditing: any;
+    public indexEditing: any;
+    public obsId: string;
+    
+    constructor(private objectDetails: ObjectDetails, 
+                private localDB: LocalDatabase,
+                public OES: ObservationEditService, 
+                private alertCtrl: AlertController,
+                private editionService: EditionModeService, 
+                private authService: AuthService,
+                private route: Router,
+                private cameraService: CameraService, 
+                private camera: Camera,
+                private mapManagerService: MapManagerService,
+                private observationEditService : ObservationEditService,
+                private modalCtrl: ModalController,
+                private cdr: ChangeDetectorRef) {
         this.doc = this.objectDetails.selectedObservation;
         this.objectId = this.objectDetails.selectedObject._id;
         this.objectDoc = this.objectDetails.selectedObject;
         this.showContent = true;
         this.loaded = {};
-
+        this.objectType = PluginUtils.doc2Class(this.objectDoc);            
         if (!this.doc.photos) {
             this.doc.photos = [];
         }
@@ -64,6 +78,7 @@ export class ObservationDetailsComponent implements OnInit {
         if (this.isReseauEtOuvrage()) {
             this.initSpecificationReseauOuvrage();
         }
+        this.observationEditService.init(this.doc);
     }
 
     ngOnInit() {
@@ -76,6 +91,7 @@ export class ObservationDetailsComponent implements OnInit {
         for (let photo of this.photos) {
             this.OES.loadImage(photo, true);
         }
+        this.observationEditService.init(this);
     }
 
     goBack() {
@@ -97,7 +113,34 @@ export class ObservationDetailsComponent implements OnInit {
             return this.doc.author && this.authService.getValue()._id === this.doc.author;
         }
     }
+    editMedia(photo,index){
+        this.editingMedia = true;
+        this.mediaEditing = photo;
+        this.indexEditing = index;
+        this.cdr.detectChanges();
+    }
+    async openEditMedia(photo,index) {
+        this.editingMedia = true;
+        this.mediaEditing = photo;
+        this.indexEditing = index;
+        const modal = await this.modalCtrl.create({
+            component: EditMediaComponent, 
+            animated: true,
+            cssClass: 'modal-css',
+            componentProps: {
+                photo: photo, 
+                index: index 
+            }
+        });
 
+        await modal.present();
+
+        const { data } = await modal.onDidDismiss();
+        if (data) {
+            this.handleEdit(data.edited);
+            this.setView(data.view);
+        }
+    }
     async removePhoto(photo, index) {
         const alert = await this.alertCtrl.create({
             backdropDismiss: false,
@@ -220,6 +263,7 @@ export class ObservationDetailsComponent implements OnInit {
                 () => {
                     this.mapManagerService.syncAllAppLayer();
                     this.photos.push(photo);
+                    this.OES.loadImage(photo, true);
                 }
             )
     }
@@ -283,6 +327,31 @@ export class ObservationDetailsComponent implements OnInit {
             this.localDB.get(this.doc.manoeuvreOuvrageId).then((result) => {
                 this.specificationReseauOuvrage[6].value = result.libelle;
             });
+        }
+    }
+    setView(str: 'detail') {
+        this.editingMedia = false;
+        this.cdr.detectChanges();
+        this.photos = Object.assign([], this.doc.photos);
+        for (let photo of this.photos) {
+            this.OES.loadImage(photo, true);
+        }
+        
+    }
+    handleEdit(val: boolean){
+        if(val){
+            this.doc.photos.splice(this.indexEditing, 1);
+                        this.photos.splice(this.indexEditing, 1);
+
+                        if (this.objectDoc._attachments) {
+                            delete this.objectDoc._attachments[this.mediaEditing.id];
+                        }
+
+                        this.objectDoc.valid = false;
+
+                        this.objectDoc.dateMaj = new Date().toISOString().split('T')[0];
+
+                        this.editionService.updateObject(this.objectDoc);
         }
     }
 }

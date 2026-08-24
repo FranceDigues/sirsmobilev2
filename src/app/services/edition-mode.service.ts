@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { LocalDatabase } from './local-database.service';
 import { EditionLayerService } from './edition-layer.service';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
 })
 export class EditionModeService {
 
-    refTypes = [
+    refTypes: {name: string, include_docs: boolean}[] = [
         {name: 'Berge', include_docs: false},
         {name: 'EchelleLimnimetrique', include_docs: false},
         {name: 'OuvrageRevanche', include_docs: false},
@@ -68,7 +69,7 @@ export class EditionModeService {
     ];
 
     constructor(private localDB: LocalDatabase, private authService: AuthService,
-                private editionLayerService: EditionLayerService) {
+                private editionLayerService: EditionLayerService, private toastController: ToastController) {
     }
 
     newObject(type) {
@@ -86,6 +87,7 @@ export class EditionModeService {
 
     createObject(objectDoc) {
         objectDoc.createFromMobile = true;
+        objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
         return (this.localDB.create(objectDoc)
             .then(
                 (doc) => {
@@ -97,6 +99,8 @@ export class EditionModeService {
     }
 
     updateObject(objectDoc, visible = true) {
+        objectDoc.lastUpdateAuthor = this.authService.getValue()._id;
+        this.removeUndefinedFields(objectDoc);
         return (this.localDB.save(objectDoc)
             .then(
                 () => {
@@ -115,8 +119,55 @@ export class EditionModeService {
                     }
                     return objectDoc;
                 }
-            ));
+            )
+            .catch(async (error) => {
+                console.error('Erreur lors de la sauvegarde du document:', error);
+                const toast = await this.toastController.create({
+                    message: `Erreur lors de la sauvegarde du document: ${error.message || error}. Veuillez réessayer.`,
+                    duration: 4000,
+                    position: 'bottom',
+                    color: 'danger'
+                });
+                await toast.present();
+                throw error;
+            }));
     }
+
+
+    /**
+     * Removes undefined fields in-place because Sirs desktop (Java) does not process them.
+     * Skips _attachments for performance (binary data, never contains undefined).
+     * @param obj
+     * @private
+     */
+    removeUndefinedFields(obj: any): void {
+        if (obj === null || obj === undefined || typeof obj !== 'object') {
+            return;
+        }
+        if (Array.isArray(obj)) {
+            for (let i = obj.length - 1; i >= 0; i--) {
+                if (obj[i] === undefined || obj[i] === 'undefined') {
+                    obj.splice(i, 1);
+                } else if (typeof obj[i] === 'object') {
+                    this.removeUndefinedFields(obj[i]);
+                }
+            }
+            return;
+        }
+        for (const key of Object.keys(obj)) {
+            if (key === '_attachments') {
+                continue;
+            }
+            if (obj[key] === undefined || obj[key] === 'undefined') {
+                delete obj[key];
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                this.removeUndefinedFields(obj[key]);
+            }
+        }
+    }
+
+
+
 
     getClosableObjects() {
         return (this.localDB.query('objetsNonClosByBorne/byAuthor', {
@@ -165,30 +216,33 @@ export class EditionModeService {
         });
     }
 
-    getReferenceTypes() {
-        const promises = [];
+    public async getReferenceTypes(): Promise<[string, any[]][]> {
 
-        this.refTypes.forEach((refType) => {
+        const promises = this.refTypes.map(async (refType): Promise<[string, any[]]> => {
             const classPath = 'fr.sirs.core.model.' + refType.name;
-            const promise = new Promise((resolve, rejects) => {
-                this.localDB.query('byClassAndLinearRef', {
+
+            try {
+
+                const value = await this.localDB.query('byClassAndLinearRef',{
                     startkey: [classPath],
                     endkey: [classPath, {}],
                     include_docs: refType.include_docs
-                }).then(
-                    (results) => {
-                        const values = results.map((item) => {
-                            return refType.include_docs ? item.doc : item.value;
-                        });
-                        resolve([refType.name, values]);
-                    },
-                    (error) => {
-                        rejects([refType.name, error]);
-                    }
-                );
-            });
-            promises.push(promise);
+                });
+
+                return [
+                  refType.name,
+                  value.map((item: any) => {
+                      return refType.include_docs ? item.doc : item.value;
+                  })
+                ];
+
+            } catch (error) {
+
+                throw [refType.name, error];
+
+            }
         });
+
         return Promise.all(promises);
     }
 

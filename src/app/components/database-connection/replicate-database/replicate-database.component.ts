@@ -16,6 +16,7 @@ import { Insomnia } from '@ionic-native/insomnia/ngx';
 export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   @Input() databaseIndex;
+  @Input() slower: boolean = false;
   @Output() readonly statusChange = new EventEmitter<any>();
 
   step;
@@ -26,6 +27,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
   activeDb: DatabaseModel;
   remoteDB;
   localDB;
+
+  private retryCount = 0;
+  private docsDownloaded = 0;
+  private readonly MAX_RETRIES = 5;
+  private readonly RETRY_DELAY = 5000;
 
   indexPromises = []; // Set as global to be accessed by he html.
 
@@ -104,13 +110,38 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.description = 'Téléchargement des documents...';
     this.percent = 0;
     this.completion = '0/' + docCount;
+    this.retryCount = 0;
+    this.docsDownloaded = 0;
 
+    this.startReplication(docCount);
+  }
+
+  private startReplication(docCount) {
     const subject = new Subject<any>();
-    this.remoteDB.replicate.to(this.localDB, { live: false, retry: true, batches_limit: 10, batch_size: 100 })
+
+    let replicationOptions = {
+      live: false,
+      retry: false,
+      batches_limit: 5,
+      batch_size: 200,
+      timeout: 120000,
+      style: 'main_only'
+    };
+    if (this.slower) {
+      replicationOptions.batch_size = 50;
+      replicationOptions.batches_limit = 2;
+      replicationOptions.timeout = 50000;
+    }
+
+    console.log('[Replication] Démarrage réplication (tentative ' + (this.retryCount + 1) + '/' + (this.MAX_RETRIES + 1) + ')');
+
+    this.remoteDB.replicate.to(this.localDB, replicationOptions)
     .on('change', (result) => {
       console.log('2 - En COURS : ', result);
+      this.retryCount = 0;
+      this.docsDownloaded += result.docs.length;
       const arg = {
-        repCount: Math.min(result.docs_written, docCount),
+        repCount: Math.min(this.docsDownloaded, docCount),
         docCount
       };
       subject.next(arg);
@@ -126,8 +157,26 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       console.log('denied', err);
     })
     .on('error', (error) => {
-      console.warn(error);
-      subject.error(error);
+      console.warn('[Replication] Erreur réplication:', error);
+      if (this.isOOMError(error)) {
+        subject.error(error);
+      } else if (this.retryCount < this.MAX_RETRIES) {
+        this.retryCount++;
+        console.log('[Replication] Erreur réseau, nouvelle tentative dans '
+          + (this.RETRY_DELAY / 1000) + 's (' + this.retryCount + '/' + this.MAX_RETRIES + ')');
+        this.zone.run(() => {
+          this.description = 'Erreur réseau, nouvelle tentative dans '
+            + (this.RETRY_DELAY / 1000) + 's (' + this.retryCount + '/' + this.MAX_RETRIES + ')...';
+        });
+        setTimeout(() => {
+          this.zone.run(() => {
+            this.description = 'Téléchargement des documents...';
+            this.startReplication(docCount);
+          });
+        }, this.RETRY_DELAY);
+      } else {
+        subject.error(error);
+      }
     });
 
     subject.subscribe({
@@ -152,12 +201,26 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     this.thirdStep();
   }
 
+  isOOMError(error): boolean {
+    try {
+      return JSON.stringify(error).includes('OUT_OF_MEMORY');
+    } catch (e) {
+      return false;
+    }
+  }
+
   async secondStepError(error) {
     console.error(error);
+    await this.destroyLocalDB();
+    const isOOM = this.isOOMError(error);
+    const message = isOOM
+      ? 'La mémoire disponible sur l\'appareil est insuffisante pour traiter le volume de pièces jointes contenu dans le lot en cours. '
+        + 'Veuillez relancer la réplication en activant le mode "Réplication plus lente" afin de réduire la taille des lots de téléchargement.'
+      : 'Une erreur s\'est produite lors du téléchargement des documents.';
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
-      header: 'Erreur',
-      message: 'Une erreur s\'est produite lors du téléchargement des documents.',
+      header: isOOM ? 'Mémoire insuffisante' : 'Erreur',
+      message,
       buttons: [
         {
           text: 'Ok',
@@ -180,7 +243,7 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
     const promises = [];
 
     designDocs.forEach((element, i) => {
-      const promise = new Promise((resolve, reject) => {
+      const promise = new Promise<void>((resolve, reject) => {
         this.localDB.put(element).then(
             () => {
               console.debug('3 - EN COURS');
@@ -244,10 +307,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   async thirdStepError(error) {
     console.error(error);
+    await this.destroyLocalDB();
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
-      message: 'Une erreur s\'est produite lors de la préparation de l\'espace de travail.',
+      message: 'Une erreur s\'est produite lors de la préparation de l\'espace de travail. La base locale a été supprimée.',
       buttons: [
         {
           text: 'Ok',
@@ -305,10 +369,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   async fourthStepError(error) {
     console.error(error);
+    await this.destroyLocalDB();
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
-      message: 'Une erreur s\'est produite lors de la construction des index.',
+      message: 'Une erreur s\'est produite lors de la construction des index. La base locale a été supprimée.',
       buttons: [
         {
           text: 'Ok',
@@ -348,10 +413,11 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
 
   async fifthStepError(error) {
     console.error(error);
+    await this.destroyLocalDB();
     const alert = await this.alertCtrl.create({
       backdropDismiss: false,
       header: 'Erreur',
-      message: 'Une erreur s\'est produite lors de la synchronisation',
+      message: 'Une erreur s\'est produite lors de la synchronisation. La base locale a été supprimée.',
       buttons: [
         {
           text: 'Ok',
@@ -363,6 +429,19 @@ export class ReplicateDatabaseComponent implements OnInit, OnDestroy {
       ]
     });
     await alert.present();
+  }
+
+  async destroyLocalDB() {
+    try {
+      console.warn('[Replication] Destruction de la base locale suite à une erreur...');
+      await this.localDB.destroy();
+      console.warn('[Replication] Base locale détruite.');
+      this.dbService.changeDatabase();
+      this.databases[this.databaseIndex].replicated = false;
+      this.dbService.saveDatabaseSettings(this.databases);
+    } catch (e) {
+      console.error('[Replication] Erreur lors de la destruction de la base locale:', e);
+    }
   }
 
   backToDatabase() {

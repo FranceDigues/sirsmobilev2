@@ -1,0 +1,32 @@
+<div class ="choicesdiv" fxLayout="column" fxLayoutAlign="start stretch">
+  <ion-header translucent>
+    <ion-toolbar>
+            <ion-title style="text-align: center;">Type de Désordre</ion-title>           
+            <ion-checkbox slot="start"  style="margin-left: 20px; " (ionChange)="selectAllUrgencies()"></ion-checkbox>      
+            <ion-buttons slot="end">
+                <ion-button (click)="closeModal()">Fermer</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+    </ion-header>
+  <ion-content fxFlex>
+      <div class="square-container" fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="10px">
+        <ion-list class="list">
+          <ion-item *ngFor="let urgency of urgencyLevels" [style.color]="getColor(urgency)" (click)="selectUrgency(urgency)" class="centerItem">
+             {{getLegendeLibelle(urgency)}}
+            <mat-icon *ngIf="ifSelected(urgency)" class="white-icon">
+              check
+            </mat-icon>
+          </ion-item>
+        </ion-list>
+      </div>
+  </ion-content>
+  <ion-footer slot="end" style="padding: 10px;">
+      <div class="right" style="padding: 0;">
+          <ion-button color="medium" [disabled]="selectedDesordreType.length < 1" (click)="validate()">
+              <ion-icon name="checkmark-outline"></ion-icon>
+              <span style="margin-left: 10px">Valider le choix</span>
+          </ion-button>
+      </div>
+  </ion-footer>
+</div>
+
